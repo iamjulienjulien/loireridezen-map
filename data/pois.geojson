@@ -464,6 +464,60 @@
           47.18
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Camping Lac de Loire (Vineuil)",
+        "type": "hébergement",
+        "desc": "Camping au bord du Lac de Loire, Vineuil"
+      },
+      "geometry": { "type": "Point", "coordinates": [1.518, 47.617] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Camping de l’Île d’Or (Amboise)",
+        "type": "hébergement",
+        "desc": "Camping municipal sur l’Île d’Or, face au château d’Amboise"
+      },
+      "geometry": { "type": "Point", "coordinates": [0.9872, 47.4167] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Camping Le Moulin Fort (Francueil)",
+        "type": "hébergement",
+        "desc": "Camping au bord du Cher, Francueil"
+      },
+      "geometry": { "type": "Point", "coordinates": [1.08937, 47.3275] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Camping La Confluence – Onlycamp (Savonnières)",
+        "type": "hébergement",
+        "desc": "Camping Onlycamp La Confluence, Savonnières"
+      },
+      "geometry": { "type": "Point", "coordinates": [0.55014, 47.34975] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Camping L’Isle Verte (Montsoreau)",
+        "type": "hébergement",
+        "desc": "Camping L’Isle Verte, Montsoreau"
+      },
+      "geometry": { "type": "Point", "coordinates": [0.05285, 47.21818] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Camping de l’Île d’Offard (Saumur)",
+        "type": "hébergement",
+        "desc": "Camping de l’Île d’Offard, Saumur"
+      },
+      "geometry": { "type": "Point", "coordinates": [-0.06462, 47.25990] }
     }
   ]
 }
