@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château d’Angers",
+        "type": "patrimoine",
+        "stage": 1,
+        "image": "https://placehold.co/600x400?text=Chateau+d%27Angers",
+        "url": "https://www.chateau-angers.fr/",
+        "desc": "Forteresse médiévale et Tenture de l’Apocalypse."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5569,
+          47.4716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Confluence Loire–Maine",
+        "type": "paysage",
+        "stage": 1,
+        "image": "https://placehold.co/600x400?text=Confluence",
+        "url": "https://www.angersloiretourisme.com/",
+        "desc": "Spot drone, horizon ouvert, lumière du soir magique."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5899,
+          47.4394
+        ]
+      }
+    }
+  ]
+}

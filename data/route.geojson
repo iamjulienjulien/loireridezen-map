@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Trace principale"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -0.5569,
+            47.4716
+          ],
+          [
+            -0.5899,
+            47.4394
+          ]
+        ]
+      }
+    }
+  ]
+}
