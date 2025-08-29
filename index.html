@@ -8,8 +8,12 @@
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css">
-  <script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.css" />
+  <script src="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.css" />
+  <script src="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
+  
+  
 
   <!-- MarkerCluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
@@ -128,7 +132,7 @@
     // 1) Carte de base
     const map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([47.3, 0.5], 8);
     // Fullscreen control
-    map.addControl(new L.Control.Fullscreen({ position: 'topright', title: 'Plein écran' }));
+    map.addControl(new L.Control.FullScreen({ position: 'topright', title: 'Plein écran' }));
     const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
     const routeLayer = L.geoJSON(null, {
