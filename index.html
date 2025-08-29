@@ -8,6 +8,8 @@
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css">
+  <script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
 
   <!-- MarkerCluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
@@ -23,6 +25,8 @@
     html, body { height: 100%; margin: 0; }
     #map { height: 100%; }
     .controls {
+      transition: transform .25s ease;
+
       position: absolute; z-index: 1000; top: 10px; left: 60px;
       background: white; padding: .6rem .8rem; border-radius: .5rem;
       box-shadow: 0 2px 8px rgba(0,0,0,.15); font-family: system-ui, sans-serif;
@@ -34,10 +38,39 @@
     }
     .legend i { display:inline-block; width:12px; height:12px; margin-right:6px; border-radius:2px; vertical-align:middle; }
     .poi-popup img { max-width: 240px; display: block; border-radius: 8px; margin-bottom: .35rem; }
+  
+    /* Toggle button */
+    #toggleFilters {
+      position: absolute; z-index: 1100; top: 10px; left: 10px;
+      background: #fff; border: 1px solid #ddd; border-radius: .5rem;
+      padding: .4rem .6rem; font-family: system-ui, sans-serif; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+    #toggleFilters[aria-expanded="true"] { background:#f5f5f5; }
+
+    /* Desktop: keep a nice sidebar */
+    @media (min-width: 900px) {
+      #toggleFilters { display: none; }
+      .controls { left: 60px; top: 10px; max-width: 320px; }
+    }
+    /* Mobile: drawer panel */
+    @media (max-width: 899px) {
+      .controls {
+        left: 0; top: 0; right: 0;
+        width: min(90vw, 420px);
+        max-width: 90vw;
+        height: 100%;
+        overflow:auto;
+        transform: translateX(-100%);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+        border-right: 1px solid #eee;
+      }
+      .controls.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,.15); }
+    }
   </style>
 </head>
 <body>
-  <div class="controls" role="region" aria-label="Filtres carte">
+  <div id="filtersPanel" class="controls" role="region" aria-label="Filtres carte">
     <strong>Filtres :</strong>
     <label><input type="checkbox" class="type-filter" value="paysage" checked> Paysage</label>
     <label><input type="checkbox" class="type-filter" value="patrimoine" checked> Patrimoine</label>
@@ -80,6 +113,7 @@
     </div>
   </div>
 
+  <button id="toggleFilters" aria-expanded="false" aria-controls="filtersPanel">Filtres</button>
   <div id="map" role="application" aria-label="Carte Loire Ride Zen"></div>
 <div><i style="background:#8E44AD"></i> Variante / détour</div>
     <hr>
@@ -93,6 +127,8 @@
   <script>
     // 1) Carte de base
     const map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([47.3, 0.5], 8);
+    // Fullscreen control
+    map.addControl(new L.Control.Fullscreen({ position: 'topright', title: 'Plein écran' }));
     const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
     const routeLayer = L.geoJSON(null, {
@@ -102,7 +138,7 @@
       })
     });
 
-    const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 48 });
+    const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 36 });
 
     L.control.layers({ "OpenStreetMap": osm }, { "Trace": routeLayer, "Points d’intérêt": cluster }, { collapsed: true }).addTo(map);
 
@@ -110,17 +146,17 @@
     const iconByType = (type) => {
       switch (type) {
         case 'patrimoine':
-          return L.ExtraMarkers.icon({ icon: 'fa-landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta', svg: true });
         case 'départ':
-          return L.ExtraMarkers.icon({ icon: 'fa-flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square', svg: true });
         case 'arrivée':
-          return L.ExtraMarkers.icon({ icon: 'fa-bullseye', prefix: 'fa', markerColor: 'red', shape: 'square', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'bullseye', prefix: 'fa', markerColor: 'red', shape: 'square', svg: true });
         case 'guinguette':
-          return L.ExtraMarkers.icon({ icon: 'fa-music', prefix: 'fa', markerColor: 'orange', shape: 'circle', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'music', prefix: 'fa', markerColor: 'orange', shape: 'circle', svg: true });
         case 'hébergement':
-          return L.ExtraMarkers.icon({ icon: 'fa-campground', prefix: 'fa', markerColor: 'purple', shape: 'circle', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'campground', prefix: 'fa', markerColor: 'purple', shape: 'circle', svg: true });
         default:
-          return L.ExtraMarkers.icon({ icon: 'fa-map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle', svg: true });
       }
     };
 
@@ -174,6 +210,19 @@
       });
 
     document.querySelectorAll('.type-filter').forEach(cb => cb.addEventListener('change', renderPOI));
+
+    // Drawer toggle (mobile)
+    const toggleBtn = document.getElementById('toggleFilters');
+    const panel = document.getElementById('filtersPanel');
+    function setOpen(open){
+      if(open){ panel.classList.add('open'); toggleBtn.setAttribute('aria-expanded','true'); }
+      else { panel.classList.remove('open'); toggleBtn.setAttribute('aria-expanded','false'); }
+    }
+    toggleBtn.addEventListener('click', () => {
+      setOpen(!panel.classList.contains('open'));
+    });
+    // Close on map click (mobile)
+    map.on('click', () => { if (window.matchMedia('(max-width: 899px)').matches) setOpen(false); });
   </script>
 </body>
 </html>
