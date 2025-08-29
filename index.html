@@ -23,7 +23,7 @@
     html, body { height: 100%; margin: 0; }
     #map { height: 100%; }
     .controls {
-      position: absolute; z-index: 1000; top: 10px; left: 10px;
+      position: absolute; z-index: 1000; top: 10px; left: 60px;
       background: white; padding: .6rem .8rem; border-radius: .5rem;
       box-shadow: 0 2px 8px rgba(0,0,0,.15); font-family: system-ui, sans-serif;
     }
@@ -45,13 +45,43 @@
     <label><input type="checkbox" class="type-filter" value="hébergement" checked> Hébergement</label>
     <label><input type="checkbox" class="type-filter" value="départ" checked> Départ</label>
     <label><input type="checkbox" class="type-filter" value="arrivée" checked> Arrivée</label>
+  
+    <hr style="margin:.5rem 0;">
+    <div class="legend-in-controls" aria-label="Légende">
+      <div style="font-weight:600; margin-bottom:.25rem;">Légende</div>
+      <div class="legend-row" style="display:grid;grid-template-columns: auto 1fr;grid-row-gap:.3rem;grid-column-gap:.5rem;align-items:center;">
+        <!-- Traces -->
+        <div title="Trace principale" style="width:16px;height:4px;background:#2E86AB;border-radius:2px;"></div>
+        <div>Trace principale</div>
+        <div title="Variante / détour" style="width:16px;height:4px;background:#8E44AD;border-radius:2px;"></div>
+        <div>Variante / détour</div>
+        <!-- POI pins using FA icons colored to match ExtraMarkers -->
+        <div style="width:16px;height:16px;border-radius:50%;background:#3498db;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-landmark" style="font-size:10px;color:#fff;"></i>
+        </div>
+        <div>Patrimoine</div>
+        <div style="width:16px;height:16px;border-radius:4px;background:#2ecc71;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-flag-checkered" style="font-size:10px;color:#fff;"></i>
+        </div>
+        <div>Départ</div>
+        <div style="width:16px;height:16px;border-radius:4px;background:#e74c3c;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-bullseye" style="font-size:10px;color:#fff;"></i>
+        </div>
+        <div>Arrivée</div>
+        <div style="width:16px;height:16px;border-radius:50%;background:#f39c12;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-music" style="font-size:10px;color:#fff;"></i>
+        </div>
+        <div>Guinguette</div>
+        <div style="width:16px;height:16px;border-radius:50%;background:#9b59b6;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-campground" style="font-size:10px;color:#fff;"></i>
+        </div>
+        <div>Hébergement</div>
+      </div>
+    </div>
   </div>
 
   <div id="map" role="application" aria-label="Carte Loire Ride Zen"></div>
-
-  <div class="legend" aria-hidden="true">
-    <div><i style="background:#2E86AB"></i> Trace principale</div>
-    <div><i style="background:#8E44AD"></i> Variante / détour</div>
+<div><i style="background:#8E44AD"></i> Variante / détour</div>
     <hr>
     <div><i style="background:#3498db"></i> Patrimoine</div>
     <div><i style="background:#2ecc71"></i> Départ</div>
