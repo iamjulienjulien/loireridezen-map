@@ -288,6 +288,182 @@
           47.468643
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Chambord",
+        "type": "patrimoine",
+        "stage": 0,
+        "desc": "Chef-d’œuvre de la Renaissance française"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.516,
+          47.616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Blois",
+        "type": "patrimoine",
+        "stage": 0,
+        "desc": "Résidence de plusieurs rois de France"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.333,
+          47.586
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château d’Amboise",
+        "type": "patrimoine",
+        "stage": 1,
+        "desc": "Château royal surplombant la Loire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.986,
+          47.413
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Chenonceau",
+        "type": "patrimoine",
+        "stage": 2,
+        "desc": "Le château des Dames enjambant le Cher"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.07,
+          47.324
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Villandry",
+        "type": "patrimoine",
+        "stage": 4,
+        "desc": "Célèbre pour ses jardins remarquables"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.509,
+          47.34
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Chinon",
+        "type": "patrimoine",
+        "stage": 5,
+        "desc": "Forteresse médiévale au bord de la Vienne"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.245,
+          47.166
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Montsoreau",
+        "type": "patrimoine",
+        "stage": 6,
+        "desc": "Château de tuffeau au bord de la Loire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.056,
+          47.215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Langeais",
+        "type": "patrimoine",
+        "stage": 4,
+        "desc": "Château médiéval et Renaissance"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.403,
+          47.325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château de Saumur",
+        "type": "patrimoine",
+        "stage": 7,
+        "desc": "Surplombant la Loire, symbole de Saumur"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.072,
+          47.26
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Château d’Angers",
+        "type": "patrimoine",
+        "stage": 8,
+        "desc": "Forteresse et tenture de l’Apocalypse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5569,
+          47.4716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Abbaye de Fontevraud",
+        "type": "patrimoine",
+        "stage": 6,
+        "desc": "L’une des plus vastes cités monastiques d’Europe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.048,
+          47.18
+        ]
+      }
     }
   ]
 }
