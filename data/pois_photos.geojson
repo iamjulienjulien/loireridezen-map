@@ -1,0 +1,22 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 7860",
+        "type": "photo",
+        "image": "./photos/IMG_7860.jpeg",
+        "thumb": "./thumbs/IMG_7860.jpeg",
+        "time": "2025:06:07 12:43:09"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.339997222222222,
+          47.58486944444444
+        ]
+      }
+    }
+  ]
+}
