@@ -3,17 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Loire Ride Zen – Carte (ExtraMarkers)</title>
+  <title>Loire Ride Zen – Carte (ExtraMarkers + Fullscreen)</title>
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.css" />
-  <script src="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.css" />
-  <script src="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
-  
-  
+  <!-- Leaflet core -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
 
   <!-- MarkerCluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
@@ -25,25 +19,23 @@
   <script src="https://unpkg.com/leaflet-extra-markers@1.2.1/dist/js/leaflet.extra-markers.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
+  <!-- Fullscreen (CDN jsDelivr pour éviter l’erreur MIME) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
+
   <style>
     html, body { height: 100%; margin: 0; }
     #map { height: 100%; }
-    .controls {
-      transition: transform .25s ease;
 
-      position: absolute; z-index: 1000; top: 10px; left: 60px;
+    .controls {
+      position: absolute; z-index: 1000; top: 10px;
       background: white; padding: .6rem .8rem; border-radius: .5rem;
       box-shadow: 0 2px 8px rgba(0,0,0,.15); font-family: system-ui, sans-serif;
+      transition: transform .25s ease;
+      max-width: 320px;
     }
-    .legend {
-      position: absolute; z-index: 1000; bottom: 10px; left: 10px;
-      background: white; padding: .4rem .6rem; border-radius: .5rem; font-size: .9rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,.15); font-family: system-ui, sans-serif;
-    }
-    .legend i { display:inline-block; width:12px; height:12px; margin-right:6px; border-radius:2px; vertical-align:middle; }
-    .poi-popup img { max-width: 240px; display: block; border-radius: 8px; margin-bottom: .35rem; }
-  
-    /* Toggle button */
+
+    /* Bouton pour afficher/masquer sur mobile */
     #toggleFilters {
       position: absolute; z-index: 1100; top: 10px; left: 10px;
       background: #fff; border: 1px solid #ddd; border-radius: .5rem;
@@ -52,15 +44,19 @@
     }
     #toggleFilters[aria-expanded="true"] { background:#f5f5f5; }
 
-    /* Desktop: keep a nice sidebar */
+    .controls hr { margin: .5rem 0; }
+    .poi-popup img { max-width: 240px; display: block; border-radius: 8px; margin-bottom: .35rem; }
+
+    /* Desktop : panneau fixe à gauche */
     @media (min-width: 900px) {
       #toggleFilters { display: none; }
-      .controls { left: 60px; top: 10px; max-width: 320px; }
+      .controls { left: 60px; top: 10px; }
     }
-    /* Mobile: drawer panel */
+
+    /* Mobile : volet coulissant */
     @media (max-width: 899px) {
       .controls {
-        left: 0; top: 0; right: 0;
+        left: 0; top: 0; right: auto;
         width: min(90vw, 420px);
         max-width: 90vw;
         height: 100%;
@@ -74,16 +70,21 @@
   </style>
 </head>
 <body>
+
+  <!-- Panneau filtres + légende -->
   <div id="filtersPanel" class="controls" role="region" aria-label="Filtres carte">
     <strong>Filtres :</strong>
-    <label><input type="checkbox" class="type-filter" value="paysage" checked> Paysage</label>
-    <label><input type="checkbox" class="type-filter" value="patrimoine" checked> Patrimoine</label>
-    <label><input type="checkbox" class="type-filter" value="guinguette" checked> Guinguette</label>
-    <label><input type="checkbox" class="type-filter" value="hébergement" checked> Hébergement</label>
-    <label><input type="checkbox" class="type-filter" value="départ" checked> Départ</label>
-    <label><input type="checkbox" class="type-filter" value="arrivée" checked> Arrivée</label>
-  
-    <hr style="margin:.5rem 0;">
+    <div style="display:grid;grid-template-columns: 1fr 1fr; gap:.25rem .75rem; margin-top:.35rem;">
+      <label><input type="checkbox" class="type-filter" value="paysage" checked> Paysage</label>
+      <label><input type="checkbox" class="type-filter" value="patrimoine" checked> Patrimoine</label>
+      <label><input type="checkbox" class="type-filter" value="guinguette" checked> Guinguette</label>
+      <label><input type="checkbox" class="type-filter" value="hébergement" checked> Hébergement</label>
+      <label><input type="checkbox" class="type-filter" value="départ" checked> Départ</label>
+      <label><input type="checkbox" class="type-filter" value="arrivée" checked> Arrivée</label>
+    </div>
+
+    <hr>
+
     <div class="legend-in-controls" aria-label="Légende">
       <div style="font-weight:600; margin-bottom:.25rem;">Légende</div>
       <div class="legend-row" style="display:grid;grid-template-columns: auto 1fr;grid-row-gap:.3rem;grid-column-gap:.5rem;align-items:center;">
@@ -92,7 +93,7 @@
         <div>Trace principale</div>
         <div title="Variante / détour" style="width:16px;height:4px;background:#8E44AD;border-radius:2px;"></div>
         <div>Variante / détour</div>
-        <!-- POI pins using FA icons colored to match ExtraMarkers -->
+        <!-- Pins (couleurs ExtraMarkers) -->
         <div style="width:16px;height:16px;border-radius:50%;background:#3498db;display:flex;align-items:center;justify-content:center;">
           <i class="fa-solid fa-landmark" style="font-size:10px;color:#fff;"></i>
         </div>
@@ -117,24 +118,24 @@
     </div>
   </div>
 
+  <!-- Bouton d’ouverture du panneau (mobile) -->
   <button id="toggleFilters" aria-expanded="false" aria-controls="filtersPanel">Filtres</button>
+
+  <!-- Carte -->
   <div id="map" role="application" aria-label="Carte Loire Ride Zen"></div>
-<div><i style="background:#8E44AD"></i> Variante / détour</div>
-    <hr>
-    <div><i style="background:#3498db"></i> Patrimoine</div>
-    <div><i style="background:#2ecc71"></i> Départ</div>
-    <div><i style="background:#e74c3c"></i> Arrivée</div>
-    <div><i style="background:#f39c12"></i> Guinguette</div>
-    <div><i style="background:#9b59b6"></i> Hébergement</div>
-  </div>
 
   <script>
-    // 1) Carte de base
+    // 1) Carte
     const map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([47.3, 0.5], 8);
-    // Fullscreen control
-    map.addControl(new L.Control.FullScreen({ position: 'topright', title: 'Plein écran' }));
-    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // Fullscreen (classe correcte : L.Control.FullScreen)
+    map.addControl(new L.Control.FullScreen({ position: 'topright', title: 'Plein écran' }));
+
+    // 2) Couches
     const routeLayer = L.geoJSON(null, {
       style: f => ({
         color: f.properties && f.properties.variant ? '#8E44AD' : '#2E86AB',
@@ -142,11 +143,19 @@
       })
     });
 
-    const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 36 });
+    // Clustering plus doux
+    const cluster = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 36
+    });
 
-    L.control.layers({ "OpenStreetMap": osm }, { "Trace": routeLayer, "Points d’intérêt": cluster }, { collapsed: true }).addTo(map);
+    L.control.layers(
+      { "OpenStreetMap": map._layers[Object.keys(map._layers)[0]]?.options?.attribution ? null : null }, // (juste le contrôle pour basculer Trace/POI)
+      { "Trace": routeLayer, "Points d’intérêt": cluster },
+      { collapsed: true }
+    ).addTo(map);
 
-    // 2) Icones ExtraMarkers par type
+    // 3) Icônes ExtraMarkers par type
     const iconByType = (type) => {
       switch (type) {
         case 'patrimoine':
@@ -164,17 +173,18 @@
       }
     };
 
-    // 3) Chargement de la trace
-    fetch('data/route.geojson')
-      .then(r => r.json())
+    // 4) Trace (utilise la version simplifiée si dispo)
+    const routeUrl = 'data/route_simplified.geojson'; // sinon: 'data/route.geojson'
+    fetch(routeUrl)
+      .then(r => r.ok ? r.json() : fetch('data/route.geojson').then(rr=>rr.json()))
       .then(geojson => {
         routeLayer.addData(geojson).addTo(map);
         try {
-          map.fitBounds(routeLayer.getBounds(), { padding: [30, 30] });
+          map.fitBounds(routeLayer.getBounds(), { padding: [30, 30], maxZoom: 13 });
         } catch(e) {}
       });
 
-    // 4) Chargement des POI
+    // 5) POI + filtres
     let poiFeatures = [];
     function renderPOI() {
       cluster.clearLayers();
@@ -215,17 +225,14 @@
 
     document.querySelectorAll('.type-filter').forEach(cb => cb.addEventListener('change', renderPOI));
 
-    // Drawer toggle (mobile)
+    // 6) Drawer mobile
     const toggleBtn = document.getElementById('toggleFilters');
     const panel = document.getElementById('filtersPanel');
     function setOpen(open){
       if(open){ panel.classList.add('open'); toggleBtn.setAttribute('aria-expanded','true'); }
       else { panel.classList.remove('open'); toggleBtn.setAttribute('aria-expanded','false'); }
     }
-    toggleBtn.addEventListener('click', () => {
-      setOpen(!panel.classList.contains('open'));
-    });
-    // Close on map click (mobile)
+    toggleBtn.addEventListener('click', () => { setOpen(!panel.classList.contains('open')); });
     map.on('click', () => { if (window.matchMedia('(max-width: 899px)').matches) setOpen(false); });
   </script>
 </body>
