@@ -80,17 +80,17 @@
     const iconByType = (type) => {
       switch (type) {
         case 'patrimoine':
-          return L.ExtraMarkers.icon({ icon: 'landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'fa-landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta', svg: true });
         case 'départ':
-          return L.ExtraMarkers.icon({ icon: 'flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'fa-flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square', svg: true });
         case 'arrivée':
-          return L.ExtraMarkers.icon({ icon: 'bullseye', prefix: 'fa', markerColor: 'red', shape: 'square', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'fa-bullseye', prefix: 'fa', markerColor: 'red', shape: 'square', svg: true });
         case 'guinguette':
-          return L.ExtraMarkers.icon({ icon: 'music', prefix: 'fa', markerColor: 'orange', shape: 'circle', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'fa-music', prefix: 'fa', markerColor: 'orange', shape: 'circle', svg: true });
         case 'hébergement':
-          return L.ExtraMarkers.icon({ icon: 'campground', prefix: 'fa', markerColor: 'purple', shape: 'circle', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'fa-campground', prefix: 'fa', markerColor: 'purple', shape: 'circle', svg: true });
         default:
-          return L.ExtraMarkers.icon({ icon: 'map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle', svg: true });
+          return L.ExtraMarkers.icon({ icon: 'fa-map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle', svg: true });
       }
     };
 
