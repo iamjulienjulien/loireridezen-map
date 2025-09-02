@@ -133,6 +133,7 @@
       maxClusterRadius: 40,
       disableClusteringAtZoom: 15
     });
+    cluster.addTo(map);
     L.control.layers({ "OpenStreetMap": osm }, { "Trace": routeLayer, "Points d’intérêt": cluster }).addTo(map);
 
     // 4) Icônes POI
