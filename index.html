@@ -109,7 +109,12 @@
     const routeLayer = L.geoJSON(null, {
       style: f => ({ color: f.properties && f.properties.variant ? '#8E44AD' : '#2E86AB', weight: 4, opacity: 0.9 })
     });
-    const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 1 });
+    // const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 1 });
+    const cluster = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 20,        // très petit rayon, clustering minimal
+      disableClusteringAtZoom: 13  // au zoom ville (~13), plus aucun cluster
+    });
 
     L.control.layers({ "OpenStreetMap": osm }, { "Trace": routeLayer, "Points d’intérêt": cluster }).addTo(map);
 
