@@ -198,6 +198,7 @@
 
       try {
         const fc = await fetchPoisFromSupabase(map.getBounds(), activeType, null, controller.signal);
+        console.log(fc);
         cluster.clearLayers();
         const layer = L.geoJSON(fc, {
           pointToLayer: (f, latlng) => L.marker(latlng, { icon: iconByType(f.properties?.type) }),
