@@ -7,7 +7,7 @@
         "name": "IMG 7788",
         "type": "photo",
         "image": "./photos/IMG_7788.jpeg",
-        "thumb": "./thumbs/IMG_7788.jpeg",
+        "thumb": "./thumbs/IMG_7788.webp",
         "time": "2025:06:06 14:22:09"
       },
       "geometry": {
@@ -24,7 +24,7 @@
         "name": "IMG 7860",
         "type": "photo",
         "image": "./photos/IMG_7860.jpeg",
-        "thumb": "./thumbs/IMG_7860.jpeg",
+        "thumb": "./thumbs/IMG_7860.webp",
         "time": "2025:06:07 12:43:09"
       },
       "geometry": {
@@ -41,7 +41,7 @@
         "name": "IMG 7905",
         "type": "photo",
         "image": "./photos/IMG_7905.jpeg",
-        "thumb": "./thumbs/IMG_7905.jpeg",
+        "thumb": "./thumbs/IMG_7905.webp",
         "time": "2025:06:08 13:31:29"
       },
       "geometry": {
@@ -58,7 +58,7 @@
         "name": "IMG 8002",
         "type": "photo",
         "image": "./photos/IMG_8002.jpeg",
-        "thumb": "./thumbs/IMG_8002.jpeg",
+        "thumb": "./thumbs/IMG_8002.webp",
         "time": "2025:06:09 20:18:52"
       },
       "geometry": {
@@ -75,7 +75,7 @@
         "name": "IMG 8034",
         "type": "photo",
         "image": "./photos/IMG_8034.jpeg",
-        "thumb": "./thumbs/IMG_8034.jpeg",
+        "thumb": "./thumbs/IMG_8034.webp",
         "time": "2025:06:10 16:02:27"
       },
       "geometry": {
@@ -92,7 +92,7 @@
         "name": "IMG 8164",
         "type": "photo",
         "image": "./photos/IMG_8164.jpeg",
-        "thumb": "./thumbs/IMG_8164.jpeg",
+        "thumb": "./thumbs/IMG_8164.webp",
         "time": "2025:06:12 13:21:35"
       },
       "geometry": {
@@ -109,7 +109,7 @@
         "name": "IMG 8170",
         "type": "photo",
         "image": "./photos/IMG_8170.jpeg",
-        "thumb": "./thumbs/IMG_8170.jpeg",
+        "thumb": "./thumbs/IMG_8170.webp",
         "time": "2025:06:12 15:04:53"
       },
       "geometry": {
@@ -126,7 +126,7 @@
         "name": "IMG 8218",
         "type": "photo",
         "image": "./photos/IMG_8218.jpeg",
-        "thumb": "./thumbs/IMG_8218.jpeg",
+        "thumb": "./thumbs/IMG_8218.webp",
         "time": "2025:06:12 17:45:05"
       },
       "geometry": {
@@ -143,7 +143,7 @@
         "name": "IMG 8256",
         "type": "photo",
         "image": "./photos/IMG_8256.jpeg",
-        "thumb": "./thumbs/IMG_8256.jpeg",
+        "thumb": "./thumbs/IMG_8256.webp",
         "time": "2025:06:12 20:31:39"
       },
       "geometry": {
@@ -160,7 +160,7 @@
         "name": "IMG 8297",
         "type": "photo",
         "image": "./photos/IMG_8297.jpeg",
-        "thumb": "./thumbs/IMG_8297.jpeg",
+        "thumb": "./thumbs/IMG_8297.webp",
         "time": "2025:06:13 14:29:26"
       },
       "geometry": {
@@ -177,7 +177,7 @@
         "name": "IMG 8409",
         "type": "photo",
         "image": "./photos/IMG_8409.jpeg",
-        "thumb": "./thumbs/IMG_8409.jpeg",
+        "thumb": "./thumbs/IMG_8409.webp",
         "time": "2025:06:16 13:12:24"
       },
       "geometry": {
@@ -194,7 +194,7 @@
         "name": "IMG 8477",
         "type": "photo",
         "image": "./photos/IMG_8477.jpeg",
-        "thumb": "./thumbs/IMG_8477.jpeg",
+        "thumb": "./thumbs/IMG_8477.webp",
         "time": "2025:06:17 11:49:26"
       },
       "geometry": {
@@ -211,7 +211,7 @@
         "name": "IMG 8509",
         "type": "photo",
         "image": "./photos/IMG_8509.jpeg",
-        "thumb": "./thumbs/IMG_8509.jpeg",
+        "thumb": "./thumbs/IMG_8509.webp",
         "time": "2025:06:17 19:47:01"
       },
       "geometry": {
@@ -228,7 +228,7 @@
         "name": "IMG 8572",
         "type": "photo",
         "image": "./photos/IMG_8572.jpeg",
-        "thumb": "./thumbs/IMG_8572.jpeg",
+        "thumb": "./thumbs/IMG_8572.webp",
         "time": "2025:06:18 17:26:15"
       },
       "geometry": {
@@ -245,7 +245,7 @@
         "name": "IMG 8584",
         "type": "photo",
         "image": "./photos/IMG_8584.jpeg",
-        "thumb": "./thumbs/IMG_8584.jpeg",
+        "thumb": "./thumbs/IMG_8584.webp",
         "time": "2025:06:18 19:58:52"
       },
       "geometry": {
@@ -262,7 +262,7 @@
         "name": "saint mathurin",
         "type": "photo",
         "image": "./photos/saint-mathurin.jpeg",
-        "thumb": "./thumbs/saint-mathurin.jpeg",
+        "thumb": "./thumbs/saint-mathurin.webp",
         "time": "2025:06:18 15:25:58"
       },
       "geometry": {
