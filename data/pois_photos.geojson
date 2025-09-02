@@ -4,10 +4,27 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "IMG 7788",
+        "type": "photo",
+        "image": "./photos/IMG_7788.jpeg",
+        "thumb": "./thumbs/IMG_7788.jpeg",
+        "time": "2025:06:06 14:22:09"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.5140944444444444,
+          47.61697777777778
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "IMG 7860",
         "type": "photo",
         "image": "./photos/IMG_7860.jpeg",
-        "thumb": "./thumbs/IMG_7860.webp",
+        "thumb": "./thumbs/IMG_7860.jpeg",
         "time": "2025:06:07 12:43:09"
       },
       "geometry": {
@@ -15,6 +32,244 @@
         "coordinates": [
           1.339997222222222,
           47.58486944444444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 7905",
+        "type": "photo",
+        "image": "./photos/IMG_7905.jpeg",
+        "thumb": "./thumbs/IMG_7905.jpeg",
+        "time": "2025:06:08 13:31:29"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.984936111111111,
+          47.41277222222222
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8002",
+        "type": "photo",
+        "image": "./photos/IMG_8002.jpeg",
+        "thumb": "./thumbs/IMG_8002.jpeg",
+        "time": "2025:06:09 20:18:52"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.9851083333333333,
+          47.41596111111111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8034",
+        "type": "photo",
+        "image": "./photos/IMG_8034.jpeg",
+        "thumb": "./thumbs/IMG_8034.jpeg",
+        "time": "2025:06:10 16:02:27"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.0701805555555555,
+          47.32404722222223
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8164",
+        "type": "photo",
+        "image": "./photos/IMG_8164.jpeg",
+        "thumb": "./thumbs/IMG_8164.jpeg",
+        "time": "2025:06:12 13:21:35"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.6933944444444444,
+          47.39538611111111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8170",
+        "type": "photo",
+        "image": "./photos/IMG_8170.jpeg",
+        "thumb": "./thumbs/IMG_8170.jpeg",
+        "time": "2025:06:12 15:04:53"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.5572250000000001,
+          47.360572222222224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8218",
+        "type": "photo",
+        "image": "./photos/IMG_8218.jpeg",
+        "thumb": "./thumbs/IMG_8218.jpeg",
+        "time": "2025:06:12 17:45:05"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.5142777777777778,
+          47.340325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8256",
+        "type": "photo",
+        "image": "./photos/IMG_8256.jpeg",
+        "thumb": "./thumbs/IMG_8256.jpeg",
+        "time": "2025:06:12 20:31:39"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.5476583333333334,
+          47.34870555555556
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8297",
+        "type": "photo",
+        "image": "./photos/IMG_8297.jpeg",
+        "thumb": "./thumbs/IMG_8297.jpeg",
+        "time": "2025:06:13 14:29:26"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.4065944444444445,
+          47.32485555555556
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8409",
+        "type": "photo",
+        "image": "./photos/IMG_8409.jpeg",
+        "thumb": "./thumbs/IMG_8409.jpeg",
+        "time": "2025:06:16 13:12:24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.23790277777777777,
+          47.16396666666667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8477",
+        "type": "photo",
+        "image": "./photos/IMG_8477.jpeg",
+        "thumb": "./thumbs/IMG_8477.jpeg",
+        "time": "2025:06:17 11:49:26"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.05155833333333334,
+          47.18105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8509",
+        "type": "photo",
+        "image": "./photos/IMG_8509.jpeg",
+        "thumb": "./thumbs/IMG_8509.jpeg",
+        "time": "2025:06:17 19:47:01"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.07279722222222222,
+          47.26218333333333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8572",
+        "type": "photo",
+        "image": "./photos/IMG_8572.jpeg",
+        "thumb": "./thumbs/IMG_8572.jpeg",
+        "time": "2025:06:18 17:26:15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.6137888888888888,
+          47.411852777777774
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IMG 8584",
+        "type": "photo",
+        "image": "./photos/IMG_8584.jpeg",
+        "thumb": "./thumbs/IMG_8584.jpeg",
+        "time": "2025:06:18 19:58:52"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.5661055555555556,
+          47.470325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "saint mathurin",
+        "type": "photo",
+        "image": "./photos/saint-mathurin.jpeg",
+        "thumb": "./thumbs/saint-mathurin.jpeg",
+        "time": "2025:06:18 15:25:58"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.31998333333333334,
+          47.40510555555555
         ]
       }
     }
