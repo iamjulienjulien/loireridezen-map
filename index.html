@@ -43,11 +43,11 @@
     #toggleFilters[aria-expanded="true"] { background:#f5f5f5; }
 
     .controls hr { margin: .5rem 0; }
-    .poi-popup img { max-width: 100%; display: block; border-radius: 8px; margin-bottom: .35rem; }
+    .poi-popup img { max-width: 240px; display: block; border-radius: 8px; margin-bottom: .35rem; }
 
     @media (min-width: 900px) {
       #toggleFilters { display: none; }
-      .controls { left: 10px; top: 10px; }
+      .controls { left: 60px; top: 10px; }
     }
     @media (max-width: 899px) {
       .controls {
@@ -62,6 +62,7 @@
 </head>
 <body>
 
+  <!-- Panneau filtres + légende -->
   <div id="filtersPanel" class="controls" role="region" aria-label="Filtres carte">
     <strong>Filtres :</strong>
     <div style="display:grid;grid-template-columns: 1fr 1fr; gap:.25rem .75rem; margin-top:.35rem;">
@@ -72,6 +73,7 @@
       <label><input type="checkbox" class="type-filter" value="départ" checked> Départ</label>
       <label><input type="checkbox" class="type-filter" value="arrivée" checked> Arrivée</label>
       <label><input type="checkbox" class="type-filter" value="photo" checked> Photos</label>
+      <label><input type="checkbox" class="type-filter" value="coupdecoeur" checked> Coup de cœur</label>
     </div>
     <hr>
     <div class="legend-in-controls">
@@ -91,77 +93,128 @@
           <i class="fa-solid fa-campground" style="font-size:10px;color:#fff;"></i></div><div>Hébergement</div>
         <div style="width:16px;height:16px;border-radius:50%;background:#00bcd4;display:flex;align-items:center;justify-content:center;">
           <i class="fa-solid fa-camera" style="font-size:10px;color:#fff;"></i></div><div>Photo</div>
+        <div style="width:16px;height:16px;border-radius:50%;background:#f1c40f;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-star" style="font-size:10px;color:#fff;"></i></div><div>Coup de cœur</div>
       </div>
     </div>
   </div>
 
+  <!-- Bouton pour mobile -->
   <button id="toggleFilters" aria-expanded="false" aria-controls="filtersPanel">Filtres</button>
 
+  <!-- Carte -->
   <div id="map"></div>
 
   <script>
+    // 🔑 Supabase config
+    const SUPA_URL = "https://covxsekavbmeqysdqnjh.supabase.co";
+    const SUPA_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnhzZWthdmJtZXF5c2RxbmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDI0MDAsImV4cCI6MjA3MjQxODQwMH0.Z53SrJ7_T4VrF8L0Ou476odsTo9ZqPrKFQXi4jRbWCU"; // clé publique OK côté client pour lecture
+
+    // 1) Carte de base
     const map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([47.3, 0.5], 8);
-    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
     map.addControl(new L.Control.FullScreen({ position: 'topright', title: 'Plein écran' }));
 
+    // 2) Trace par étapes (locale)
+    const colors = ['#2E86AB','#1F77B4','#5DADE2','#9B59B6','#E74C3C','#F39C12','#27AE60','#16A085','#34495E'];
     const routeLayer = L.geoJSON(null, {
-      style: f => ({ color: f.properties && f.properties.variant ? '#8E44AD' : '#2E86AB', weight: 4, opacity: 0.9 })
+      style: f => {
+        const stage = f.properties?.stage || 0;
+        return { color: colors[stage % colors.length], weight: 4, opacity: 0.9 };
+      }
     });
-    // const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 1 });
+    fetch('data/route_simplified.geojson')
+      .then(r => r.ok ? r.json() : fetch('data/route.geojson').then(rr => rr.json()))
+      .then(gj => { routeLayer.addData(gj).addTo(map); try { map.fitBounds(routeLayer.getBounds(), { padding:[30,30], maxZoom: 13 }); } catch(e) {} });
+
+    // 3) Clustering
     const cluster = L.markerClusterGroup({
       showCoverageOnHover: false,
-      maxClusterRadius: 20,        // très petit rayon, clustering minimal
-      disableClusteringAtZoom: 13  // au zoom ville (~13), plus aucun cluster
+      maxClusterRadius: 40,
+      disableClusteringAtZoom: 15
     });
-
     L.control.layers({ "OpenStreetMap": osm }, { "Trace": routeLayer, "Points d’intérêt": cluster }).addTo(map);
 
+    // 4) Icônes POI
     const iconByType = (type) => {
       switch (type) {
-        case 'patrimoine': return L.ExtraMarkers.icon({ icon: 'fa-landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta' });
-        case 'départ': return L.ExtraMarkers.icon({ icon: 'fa-flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square' });
-        case 'arrivée': return L.ExtraMarkers.icon({ icon: 'fa-bullseye', prefix: 'fa', markerColor: 'red', shape: 'square' });
-        case 'guinguette': return L.ExtraMarkers.icon({ icon: 'fa-music', prefix: 'fa', markerColor: 'orange', shape: 'circle' });
-        case 'hébergement': return L.ExtraMarkers.icon({ icon: 'fa-campground', prefix: 'fa', markerColor: 'purple', shape: 'circle' });
-        case 'photo': return L.ExtraMarkers.icon({ icon: 'fa-camera', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
-        default: return L.ExtraMarkers.icon({ icon: 'fa-map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
+        case 'patrimoine': return L.ExtraMarkers.icon({ icon: 'landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta' });
+        case 'départ': return L.ExtraMarkers.icon({ icon: 'flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square' });
+        case 'arrivée': return L.ExtraMarkers.icon({ icon: 'bullseye', prefix: 'fa', markerColor: 'red', shape: 'square' });
+        case 'guinguette': return L.ExtraMarkers.icon({ icon: 'music', prefix: 'fa', markerColor: 'orange', shape: 'circle' });
+        case 'hébergement': return L.ExtraMarkers.icon({ icon: 'campground', prefix: 'fa', markerColor: 'purple', shape: 'circle' });
+        case 'photo': return L.ExtraMarkers.icon({ icon: 'camera', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
+        case 'coupdecoeur': return L.ExtraMarkers.icon({ icon: 'star', prefix: 'fa', markerColor: 'yellow', shape: 'circle' });
+        default: return L.ExtraMarkers.icon({ icon: 'map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
       }
     };
 
-    fetch('data/route_simplified.geojson')
-      .then(r => r.ok ? r.json() : fetch('data/route.geojson').then(rr => rr.json()))
-      .then(geojson => {
-        routeLayer.addData(geojson).addTo(map);
-        try { map.fitBounds(routeLayer.getBounds(), { padding:[30,30], maxZoom: 13 }); } catch(e) {}
-      });
+    // 5) Chargement POI depuis Supabase (RPC GeoJSON par BBOX)
+    let lastAbort = null;
+    function debounce(fn, ms=250){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; }
 
-    let poiFeatures = [];
-    function renderPOI() {
-      cluster.clearLayers();
-      const activeTypes = Array.from(document.querySelectorAll('.type-filter:checked')).map(i => i.value);
-      const filtered = poiFeatures.filter(f => activeTypes.includes((f.properties||{}).type));
-      const layer = L.geoJSON({ type:"FeatureCollection", features: filtered }, {
-        pointToLayer: (f, latlng) => L.marker(latlng, { icon: iconByType((f.properties||{}).type) }),
-        onEachFeature: (f, l) => {
-          const p = f.properties||{};
-          const img = p.thumb || p.image;
-          const link = p.url ? `<p><a href="${p.url}" target="_blank">En savoir plus ↗</a></p>` : '';
-          l.bindPopup(`<div class="poi-popup">
-            ${img ? `<img src="${img}" alt="${p.name||'Photo'}" />` : ''}
-            <strong>${p.name||'Point'}</strong><br/>
-            <small>${p.type||''} ${p.time||''}</small>
-            <p>${p.desc||''}</p>${link}
-          </div>`);
-        }
+    async function fetchPoisFromSupabase(bounds, activeType=null, activeStage=null, signal) {
+      const params = new URLSearchParams({
+        minlon: bounds.getWest(),
+        minlat: bounds.getSouth(),
+        maxlon: bounds.getEast(),
+        maxlat: bounds.getNorth()
       });
-      cluster.addLayer(layer); map.addLayer(cluster);
+      if (activeType) params.set('p_type', activeType);
+      if (activeStage != null) params.set('p_stage', String(activeStage));
+
+      const url = `${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${params.toString()}`;
+      const res = await fetch(url, {
+        headers: { apikey: SUPA_ANON_KEY, Authorization: `Bearer ${SUPA_ANON_KEY}` },
+        signal
+      });
+      if (!res.ok) throw new Error(`Supabase ${res.status}`);
+      return res.json(); // FeatureCollection
     }
-    fetch('data/pois.geojson').then(r=>r.json()).then(g=>{ poiFeatures=g.features||[]; renderPOI(); });
-    fetch('data/pois_photos.geojson').then(r=>r.json()).then(g=>{ poiFeatures=poiFeatures.concat(g.features||[]); renderPOI(); });
-    document.querySelectorAll('.type-filter').forEach(cb => cb.addEventListener('change', renderPOI));
 
+    function bindPopupFromProps(p, layer){
+      const img = p.thumb || p.image;
+      const insta = p.url_insta ? `<p><a href="${p.url_insta}" target="_blank" rel="noopener">Voir sur Instagram 📲</a></p>` : '';
+      layer.bindPopup(`
+        <div class="poi-popup">
+          ${img ? `<img src="${img}" alt="${p.name||'POI'}" />` : ''}
+          <strong>${p.name||'Point'}</strong><br/>
+          <small>${p.type||''}${p.stage ? ` · Étape ${p.stage}` : ''}</small>
+          <p>${p.description || ''}</p>
+          ${insta}
+        </div>
+      `);
+    }
+
+    async function loadPoisForViewport() {
+      // Filtre type simple : si un seul type coché, on applique côté SQL; sinon null
+      const activeTypes = Array.from(document.querySelectorAll('.type-filter:checked')).map(i => i.value);
+      const activeType = activeTypes.length === 1 ? activeTypes[0] : null;
+
+      // Annule la requête précédente si encore en vol
+      if (lastAbort) lastAbort.abort();
+      const controller = new AbortController();
+      lastAbort = controller;
+
+      try {
+        const fc = await fetchPoisFromSupabase(map.getBounds(), activeType, null, controller.signal);
+        cluster.clearLayers();
+        const layer = L.geoJSON(fc, {
+          pointToLayer: (f, latlng) => L.marker(latlng, { icon: iconByType(f.properties?.type) }),
+          onEachFeature: (f, l) => bindPopupFromProps(f.properties||{}, l)
+        });
+        cluster.addLayer(layer);
+      } catch(e) {
+        if (e.name !== 'AbortError') console.error('Erreur chargement POI:', e);
+      }
+    }
+
+    const loadPoisDebounced = debounce(loadPoisForViewport, 250);
+    map.on('moveend', loadPoisDebounced);
+    document.querySelectorAll('.type-filter').forEach(cb => cb.addEventListener('change', loadPoisDebounced));
+    loadPoisForViewport(); // premier chargement
+
+    // 6) Drawer mobile
     const toggleBtn=document.getElementById('toggleFilters'); const panel=document.getElementById('filtersPanel');
     function setOpen(o){ if(o){panel.classList.add('open');toggleBtn.setAttribute('aria-expanded','true');}else{panel.classList.remove('open');toggleBtn.setAttribute('aria-expanded','false');}}
     toggleBtn.addEventListener('click',()=>setOpen(!panel.classList.contains('open')));
