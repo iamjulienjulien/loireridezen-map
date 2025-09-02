@@ -47,7 +47,7 @@
 
     @media (min-width: 900px) {
       #toggleFilters { display: none; }
-      .controls { left: 60px; top: 10px; }
+      .controls { left: 10px; top: 10px; }
     }
     @media (max-width: 899px) {
       .controls {
@@ -130,8 +130,8 @@
     // 3) Clustering
     const cluster = L.markerClusterGroup({
       showCoverageOnHover: false,
-      maxClusterRadius: 40,
-      disableClusteringAtZoom: 15
+      maxClusterRadius: 20,        // très petit rayon, clustering minimal
+      disableClusteringAtZoom: 13  // au zoom ville (~13), plus aucun cluster
     });
     cluster.addTo(map);
     L.control.layers({ "OpenStreetMap": osm }, { "Trace": routeLayer, "Points d’intérêt": cluster }).addTo(map);
@@ -139,14 +139,14 @@
     // 4) Icônes POI
     const iconByType = (type) => {
       switch (type) {
-        case 'patrimoine': return L.ExtraMarkers.icon({ icon: 'landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta' });
-        case 'départ': return L.ExtraMarkers.icon({ icon: 'flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square' });
-        case 'arrivée': return L.ExtraMarkers.icon({ icon: 'bullseye', prefix: 'fa', markerColor: 'red', shape: 'square' });
-        case 'guinguette': return L.ExtraMarkers.icon({ icon: 'music', prefix: 'fa', markerColor: 'orange', shape: 'circle' });
-        case 'hébergement': return L.ExtraMarkers.icon({ icon: 'campground', prefix: 'fa', markerColor: 'purple', shape: 'circle' });
-        case 'photo': return L.ExtraMarkers.icon({ icon: 'camera', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
-        case 'coupdecoeur': return L.ExtraMarkers.icon({ icon: 'star', prefix: 'fa', markerColor: 'yellow', shape: 'circle' });
-        default: return L.ExtraMarkers.icon({ icon: 'map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
+        case 'patrimoine': return L.ExtraMarkers.icon({ icon: 'fa-landmark', prefix: 'fa', markerColor: 'blue', shape: 'penta' });
+        case 'départ': return L.ExtraMarkers.icon({ icon: 'fa-flag-checkered', prefix: 'fa', markerColor: 'green', shape: 'square' });
+        case 'arrivée': return L.ExtraMarkers.icon({ icon: 'fa-bullseye', prefix: 'fa', markerColor: 'red', shape: 'square' });
+        case 'guinguette': return L.ExtraMarkers.icon({ icon: 'fa-music', prefix: 'fa', markerColor: 'orange', shape: 'circle' });
+        case 'hébergement': return L.ExtraMarkers.icon({ icon: 'fa-campground', prefix: 'fa', markerColor: 'purple', shape: 'circle' });
+        case 'photo': return L.ExtraMarkers.icon({ icon: 'fa-camera', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
+        case 'coupdecoeur': return L.ExtraMarkers.icon({ icon: 'fa-star', prefix: 'fa', markerColor: 'yellow', shape: 'circle' });
+        default: return L.ExtraMarkers.icon({ icon: 'fa-map-pin', prefix: 'fa', markerColor: 'cyan', shape: 'circle' });
       }
     };
 
