@@ -204,6 +204,7 @@
           pointToLayer: (f, latlng) => L.marker(latlng, { icon: iconByType(f.properties?.type) }),
           onEachFeature: (f, l) => bindPopupFromProps(f.properties||{}, l)
         });
+        console.log(layer);
         cluster.addLayer(layer);
       } catch(e) {
         if (e.name !== 'AbortError') console.error('Erreur chargement POI:', e);
