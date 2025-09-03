@@ -386,6 +386,7 @@
         zoomControl: true,
         scrollWheelZoom: true,
       }).setView([47.3, 0.5], 8);
+      const osm = L.tileLayer( "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "&copy; OpenStreetMap" } ).addTo(map);
       const baseOSM = osm; // déjà ajouté
       const baseEsriSat = L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
