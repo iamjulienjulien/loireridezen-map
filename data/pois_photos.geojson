@@ -4,7 +4,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 7788",
+        "name": "Château de Chambord",
         "type": "photo",
         "image": "./photos/IMG_7788.jpeg",
         "thumb": "./thumbs/IMG_7788.webp",
@@ -21,7 +21,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 7860",
+        "name": "Pont Jacques Gabriel à Blois",
         "type": "photo",
         "image": "./photos/IMG_7860.jpeg",
         "thumb": "./thumbs/IMG_7860.webp",
@@ -38,7 +38,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 7905",
+        "name": "Chapelle Saint-Hubert à Amboise",
         "type": "photo",
         "image": "./photos/IMG_7905.jpeg",
         "thumb": "./thumbs/IMG_7905.webp",
@@ -55,7 +55,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8002",
+        "name": "Château d'Amboise",
         "type": "photo",
         "image": "./photos/IMG_8002.jpeg",
         "thumb": "./thumbs/IMG_8002.webp",
@@ -72,7 +72,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8034",
+        "name": "Château de Chenonceau",
         "type": "photo",
         "image": "./photos/IMG_8034.jpeg",
         "thumb": "./thumbs/IMG_8034.webp",
@@ -89,7 +89,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8164",
+        "name": "Cathédrale Saint-Gatien à Tours",
         "type": "photo",
         "image": "./photos/IMG_8164.jpeg",
         "thumb": "./thumbs/IMG_8164.webp",
@@ -106,7 +106,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8170",
+        "name": "Peintre dans un champ de blé",
         "type": "photo",
         "image": "./photos/IMG_8170.jpeg",
         "thumb": "./thumbs/IMG_8170.webp",
@@ -123,7 +123,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8218",
+        "name": "Jardins du château de Villandry",
         "type": "photo",
         "image": "./photos/IMG_8218.jpeg",
         "thumb": "./thumbs/IMG_8218.webp",
@@ -140,7 +140,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8256",
+        "name": "Toues cabanées sur la Loire",
         "type": "photo",
         "image": "./photos/IMG_8256.jpeg",
         "thumb": "./thumbs/IMG_8256.webp",
@@ -157,7 +157,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8297",
+        "name": "Château de Langeais",
         "type": "photo",
         "image": "./photos/IMG_8297.jpeg",
         "thumb": "./thumbs/IMG_8297.webp",
@@ -174,7 +174,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8409",
+        "name": "Forteresse royale de Chinon",
         "type": "photo",
         "image": "./photos/IMG_8409.jpeg",
         "thumb": "./thumbs/IMG_8409.webp",
@@ -191,7 +191,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8477",
+        "name": "Cloître de l'Abbaye de Fontevraud",
         "type": "photo",
         "image": "./photos/IMG_8477.jpeg",
         "thumb": "./thumbs/IMG_8477.webp",
@@ -208,7 +208,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8509",
+        "name": "Château de Saumur",
         "type": "photo",
         "image": "./photos/IMG_8509.jpeg",
         "thumb": "./thumbs/IMG_8509.webp",
@@ -225,7 +225,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8572",
+        "name": "Confluence Loire-Maine",
         "type": "photo",
         "image": "./photos/IMG_8572.jpeg",
         "thumb": "./thumbs/IMG_8572.webp",
@@ -242,7 +242,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "IMG 8584",
+        "name": "Château d'Angers",
         "type": "photo",
         "image": "./photos/IMG_8584.jpeg",
         "thumb": "./thumbs/IMG_8584.webp",
@@ -259,7 +259,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "saint mathurin",
+        "name": "Saint-Mathurin",
         "type": "photo",
         "image": "./photos/saint-mathurin.jpeg",
         "thumb": "./thumbs/saint-mathurin.webp",
