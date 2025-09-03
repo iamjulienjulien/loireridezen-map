@@ -10,191 +10,664 @@
     />
 
     <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- MarkerCluster -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    />
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
     <!-- ExtraMarkers + Font Awesome -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-extra-markers@1.2.1/dist/css/leaflet.extra-markers.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-extra-markers@1.2.1/dist/css/leaflet.extra-markers.min.css"
+    />
     <script src="https://unpkg.com/leaflet-extra-markers@1.2.1/dist/js/leaflet.extra-markers.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
 
     <!-- Fullscreen plugin -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.css"/>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-      html, body { height: 100%; margin: 0; }
-      .atma-regular { font-family: "Atma", system-ui; font-weight: 400; }
-      .atma-semibold { font-family: "Atma", system-ui; font-weight: 600; }
-      .atma-bold { font-family: "Atma", system-ui; font-weight: 700; }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      .atma-light {
+        font-family: "Atma", system-ui;
+        font-weight: 300;
+        font-style: normal;
+      }
 
-      h1 { font-size: 1.25rem; text-align: center; margin: 5px 0 0; }
-      #map { height: 100%; }
+      .atma-regular {
+        font-family: "Atma", system-ui;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .atma-medium {
+        font-family: "Atma", system-ui;
+        font-weight: 500;
+        font-style: normal;
+      }
+
+      .atma-semibold {
+        font-family: "Atma", system-ui;
+        font-weight: 600;
+        font-style: normal;
+      }
+
+      .atma-bold {
+        font-family: "Atma", system-ui;
+        font-weight: 700;
+        font-style: normal;
+      }
+      h1 {
+        font-size: 1.25rem;
+        text-align: center;
+        margin: 5px 0 0;
+      }
+      #map {
+        height: 100%;
+      }
       .controls {
-        position: absolute; z-index: 1000; top: 10px; background: white; padding: .6rem .8rem;
-        border-radius: .5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-family: system-ui,sans-serif;
-        transition: transform .25s ease; max-width: 320px;
+        position: absolute;
+        z-index: 1000;
+        top: 10px;
+        background: white;
+        padding: 0.6rem 0.8rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-family: system-ui, sans-serif;
+        transition: transform 0.25s ease;
+        max-width: 320px;
       }
       #toggleFilters {
-        position: absolute; z-index: 1100; top: 10px; left: 10px; background: #fff; border: 1px solid #ddd;
-        border-radius: .5rem; padding: .4rem .6rem; font-family: system-ui,sans-serif; cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        position: absolute;
+        z-index: 1100;
+        top: 10px;
+        left: 10px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.6rem;
+        font-family: system-ui, sans-serif;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       }
-      #toggleFilters[aria-expanded="true"] { background:#f5f5f5; }
-      .controls hr { margin:.5rem 0; }
-      .poi-popup img { max-width:100%; display:block; border-radius:2px; margin-bottom:.35rem; }
-      @media (min-width:900px){#toggleFilters{display:none}.controls{left:10px;top:10px}}
-      @media (max-width:899px){
-        .controls{left:0;top:0;width:min(90vw,420px);height:100%;overflow:auto;transform:translateX(-100%);
-                  box-shadow:0 0 0 rgba(0,0,0,0);border-right:1px solid #eee;}
-        .controls.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.15);}
+      #toggleFilters[aria-expanded="true"] {
+        background: #f5f5f5;
+      }
+      .controls hr {
+        margin: 0.5rem 0;
+      }
+      .poi-popup img {
+        max-width: 100%;
+        display: block;
+        border-radius: 2px;
+        margin-bottom: 0.35rem;
+      }
+      @media (min-width: 900px) {
+        #toggleFilters {
+          display: none;
+        }
+        .controls {
+          left: 10px;
+          top: 10px;
+        }
+      }
+      @media (max-width: 899px) {
+        .controls {
+          left: 0;
+          top: 0;
+          width: min(90vw, 420px);
+          height: 100%;
+          overflow: auto;
+          transform: translateX(-100%);
+          box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+          border-right: 1px solid #eee;
+        }
+        .controls.open {
+          transform: translateX(0);
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        }
       }
     </style>
   </head>
   <body class="atma-regular">
     <!-- Filtres + légende -->
-    <div id="filtersPanel" class="controls" role="region" aria-label="Filtres carte">
+    <div
+      id="filtersPanel"
+      class="controls"
+      role="region"
+      aria-label="Filtres carte"
+    >
       <h1 class="atma-bold">✨ Loire Ride Zen</h1>
       <strong class="atma-semibold">Filtres</strong>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem;margin-top:.35rem;">
-        <label><input type="checkbox" class="type-filter" value="patrimoine" checked/> Patrimoine</label>
-        <label><input type="checkbox" class="type-filter" value="guinguette" checked/> Guinguette</label>
-        <label><input type="checkbox" class="type-filter" value="hébergement" checked/> Hébergement</label>
-        <label><input type="checkbox" class="type-filter" value="coupdecoeur" checked/> Coup de cœur</label>
-        <label><input type="checkbox" class="type-filter" value="départ" checked/> Départ</label>
-        <label><input type="checkbox" class="type-filter" value="arrivée" checked/> Arrivée</label>
-        <label><input type="checkbox" class="type-filter" value="photo" checked/> Photos</label>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.25rem 0.75rem;
+          margin-top: 0.35rem;
+        "
+      >
+        <label
+          ><input
+            type="checkbox"
+            class="type-filter"
+            value="patrimoine"
+            checked
+          />
+          Patrimoine</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            class="type-filter"
+            value="guinguette"
+            checked
+          />
+          Guinguette</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            class="type-filter"
+            value="hébergement"
+            checked
+          />
+          Hébergement</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            class="type-filter"
+            value="coupdecoeur"
+            checked
+          />
+          Coup de cœur</label
+        >
+        <label
+          ><input type="checkbox" class="type-filter" value="départ" checked />
+          Départ</label
+        >
+        <label
+          ><input type="checkbox" class="type-filter" value="arrivée" checked />
+          Arrivée</label
+        >
+        <label
+          ><input type="checkbox" class="type-filter" value="photo" checked />
+          Photos</label
+        >
       </div>
-      <hr/>
+      <hr />
       <div class="legend-in-controls">
-        <div style="margin-bottom:.25rem" class="atma-semibold">Légende</div>
-        <div style="display:grid;grid-template-columns:auto 1fr;grid-row-gap:.3rem;grid-column-gap:.5rem;align-items:center;">
-          <div style="width:16px;height:4px;background:#2e86ab"></div><div>Trace principale</div>
-          <div style="width:16px;height:4px;background:#8e44ad"></div><div>Variante / détour</div>
-          <div style="width:16px;height:16px;border-radius:50%;background:#3498db;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-landmark" style="font-size:10px;color:#fff"></i></div><div>Patrimoine</div>
-          <div style="width:16px;height:16px;border-radius:50%;background:#f39c12;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-music" style="font-size:10px;color:#fff"></i></div><div>Guinguette</div>
-          <div style="width:16px;height:16px;border-radius:50%;background:#9b59b6;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-campground" style="font-size:10px;color:#fff"></i></div><div>Hébergement</div>
-          <div style="width:16px;height:16px;border-radius:50%;background:#00bcd4;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-camera" style="font-size:10px;color:#fff"></i></div><div>Photo</div>
-          <div style="width:16px;height:16px;border-radius:50%;background:#f1c40f;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-star" style="font-size:10px;color:#fff"></i></div><div>Coup de cœur</div>
-          <div style="width:16px;height:16px;border-radius:4px;background:#2ecc71;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-flag-checkered" style="font-size:10px;color:#fff"></i></div><div>Départ</div>
-          <div style="width:16px;height:16px;border-radius:4px;background:#e74c3c;display:flex;align-items:center;justify-content:center;">
-            <i class="fa-solid fa-bullseye" style="font-size:10px;color:#fff"></i></div><div>Arrivée</div>
+        <div style="margin-bottom: 0.25rem" class="atma-semibold">Légende</div>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-row-gap: 0.3rem;
+            grid-column-gap: 0.5rem;
+            align-items: center;
+          "
+        >
+          <div style="width: 16px; height: 4px; background: #2e86ab"></div>
+          <div>Trace principale</div>
+          <div style="width: 16px; height: 4px; background: #8e44ad"></div>
+          <div>Variante / détour</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #3498db;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-landmark"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Patrimoine</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #f39c12;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-music"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Guinguette</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #9b59b6;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-campground"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Hébergement</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #00bcd4;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-camera"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Photo</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #f1c40f;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-star"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Coup de cœur</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 4px;
+              background: #2ecc71;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-flag-checkered"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Départ</div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 4px;
+              background: #e74c3c;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <i
+              class="fa-solid fa-bullseye"
+              style="font-size: 10px; color: #fff"
+            ></i>
+          </div>
+          <div>Arrivée</div>
         </div>
       </div>
     </div>
 
-    <button id="toggleFilters" aria-expanded="false" aria-controls="filtersPanel">Filtres</button>
+    <button
+      id="toggleFilters"
+      aria-expanded="false"
+      aria-controls="filtersPanel"
+    >
+      Filtres
+    </button>
     <div id="map"></div>
 
     <script>
       // 🔑 Supabase config
       const SUPA_URL = "https://covxsekavbmeqysdqnjh.supabase.co";
-      const SUPA_ANON_KEY = "…"; // ta clé publique
+      const SUPA_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnhzZWthdmJtZXF5c2RxbmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDI0MDAsImV4cCI6MjA3MjQxODQwMH0.Z53SrJ7_T4VrF8L0Ou476odsTo9ZqPrKFQXi4jRbWCU"; // clé publique OK côté client pour lecture
 
-      // 1) Carte + fonds
-      const map = L.map("map", { zoomControl: true, scrollWheelZoom: true }).setView([47.3, 0.5], 8);
-
-      const baseOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{ attribution:"&copy; OpenStreetMap" });
-      const baseEsriSat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{ attribution:"Imagery © Esri" });
-
+      // 1) Carte de base
+      const map = L.map("map", {
+        zoomControl: true,
+        scrollWheelZoom: true,
+      }).setView([47.3, 0.5], 8);
+      const baseOSM = osm; // déjà ajouté
+      const baseEsriSat = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        { attribution: "Imagery © Esri" }
+      );
+      const esriLabels = L.tileLayer(
+        "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        { pane: "labelsPane" }
+      );
       map.createPane("labelsPane");
-      map.getPane("labelsPane").style.pointerEvents="none";
-      map.getPane("labelsPane").style.zIndex=650;
-      const esriLabels = L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{ pane:"labelsPane", attribution:"Labels © Esri" });
+      map.getPane("labelsPane").style.pointerEvents = "none";
+      map.getPane("labelsPane").style.zIndex = 650;
 
-      const savedBase = localStorage.getItem("baseLayer");
-      if(savedBase==="sat"){ baseEsriSat.addTo(map); esriLabels.addTo(map); } else { baseOSM.addTo(map); }
+      const baseMaps = {
+        "Plan (OSM)": baseOSM,
+        "Satellite (Esri)": baseEsriSat,
+      };
+      const overlays = { Trace: routeLayer, "Points d’intérêt": cluster };
+      L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
 
-      map.addControl(new L.Control.FullScreen({ position:"topright", title:"Plein écran" }));
+      map.on("baselayerchange", (e) => {
+        if (e.name.includes("Satellite")) esriLabels.addTo(map);
+        else map.removeLayer(esriLabels);
+      });
+      map.addControl(
+        new L.Control.FullScreen({ position: "topright", title: "Plein écran" })
+      );
 
-      // 2) Trace
-      const colors=["#2E86AB","#1F77B4","#5DADE2","#9B59B6","#E74C3C","#F39C12","#27AE60","#16A085","#34495E"];
-      const routeLayer=L.geoJSON(null,{ style:f=>{const s=f.properties?.stage||0; return{color:colors[s%colors.length],weight:4,opacity:0.9};}});
-      fetch("data/route_simplified.geojson").then(r=>r.ok?r.json():fetch("data/route.geojson").then(rr=>rr.json()))
-        .then(gj=>{routeLayer.addData(gj).addTo(map); try{map.fitBounds(routeLayer.getBounds(),{padding:[30,30],maxZoom:13});}catch(e){} });
+      // 2) Trace (locale)
+      const colors = [
+        "#2E86AB",
+        "#1F77B4",
+        "#5DADE2",
+        "#9B59B6",
+        "#E74C3C",
+        "#F39C12",
+        "#27AE60",
+        "#16A085",
+        "#34495E",
+      ];
+      const routeLayer = L.geoJSON(null, {
+        style: (f) => {
+          const s = f.properties?.stage || 0;
+          return { color: colors[s % colors.length], weight: 4, opacity: 0.9 };
+        },
+      });
+      fetch("data/route_simplified.geojson")
+        .then((r) =>
+          r.ok ? r.json() : fetch("data/route.geojson").then((rr) => rr.json())
+        )
+        .then((gj) => {
+          routeLayer.addData(gj).addTo(map);
+          try {
+            map.fitBounds(routeLayer.getBounds(), {
+              padding: [30, 30],
+              maxZoom: 13,
+            });
+          } catch (e) {}
+        });
 
       // 3) Cluster
-      const cluster=L.markerClusterGroup({ showCoverageOnHover:false, maxClusterRadius:20, disableClusteringAtZoom:13 });
+      const cluster = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 20, // très petit rayon, clustering minimal
+        disableClusteringAtZoom: 13, // au zoom ville (~13), plus aucun cluster
+      });
       cluster.addTo(map);
+      L.control
+        .layers(
+          { OpenStreetMap: osm },
+          { Trace: routeLayer, "Points d’intérêt": cluster }
+        )
+        .addTo(map);
 
       // 4) Icônes
-      const iconByType=(type)=>{switch(type){
-        case "patrimoine": return L.ExtraMarkers.icon({icon:"fa-landmark",prefix:"fa",markerColor:"blue",shape:"penta"});
-        case "départ": return L.ExtraMarkers.icon({icon:"fa-flag-checkered",prefix:"fa",markerColor:"green",shape:"square"});
-        case "arrivée": return L.ExtraMarkers.icon({icon:"fa-bullseye",prefix:"fa",markerColor:"red",shape:"square"});
-        case "guinguette": return L.ExtraMarkers.icon({icon:"fa-music",prefix:"fa",markerColor:"orange",shape:"circle"});
-        case "hébergement": return L.ExtraMarkers.icon({icon:"fa-campground",prefix:"fa",markerColor:"purple",shape:"circle"});
-        case "photo": return L.ExtraMarkers.icon({icon:"fa-camera",prefix:"fa",markerColor:"cyan",shape:"circle"});
-        case "coupdecoeur": return L.ExtraMarkers.icon({icon:"fa-star",prefix:"fa",markerColor:"yellow",shape:"circle"});
-        default: return L.ExtraMarkers.icon({icon:"fa-map-pin",prefix:"fa",markerColor:"cyan",shape:"circle"});}};
+      const iconByType = (type) => {
+        switch (type) {
+          case "patrimoine":
+            return L.ExtraMarkers.icon({
+              icon: "fa-landmark",
+              prefix: "fa",
+              markerColor: "blue",
+              shape: "penta",
+            });
+          case "départ":
+            return L.ExtraMarkers.icon({
+              icon: "fa-flag-checkered",
+              prefix: "fa",
+              markerColor: "green",
+              shape: "square",
+            });
+          case "arrivée":
+            return L.ExtraMarkers.icon({
+              icon: "fa-bullseye",
+              prefix: "fa",
+              markerColor: "red",
+              shape: "square",
+            });
+          case "guinguette":
+            return L.ExtraMarkers.icon({
+              icon: "fa-music",
+              prefix: "fa",
+              markerColor: "orange",
+              shape: "circle",
+            });
+          case "hébergement":
+            return L.ExtraMarkers.icon({
+              icon: "fa-campground",
+              prefix: "fa",
+              markerColor: "purple",
+              shape: "circle",
+            });
+          case "photo":
+            return L.ExtraMarkers.icon({
+              icon: "fa-camera",
+              prefix: "fa",
+              markerColor: "cyan",
+              shape: "circle",
+            });
+          case "coupdecoeur":
+            return L.ExtraMarkers.icon({
+              icon: "fa-star",
+              prefix: "fa",
+              markerColor: "yellow",
+              shape: "circle",
+            });
+          default:
+            return L.ExtraMarkers.icon({
+              icon: "fa-map-pin",
+              prefix: "fa",
+              markerColor: "cyan",
+              shape: "circle",
+            });
+        }
+      };
 
-      // 5) Fetch BDD
-      let lastAbort=null;
-      const debounce=(fn,ms=250)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};};
-      async function fetchPoisFromSupabase(bounds,activeType=null,activeStage=null,signal){
-        const qs=new URLSearchParams({minlon:bounds.getWest(),minlat:bounds.getSouth(),maxlon:bounds.getEast(),maxlat:bounds.getNorth()});
-        if(activeType)qs.set("p_type",activeType);
-        if(activeStage!=null)qs.set("p_stage",String(activeStage));
-        const res=await fetch(`${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${qs}`,{headers:{apikey:SUPA_ANON_KEY,Authorization:`Bearer ${SUPA_ANON_KEY}`},signal});
-        if(!res.ok)throw new Error(`Supabase ${res.status}`);
-        return res.json();
+      // 5) Fetch BDD (RPC GeoJSON par BBOX)
+      let lastAbort = null;
+      const debounce = (fn, ms = 250) => {
+        let t;
+        return (...a) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...a), ms);
+        };
+      };
+
+      async function fetchPoisFromSupabase(
+        bounds,
+        activeType = null,
+        activeStage = null,
+        signal
+      ) {
+        const qs = new URLSearchParams({
+          minlon: bounds.getWest(),
+          minlat: bounds.getSouth(),
+          maxlon: bounds.getEast(),
+          maxlat: bounds.getNorth(),
+        });
+        if (activeType) qs.set("p_type", activeType);
+        if (activeStage != null) qs.set("p_stage", String(activeStage));
+
+        const res = await fetch(
+          `${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${qs}`,
+          {
+            headers: {
+              apikey: SUPA_ANON_KEY,
+              Authorization: `Bearer ${SUPA_ANON_KEY}`,
+            },
+            signal,
+          }
+        );
+        if (!res.ok) throw new Error(`Supabase ${res.status}`);
+        return res.json(); // FeatureCollection
       }
 
-      async function fetchLocalPhotos(){try{const r=await fetch("data/pois_photos.geojson",{cache:"no-cache"});if(!r.ok)return{type:"FeatureCollection",features:[]};return r.json();}catch(e){return{type:"FeatureCollection",features:[]};}}
+      // 6) Fetch local photos (toujours chargées, pas filtrées par BBOX côté fichier)
+      async function fetchLocalPhotos() {
+        try {
+          const r = await fetch("data/pois_photos.geojson", {
+            cache: "no-cache",
+          });
+          if (!r.ok) return { type: "FeatureCollection", features: [] };
+          return r.json();
+        } catch (e) {
+          console.warn("Aucune photos locale:", e);
+          return { type: "FeatureCollection", features: [] };
+        }
+      }
 
-      function bindPopupFromProps(p,l){const img=p.thumb||p.image;const insta=p.url_insta?`<p><a href="${p.url_insta}" target="_blank">Voir sur Instagram 📲</a></p>`:"";
-        l.bindPopup(`<div class="poi-popup">${img?`<img src="${img}" alt="${p.name||"POI"}"/>`:""}<strong>${p.name||"Point"}</strong><br/><small>${p.type||""}${p.stage?` · Étape ${p.stage}`:""}</small><p>${p.description||""}</p>${insta}</div>`);}
+      function bindPopupFromProps(p, layer) {
+        const img = p.thumb || p.image;
+        const insta = p.url_insta
+          ? `<p><a href="${p.url_insta}" target="_blank" rel="noopener">Voir sur Instagram 📲</a></p>`
+          : "";
+        layer.bindPopup(`
+        <div class="poi-popup">
+          ${img ? `<img src="${img}" alt="${p.name || "POI"}" />` : ""}
+          <strong>${p.name || "Point"}</strong><br/>
+          <small>${p.type || ""}${p.stage ? ` · Étape ${p.stage}` : ""}</small>
+          <p>${p.description || ""}</p>
+          ${insta}
+        </div>
+      `);
+      }
 
-      async function loadPoisForViewport(){
-        const activeTypes=Array.from(document.querySelectorAll(".type-filter:checked")).map(i=>i.value);
-        const activeType=activeTypes.length===1?activeTypes[0]:null;
-        if(lastAbort)lastAbort.abort();const controller=new AbortController();lastAbort=controller;
-        try{
-          const [fcDB,fcLocal]=await Promise.all([fetchPoisFromSupabase(map.getBounds(),activeType,null,controller.signal),fetchLocalPhotos()]);
-          const all=(fcDB.features||[]).concat(fcLocal.features||[]);
-          const activeSet=new Set(activeTypes);
-          const filtered=all.filter(f=>activeSet.has((f.properties||{}).type));
+      // 7) Rendu combiné BDD + photos locales
+      async function loadPoisForViewport() {
+        // Si un seul type coché, on le pousse côté SQL pour alléger la réponse BDD
+        const activeTypes = Array.from(
+          document.querySelectorAll(".type-filter:checked")
+        ).map((i) => i.value);
+        const activeType = activeTypes.length === 1 ? activeTypes[0] : null;
+
+        if (lastAbort) lastAbort.abort();
+        const controller = new AbortController();
+        lastAbort = controller;
+
+        try {
+          // Requêtes en parallèle : BDD (BBOX) + fichier local
+          const [fcDB, fcLocal] = await Promise.all([
+            fetchPoisFromSupabase(
+              map.getBounds(),
+              activeType,
+              null,
+              controller.signal
+            ),
+            fetchLocalPhotos(),
+          ]);
+
+          // Merge des features
+          const all = (fcDB.features || []).concat(fcLocal.features || []);
+
+          // Filtre UI (surtout pour les photos locales si plusieurs types cochés)
+          const activeSet = new Set(activeTypes);
+          const filtered = all.filter((f) =>
+            activeSet.has((f.properties || {}).type)
+          );
+
+          // Rendu
           cluster.clearLayers();
-          const layer=L.geoJSON({type:"FeatureCollection",features:filtered},{pointToLayer:(f,latlng)=>L.marker(latlng,{icon:iconByType((f.properties||{}).type)}),onEachFeature:(f,l)=>bindPopupFromProps(f.properties||{},l)});
+          const layer = L.geoJSON(
+            { type: "FeatureCollection", features: filtered },
+            {
+              pointToLayer: (f, latlng) =>
+                L.marker(latlng, {
+                  icon: iconByType((f.properties || {}).type),
+                }),
+              onEachFeature: (f, l) =>
+                bindPopupFromProps(f.properties || {}, l),
+            }
+          );
           cluster.addLayer(layer);
-        }catch(e){if(e.name!=="AbortError")console.error("Erreur chargement POI:",e);}
+        } catch (e) {
+          if (e.name !== "AbortError")
+            console.error("Erreur chargement POI:", e);
+        }
       }
 
-      const loadPoisDebounced=debounce(loadPoisForViewport,250);
-      map.on("moveend",loadPoisDebounced);
-      document.querySelectorAll(".type-filter").forEach(cb=>cb.addEventListener("change",loadPoisDebounced));
-      loadPoisForViewport();
+      const loadPoisDebounced = debounce(loadPoisForViewport, 250);
+      map.on("moveend", loadPoisDebounced);
+      document
+        .querySelectorAll(".type-filter")
+        .forEach((cb) => cb.addEventListener("change", loadPoisDebounced));
+      loadPoisForViewport(); // premier affichage
 
-      // 6) Drawer mobile
-      const toggleBtn=document.getElementById("toggleFilters");const panel=document.getElementById("filtersPanel");
-      function setOpen(o){if(o){panel.classList.add("open");toggleBtn.setAttribute("aria-expanded","true");}else{panel.classList.remove("open");toggleBtn.setAttribute("aria-expanded","false");}}
-      toggleBtn.addEventListener("click",()=>setOpen(!panel.classList.contains("open")));
-      map.on("click",()=>{if(window.matchMedia("(max-width:899px)").matches)setOpen(false);});
-
-      // 7) Layers control (fond + overlays)
-      const baseMaps={"Plan (OSM)":baseOSM,"Satellite (Esri)":baseEsriSat};
-      const overlays={"Trace":routeLayer,"Points d’intérêt":cluster};
-      L.control.layers(baseMaps,overlays,{collapsed:false}).addTo(map);
-
-      map.on("baselayerchange",e=>{
-        if(e.name.includes("Satellite")){esriLabels.addTo(map);localStorage.setItem("baseLayer","sat");}
-        else{map.removeLayer(esriLabels);localStorage.setItem("baseLayer","osm");}
+      // 8) Drawer mobile
+      const toggleBtn = document.getElementById("toggleFilters");
+      const panel = document.getElementById("filtersPanel");
+      function setOpen(o) {
+        if (o) {
+          panel.classList.add("open");
+          toggleBtn.setAttribute("aria-expanded", "true");
+        } else {
+          panel.classList.remove("open");
+          toggleBtn.setAttribute("aria-expanded", "false");
+        }
+      }
+      toggleBtn.addEventListener("click", () =>
+        setOpen(!panel.classList.contains("open"))
+      );
+      map.on("click", () => {
+        if (window.matchMedia("(max-width:899px)").matches) setOpen(false);
       });
     </script>
   </body>
