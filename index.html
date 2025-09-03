@@ -376,300 +376,169 @@
     <div id="map"></div>
 
     <script>
-      // 🔑 Supabase config
+       // 🔑 Supabase config
       const SUPA_URL = "https://covxsekavbmeqysdqnjh.supabase.co";
       const SUPA_ANON_KEY =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnhzZWthdmJtZXF5c2RxbmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDI0MDAsImV4cCI6MjA3MjQxODQwMH0.Z53SrJ7_T4VrF8L0Ou476odsTo9ZqPrKFQXi4jRbWCU"; // clé publique OK côté client pour lecture
 
-      // 1) Carte de base
-      const map = L.map("map", {
-        zoomControl: true,
-        scrollWheelZoom: true,
-      }).setView([47.3, 0.5], 8);
-      const osm = L.tileLayer( "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "&copy; OpenStreetMap" } ).addTo(map);
-      const baseOSM = osm; // déjà ajouté
+    
+      // 1) Carte + fonds
+      const map = L.map("map", { zoomControl: true, scrollWheelZoom: true }).setView([47.3, 0.5], 8);
+    
+      const baseOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap"
+      });
+    
       const baseEsriSat = L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        { attribution: "Imagery © Esri" }
+        { attribution: "Imagery © Esri & sources" }
       );
-      const esriLabels = L.tileLayer(
-        "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-        { pane: "labelsPane" }
-      );
+    
+      // Pane et labels
       map.createPane("labelsPane");
       map.getPane("labelsPane").style.pointerEvents = "none";
       map.getPane("labelsPane").style.zIndex = 650;
-
-      const baseMaps = {
-        "Plan (OSM)": baseOSM,
-        "Satellite (Esri)": baseEsriSat,
-      };
-      const overlays = { Trace: routeLayer, "Points d’intérêt": cluster };
-      L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
-
-      map.on("baselayerchange", (e) => {
-        if (e.name.includes("Satellite")) esriLabels.addTo(map);
-        else map.removeLayer(esriLabels);
-      });
-      map.addControl(
-        new L.Control.FullScreen({ position: "topright", title: "Plein écran" })
+      const esriLabels = L.tileLayer(
+        "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        { pane: "labelsPane", attribution: "Labels © Esri" }
       );
-
-      // 2) Trace (locale)
-      const colors = [
-        "#2E86AB",
-        "#1F77B4",
-        "#5DADE2",
-        "#9B59B6",
-        "#E74C3C",
-        "#F39C12",
-        "#27AE60",
-        "#16A085",
-        "#34495E",
-      ];
+    
+      // Charger préférence de fond
+      const savedBase = localStorage.getItem("baseLayer");
+      if (savedBase === "sat") { baseEsriSat.addTo(map); esriLabels.addTo(map); }
+      else { baseOSM.addTo(map); }
+    
+      map.addControl(new L.Control.FullScreen({ position: "topright", title: "Plein écran" }));
+    
+      // 2) Trace
+      const colors = ["#2E86AB","#1F77B4","#5DADE2","#9B59B6","#E74C3C","#F39C12","#27AE60","#16A085","#34495E"];
       const routeLayer = L.geoJSON(null, {
-        style: (f) => {
+        style: f => {
           const s = f.properties?.stage || 0;
           return { color: colors[s % colors.length], weight: 4, opacity: 0.9 };
-        },
+        }
       });
       fetch("data/route_simplified.geojson")
-        .then((r) =>
-          r.ok ? r.json() : fetch("data/route.geojson").then((rr) => rr.json())
-        )
-        .then((gj) => {
+        .then(r => r.ok ? r.json() : fetch("data/route.geojson").then(rr => rr.json()))
+        .then(gj => {
           routeLayer.addData(gj).addTo(map);
-          try {
-            map.fitBounds(routeLayer.getBounds(), {
-              padding: [30, 30],
-              maxZoom: 13,
-            });
-          } catch (e) {}
+          try { map.fitBounds(routeLayer.getBounds(), { padding: [30, 30], maxZoom: 13 }); } catch (e) {}
         });
-
+    
       // 3) Cluster
       const cluster = L.markerClusterGroup({
         showCoverageOnHover: false,
-        maxClusterRadius: 20, // très petit rayon, clustering minimal
-        disableClusteringAtZoom: 13, // au zoom ville (~13), plus aucun cluster
+        maxClusterRadius: 20,
+        disableClusteringAtZoom: 13
       });
       cluster.addTo(map);
-      L.control
-        .layers(
-          { OpenStreetMap: osm },
-          { Trace: routeLayer, "Points d’intérêt": cluster }
-        )
-        .addTo(map);
-
+    
       // 4) Icônes
       const iconByType = (type) => {
         switch (type) {
-          case "patrimoine":
-            return L.ExtraMarkers.icon({
-              icon: "fa-landmark",
-              prefix: "fa",
-              markerColor: "blue",
-              shape: "penta",
-            });
-          case "départ":
-            return L.ExtraMarkers.icon({
-              icon: "fa-flag-checkered",
-              prefix: "fa",
-              markerColor: "green",
-              shape: "square",
-            });
-          case "arrivée":
-            return L.ExtraMarkers.icon({
-              icon: "fa-bullseye",
-              prefix: "fa",
-              markerColor: "red",
-              shape: "square",
-            });
-          case "guinguette":
-            return L.ExtraMarkers.icon({
-              icon: "fa-music",
-              prefix: "fa",
-              markerColor: "orange",
-              shape: "circle",
-            });
-          case "hébergement":
-            return L.ExtraMarkers.icon({
-              icon: "fa-campground",
-              prefix: "fa",
-              markerColor: "purple",
-              shape: "circle",
-            });
-          case "photo":
-            return L.ExtraMarkers.icon({
-              icon: "fa-camera",
-              prefix: "fa",
-              markerColor: "cyan",
-              shape: "circle",
-            });
-          case "coupdecoeur":
-            return L.ExtraMarkers.icon({
-              icon: "fa-star",
-              prefix: "fa",
-              markerColor: "yellow",
-              shape: "circle",
-            });
-          default:
-            return L.ExtraMarkers.icon({
-              icon: "fa-map-pin",
-              prefix: "fa",
-              markerColor: "cyan",
-              shape: "circle",
-            });
+          case "patrimoine":   return L.ExtraMarkers.icon({ icon:"fa-landmark", prefix:"fa", markerColor:"blue", shape:"penta" });
+          case "départ":       return L.ExtraMarkers.icon({ icon:"fa-flag-checkered", prefix:"fa", markerColor:"green", shape:"square" });
+          case "arrivée":      return L.ExtraMarkers.icon({ icon:"fa-bullseye", prefix:"fa", markerColor:"red", shape:"square" });
+          case "guinguette":   return L.ExtraMarkers.icon({ icon:"fa-music", prefix:"fa", markerColor:"orange", shape:"circle" });
+          case "hébergement":  return L.ExtraMarkers.icon({ icon:"fa-campground", prefix:"fa", markerColor:"purple", shape:"circle" });
+          case "photo":        return L.ExtraMarkers.icon({ icon:"fa-camera", prefix:"fa", markerColor:"cyan", shape:"circle" });
+          case "coupdecoeur":  return L.ExtraMarkers.icon({ icon:"fa-star", prefix:"fa", markerColor:"yellow", shape:"circle" });
+          default:             return L.ExtraMarkers.icon({ icon:"fa-map-pin", prefix:"fa", markerColor:"cyan", shape:"circle" });
         }
       };
-
-      // 5) Fetch BDD (RPC GeoJSON par BBOX)
+    
+      // 5) Fetch BDD
       let lastAbort = null;
-      const debounce = (fn, ms = 250) => {
-        let t;
-        return (...a) => {
-          clearTimeout(t);
-          t = setTimeout(() => fn(...a), ms);
-        };
-      };
-
-      async function fetchPoisFromSupabase(
-        bounds,
-        activeType = null,
-        activeStage = null,
-        signal
-      ) {
+      const debounce = (fn, ms=250) => { let t; return (...a) => { clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
+    
+      async function fetchPoisFromSupabase(bounds, activeType=null, activeStage=null, signal) {
         const qs = new URLSearchParams({
-          minlon: bounds.getWest(),
-          minlat: bounds.getSouth(),
-          maxlon: bounds.getEast(),
-          maxlat: bounds.getNorth(),
+          minlon: bounds.getWest(), minlat: bounds.getSouth(),
+          maxlon: bounds.getEast(), maxlat: bounds.getNorth()
         });
         if (activeType) qs.set("p_type", activeType);
         if (activeStage != null) qs.set("p_stage", String(activeStage));
-
-        const res = await fetch(
-          `${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${qs}`,
-          {
-            headers: {
-              apikey: SUPA_ANON_KEY,
-              Authorization: `Bearer ${SUPA_ANON_KEY}`,
-            },
-            signal,
-          }
-        );
+    
+        const res = await fetch(`${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${qs}`, {
+          headers: { apikey: SUPA_ANON_KEY, Authorization: `Bearer ${SUPA_ANON_KEY}` },
+          signal
+        });
         if (!res.ok) throw new Error(`Supabase ${res.status}`);
-        return res.json(); // FeatureCollection
+        return res.json();
       }
-
-      // 6) Fetch local photos (toujours chargées, pas filtrées par BBOX côté fichier)
+    
       async function fetchLocalPhotos() {
         try {
-          const r = await fetch("data/pois_photos.geojson", {
-            cache: "no-cache",
-          });
-          if (!r.ok) return { type: "FeatureCollection", features: [] };
+          const r = await fetch("data/pois_photos.geojson", { cache: "no-cache" });
+          if (!r.ok) return { type:"FeatureCollection", features:[] };
           return r.json();
-        } catch (e) {
-          console.warn("Aucune photos locale:", e);
-          return { type: "FeatureCollection", features: [] };
-        }
+        } catch(e) { return { type:"FeatureCollection", features:[] }; }
       }
-
+    
       function bindPopupFromProps(p, layer) {
         const img = p.thumb || p.image;
-        const insta = p.url_insta
-          ? `<p><a href="${p.url_insta}" target="_blank" rel="noopener">Voir sur Instagram 📲</a></p>`
-          : "";
+        const insta = p.url_insta ? `<p><a href="${p.url_insta}" target="_blank" rel="noopener">Voir sur Instagram 📲</a></p>` : "";
         layer.bindPopup(`
-        <div class="poi-popup">
-          ${img ? `<img src="${img}" alt="${p.name || "POI"}" />` : ""}
-          <strong>${p.name || "Point"}</strong><br/>
-          <small>${p.type || ""}${p.stage ? ` · Étape ${p.stage}` : ""}</small>
-          <p>${p.description || ""}</p>
-          ${insta}
-        </div>
-      `);
+          <div class="poi-popup">
+            ${img ? `<img src="${img}" alt="${p.name||"POI"}"/>` : ""}
+            <strong>${p.name||"Point"}</strong><br/>
+            <small>${p.type||""}${p.stage?` · Étape ${p.stage}`:""}</small>
+            <p>${p.description||""}</p>
+            ${insta}
+          </div>
+        `);
       }
-
-      // 7) Rendu combiné BDD + photos locales
+    
       async function loadPoisForViewport() {
-        // Si un seul type coché, on le pousse côté SQL pour alléger la réponse BDD
-        const activeTypes = Array.from(
-          document.querySelectorAll(".type-filter:checked")
-        ).map((i) => i.value);
-        const activeType = activeTypes.length === 1 ? activeTypes[0] : null;
-
+        const activeTypes = Array.from(document.querySelectorAll(".type-filter:checked")).map(i=>i.value);
+        const activeType = activeTypes.length===1 ? activeTypes[0] : null;
+    
         if (lastAbort) lastAbort.abort();
-        const controller = new AbortController();
-        lastAbort = controller;
-
+        const controller = new AbortController(); lastAbort = controller;
+    
         try {
-          // Requêtes en parallèle : BDD (BBOX) + fichier local
           const [fcDB, fcLocal] = await Promise.all([
-            fetchPoisFromSupabase(
-              map.getBounds(),
-              activeType,
-              null,
-              controller.signal
-            ),
-            fetchLocalPhotos(),
+            fetchPoisFromSupabase(map.getBounds(), activeType, null, controller.signal),
+            fetchLocalPhotos()
           ]);
-
-          // Merge des features
-          const all = (fcDB.features || []).concat(fcLocal.features || []);
-
-          // Filtre UI (surtout pour les photos locales si plusieurs types cochés)
+          const all = (fcDB.features||[]).concat(fcLocal.features||[]);
           const activeSet = new Set(activeTypes);
-          const filtered = all.filter((f) =>
-            activeSet.has((f.properties || {}).type)
-          );
-
-          // Rendu
+          const filtered = all.filter(f => activeSet.has((f.properties||{}).type));
+    
           cluster.clearLayers();
-          const layer = L.geoJSON(
-            { type: "FeatureCollection", features: filtered },
-            {
-              pointToLayer: (f, latlng) =>
-                L.marker(latlng, {
-                  icon: iconByType((f.properties || {}).type),
-                }),
-              onEachFeature: (f, l) =>
-                bindPopupFromProps(f.properties || {}, l),
-            }
-          );
+          const layer = L.geoJSON({ type:"FeatureCollection", features: filtered }, {
+            pointToLayer: (f, latlng) => L.marker(latlng, { icon: iconByType((f.properties||{}).type) }),
+            onEachFeature: (f,l) => bindPopupFromProps(f.properties||{}, l)
+          });
           cluster.addLayer(layer);
-        } catch (e) {
-          if (e.name !== "AbortError")
-            console.error("Erreur chargement POI:", e);
+        } catch(e) {
+          if (e.name !== "AbortError") console.error("Erreur chargement POI:", e);
         }
       }
-
-      const loadPoisDebounced = debounce(loadPoisForViewport, 250);
+    
+      const loadPoisDebounced = debounce(loadPoisForViewport,250);
       map.on("moveend", loadPoisDebounced);
-      document
-        .querySelectorAll(".type-filter")
-        .forEach((cb) => cb.addEventListener("change", loadPoisDebounced));
-      loadPoisForViewport(); // premier affichage
-
-      // 8) Drawer mobile
-      const toggleBtn = document.getElementById("toggleFilters");
-      const panel = document.getElementById("filtersPanel");
-      function setOpen(o) {
-        if (o) {
-          panel.classList.add("open");
-          toggleBtn.setAttribute("aria-expanded", "true");
-        } else {
-          panel.classList.remove("open");
-          toggleBtn.setAttribute("aria-expanded", "false");
-        }
-      }
-      toggleBtn.addEventListener("click", () =>
-        setOpen(!panel.classList.contains("open"))
-      );
-      map.on("click", () => {
-        if (window.matchMedia("(max-width:899px)").matches) setOpen(false);
+      document.querySelectorAll(".type-filter").forEach(cb => cb.addEventListener("change", loadPoisDebounced));
+      loadPoisForViewport();
+    
+      // 6) Drawer mobile
+      const toggleBtn=document.getElementById("toggleFilters");
+      const panel=document.getElementById("filtersPanel");
+      function setOpen(o){ if(o){panel.classList.add("open");toggleBtn.setAttribute("aria-expanded","true");}
+                           else{panel.classList.remove("open");toggleBtn.setAttribute("aria-expanded","false");} }
+      toggleBtn.addEventListener("click",()=>setOpen(!panel.classList.contains("open")));
+      map.on("click",()=>{ if(window.matchMedia("(max-width:899px)").matches) setOpen(false); });
+    
+      // 7) Contrôle des couches (fond + overlays)
+      const baseMaps = { "Plan (OSM)": baseOSM, "Satellite (Esri)": baseEsriSat };
+      const overlays = { "Trace": routeLayer, "Points d’intérêt": cluster };
+      L.control.layers(baseMaps, overlays, { collapsed:false }).addTo(map);
+    
+      map.on("baselayerchange", e => {
+        if (e.name.includes("Satellite")) { esriLabels.addTo(map); localStorage.setItem("baseLayer","sat"); }
+        else { map.removeLayer(esriLabels); localStorage.setItem("baseLayer","osm"); }
       });
     </script>
+
   </body>
 </html>
