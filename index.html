@@ -23,8 +23,44 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.css"/>
   <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+
   <style>
     html, body { height: 100%; margin: 0; }
+    .atma-light {
+      font-family: "Atma", system-ui;
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    .atma-regular {
+      font-family: "Atma", system-ui;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    .atma-medium {
+      font-family: "Atma", system-ui;
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    .atma-semibold {
+      font-family: "Atma", system-ui;
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    .atma-bold {
+      font-family: "Atma", system-ui;
+      font-weight: 700;
+      font-style: normal;
+    }
+
     #map { height: 100%; }
     .controls {
       position: absolute; z-index: 1000; top: 10px;
@@ -49,7 +85,7 @@
     }
   </style>
 </head>
-<body>
+<body class="atma-regular">
 
   <!-- Filtres + légende -->
   <div id="filtersPanel" class="controls" role="region" aria-label="Filtres carte">
