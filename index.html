@@ -459,6 +459,15 @@
           return { color: colors[s % colors.length], weight: 4, opacity: 0.9 };
         },
       });
+      // 👉 Nouvelle trace : Boucle Angevine
+      const boucleLayer = L.geoJSON(null, {
+        style: () => ({
+          color: "#FF7F00", // orange chaud (différent de la trace principale)
+          weight: 4,
+          opacity: 0.9,
+          dashArray: "6,4", // tirets pour différencier visuellement
+        }),
+      });
       fetch("data/route_simplified.geojson")
         .then((r) =>
           r.ok ? r.json() : fetch("data/route.geojson").then((rr) => rr.json())
@@ -472,6 +481,15 @@
             });
           } catch (e) {}
         });
+
+      // Charger la Boucle Angevine
+      fetch("data/routes/boucle_angevine_simplified.geojson")
+        .then((r) => r.json())
+        .then((gj) => {
+          boucleLayer.addData(gj);
+          // (Optionnel) bouton pour zoomer sur la boucle — voir plus bas
+        })
+        .catch(() => console.warn("Boucle Angevine introuvable"));
 
       // 3) Cluster
       const cluster = L.markerClusterGroup({
@@ -688,7 +706,11 @@
         "Plan (OSM)": baseOSM,
         "Satellite (Esri)": baseEsriSat,
       };
-      const overlays = { Trace: routeLayer, "Points d’intérêt": cluster };
+      const overlays = {
+        "Trace principale": routeLayer,
+        "Boucle Angevine": boucleLayer, // ← nouvelle ligne
+        "Points d’intérêt": cluster,
+      };
       L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
 
       map.on("baselayerchange", (e) => {
