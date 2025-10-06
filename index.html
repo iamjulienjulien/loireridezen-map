@@ -483,7 +483,7 @@
         });
 
       // Charger la Boucle Angevine
-      fetch("data/routes/boucle_angevine.geojson")
+      fetch("data/boucle_angevine.geojson")
         .then((r) => r.json())
         .then((gj) => {
           boucleLayer.addData(gj);
