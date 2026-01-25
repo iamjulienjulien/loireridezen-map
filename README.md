@@ -38,6 +38,7 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 ## 🧱 Stack technique
 
 ### Frontend
+
 - **Leaflet 1.9**
 - Leaflet MarkerCluster
 - Leaflet ExtraMarkers
@@ -46,11 +47,13 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 - Vanilla JS / HTML / CSS
 
 ### Backend (POI dynamiques)
+
 - **Supabase**
 - **PostgreSQL + PostGIS**
 - RPC SQL retournant du **GeoJSON par BBOX**
 
 ### Data & tooling
+
 - GeoJSON
 - GPX → GeoJSON
 - Python (EXIF, images)
@@ -87,6 +90,7 @@ Transforme automatiquement tes photos de terrain en points d’intérêt sur la 
 ### Étapes
 
 #### 1) Ajouter les photos
+
 Place tes photos **géolocalisées** dans un dossier, par exemple :
 
 ```
@@ -94,6 +98,7 @@ Place tes photos **géolocalisées** dans un dossier, par exemple :
 ```
 
 Formats supportés :
+
 - JPG / JPEG
 - PNG
 - HEIC (voir note plus bas)
@@ -101,6 +106,7 @@ Formats supportés :
 ---
 
 #### 2) (Optionnel) Générer des miniatures WebP
+
 Pour des popups rapides et légères :
 
 ```bash
@@ -110,6 +116,7 @@ python make_thumbs.py   --photos ./photos   --thumbs ./thumbs   --width 1200   -
 ---
 
 #### 3) Générer le GeoJSON des photos
+
 Extraction automatique des coordonnées GPS depuis les EXIF :
 
 ```bash
@@ -128,23 +135,23 @@ Les photos sont chargées comme une **couche POI supplémentaire**, fusionnée a
 Exemple simplifié :
 
 ```js
-fetch('data/pois_photos.geojson')
-  .then(r => r.json())
-  .then(geojson => {
+fetch("data/pois_photos.geojson")
+  .then((r) => r.json())
+  .then((geojson) => {
     const photosLayer = L.geoJSON(geojson, {
       pointToLayer: (f, latlng) =>
-        L.marker(latlng, { icon: iconByType('photo') }),
+        L.marker(latlng, { icon: iconByType("photo") }),
       onEachFeature: (f, l) => {
         const p = f.properties || {};
         const img = p.thumb || p.image;
         l.bindPopup(`
           <div class="poi-popup">
-            <img src="${img}" alt="${p.name || 'Photo'}" />
-            <strong>${p.name || 'Photo'}</strong><br/>
-            <small>${p.time || ''}</small>
+            <img src="${img}" alt="${p.name || "Photo"}" />
+            <strong>${p.name || "Photo"}</strong><br/>
+            <small>${p.time || ""}</small>
           </div>
         `);
-      }
+      },
     });
     cluster.addLayer(photosLayer);
   });
@@ -162,6 +169,7 @@ fetch('data/pois_photos.geojson')
 - 📱 Teste systématiquement sur mobile (drawer + clustering).
 
 ### HEIC
+
 Pour le support HEIC :
 
 ```bash
@@ -172,9 +180,9 @@ pip install pillow pillow-heif
 
 ## 🌊 Philosophie
 
-> *La carte n’est pas qu’un outil de navigation.*  
-> *C’est un espace de narration, une mémoire du mouvement,*  
-> *un carnet de voyage géographique.*
+> _La carte n’est pas qu’un outil de navigation._  
+> _C’est un espace de narration, une mémoire du mouvement,_  
+> _un carnet de voyage géographique._
 
 **Loire Ride Zen** explore le **slow travel à vélo**, la Loire comme fil conducteur,
 et la technologie comme moyen de raconter autrement.
@@ -192,3 +200,15 @@ et la technologie comme moyen de raconter autrement.
 ---
 
 Bonne route 🚲
+
+---
+
+## 👋 À propos
+
+**Julien Julien**
+Développeur Full Stack & créateur de projets narratifs.
+Je conçois des applications et des outils numériques durables, où le code, la structure et le récit avancent ensemble.
+J’aime les projets clairs, évolutifs, pensés pour le temps long plutôt que pour l’instantané.
+
+📍 Angers, France 🇫🇷
+🌍 https://julienjulien.fr
