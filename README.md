@@ -3,7 +3,7 @@
 Carte interactive du projet **Loire Ride Zen** :  
 un récit de voyage à vélo le long de la Loire, mêlant **traces**, **points d’intérêt**, **photos géolocalisées** et **coups de cœur personnels**.
 
-Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** pour transformer une aventure réelle en expérience cartographique vivante.
+Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** pour transformer une aventure réelle en expérience cartographique vivante.  
 
 ---
 
@@ -203,12 +203,12 @@ Bonne route 🚲
 
 ---
 
-## 👋 À propos
+## 👋 À propos du développeur
 
-**Julien Julien**
-Développeur Full Stack & créateur de projets narratifs.
-Je conçois des applications et des outils numériques durables, où le code, la structure et le récit avancent ensemble.
-J’aime les projets clairs, évolutifs, pensés pour le temps long plutôt que pour l’instantané.
+**Julien Julien**  
+Développeur Full Stack & créateur de projets narratifs.  
+> Je conçois des applications et des outils numériques durables, où le code, la structure et le récit avancent ensemble.  
+> J’aime les projets clairs, évolutifs, pensés pour le temps long plutôt que pour l’instantané.  
 
-📍 Angers, France 🇫🇷
+📍 Angers, France 🇫🇷  
 🌍 https://julienjulien.fr
