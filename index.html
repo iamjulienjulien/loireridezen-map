@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
@@ -52,6 +52,25 @@
       href="https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     /> -->
+
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script
+      async
+      src="https://plausible.io/js/pa-BOQLtEKyALECqC2DirH6B.js"
+    ></script>
+    <script>
+      ((window.plausible =
+        window.plausible ||
+        function () {
+          (plausible.q = plausible.q || []).push(arguments);
+        }),
+        (plausible.init =
+          plausible.init ||
+          function (i) {
+            plausible.o = i || {};
+          }));
+      plausible.init();
+    </script>
 
     <style>
       html,
@@ -411,12 +430,12 @@
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           attribution: "&copy; OpenStreetMap",
-        }
+        },
       );
 
       const baseEsriSat = L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        { attribution: "Imagery © Esri & sources" }
+        { attribution: "Imagery © Esri & sources" },
       );
 
       // Pane et labels
@@ -425,7 +444,7 @@
       map.getPane("labelsPane").style.zIndex = 650;
       const esriLabels = L.tileLayer(
         "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-        { pane: "labelsPane", attribution: "Labels © Esri" }
+        { pane: "labelsPane", attribution: "Labels © Esri" },
       );
 
       // Charger préférence de fond
@@ -438,7 +457,10 @@
       }
 
       map.addControl(
-        new L.Control.FullScreen({ position: "topright", title: "Plein écran" })
+        new L.Control.FullScreen({
+          position: "topright",
+          title: "Plein écran",
+        }),
       );
 
       // 2) Trace
@@ -470,7 +492,7 @@
       });
       fetch("data/route_simplified.geojson")
         .then((r) =>
-          r.ok ? r.json() : fetch("data/route.geojson").then((rr) => rr.json())
+          r.ok ? r.json() : fetch("data/route.geojson").then((rr) => rr.json()),
         )
         .then((gj) => {
           routeLayer.addData(gj).addTo(map);
@@ -575,7 +597,7 @@
         bounds,
         activeType = null,
         activeStage = null,
-        signal
+        signal,
       ) {
         const qs = new URLSearchParams({
           minlon: bounds.getWest(),
@@ -594,7 +616,7 @@
               Authorization: `Bearer ${SUPA_ANON_KEY}`,
             },
             signal,
-          }
+          },
         );
         if (!res.ok) throw new Error(`Supabase ${res.status}`);
         return res.json();
@@ -622,8 +644,8 @@
             ${img ? `<img src="${img}" alt="${p.name || "POI"}"/>` : ""}
             <strong>${p.name || "Point"}</strong><br/>
             <small>${p.type || ""}${
-          p.stage ? ` · Étape ${p.stage}` : ""
-        }</small>
+              p.stage ? ` · Étape ${p.stage}` : ""
+            }</small>
             <p>${p.description || ""}</p>
             ${insta}
           </div>
@@ -632,7 +654,7 @@
 
       async function loadPoisForViewport() {
         const activeTypes = Array.from(
-          document.querySelectorAll(".type-filter:checked")
+          document.querySelectorAll(".type-filter:checked"),
         ).map((i) => i.value);
         const activeType = activeTypes.length === 1 ? activeTypes[0] : null;
 
@@ -646,14 +668,14 @@
               map.getBounds(),
               activeType,
               null,
-              controller.signal
+              controller.signal,
             ),
             fetchLocalPhotos(),
           ]);
           const all = (fcDB.features || []).concat(fcLocal.features || []);
           const activeSet = new Set(activeTypes);
           const filtered = all.filter((f) =>
-            activeSet.has((f.properties || {}).type)
+            activeSet.has((f.properties || {}).type),
           );
 
           cluster.clearLayers();
@@ -666,7 +688,7 @@
                 }),
               onEachFeature: (f, l) =>
                 bindPopupFromProps(f.properties || {}, l),
-            }
+            },
           );
           cluster.addLayer(layer);
         } catch (e) {
@@ -695,7 +717,7 @@
         }
       }
       toggleBtn.addEventListener("click", () =>
-        setOpen(!panel.classList.contains("open"))
+        setOpen(!panel.classList.contains("open")),
       );
       map.on("click", () => {
         if (window.matchMedia("(max-width:899px)").matches) setOpen(false);
