@@ -710,9 +710,7 @@
 
       async function fetchLocalPhotos() {
         try {
-          const r = await fetch("data/pois_photos.geojson", {
-            cache: "no-cache",
-          });
+          const r = await fetch("data/pois_photos.geojson");
           if (!r.ok) return { type: "FeatureCollection", features: [] };
           return r.json();
         } catch (e) {
