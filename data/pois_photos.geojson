@@ -4,135 +4,135 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Château de Chambord",
+        "name": "01 chambord",
         "type": "photo",
-        "image": "./photos/IMG_7788.jpeg",
-        "thumb": "./thumbs/IMG_7788.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg",
+        "thumb": "./thumbs/01-chambord.webp",
         "time": "2025:06:06 14:22:09"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.5140944444444444,
-          47.61697777777778
+          1.514094,
+          47.616978
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Pont Jacques Gabriel à Blois",
+        "name": "02 blois",
         "type": "photo",
-        "image": "./photos/IMG_7860.jpeg",
-        "thumb": "./thumbs/IMG_7860.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg",
+        "thumb": "./thumbs/02-blois.webp",
         "time": "2025:06:07 12:43:09"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.339997222222222,
-          47.58486944444444
+          1.339997,
+          47.584869
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Chapelle Saint-Hubert à Amboise",
+        "name": "03 amboise",
         "type": "photo",
-        "image": "./photos/IMG_7905.jpeg",
-        "thumb": "./thumbs/IMG_7905.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg",
+        "thumb": "./thumbs/03-amboise.webp",
         "time": "2025:06:08 13:31:29"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.984936111111111,
-          47.41277222222222
+          0.984936,
+          47.412772
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Château d'Amboise",
+        "name": "04 amboise",
         "type": "photo",
-        "image": "./photos/IMG_8002.jpeg",
-        "thumb": "./thumbs/IMG_8002.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg",
+        "thumb": "./thumbs/04-amboise.webp",
         "time": "2025:06:09 20:18:52"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.9851083333333333,
-          47.41596111111111
+          0.985108,
+          47.415961
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Château de Chenonceau",
+        "name": "05 chenonceau",
         "type": "photo",
-        "image": "./photos/IMG_8034.jpeg",
-        "thumb": "./thumbs/IMG_8034.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg",
+        "thumb": "./thumbs/05-chenonceau.webp",
         "time": "2025:06:10 16:02:27"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.0701805555555555,
-          47.32404722222223
+          1.070181,
+          47.324047
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Cathédrale Saint-Gatien à Tours",
+        "name": "06 tours",
         "type": "photo",
-        "image": "./photos/IMG_8164.jpeg",
-        "thumb": "./thumbs/IMG_8164.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg",
+        "thumb": "./thumbs/06-tours.webp",
         "time": "2025:06:12 13:21:35"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.6933944444444444,
-          47.39538611111111
+          0.693394,
+          47.395386
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Peintre dans un champ de blé",
+        "name": "07 delaware painter",
         "type": "photo",
-        "image": "./photos/IMG_8170.jpeg",
-        "thumb": "./thumbs/IMG_8170.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/07-delaware-painter.jpeg",
+        "thumb": "./thumbs/07-delaware-painter.webp",
         "time": "2025:06:12 15:04:53"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.5572250000000001,
-          47.360572222222224
+          0.557225,
+          47.360572
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Jardins du château de Villandry",
+        "name": "08 villandry",
         "type": "photo",
-        "image": "./photos/IMG_8218.jpeg",
-        "thumb": "./thumbs/IMG_8218.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg",
+        "thumb": "./thumbs/08-villandry.webp",
         "time": "2025:06:12 17:45:05"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.5142777777777778,
+          0.514278,
           47.340325
         ]
       }
@@ -140,67 +140,67 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Toues cabanées sur la Loire",
+        "name": "09 boats",
         "type": "photo",
-        "image": "./photos/IMG_8256.jpeg",
-        "thumb": "./thumbs/IMG_8256.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/09-boats.jpeg",
+        "thumb": "./thumbs/09-boats.webp",
         "time": "2025:06:12 20:31:39"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.5476583333333334,
-          47.34870555555556
+          0.547658,
+          47.348706
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Château de Langeais",
+        "name": "10 langeais",
         "type": "photo",
-        "image": "./photos/IMG_8297.jpeg",
-        "thumb": "./thumbs/IMG_8297.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg",
+        "thumb": "./thumbs/10-langeais.webp",
         "time": "2025:06:13 14:29:26"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.4065944444444445,
-          47.32485555555556
+          0.406594,
+          47.324856
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Forteresse royale de Chinon",
+        "name": "11 chinon",
         "type": "photo",
-        "image": "./photos/IMG_8409.jpeg",
-        "thumb": "./thumbs/IMG_8409.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg",
+        "thumb": "./thumbs/11-chinon.webp",
         "time": "2025:06:16 13:12:24"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.23790277777777777,
-          47.16396666666667
+          0.237903,
+          47.163967
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Cloître de l'Abbaye de Fontevraud",
+        "name": "12 fontevraud",
         "type": "photo",
-        "image": "./photos/IMG_8477.jpeg",
-        "thumb": "./thumbs/IMG_8477.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg",
+        "thumb": "./thumbs/12-fontevraud.webp",
         "time": "2025:06:17 11:49:26"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.05155833333333334,
+          0.051558,
           47.18105
         ]
       }
@@ -208,68 +208,68 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Château de Saumur",
+        "name": "13 saumur",
         "type": "photo",
-        "image": "./photos/IMG_8509.jpeg",
-        "thumb": "./thumbs/IMG_8509.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg",
+        "thumb": "./thumbs/13-saumur.webp",
         "time": "2025:06:17 19:47:01"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.07279722222222222,
-          47.26218333333333
+          -0.072797,
+          47.262183
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Confluence Loire-Maine",
+        "name": "14 saint mathurin",
         "type": "photo",
-        "image": "./photos/IMG_8572.jpeg",
-        "thumb": "./thumbs/IMG_8572.webp",
-        "time": "2025:06:18 17:26:15"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.6137888888888888,
-          47.411852777777774
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Château d'Angers",
-        "type": "photo",
-        "image": "./photos/IMG_8584.jpeg",
-        "thumb": "./thumbs/IMG_8584.webp",
-        "time": "2025:06:18 19:58:52"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.5661055555555556,
-          47.470325
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Saint-Mathurin",
-        "type": "photo",
-        "image": "./photos/saint-mathurin.jpeg",
-        "thumb": "./thumbs/saint-mathurin.webp",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/14-saint-mathurin.jpeg",
+        "thumb": "./thumbs/14-saint-mathurin.webp",
         "time": "2025:06:18 15:25:58"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.31998333333333334,
-          47.40510555555555
+          -0.319983,
+          47.405106
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "15 loire maine",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg",
+        "thumb": "./thumbs/15-loire-maine.webp",
+        "time": "2025:06:18 17:26:15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.613789,
+          47.411853
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "16 angers",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg",
+        "thumb": "./thumbs/16-angers.webp",
+        "time": "2025:06:18 19:58:52"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.566106,
+          47.470325
         ]
       }
     }
