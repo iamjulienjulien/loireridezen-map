@@ -1,0 +1,196 @@
+/* ───────────────────────────────────────────── Base */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+#map {
+  height: 100%;
+}
+
+.extra-marker-content {
+  z-index: 1000;
+}
+
+/* ───────────────────────────────────── Panneau filtres */
+
+.controls {
+  position: absolute;
+  z-index: 1000;
+  top: 10px;
+  background: white;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease;
+  max-width: 320px;
+}
+
+.controls hr {
+  margin: 0.5rem 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.filters-header {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.filters-header .logo {
+  max-width: 120px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 0.75rem;
+}
+
+.filters-grid label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-row-gap: 0.3rem;
+  grid-column-gap: 0.5rem;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.legend-line {
+  width: 16px;
+  height: 4px;
+}
+
+.legend-marker {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #fff;
+  border-width: 2px;
+  border-style: solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+/* ─────────────────────────────────────── Bouton mobile */
+
+.filters-toggle {
+  position: absolute;
+  z-index: 1100;
+  top: 10px;
+  left: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.filters-toggle[aria-expanded="true"] {
+  background: #f5f5f5;
+}
+
+/* ─────────────────────────────────── Responsive (mobile = drawer) */
+
+@media (min-width: 900px) {
+  .filters-toggle {
+    display: none;
+  }
+
+  .controls {
+    left: 10px;
+    top: 10px;
+  }
+}
+
+@media (max-width: 899px) {
+  .controls {
+    left: 0;
+    top: 0;
+    width: min(90vw, 420px);
+    height: 100%;
+    overflow: auto;
+    transform: translateX(-100%);
+    box-shadow: none;
+    border-right: 1px solid #eee;
+    border-radius: 0;
+  }
+
+  .controls.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* ─────────────────────────────────────────── Popups POI */
+
+.poi-popup img {
+  max-width: 100%;
+  display: block;
+  border-radius: 2px;
+  margin-bottom: 0.35rem;
+}
+
+.poi-popup p {
+  margin: 0.4rem 0 0;
+}
+
+/* ─────────────────────────────────── Bannière d'erreur Supabase */
+
+.lrz-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fef3c7;
+  border: 1px solid #d97706;
+  color: #78350f;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  max-width: 380px;
+}
+
+.lrz-error-banner__retry {
+  background: #d97706;
+  color: white;
+  border: 0;
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.lrz-error-banner__retry:hover {
+  background: #b45309;
+}

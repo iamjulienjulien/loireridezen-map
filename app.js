@@ -1,0 +1,37 @@
+/**
+ * app.js — Entry point de la carte Loire Ride Zen
+ *
+ * Orchestre l'initialisation des sous-modules dans le bon ordre.
+ * Toute la logique vit dans ./app/*.js, ce fichier ne fait que coordonner.
+ *
+ * Ordre d'init :
+ *   1. UI statique (filtres, légende, drawer)
+ *   2. Layer control Leaflet
+ *   3. Chargement des traces GPX en parallèle (avec fitBounds final)
+ *   4. Premier chargement des POI + branchement des listeners viewport
+ */
+
+import { loadAllRoutes } from "./app/routes.js";
+import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
+import {
+  renderFilters,
+  renderLegend,
+  initMobileDrawer,
+  initLayerControl,
+} from "./app/ui.js";
+
+function init() {
+  renderFilters();
+  renderLegend();
+  initMobileDrawer();
+  initLayerControl();
+
+  // Traces GPX : fire-and-forget (fitBounds géré en interne)
+  loadAllRoutes();
+
+  // POI : premier chargement + listeners "moveend" / filtres
+  bindViewportListeners();
+  loadPoisForViewport();
+}
+
+init();
