@@ -15,38 +15,16 @@
     <!-- Leaflet -->
     <link
       rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css"
     />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- MarkerCluster -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-    />
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
-    <!-- ExtraMarkers + Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet-extra-markers@1.2.1/dist/css/leaflet.extra-markers.min.css"
-    />
-    <script src="https://unpkg.com/leaflet-extra-markers@1.2.1/dist/js/leaflet.extra-markers.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    />
-
-    <!-- Fullscreen plugin -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@1.6.0/Control.FullScreen.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.js",
+          "leaflet-extra-markers": "https://unpkg.com/leaflet-extra-markers@2.0.1/src/index.js"
+        }
+      }
+    </script>
 
     <!-- Google Fonts -->
     <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -80,6 +58,9 @@
       body {
         height: 100%;
         margin: 0;
+      }
+      .extra-marker-content {
+        z-index: 1000;
       }
       .atma-light {
         font-family: "Atma", system-ui;
@@ -313,121 +294,107 @@
           <div>Variante / détour</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
+              width: 25px;
+              height: 25px;
               border-radius: 50%;
-              background: #3498db;
+              background: #fff;
+              border: 2px solid #3498db;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-landmark"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            🏰
           </div>
           <div>Patrimoine</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
+              width: 25px;
+              height: 25px;
               border-radius: 50%;
-              background: #f39c12;
+              background: #fff;
+              border: 2px solid #f39c12;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-music"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            🍻
           </div>
           <div>Guinguette</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
+              width: 25px;
+              height: 25px;
               border-radius: 50%;
-              background: #9b59b6;
+              background: #fff;
+              border: 2px solid #9b59b6;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-campground"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            🏕️
           </div>
           <div>Hébergement</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
+              width: 25px;
+              height: 25px;
               border-radius: 50%;
-              background: #00bcd4;
+              background: #fff;
+              border: 2px solid #00bcd4;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-camera"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            📸
           </div>
           <div>Photo</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
+              width: 25px;
+              height: 25px;
               border-radius: 50%;
-              background: #f1c40f;
+              background: #fff;
+              border: 2px solid #f1c40f;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-star"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            💖
           </div>
           <div>Coup de cœur</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
-              border-radius: 4px;
-              background: #2ecc71;
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+              background: #fff;
+              border: 2px solid #2ecc71;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-flag-checkered"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            🏳️
           </div>
           <div>Départ</div>
           <div
             style="
-              width: 16px;
-              height: 16px;
-              border-radius: 4px;
-              background: #e74c3c;
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+              background: #fff;
+              border: 2px solid #e74c3c;
               display: flex;
               align-items: center;
               justify-content: center;
             "
           >
-            <i
-              class="fa-solid fa-bullseye"
-              style="font-size: 10px; color: #fff"
-            ></i>
+            🏁
           </div>
           <div>Arrivée</div>
         </div>
@@ -443,7 +410,28 @@
     </button>
     <div id="map"></div>
 
-    <script>
+    <script type="module">
+      import {
+        Map,
+        TileLayer,
+        GeoJSON,
+        Marker,
+        LayerGroup,
+        Control,
+        DomUtil,
+        DomEvent,
+      } from "leaflet";
+
+      import * as leafletExtraMarkers from "leaflet-extra-markers";
+
+      const {
+        Icon,
+        TackSquareBorder,
+        TackCircleBorder,
+        TackStarBorder,
+        TackDiamondBorder,
+      } = leafletExtraMarkers;
+
       // 🔑 Supabase config — valeurs injectées via window.LRZ_CONFIG (config.js)
       const cfg = window.LRZ_CONFIG || {};
       const SUPA_URL = cfg.SUPA_URL;
@@ -457,19 +445,19 @@
       }
 
       // 1) Carte + fonds
-      const map = L.map("map", {
+      const map = new Map("map", {
         zoomControl: true,
         scrollWheelZoom: true,
       }).setView([47.3, 0.5], 8);
 
-      const baseOSM = L.tileLayer(
+      const baseOSM = new TileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           attribution: "&copy; OpenStreetMap",
         },
       );
 
-      const baseEsriSat = L.tileLayer(
+      const baseEsriSat = new TileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         { attribution: "Imagery © Esri & sources" },
       );
@@ -478,7 +466,7 @@
       map.createPane("labelsPane");
       map.getPane("labelsPane").style.pointerEvents = "none";
       map.getPane("labelsPane").style.zIndex = 650;
-      const esriLabels = L.tileLayer(
+      const esriLabels = new TileLayer(
         "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
         { pane: "labelsPane", attribution: "Labels © Esri" },
       );
@@ -492,13 +480,6 @@
         baseOSM.addTo(map);
       }
 
-      map.addControl(
-        new L.Control.FullScreen({
-          position: "topright",
-          title: "Plein écran",
-        }),
-      );
-
       // 2) Trace
       const colors = [
         "#2E86AB",
@@ -511,14 +492,14 @@
         "#16A085",
         "#34495E",
       ];
-      const routeLayer = L.geoJSON(null, {
+      const routeLayer = new GeoJSON(null, {
         style: (f) => {
           const s = f.properties?.stage || 0;
           return { color: colors[s % colors.length], weight: 4, opacity: 0.9 };
         },
       });
       // 👉 Nouvelle trace : Boucle Angevine
-      const boucleLayer = L.geoJSON(null, {
+      const boucleLayer = new GeoJSON(null, {
         style: () => ({
           color: "#FF7F00", // orange chaud (différent de la trace principale)
           weight: 4,
@@ -549,20 +530,16 @@
         })
         .catch(() => console.warn("Boucle Angevine introuvable"));
 
-      // 3) Cluster
-      const cluster = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        maxClusterRadius: 20,
-        disableClusteringAtZoom: 13,
-      });
+      // 3) Markers layer
+      const cluster = new LayerGroup();
       cluster.addTo(map);
 
       // Bannière d'erreur Supabase (masquée par défaut)
-      const errorControl = L.control({ position: "bottomleft" });
+      const errorControl = new Control({ position: "bottomleft" });
       let currentRetry = null;
 
       errorControl.onAdd = function () {
-        const div = L.DomUtil.create("div", "lrz-error-banner");
+        const div = DomUtil.create("div", "lrz-error-banner");
         div.setAttribute("role", "status");
         div.setAttribute("aria-live", "polite");
         div.style.display = "none";
@@ -570,7 +547,7 @@
           <span class="lrz-error-banner__msg">Impossible de charger les lieux.</span>
           <button type="button" class="lrz-error-banner__retry">Réessayer</button>
         `;
-        L.DomEvent.disableClickPropagation(div);
+        DomEvent.disableClickPropagation(div);
         div
           .querySelector(".lrz-error-banner__retry")
           .addEventListener("click", () => {
@@ -593,60 +570,60 @@
       const iconByType = (type) => {
         switch (type) {
           case "patrimoine":
-            return L.ExtraMarkers.icon({
-              icon: "fa-landmark",
-              prefix: "fa",
-              markerColor: "blue",
-              shape: "penta",
+            return new Icon({
+              content: "🏰",
+              color: "#2196F3",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackStarBorder,
             });
           case "départ":
-            return L.ExtraMarkers.icon({
-              icon: "fa-flag-checkered",
-              prefix: "fa",
-              markerColor: "green",
-              shape: "square",
+            return new Icon({
+              content: "🏳️",
+              color: "#4CAF50",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackDiamondBorder,
             });
           case "arrivée":
-            return L.ExtraMarkers.icon({
-              icon: "fa-bullseye",
-              prefix: "fa",
-              markerColor: "red",
-              shape: "square",
+            return new Icon({
+              content: "🏁",
+              color: "#F44336",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackDiamondBorder,
             });
           case "guinguette":
-            return L.ExtraMarkers.icon({
-              icon: "fa-music",
-              prefix: "fa",
-              markerColor: "orange",
-              shape: "circle",
+            return new Icon({
+              content: "🍻",
+              color: "#FF9800",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackSquareBorder,
             });
           case "hébergement":
-            return L.ExtraMarkers.icon({
-              icon: "fa-campground",
-              prefix: "fa",
-              markerColor: "purple",
-              shape: "circle",
+            return new Icon({
+              content: "🏕️",
+              color: "#9C27B0",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackSquareBorder,
             });
           case "photo":
-            return L.ExtraMarkers.icon({
-              icon: "fa-camera",
-              prefix: "fa",
-              markerColor: "cyan",
-              shape: "circle",
+            return new Icon({
+              content: "📸",
+              color: "#32a9dd",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackSquareBorder,
             });
           case "coupdecoeur":
-            return L.ExtraMarkers.icon({
-              icon: "fa-star",
-              prefix: "fa",
-              markerColor: "yellow",
-              shape: "circle",
+            return new Icon({
+              content: "💖",
+              color: "#FFC107",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackSquareBorder,
             });
           default:
-            return L.ExtraMarkers.icon({
-              icon: "fa-map-pin",
-              prefix: "fa",
-              markerColor: "cyan",
-              shape: "circle",
+            return new Icon({
+              content: "📍",
+              color: "#00BCD4",
+              accentColor: "rgba(0,0,0,0.25)",
+              svg: TackCircleBorder,
             });
         }
       };
@@ -758,11 +735,11 @@
           );
 
           cluster.clearLayers();
-          const layer = L.geoJSON(
+          const layer = new GeoJSON(
             { type: "FeatureCollection", features: filtered },
             {
               pointToLayer: (f, latlng) =>
-                L.marker(latlng, {
+                new Marker(latlng, {
                   icon: iconByType((f.properties || {}).type),
                 }),
               onEachFeature: (f, l) =>
@@ -823,7 +800,7 @@
         "Boucle Angevine": boucleLayer, // ← nouvelle ligne
         "Points d’intérêt": cluster,
       };
-      L.control.layers(baseMaps, overlays, { collapsed: false }).addTo(map);
+      new Control.Layers(baseMaps, overlays, { collapsed: false }).addTo(map);
 
       map.on("baselayerchange", (e) => {
         if (e.name.includes("Satellite")) {
