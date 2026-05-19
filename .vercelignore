@@ -1,0 +1,27 @@
+# Photos — externalized to Supabase Storage
+photos/
+
+# Raw route data (simplified geojson used instead)
+data/route.geojson
+data/boucle_angevine.gpx
+
+# Python scripts and environment
+*.py
+.venv/
+requirements.txt
+
+# GPX source files
+gpx/
+
+# SQL schema
+sql/
+
+# Dev & tooling
+.DS_Store
+.vscode/
+memory/
+development/
+supabase/
+config.js.example
+README.md
+.skill-cache/
