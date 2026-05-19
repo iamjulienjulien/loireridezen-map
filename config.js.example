@@ -1,0 +1,8 @@
+// Configuration runtime — copier ce fichier en `config.js` pour dev local.
+// En production Vercel, ce fichier est généré au build depuis les variables d'env.
+//
+// Récupérer ces valeurs depuis : Supabase Console → Project Settings → API
+window.LRZ_CONFIG = {
+  SUPA_URL: "https://YOUR-PROJECT.supabase.co",
+  SUPA_PUBLISHABLE_KEY: "your-publishable-key-here",
+};

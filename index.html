@@ -9,6 +9,9 @@
       content="Découvrez la carte interactive de Loire Ride Zen 🚴‍♂️ : étapes de ma rando à vélo, châteaux de la Loire et coups de cœur en chemin."
     />
 
+    <!-- Runtime config (généré au build Vercel depuis les env vars, ou config.js local) -->
+    <script src="config.js"></script>
+
     <!-- Leaflet -->
     <link
       rel="stylesheet"
@@ -415,10 +418,17 @@
     <div id="map"></div>
 
     <script>
-      // 🔑 Supabase config
-      const SUPA_URL = "https://covxsekavbmeqysdqnjh.supabase.co";
-      const SUPA_ANON_KEY =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnhzZWthdmJtZXF5c2RxbmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDI0MDAsImV4cCI6MjA3MjQxODQwMH0.Z53SrJ7_T4VrF8L0Ou476odsTo9ZqPrKFQXi4jRbWCU"; // clé publique OK côté client pour lecture
+      // 🔑 Supabase config — valeurs injectées via window.LRZ_CONFIG (config.js)
+      const cfg = window.LRZ_CONFIG || {};
+      const SUPA_URL = cfg.SUPA_URL;
+      const SUPA_PUBLISHABLE_KEY = cfg.SUPA_PUBLISHABLE_KEY;
+
+      if (!SUPA_URL || !SUPA_PUBLISHABLE_KEY) {
+        console.error(
+          "[loireridezen] config.js manquant ou incomplet. " +
+            "Créer config.js depuis config.js.example pour dev local.",
+        );
+      }
 
       // 1) Carte + fonds
       const map = L.map("map", {
@@ -630,8 +640,8 @@
           `${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${qs}`,
           {
             headers: {
-              apikey: SUPA_ANON_KEY,
-              Authorization: `Bearer ${SUPA_ANON_KEY}`,
+              apikey: SUPA_PUBLISHABLE_KEY,
+              Authorization: `Bearer ${SUPA_PUBLISHABLE_KEY}`,
             },
             signal,
           },
