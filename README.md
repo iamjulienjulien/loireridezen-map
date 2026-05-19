@@ -58,6 +58,7 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 - GeoJSON (RFC 7946)
 - GPX → GeoJSON (via `gpxpy` + `shapely` pour la simplification)
 - Python (Pillow, pillow-heif, exifread pour les EXIF photo)
+- Photos originales hébergées sur **Supabase Storage** (bucket `photos`)
 
 ### Déploiement
 
@@ -79,6 +80,7 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 ├─ make_thumbs.py
 ├─ gpx_to_geojson.py
 ├─ sync_pois_from_supabase.py
+├─ sync_photos_to_supabase.py
 ├─ assets/
 │  └─ logo_loire_ride_zen.jpg
 ├─ data/
@@ -88,8 +90,8 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 │  ├─ boucle_angevine.gpx
 │  ├─ pois.geojson
 │  └─ pois_photos.geojson
-├─ photos/
-├─ thumbs/
+├─ photos/                ← gitignored, source des originaux
+├─ thumbs/                ← committé (miniatures WebP, ~5 MB)
 └─ sql/
    ├─ schema.sql
    └─ migrations/
@@ -98,6 +100,7 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 Fichiers **non versionnés** (générés ou locaux, dans `.gitignore`) :
 
 - `config.js` — créé localement depuis `config.js.example`, généré par le build Vercel en prod
+- `photos/` — originaux JPEG/HEIC hébergés sur Supabase Storage (cf. [Sync photos vers Supabase](#-poi-depuis-des-photos-géolocalisées))
 - `.venv/` — environnement Python local
 - `.supabase/` — état local de Supabase CLI
 
@@ -133,14 +136,20 @@ Comment une donnée arrive sur la carte, selon sa source :
 │  FLUX 1 — Photos terrain → POI photos                            │
 └─────────────────────────────────────────────────────────────────┘
 
-  Photos JPEG/HEIC          make_thumbs.py        thumbs/*.webp
-  avec GPS EXIF      ───→   (resize WebP)   ───→
-  (./photos)
-                            photos_to_poi.py      data/pois_photos.geojson
-                     ───→   (extrait GPS)   ───→
-                                                          │
-                                                          ▼
-                                                  Leaflet (couche photos)
+  Photos terrain (JPEG/HEIC + GPS EXIF, ./photos local, gitignored)
+       │
+       ├─ make_thumbs.py ───────────────→ ./thumbs/*.webp
+       │                                  (committé, ~5 MB)
+       │
+       ├─ sync_photos_to_supabase.py ───→ Supabase Storage
+       │  (upload, SUPA_SECRET_KEY)       bucket "photos"
+       │                                          ↑
+       │                                          │ référencé par URL
+       └─ photos_to_poi.py ─────────────→ data/pois_photos.geojson
+          (lit EXIF en local,             (committé, URLs Supabase)
+          génère URLs Supabase)                   │
+                                                  ▼
+                                          Leaflet (couche photos)
 
 
 ┌─────────────────────────────────────────────────────────────────┐
@@ -180,11 +189,13 @@ Les trois flux convergent dans le même cluster Leaflet, qui les gère côte à 
 
 ## 🔐 Variables d'environnement
 
-La configuration runtime sensible est externalisée dans un objet `window.LRZ_CONFIG` chargé depuis `config.js`. Ce fichier est **gitignored**.
+Deux niveaux de credentials Supabase à distinguer.
 
-### En local
+### Côté navigateur (carte publique)
 
-Copier `config.js.example` en `config.js` et y mettre les valeurs réelles :
+Configuration runtime exposée au client via `window.LRZ_CONFIG` dans `config.js`. **Gitignored**.
+
+**En local**, copier `config.js.example` en `config.js` et y mettre les valeurs réelles :
 
 ```js
 window.LRZ_CONFIG = {
@@ -193,11 +204,9 @@ window.LRZ_CONFIG = {
 };
 ```
 
-Ces valeurs sont à récupérer dans la console Supabase → Project Settings → API Keys (publishable key, **pas** secret).
+Ces valeurs sont à récupérer dans la console Supabase → Project Settings → API Keys (**publishable** key, pas secret).
 
-### En production (Vercel)
-
-Le fichier `config.js` est **généré au moment du build** par Vercel à partir des variables d'environnement :
+**En production (Vercel)**, le fichier `config.js` est **généré au moment du build** par Vercel à partir des variables d'environnement :
 
 | Variable               | Description                                   | Visibilité                   |
 | ---------------------- | --------------------------------------------- | ---------------------------- |
@@ -208,7 +217,20 @@ Le fichier `config.js` est **généré au moment du build** par Vercel à partir
 
 Le `buildCommand` de `vercel.json` lit ces variables et écrit le `config.js` avant que Vercel ne serve les fichiers.
 
-> 💡 **Sécurité.** La `SUPA_PUBLISHABLE_KEY` est conçue par Supabase pour être publique côté client. La sécurité repose entièrement sur les politiques RLS de la base. Ne **jamais** exposer la `secret key` côté front.
+### Côté scripts admin (push vers Supabase)
+
+Certaines opérations administratives — uploader des photos sur Supabase Storage, par exemple — nécessitent le rôle `service_role` (bypass RLS). La clé associée est la **`SUPA_SECRET_KEY`** (format `sb_secret_*`).
+
+| Variable          | Utilisée par                 | Source autorisée             |
+| ----------------- | ---------------------------- | ---------------------------- |
+| `SUPA_SECRET_KEY` | `sync_photos_to_supabase.py` | **Variable d'env seulement** |
+
+```bash
+# Récupérer dans console Supabase → Settings → API Keys → Secret key → Reveal
+export SUPA_SECRET_KEY="sb_secret_xxxxxxxxxxxxxxxxxxxxxx_xxxxxxxx"
+```
+
+> ⚠️ **`SUPA_SECRET_KEY` ne doit JAMAIS être dans `config.js`** ni dans aucun fichier committé. `config.js` est exposé au navigateur (en local et en prod via Vercel). Y placer la secret key serait une fuite immédiate avec accès complet à la base. Stockage recommandé : 1Password / Bitwarden / Keychain macOS, et `export` ponctuel dans le terminal au moment de l'utiliser.
 
 ---
 
@@ -383,29 +405,13 @@ Cela génère une migration locale qui reflète l'état distant. À committer en
 
 ## 📷 POI depuis des photos géolocalisées
 
-Transforme automatiquement les photos de terrain en points d'intérêt sur la carte.
+Transforme automatiquement les photos de terrain en points d'intérêt sur la carte. Workflow en 4 étapes : photos en local → miniatures + upload Supabase → GeoJSON.
 
-### Étapes
+### 1) Ajouter les photos
 
-#### 1) Ajouter les photos
+Place les photos **géolocalisées** dans `./photos` (dossier gitignored). Formats supportés : JPG / JPEG, PNG, HEIC. Les photos sans GPS sont automatiquement ignorées.
 
-Place les photos **géolocalisées** dans un dossier, par exemple :
-
-```
-./photos
-```
-
-Formats supportés :
-
-- JPG / JPEG
-- PNG
-- HEIC (voir note plus bas)
-
----
-
-#### 2) (Optionnel) Générer des miniatures WebP
-
-Pour des popups rapides et légères :
+### 2) Générer les miniatures WebP
 
 ```bash
 python make_thumbs.py \
@@ -415,22 +421,90 @@ python make_thumbs.py \
   --quality 80
 ```
 
----
+Les miniatures restent dans le repo (`./thumbs/`, ~5 MB total). Elles servent à l'affichage rapide dans les popups Leaflet.
 
-#### 3) Générer le GeoJSON des photos
+### 3) Uploader les originaux sur Supabase Storage
 
-Extraction automatique des coordonnées GPS depuis les EXIF :
+Les photos originales (JPEG/HEIC, 1.6 à 5 MB chacune) sont hébergées sur **Supabase Storage** dans le bucket `photos`, pas dans le repo git.
 
 ```bash
-python photos_to_poi.py \
-  --photos ./photos \
-  --out ./data/pois_photos.geojson \
-  --image-prefix ./photos \
-  --thumb-prefix ./thumbs
+# Récupérer SUPA_SECRET_KEY (cf. section Variables d'environnement)
+export SUPA_SECRET_KEY="sb_secret_..."
+
+# Voir ce qui serait fait
+python sync_photos_to_supabase.py --dry-run
+
+# Lancer pour de vrai (sync additive : n'écrase rien, ne supprime rien)
+python sync_photos_to_supabase.py
 ```
 
-Résultat :
-un fichier `pois_photos.geojson` directement exploitable par Leaflet.
+Le script est **idempotent** : il skip les fichiers déjà présents sur Supabase. Tu peux le relancer 10 fois de suite sans risque.
+
+**Flags utiles :**
+
+```bash
+# Écraser les fichiers déjà présents (si une photo a été modifiée en local)
+python sync_photos_to_supabase.py --upsert
+
+# Sync miroir : aussi supprimer sur Supabase ce qui n'est plus en local
+python sync_photos_to_supabase.py --delete
+
+# Combiner --delete avec --dry-run avant de lancer pour vrai !
+python sync_photos_to_supabase.py --dry-run --delete
+```
+
+Le script affiche un **plan** avant d'agir :
+
+```
+────────────────────────────────────────────────────────────
+Plan de synchronisation :
+  Nouveau (à uploader)       : 12
+  Existant (skip, sans --upsert) : 38
+  Distant orphelin (ignoré, sans --delete) : 0
+────────────────────────────────────────────────────────────
+```
+
+### 4) Générer le GeoJSON des photos
+
+Extraction automatique des coordonnées GPS depuis les EXIF, génération des URLs Supabase pour `image` et URLs locales pour `thumb` :
+
+```bash
+# Mode local (recommandé) : lit les EXIF en local, génère des URLs Supabase
+python photos_to_poi.py --local-photos ./photos
+
+# Mode pur Supabase : télécharge chaque photo depuis le bucket pour lire les EXIF
+# Plus lent mais marche depuis n'importe quelle machine sans copie locale
+python photos_to_poi.py
+```
+
+Résultat : `data/pois_photos.geojson` avec chaque feature contenant :
+
+- `image` : URL Supabase Storage (ex. `https://...supabase.co/storage/v1/object/public/photos/04-amboise.jpeg`)
+- `thumb` : chemin relatif `./thumbs/04-amboise.webp`
+- `time` : DateTime EXIF
+- coordinates WGS84
+
+### Workflow type complet après une sortie photo
+
+```bash
+# 1. Vider la carte SD dans ./photos/
+# (Lightroom, Finder, etc.)
+
+# 2. Générer les miniatures
+python make_thumbs.py --photos ./photos --thumbs ./thumbs
+
+# 3. Uploader les originaux sur Supabase Storage
+export SUPA_SECRET_KEY="sb_secret_..."
+python sync_photos_to_supabase.py
+
+# 4. Régénérer le GeoJSON
+python photos_to_poi.py --local-photos ./photos
+
+# 5. Commit + push
+git add thumbs/ data/pois_photos.geojson
+git commit -m "data(photos): nouvelles photos étape 3"
+git push
+```
 
 ---
 
@@ -510,18 +584,15 @@ fetch("data/pois_photos.geojson")
 
 ## 🧠 Astuces & bonnes pratiques
 
-- 📍 Les photos **sans GPS** sont automatiquement ignorées.
-- 🧭 Les chemins `--image-prefix` et `--thumb-prefix` deviennent les **URLs publiques** utilisées dans la carte.
+- 📍 Les photos **sans GPS** sont automatiquement ignorées par `photos_to_poi.py`.
+- 🔒 **`SUPA_SECRET_KEY` jamais committée**, jamais dans `config.js`. Uniquement en variable d'env au moment d'exécuter `sync_photos_to_supabase.py`.
 - 🍃 Garder une trace **pleine** (`route.geojson`) et une **simplifiée** (`route_simplified.geojson`). La carte tente la version simplifiée en premier et bascule sur la version pleine en cas d'erreur.
 - 📱 Tester systématiquement sur mobile (drawer + clustering).
+- 🧪 **Toujours `--dry-run` d'abord** avec `sync_photos_to_supabase.py --delete`. Le sync miroir est irréversible.
 
 ### HEIC
 
-Le support HEIC est déjà dans `requirements.txt` via `pillow-heif`. Si tu pars d'une install manuelle :
-
-```bash
-pip install pillow pillow-heif
-```
+Le support HEIC est déjà dans `requirements.txt` via `pillow-heif`. À noter : tous les navigateurs ne décodent pas le HEIC en natif (Chrome notamment). Pour une compatibilité maximale, convertir les HEIC en JPEG avant l'upload Supabase (Lightroom, Preview, ou `sips -s format jpeg` sur macOS).
 
 ---
 
@@ -541,6 +612,7 @@ Pour un déploiement de preview (branche secondaire), même mécanisme avec une 
 - Onglet Réseau → confirmer que les requêtes Supabase utilisent la bonne `apikey`
 - Vérifier qu'au moins un POI s'affiche
 - Tester un changement de couche (Plan ↔ Satellite)
+- Vérifier qu'une photo s'affiche dans une popup (URL Supabase Storage)
 
 **Logs de build et runtime :** Vercel Dashboard → Project → Deployments → cliquer un déploiement pour voir le détail.
 
