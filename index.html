@@ -475,7 +475,9 @@
               padding: [30, 30],
               maxZoom: 13,
             });
-          } catch (e) {}
+          } catch (e) {
+            console.warn("[loireridezen] fitBounds failed:", e);
+          }
         });
 
       // Charger la Boucle Angevine
