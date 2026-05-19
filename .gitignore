@@ -1,3 +1,14 @@
 .DS_Store
 .vscode/
 .venv/
+
+# Runtime config — généré au build sur Vercel, créé localement par chaque dev
+config.js
+.DS_Store
+audit-carte-2026-05-19-complet.md
+.DS_Store
+audit-carte-2026-05-19.md
+AUDIT-carte-loireridezen-brief.md
+memory/
+development/
+supabase/
