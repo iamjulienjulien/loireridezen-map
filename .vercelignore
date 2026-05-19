@@ -5,6 +5,9 @@ photos/
 data/route.geojson
 data/boucle_angevine.gpx
 
+sources/
+scripts/
+
 # Python scripts and environment
 *.py
 .venv/
