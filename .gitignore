@@ -12,3 +12,5 @@ AUDIT-carte-loireridezen-brief.md
 memory/
 development/
 supabase/
+# Photos originales — externalisées sur Supabase Storage (LRZ-QA-10)
+photos/
