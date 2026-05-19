@@ -272,6 +272,23 @@
           47.470325
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "17 la chevalerie",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg",
+        "thumb": "./thumbs/17-la-chevalerie.webp",
+        "time": "2025:09:30 16:28:17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.456067,
+          47.440792
+        ]
+      }
     }
   ]
 }
