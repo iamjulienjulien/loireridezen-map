@@ -1,0 +1,18 @@
+[
+  {
+    "id": "acte-1",
+    "label": "Acte 1"
+  },
+  {
+    "id": "acte-2",
+    "label": "Acte 2 — Blois → Angers"
+  },
+  {
+    "id": "acte-3",
+    "label": "Acte 3"
+  },
+  {
+    "id": "micro-aventure",
+    "label": "Micro-aventure"
+  }
+]

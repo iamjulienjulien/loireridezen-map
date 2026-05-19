@@ -1,0 +1,398 @@
+[
+  {
+    "id": "a819386b-2895-425a-a690-4a1a2d99484a",
+    "label": "Arrivée — Étape 0 - Blois ↔️ Chambord",
+    "type": "arrivée",
+    "stage": 0,
+    "description": "Point d’arrivée de Étape 0 - Blois ↔️ Chambord",
+    "coordinates": [
+      1.376347,
+      47.606041
+    ]
+  },
+  {
+    "id": "f83db4f7-960a-4b90-8614-c6f121e59bab",
+    "label": "Camping municipal de lîle dOr",
+    "type": "hébergement",
+    "stage": 0,
+    "description": "",
+    "coordinates": [
+      0.98721782,
+      47.416589435
+    ]
+  },
+  {
+    "id": "0a0cdaff-4945-4001-8e52-96113d66864b",
+    "label": "Camping Val de Loire",
+    "type": "hébergement",
+    "stage": 0,
+    "description": "",
+    "coordinates": [
+      1.375867728,
+      47.605738153
+    ]
+  },
+  {
+    "id": "396581f0-e5e5-4553-a7ee-6fd05b6aaee6",
+    "label": "Château de Blois",
+    "type": "patrimoine",
+    "stage": 0,
+    "description": "Résidence de plusieurs rois de France",
+    "coordinates": [
+      1.333,
+      47.586
+    ]
+  },
+  {
+    "id": "a4e076fd-a97b-469f-8897-5b16d4a836cb",
+    "label": "Château de Chambord",
+    "type": "patrimoine",
+    "stage": 0,
+    "description": "Chef-d’œuvre de la Renaissance française",
+    "coordinates": [
+      1.516,
+      47.616
+    ]
+  },
+  {
+    "id": "c107d5df-6dcf-4e3d-a228-38b52df500f5",
+    "label": "Départ — Étape 0 - Blois ↔️ Chambord",
+    "type": "départ",
+    "stage": 0,
+    "description": "Point de départ de Étape 0 - Blois ↔️ Chambord",
+    "coordinates": [
+      1.374521,
+      47.605676
+    ]
+  },
+  {
+    "id": "0bb6cc35-c0f9-4af1-8737-ea824a2bfc16",
+    "label": "Héron Carré",
+    "type": "guinguette",
+    "stage": 0,
+    "description": "La guingette de Angers",
+    "coordinates": [
+      -0.5734521,
+      47.4687926
+    ]
+  },
+  {
+    "id": "68866aa8-adda-4848-975e-885c65d00881",
+    "label": "Le Quai des Brunes",
+    "type": "guinguette",
+    "stage": 0,
+    "description": "La guingette de Saumur",
+    "coordinates": [
+      -0.0654099,
+      47.2601976
+    ]
+  },
+  {
+    "id": "7d816235-cc5f-4960-8809-c582eac6573d",
+    "label": "Arrivée — Étape 1 - Blois ➡️ Amboise",
+    "type": "arrivée",
+    "stage": 1,
+    "description": "Point d’arrivée de Étape 1 - Blois ➡️ Amboise",
+    "coordinates": [
+      0.978207,
+      47.405639
+    ]
+  },
+  {
+    "id": "70451e62-aa17-4bb2-9924-a495f8a0ebf0",
+    "label": "Château d’Amboise",
+    "type": "patrimoine",
+    "stage": 1,
+    "description": "Château royal surplombant la Loire",
+    "coordinates": [
+      0.986,
+      47.413
+    ]
+  },
+  {
+    "id": "daedd886-e4a1-454f-8f31-5ce1cb171628",
+    "label": "Départ — Étape 1 - Blois ➡️ Amboise",
+    "type": "départ",
+    "stage": 1,
+    "description": "Point de départ de Étape 1 - Blois ➡️ Amboise",
+    "coordinates": [
+      1.376383,
+      47.60626
+    ]
+  },
+  {
+    "id": "0872736c-52bc-4989-87f9-f694a30b5d0f",
+    "label": "Arrivée — Étape 2 - Amboise ➡️ Chenonceaux",
+    "type": "arrivée",
+    "stage": 2,
+    "description": "Point d’arrivée de Étape 2 - Amboise ➡️ Chenonceaux",
+    "coordinates": [
+      1.06653,
+      47.329851
+    ]
+  },
+  {
+    "id": "b67cc22d-5b57-45e2-97a7-15b667502f57",
+    "label": "Château de Chenonceau",
+    "type": "patrimoine",
+    "stage": 2,
+    "description": "Le château des Dames enjambant le Cher",
+    "coordinates": [
+      1.07,
+      47.324
+    ]
+  },
+  {
+    "id": "5df846a9-e6b3-4af3-b05a-30748625513d",
+    "label": "Confluence Loire-Chre",
+    "type": "coupdecoeur",
+    "stage": 2,
+    "description": "Rencontre entre le Cher et la Loire",
+    "coordinates": [
+      0.479632112,
+      47.342115083
+    ]
+  },
+  {
+    "id": "5a3aad3a-5532-4edb-bb15-7193916aa6ef",
+    "label": "Confluence Loire-Maine",
+    "type": "coupdecoeur",
+    "stage": 2,
+    "description": "Rencontre entre la Maine et la Loire",
+    "coordinates": [
+      -0.613734206,
+      47.411803714
+    ]
+  },
+  {
+    "id": "19997887-ae72-4a3d-a885-6d1d68a332e1",
+    "label": "Confluence Loire-Vienne",
+    "type": "coupdecoeur",
+    "stage": 2,
+    "description": "Rencontre entre la Vienne et la Loire",
+    "coordinates": [
+      0.076516307,
+      47.213551898
+    ]
+  },
+  {
+    "id": "709e06f3-8a63-49e4-be9a-d701f25e7777",
+    "label": "Départ — Étape 2 - Amboise ➡️ Chenonceaux",
+    "type": "départ",
+    "stage": 2,
+    "description": "Point de départ de Étape 2 - Amboise ➡️ Chenonceaux",
+    "coordinates": [
+      0.988798,
+      47.417164
+    ]
+  },
+  {
+    "id": "19320643-3863-480c-af38-402293b4c18f",
+    "label": "Arrivée — Étape 3 - Chenonceaux ➡️ Tours",
+    "type": "arrivée",
+    "stage": 3,
+    "description": "Point d’arrivée de Étape 3 - Chenonceaux ➡️ Tours",
+    "coordinates": [
+      0.693727,
+      47.390055
+    ]
+  },
+  {
+    "id": "3c5ef63b-c12c-49f7-a7a8-3eef75e30b58",
+    "label": "Départ — Étape 3 - Chenonceaux ➡️ Tours",
+    "type": "départ",
+    "stage": 3,
+    "description": "Point de départ de Étape 3 - Chenonceaux ➡️ Tours",
+    "coordinates": [
+      1.089365,
+      47.327402
+    ]
+  },
+  {
+    "id": "d5d833a5-a126-49db-abcc-d32024c018f0",
+    "label": "Arrivée — Étape 4 - Tours ➡️ Villandry",
+    "type": "arrivée",
+    "stage": 4,
+    "description": "Point d’arrivée de Étape 4 - Tours ➡️ Villandry",
+    "coordinates": [
+      0.511382,
+      47.340919
+    ]
+  },
+  {
+    "id": "d4743087-31e3-4159-b82b-3fe0822e9826",
+    "label": "Château de Langeais",
+    "type": "patrimoine",
+    "stage": 4,
+    "description": "Château médiéval et Renaissance",
+    "coordinates": [
+      0.403,
+      47.325
+    ]
+  },
+  {
+    "id": "00d98e7b-35f9-43c8-8bbb-fd30a28b0192",
+    "label": "Château de Villandry",
+    "type": "patrimoine",
+    "stage": 4,
+    "description": "Célèbre pour ses jardins remarquables",
+    "coordinates": [
+      0.509,
+      47.34
+    ]
+  },
+  {
+    "id": "8f51b68a-d95c-4620-b8bf-d64ca58b9951",
+    "label": "Départ — Étape 4 - Tours ➡️ Villandry",
+    "type": "départ",
+    "stage": 4,
+    "description": "Point de départ de Étape 4 - Tours ➡️ Villandry",
+    "coordinates": [
+      0.692776,
+      47.389491
+    ]
+  },
+  {
+    "id": "535c989f-c60e-4992-858c-7a0de5b96eda",
+    "label": "Arrivée — Étape 5 - Villandry ➡️ Chinon",
+    "type": "arrivée",
+    "stage": 5,
+    "description": "Point d’arrivée de Étape 5 - Villandry ➡️ Chinon",
+    "coordinates": [
+      0.238043,
+      47.168313
+    ]
+  },
+  {
+    "id": "990de9c3-48e3-4636-8de0-ff0b7e987958",
+    "label": "Château de Chinon",
+    "type": "patrimoine",
+    "stage": 5,
+    "description": "Forteresse médiévale au bord de la Vienne",
+    "coordinates": [
+      0.245,
+      47.166
+    ]
+  },
+  {
+    "id": "0ae92821-b648-4de2-a613-b533122386ce",
+    "label": "Départ — Étape 5 - Villandry ➡️ Chinon",
+    "type": "départ",
+    "stage": 5,
+    "description": "Point de départ de Étape 5 - Villandry ➡️ Chinon",
+    "coordinates": [
+      0.51001,
+      47.344143
+    ]
+  },
+  {
+    "id": "784dd550-a917-49f0-b1d7-430bfd36ddc6",
+    "label": "Abbaye de Fontevraud",
+    "type": "patrimoine",
+    "stage": 6,
+    "description": "L’une des plus vastes cités monastiques d’Europe",
+    "coordinates": [
+      0.048,
+      47.18
+    ]
+  },
+  {
+    "id": "10f5674c-eec4-434e-8c73-8bda6ff5055d",
+    "label": "Arrivée — Étape 6 - Chinon ➡️ Montsoreau",
+    "type": "arrivée",
+    "stage": 6,
+    "description": "Point d’arrivée de Étape 6 - Chinon ➡️ Montsoreau",
+    "coordinates": [
+      0.056982,
+      47.216735
+    ]
+  },
+  {
+    "id": "7d36a628-7179-452d-a831-550ac608b7eb",
+    "label": "Château de Montsoreau",
+    "type": "patrimoine",
+    "stage": 6,
+    "description": "Château de tuffeau au bord de la Loire",
+    "coordinates": [
+      0.056,
+      47.215
+    ]
+  },
+  {
+    "id": "05e33c25-cf30-461f-a8c4-9aea7d42dda4",
+    "label": "Départ — Étape 6 - Chinon ➡️ Montsoreau",
+    "type": "départ",
+    "stage": 6,
+    "description": "Point de départ de Étape 6 - Chinon ➡️ Montsoreau",
+    "coordinates": [
+      0.237961,
+      47.163875
+    ]
+  },
+  {
+    "id": "06e4173b-1bf4-483e-9d58-7ed162aee9d8",
+    "label": "Arrivée — Étape 7 - Montsoreau ➡️ Saumur",
+    "type": "arrivée",
+    "stage": 7,
+    "description": "Point d’arrivée de Étape 7 - Montsoreau ➡️ Saumur",
+    "coordinates": [
+      -0.073965,
+      47.263508
+    ]
+  },
+  {
+    "id": "50acda21-1e4c-45a9-8993-a0a054359149",
+    "label": "Château de Saumur",
+    "type": "patrimoine",
+    "stage": 7,
+    "description": "Surplombant la Loire, symbole de Saumur",
+    "coordinates": [
+      -0.072,
+      47.26
+    ]
+  },
+  {
+    "id": "60bc18ee-8e04-4c7a-b375-e69c8948011d",
+    "label": "Départ — Étape 7 - Montsoreau ➡️ Saumur",
+    "type": "départ",
+    "stage": 7,
+    "description": "Point de départ de Étape 7 - Montsoreau ➡️ Saumur",
+    "coordinates": [
+      0.056785,
+      47.216523
+    ]
+  },
+  {
+    "id": "fc5d68aa-e819-4507-99e1-4b596f80d503",
+    "label": "Arrivée — Étape 8 - Saumur ➡️ Angers",
+    "type": "arrivée",
+    "stage": 8,
+    "description": "Point d’arrivée de Étape 8 - Saumur ➡️ Angers",
+    "coordinates": [
+      -0.57099,
+      47.468643
+    ]
+  },
+  {
+    "id": "b1a16d8e-49d9-49d9-9dca-d01fdee93a10",
+    "label": "Château d’Angers",
+    "type": "patrimoine",
+    "stage": 8,
+    "description": "Forteresse et tenture de l’Apocalypse",
+    "coordinates": [
+      -0.5569,
+      47.4716
+    ]
+  },
+  {
+    "id": "074d2dd0-e737-4f67-b55f-c161efa2ea10",
+    "label": "Départ — Étape 8 - Saumur ➡️ Angers",
+    "type": "départ",
+    "stage": 8,
+    "description": "Point de départ de Étape 8 - Saumur ➡️ Angers",
+    "coordinates": [
+      -0.073464,
+      47.263767
+    ]
+  }
+]

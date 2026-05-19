@@ -1,0 +1,108 @@
+[
+  {
+    "id": "etape-00-blois-chambord",
+    "group_id": "acte-2",
+    "label": "Blois ↔ Chambord",
+    "stage": 0,
+    "files": {
+      "geojson": "data/traces/etape-00.geojson",
+      "simplified": "data/traces/etape-00_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-01-blois-amboise",
+    "group_id": "acte-2",
+    "label": "Blois → Amboise",
+    "stage": 1,
+    "files": {
+      "geojson": "data/traces/etape-01.geojson",
+      "simplified": "data/traces/etape-01_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-02-amboise-chenonceaux",
+    "group_id": "acte-2",
+    "label": "Amboise → Chenonceaux",
+    "stage": 2,
+    "files": {
+      "geojson": "data/traces/etape-02.geojson",
+      "simplified": "data/traces/etape-02_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-03-chenonceaux-tours",
+    "group_id": "acte-2",
+    "label": "Chenonceaux → Tours",
+    "stage": 3,
+    "files": {
+      "geojson": "data/traces/etape-03.geojson",
+      "simplified": "data/traces/etape-03_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-04-tours-villandry",
+    "group_id": "acte-2",
+    "label": "Tours → Villandry",
+    "stage": 4,
+    "files": {
+      "geojson": "data/traces/etape-04.geojson",
+      "simplified": "data/traces/etape-04_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-05-villandry-chinon",
+    "group_id": "acte-2",
+    "label": "Villandry → Chinon",
+    "stage": 5,
+    "files": {
+      "geojson": "data/traces/etape-05.geojson",
+      "simplified": "data/traces/etape-05_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-06-chinon-montsoreau",
+    "group_id": "acte-2",
+    "label": "Chinon → Montsoreau",
+    "stage": 6,
+    "files": {
+      "geojson": "data/traces/etape-06.geojson",
+      "simplified": "data/traces/etape-06_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-07-montsoreau-saumur",
+    "group_id": "acte-2",
+    "label": "Montsoreau → Saumur",
+    "stage": 7,
+    "files": {
+      "geojson": "data/traces/etape-07.geojson",
+      "simplified": "data/traces/etape-07_simplified.geojson"
+    }
+  },
+  {
+    "id": "etape-08-saumur-angers",
+    "group_id": "acte-2",
+    "label": "Saumur → Angers",
+    "stage": 8,
+    "files": {
+      "geojson": "data/traces/etape-08.geojson",
+      "simplified": "data/traces/etape-08_simplified.geojson"
+    }
+  },
+  {
+    "id": "acte-1",
+    "group_id": "acte-1",
+    "label": "Acte 1",
+    "files": {
+      "geojson": "data/traces/acte-1.geojson"
+    }
+  },
+  {
+    "id": "boucle-angevine",
+    "group_id": "micro-aventure",
+    "label": "Boucle Angevine",
+    "files": {
+      "geojson": "data/traces/boucle-angevine.geojson"
+    }
+  }
+]
