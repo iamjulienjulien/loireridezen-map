@@ -14,4 +14,7 @@ development/
 supabase/
 # Photos originales — externalisées sur Supabase Storage (LRZ-QA-10)
 photos/
+<<<<<<< HEAD
 gpx/
+=======
+>>>>>>> 81629bf (update gitignore)
