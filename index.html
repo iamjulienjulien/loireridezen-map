@@ -463,7 +463,7 @@
           opacity: 0.9,
           dashArray: "6,4", // tirets pour différencier visuellement
         }),
-      });
+      }).addTo(map);
       fetch("data/route_simplified.geojson")
         .then((r) =>
           r.ok ? r.json() : fetch("data/route.geojson").then((rr) => rr.json()),
@@ -481,7 +481,7 @@
         });
 
       // Charger la Boucle Angevine
-      fetch("data/boucle_angevine.geojson")
+      fetch("data/route_boucle_angevine.geojson")
         .then((r) => r.json())
         .then((gj) => {
           boucleLayer.addData(gj);
