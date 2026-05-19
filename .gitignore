@@ -14,3 +14,4 @@ development/
 supabase/
 # Photos originales — externalisées sur Supabase Storage (LRZ-QA-10)
 photos/
+gpx/
