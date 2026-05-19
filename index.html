@@ -583,6 +583,24 @@
         }
       };
 
+      // Utils — échappement HTML et validation d'URL
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function safeHttpUrl(url) {
+        if (!url) return null;
+        const trimmed = String(url).trim();
+        if (!/^https?:\/\//i.test(trimmed)) return null;
+        return trimmed;
+      }
+
       // 5) Fetch BDD
       let lastAbort = null;
       const debounce = (fn, ms = 250) => {
@@ -636,18 +654,16 @@
 
       function bindPopupFromProps(p, layer) {
         const img = p.thumb || p.image;
-        const insta = p.url_insta
-          ? `<p><a href="${p.url_insta}" target="_blank" rel="noopener">Voir sur Instagram 📲</a></p>`
-          : "";
+        const insta = safeHttpUrl(p.url_insta);
         layer.bindPopup(`
           <div class="poi-popup">
-            ${img ? `<img src="${img}" alt="${p.name || "POI"}"/>` : ""}
-            <strong>${p.name || "Point"}</strong><br/>
-            <small>${p.type || ""}${
-              p.stage ? ` · Étape ${p.stage}` : ""
+            ${img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(p.name || "POI")}"/>` : ""}
+            <strong>${escapeHtml(p.name || "Point")}</strong><br/>
+            <small>${escapeHtml(p.type || "")}${
+              p.stage ? ` · Étape ${escapeHtml(String(p.stage))}` : ""
             }</small>
-            <p>${p.description || ""}</p>
-            ${insta}
+            <p>${escapeHtml(p.description || "")}</p>
+            ${insta ? `<p><a href="${escapeHtml(insta)}" target="_blank" rel="noopener noreferrer">Voir sur Instagram 📲</a></p>` : ""}
           </div>
         `);
       }
