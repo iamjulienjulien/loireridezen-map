@@ -13,7 +13,7 @@ if (!SUPA_URL || !SUPA_PUBLISHABLE_KEY) {
 }
 
 const content =
-  `window.LRZ_CONFIG = { SUPA_URL: "${SUPA_URL}", SUPA_PUBLISHABLE_KEY: "${SUPA_PUBLISHABLE_KEY}" };\n`;
+  `window.LRZ_CONFIG = { SUPA_URL: ${JSON.stringify(SUPA_URL)}, SUPA_PUBLISHABLE_KEY: ${JSON.stringify(SUPA_PUBLISHABLE_KEY)} };\n`;
 
 fs.writeFileSync("config.js", content);
 console.log("[build] config.js généré.");
