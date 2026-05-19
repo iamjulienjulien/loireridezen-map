@@ -1,5 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "printf 'window.LRZ_CONFIG = { SUPA_URL: \"%s\", SUPA_PUBLISHABLE_KEY: \"%s\" };\\n' \"$SUPA_URL\" \"$SUPA_PUBLISHABLE_KEY\" > config.js",
+  "installCommand": "",
+  "buildCommand": "node generate-config.js",
   "outputDirectory": "."
 }
