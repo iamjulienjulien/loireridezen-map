@@ -187,6 +187,32 @@
           box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
         }
       }
+      .lrz-error-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fef3c7;
+        border: 1px solid #d97706;
+        color: #78350f;
+        padding: 8px 12px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-size: 14px;
+        font-family: inherit;
+        max-width: 380px;
+      }
+      .lrz-error-banner__retry {
+        background: #d97706;
+        color: white;
+        border: 0;
+        border-radius: 3px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .lrz-error-banner__retry:hover {
+        background: #b45309;
+      }
     </style>
   </head>
   <body class="atma-regular">
@@ -531,6 +557,38 @@
       });
       cluster.addTo(map);
 
+      // Bannière d'erreur Supabase (masquée par défaut)
+      const errorControl = L.control({ position: "bottomleft" });
+      let currentRetry = null;
+
+      errorControl.onAdd = function () {
+        const div = L.DomUtil.create("div", "lrz-error-banner");
+        div.setAttribute("role", "status");
+        div.setAttribute("aria-live", "polite");
+        div.style.display = "none";
+        div.innerHTML = `
+          <span class="lrz-error-banner__msg">Impossible de charger les lieux.</span>
+          <button type="button" class="lrz-error-banner__retry">Réessayer</button>
+        `;
+        L.DomEvent.disableClickPropagation(div);
+        div
+          .querySelector(".lrz-error-banner__retry")
+          .addEventListener("click", () => {
+            if (currentRetry) currentRetry();
+          });
+        return div;
+      };
+      errorControl.addTo(map);
+
+      function showErrorBanner(onRetry) {
+        currentRetry = onRetry;
+        errorControl.getContainer().style.display = "flex";
+      }
+      function hideErrorBanner() {
+        currentRetry = null;
+        errorControl.getContainer().style.display = "none";
+      }
+
       // 4) Icônes
       const iconByType = (type) => {
         switch (type) {
@@ -688,14 +746,11 @@
         const controller = new AbortController();
         lastAbort = controller;
 
+        const bounds = map.getBounds();
+
         try {
           const [fcDB, fcLocal] = await Promise.all([
-            fetchPoisFromSupabase(
-              map.getBounds(),
-              activeType,
-              null,
-              controller.signal,
-            ),
+            fetchPoisFromSupabase(bounds, activeType, null, controller.signal),
             fetchLocalPhotos(),
           ]);
           const all = (fcDB.features || []).concat(fcLocal.features || []);
@@ -717,9 +772,20 @@
             },
           );
           cluster.addLayer(layer);
+          hideErrorBanner();
         } catch (e) {
-          if (e.name !== "AbortError")
-            console.error("Erreur chargement POI:", e);
+          if (e.name === "AbortError") return;
+          console.error("[loireridezen] fetchPoisFromSupabase failed", {
+            bbox: {
+              west: bounds.getWest(),
+              south: bounds.getSouth(),
+              east: bounds.getEast(),
+              north: bounds.getNorth(),
+            },
+            error: e.message,
+            stack: e.stack,
+          });
+          showErrorBanner(loadPoisForViewport);
         }
       }
 
