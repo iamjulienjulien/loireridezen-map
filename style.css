@@ -1352,3 +1352,69 @@ body {
   border-radius: 6px;
   margin-top: 0.2rem;
 }
+
+/* ─────────────────────────── LRZ-EVO-20 : Marker "Où je suis" ─────────── */
+.lrz-current-marker-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+.lrz-current-marker {
+  font-size: 1.5rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+  animation: lrz-pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+}
+.lrz-current-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  background: rgba(198, 146, 71, 0.35);
+  animation: lrz-ripple 2s ease-out infinite;
+}
+@keyframes lrz-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.18); }
+}
+@keyframes lrz-ripple {
+  0%   { transform: scale(0.4); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Popup position */
+.lrz-current-popup {
+  font-size: 0.875rem;
+  min-width: 160px;
+  line-height: 1.4;
+}
+.lrz-current-popup strong {
+  display: block;
+  font-size: 0.9375rem;
+  margin-bottom: 0.2rem;
+}
+.lrz-current-popup__date {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0 0 0.25rem;
+}
+.lrz-current-popup p {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  color: #555;
+}
+
+/* Row toggle dans le panel */
+.lrz-row--position {
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}

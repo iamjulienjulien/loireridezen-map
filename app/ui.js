@@ -274,6 +274,20 @@ export function initAccordion(prefs) {
   });
 }
 
+// ─────────────────────────────────────── Toggle "Où je suis"
+
+export function initCurrentPositionToggle(layer, loadFn, prefs) {
+  const cb = document.getElementById("position-toggle");
+  if (!cb) return;
+  cb.checked = prefs.currentPosition ?? true;
+  if (cb.checked) loadFn();
+  cb.addEventListener("change", () => {
+    if (cb.checked) loadFn();
+    else map.removeLayer(layer);
+    updatePreference("currentPosition", cb.checked);
+  });
+}
+
 // ─────────────────────────────────────── Reset preferences
 
 export function initResetButton() {

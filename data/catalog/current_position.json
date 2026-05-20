@@ -1,0 +1,11 @@
+{
+  "active": true,
+  "label": "Rue d'Anjou",
+  "description": "Chez moi",
+  "coordinates": [
+    -0.5568501,
+    47.4663954
+  ],
+  "source": "address",
+  "updated_at": "2026-05-20T10:50:24.110549+00:00"
+}

@@ -13,6 +13,7 @@ const DEFAULTS = {
   traceMarkers: {},
   poi: {},
   photos: true,
+  currentPosition: true,
   sections: {},
 };
 

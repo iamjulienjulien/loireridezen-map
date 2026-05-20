@@ -12,6 +12,7 @@ import { map } from "./app/map.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
 import { buildTraceMarkersFromCatalog, traceMarkers } from "./app/trace-markers.js";
+import { loadCurrentPosition, currentPositionLayer } from "./app/current-position.js";
 import {
   renderTracesSection,
   renderPoiSection,
@@ -24,6 +25,7 @@ import {
   initPoiBadge,
   initResetButton,
   initKeyboardShortcuts,
+  initCurrentPositionToggle,
 } from "./app/ui.js";
 
 // ─────────────────────────────────── Skeleton helpers
@@ -73,6 +75,11 @@ async function init() {
   initPoiBadge();
   initResetButton();
   initKeyboardShortcuts(map);
+  initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
+  setInterval(() => {
+    const toggle = document.getElementById("position-toggle");
+    if (!toggle || toggle.checked) loadCurrentPosition();
+  }, 5 * 60 * 1000);
 
   // Sauvegarder la préférence POI à chaque changement de type-filter
   document.querySelectorAll(".type-filter").forEach((cb) => {

@@ -81,20 +81,27 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 ├─ app.js
 ├─ app/
 │  ├─ config.js
+│  ├─ current-position.js   ← marker "Où je suis"
 │  ├─ helpers.js
+│  ├─ locate.js
 │  ├─ map.js
 │  ├─ poi.js
+│  ├─ preferences.js
 │  ├─ routes.js
+│  ├─ step-popup.js         ← popups d'étape riches
+│  ├─ trace-markers.js      ← markers Départ/Étape/Arrivée calculés
 │  ├─ types.js
 │  └─ ui.js
 ├─ scripts/
 │  ├─ gpx_to_geojson.py
 │  ├─ make_thumbs.py
 │  ├─ migrate.py
+│  ├─ migrate_photos_order.py   ← migration idempotente des labels/order photos
 │  ├─ photos_to_poi.py
 │  ├─ sync_photos_to_supabase.py
 │  ├─ sync_pois_from_supabase.py
-│  └─ update_data.py        ← orchestrateur principal
+│  ├─ update_data.py            ← orchestrateur principal
+│  └─ update_position.py        ← marker "Où je suis" (CLI interactif)
 ├─ sources/                 ← gitignored, matière brute
 │  ├─ gpx/
 │  └─ photos/
@@ -103,7 +110,8 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 │  │  ├─ groups.json
 │  │  ├─ traces.json
 │  │  ├─ photos.json
-│  │  └─ pois.json
+│  │  ├─ pois.json
+│  │  └─ current_position.json   ← marker "Où je suis" (mis à jour par update_position.py)
 │  ├─ traces/               ← GeoJSON générés depuis sources/gpx/
 │  │  ├─ *.geojson
 │  │  └─ *_simplified.geojson
@@ -295,6 +303,7 @@ Les quatre fichiers `data/catalog/*.json` sont la **source de vérité éditoria
 | `traces.json` | Inventaire des traces GPX | `update_data.py` à l'ajout/suppression |
 | `photos.json` | Inventaire des photos géolocalisées | `update_data.py` après sync photos |
 | `pois.json` | Snapshot light des POI Supabase | `update_data.py --pois` (régénéré entier) |
+| `current_position.json` | Position courante du cycliste sur la carte | `update_position.py` (CLI interactif) |
 
 ### Quand éditer à la main
 
@@ -648,6 +657,96 @@ git add data/thumbs/ data/pois/pois_photos.geojson data/catalog/photos.json
 git commit -m "data(photos): nouvelles photos étape 3"
 git push
 ```
+
+---
+
+## 🚲 Marker "Où je suis"
+
+Affiche un marqueur animé 🚲 sur la carte indiquant la position actuelle du cycliste. La position est mise à jour **manuellement** via un script CLI : elle ne suit pas le GPS en temps réel, mais est actualisée à chaque étape ou séjour.
+
+La carte relit le fichier `data/catalog/current_position.json` toutes les **5 minutes** (sans rechargement de page). Si `active` est `false`, le marqueur est masqué automatiquement.
+
+### Usage
+
+```bash
+source .venv/bin/activate
+python scripts/update_position.py
+```
+
+Le script affiche un menu interactif :
+
+```
+Que veux-tu faire ?
+❯ Mettre à jour par adresse
+  Mettre à jour par coordonnées GPS
+  Effacer
+  Quitter
+```
+
+**Option 1 — Par adresse (géocodage Nominatim)**
+
+```
+Adresse : Chalonnes-sur-Loire
+Géocodage en cours…
+Choisir :
+❯ Chalonnes-sur-Loire, Maine-et-Loire, … (47.3594, -0.7594)
+  …
+Label affiché : Chalonnes-sur-Loire
+Description (optionnelle) : Étape 2 — nuit chez l'habitant
+✓ Position mise à jour : Chalonnes-sur-Loire
+```
+
+**Option 2 — Par coordonnées GPS directes**
+
+```
+Coordonnées (lat, lon) : 47.3594, -0.7594
+Label : Chalonnes-sur-Loire
+Description (optionnelle) :
+✓ Position mise à jour : Chalonnes-sur-Loire
+```
+
+**Option 3 — Effacer**
+
+Masque le marqueur sur la carte (`active: false`) sans supprimer les coordonnées enregistrées.
+
+### Fichier généré
+
+`data/catalog/current_position.json` — exemple après mise à jour :
+
+```json
+{
+  "active": true,
+  "label": "Chalonnes-sur-Loire",
+  "description": "Étape 2 — nuit chez l'habitant",
+  "coordinates": [-0.7594, 47.3594],
+  "source": "address",
+  "updated_at": "2026-06-15T18:42:00+00:00"
+}
+```
+
+Les `coordinates` suivent la convention GeoJSON : `[longitude, latitude]`.
+
+### Workflow type
+
+```bash
+# 1. Mettre à jour la position
+python scripts/update_position.py
+
+# 2. Committer pour que Vercel serve le fichier mis à jour
+git add data/catalog/current_position.json
+git commit -m "data: position mise à jour — Chalonnes-sur-Loire"
+git push
+```
+
+La carte en production rechargera automatiquement le fichier dans les 5 minutes suivant le déploiement Vercel.
+
+### Panel carte
+
+La section **Contrôles** du panneau latéral expose une checkbox **"Afficher ma position"**. Son état est persisté dans `localStorage` : si l'utilisateur la décoche, le marqueur reste masqué au rechargement même si `active: true` dans le JSON.
+
+### Dépendances
+
+Requires `requests>=2.31` (dans `requirements.txt`) pour le géocodage Nominatim. Installé automatiquement avec `pip install -r requirements.txt`.
 
 ---
 

@@ -5,3 +5,4 @@ gpxpy>=1.6
 shapely>=2.0
 rich>=13
 questionary>=2
+requests>=2.31
