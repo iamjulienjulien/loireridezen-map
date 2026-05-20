@@ -10,9 +10,9 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 ## ✨ Fonctionnalités
 
 - 🚴 **Parcours à vélo**
-  - Trace principale de la randonnée
-  - Traces secondaires (micro-aventures, boucles locales)
-  - Couleurs par étape
+  - Traces par acte et par étape
+  - Micro-aventures (boucles locales)
+  - Couleurs par étape, par groupe ou dynamiques
 
 - 📍 **Points d'intérêt (POI)**
   - Patrimoine (châteaux, lieux historiques)
@@ -57,8 +57,9 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 
 - GeoJSON (RFC 7946)
 - GPX → GeoJSON (via `gpxpy` + `shapely` pour la simplification)
-- Python (Pillow, pillow-heif, exifread pour les EXIF photo)
+- Python (Pillow, pillow-heif, exifread, rich, questionary)
 - Photos originales hébergées sur **Supabase Storage** (bucket `photos`)
+- Catalogs JSON `data/catalog/` comme source de vérité éditoriale
 
 ### Déploiement
 
@@ -75,23 +76,43 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 ├─ README.md
 ├─ requirements.txt
 ├─ vercel.json
+├─ .vercelignore
 ├─ config.js.example
-├─ photos_to_poi.py
-├─ make_thumbs.py
-├─ gpx_to_geojson.py
-├─ sync_pois_from_supabase.py
-├─ sync_photos_to_supabase.py
+├─ app.js
+├─ app/
+│  ├─ config.js
+│  ├─ helpers.js
+│  ├─ map.js
+│  ├─ poi.js
+│  ├─ routes.js
+│  ├─ types.js
+│  └─ ui.js
+├─ scripts/
+│  ├─ gpx_to_geojson.py
+│  ├─ make_thumbs.py
+│  ├─ migrate.py
+│  ├─ photos_to_poi.py
+│  ├─ sync_photos_to_supabase.py
+│  ├─ sync_pois_from_supabase.py
+│  └─ update_data.py        ← orchestrateur principal
+├─ sources/                 ← gitignored, matière brute
+│  ├─ gpx/
+│  └─ photos/
+├─ data/
+│  ├─ catalog/              ← inventaires JSON éditoriaux
+│  │  ├─ groups.json
+│  │  ├─ traces.json
+│  │  ├─ photos.json
+│  │  └─ pois.json
+│  ├─ traces/               ← GeoJSON générés depuis sources/gpx/
+│  │  ├─ *.geojson
+│  │  └─ *_simplified.geojson
+│  ├─ pois/
+│  │  ├─ pois.geojson       ← snapshot Supabase
+│  │  └─ pois_photos.geojson
+│  └─ thumbs/               ← miniatures WebP commitées (~5 MB)
 ├─ assets/
 │  └─ logo_loire_ride_zen.jpg
-├─ data/
-│  ├─ route.geojson
-│  ├─ route_simplified.geojson
-│  ├─ boucle_angevine.geojson
-│  ├─ boucle_angevine.gpx
-│  ├─ pois.geojson
-│  └─ pois_photos.geojson
-├─ photos/                ← gitignored, source des originaux
-├─ thumbs/                ← committé (miniatures WebP, ~5 MB)
 └─ sql/
    ├─ schema.sql
    └─ migrations/
@@ -100,7 +121,7 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 Fichiers **non versionnés** (générés ou locaux, dans `.gitignore`) :
 
 - `config.js` — créé localement depuis `config.js.example`, généré par le build Vercel en prod
-- `photos/` — originaux JPEG/HEIC hébergés sur Supabase Storage (cf. [Sync photos vers Supabase](#-poi-depuis-des-photos-géolocalisées))
+- `sources/` — matière brute (GPX, photos JPEG/HEIC) non commités
 - `.venv/` — environnement Python local
 - `.supabase/` — état local de Supabase CLI
 
@@ -136,31 +157,23 @@ Comment une donnée arrive sur la carte, selon sa source :
 │  FLUX 1 — Photos terrain → POI photos                            │
 └─────────────────────────────────────────────────────────────────┘
 
-  Photos terrain (JPEG/HEIC + GPS EXIF, ./photos local, gitignored)
-       │
-       ├─ make_thumbs.py ───────────────→ ./thumbs/*.webp
-       │                                  (committé, ~5 MB)
-       │
-       ├─ sync_photos_to_supabase.py ───→ Supabase Storage
-       │  (upload, SUPA_SECRET_KEY)       bucket "photos"
-       │                                          ↑
-       │                                          │ référencé par URL
-       └─ photos_to_poi.py ─────────────→ data/pois_photos.geojson
-          (lit EXIF en local,             (committé, URLs Supabase)
-          génère URLs Supabase)                   │
-                                                  ▼
-                                          Leaflet (couche photos)
+  sources/photos/        update_data.py ──┬─ make_thumbs.py ──→ data/thumbs/*.webp
+  (JPEG/HEIC + EXIF GPS)                  ├─ sync_photos_to_supabase.py → Supabase Storage
+                                          └─ photos_to_poi.py ──→ data/pois/pois_photos.geojson
+                                                                         │
+                                                                         ▼
+                                                                 Leaflet (couche photos)
 
 
 ┌─────────────────────────────────────────────────────────────────┐
 │  FLUX 2 — GPX → traces géographiques                             │
 └─────────────────────────────────────────────────────────────────┘
 
-  GPX (GPS, montre,         gpx_to_geojson.py     data/route*.geojson
-  iPhone)             ───→  (+ simplification)  ───→  data/boucle*.geojson
-                                                          │
-                                                          ▼
-                                                  Leaflet (couche traces)
+  sources/gpx/           update_data.py ──→ gpx_to_geojson.py ──→ data/traces/*.geojson
+  (GPX terrain)                                                     data/catalog/traces.json
+                                                                         │
+                                                                         ▼
+                                                                 Leaflet (couche traces)
 
 
 ┌─────────────────────────────────────────────────────────────────┐
@@ -176,14 +189,144 @@ Comment une donnée arrive sur la carte, selon sa source :
   ╔══════════════════════════════════════════════════════════════╗
   ║  Snapshot offline (édition + traçabilité)                    ║
   ║                                                              ║
-  ║  Table public.pois     sync_pois_from_supabase.py            ║
-  ║                  ───→  (export RFC 7946)         ───→        ║
-  ║                                                              ║
-  ║                        data/pois.geojson (committé)          ║
+  ║  Table public.pois     update_data.py ──→ sync_pois.py       ║
+  ║                  ───→  (export RFC 7946)                     ║
+  ║                        data/pois/pois.geojson (committé)     ║
   ╚══════════════════════════════════════════════════════════════╝
 ```
 
 Les trois flux convergent dans le même cluster Leaflet, qui les gère côte à côte (filtres par type, popup au clic).
+
+---
+
+## 🎛 Workflow de synchronisation
+
+`scripts/update_data.py` est le **point d'entrée unique** pour toute mise à jour des données. Il orchestre les scripts Python individuels, met à jour les catalogs JSON, et guide interactivement les ajouts éditoriaux.
+
+### Usage
+
+```bash
+# Menu interactif (mode normal)
+python scripts/update_data.py
+
+# Tout synchroniser sans prompts (mode CI)
+python scripts/update_data.py --all --non-interactive --yes
+
+# Ajouts uniquement, traces
+python scripts/update_data.py --add-only --traces
+
+# Logs détaillés
+python scripts/update_data.py -v
+```
+
+### Déroulement type
+
+**Écran 1 — Scan des sources**
+
+```
+╭─────────────────────────────────────────────────────╮
+│ 🚲 Loire Ride Zen — Mise à jour des données         │
+│ Scan des sources 🔎                                 │
+╰─────────────────────────────────────────────────────╯
+Catégorie    Catalog   Sources    Diff
+Traces            11        2      +2
+Photos            17        3      +3
+POI               36         —     N/A
+Groupes            4         4       0
+```
+
+**Écran 2 — Menu interactif**
+
+```
+Que voulez-vous synchroniser ?
+❯ Tout ajouter
+  Tout supprimer
+  Traces seulement (ajout de 2)
+  Photos seulement (ajout de 3)
+  POI avec la base de données
+  Quitter
+```
+
+**Écran 3 — Prompts éditoriaux** (pour chaque nouvel item)
+
+```
+Label pour 'etape-09-angers-nantes' : Étape 9 — Angers → Nantes
+Groupe : ❯ acte-3
+Description (optionnelle) : La dernière ligne droite.
+```
+
+**Écran 4 — Exécution avec arbre visuel**
+
+```
+── Traces
+   ├─ etape-09.gpx → etape-09.geojson         ✓ succès
+   ├─ etape-09.gpx → etape-09_simplified.geojson ✓ succès
+   └─ +1 entrée ajoutée dans traces.json
+```
+
+### Workflow après une sortie terrain
+
+```bash
+# 1. Déposer les GPX dans sources/gpx/
+#    Déposer les photos dans sources/photos/
+
+# 2. Lancer l'orchestrateur
+python scripts/update_data.py
+
+# 3. Vérifier les changements
+git diff data/catalog/ data/traces/ data/thumbs/
+
+# 4. Commit + push
+git add data/ && git commit -m "data: ajout étape 9 + photos terrain"
+git push
+```
+
+> Les scripts individuels (`gpx_to_geojson.py`, `make_thumbs.py`, etc.) restent appelables directement — ils sont les briques de base qu'`update_data.py` orchestre.
+
+---
+
+## 📋 Catalogs éditoriaux
+
+Les quatre fichiers `data/catalog/*.json` sont la **source de vérité éditoriale** du projet. La carte les lit directement au chargement (plus de paths hardcodés).
+
+| Fichier | Rôle | Mis à jour par |
+|---|---|---|
+| `groups.json` | Définition des actes et micro-aventures | **Manuellement** (couleurs, labels, ordre) |
+| `traces.json` | Inventaire des traces GPX | `update_data.py` à l'ajout/suppression |
+| `photos.json` | Inventaire des photos géolocalisées | `update_data.py` après sync photos |
+| `pois.json` | Snapshot light des POI Supabase | `update_data.py --pois` (régénéré entier) |
+
+### Quand éditer à la main
+
+- **`groups.json`** — ajouter un acte, changer une couleur, modifier un label, réordonner. Ce fichier est pensé pour l'édition humaine : les couleurs, descriptions et années y sont maintenues.
+- **`traces.json`** — corriger un label ou une description après import, modifier l'ordre d'affichage, ajuster `distance_km` / `elevation_gain_m`.
+- **`photos.json`** — corriger le label ou la description d'une photo, changer son groupe.
+
+### Quand ne pas éditer à la main
+
+- **`pois.json`** — régénéré entièrement à chaque `update_data.py --pois`. Toute édition manuelle sera écrasée.
+- Les champs `paths`, `source`, `updated_at` — gérés automatiquement, ne pas toucher.
+
+### Format des catalogs
+
+Tous les catalogs partagent la même enveloppe :
+
+```json
+{
+  "updated_at": "2026-05-19T22:00:00+00:00",
+  "items": [ ... ]
+}
+```
+
+Le champ `color` dans `groups.json` accepte trois formes :
+
+```json
+"color": "#34495E"               // couleur fixe
+"color": ["#2E86AB", "#E74C3C"]  // cyclage par étape (modulo)
+"color": "fn:byStage"            // fonction JS (définie dans app/types.js)
+```
+
+> Pour le schéma complet de chaque catalog, voir le ticket de spec `development/tickets/LRZ-EVO-1.md`.
 
 ---
 
@@ -221,9 +364,9 @@ Le `buildCommand` de `vercel.json` lit ces variables et écrit le `config.js` av
 
 Certaines opérations administratives — uploader des photos sur Supabase Storage, par exemple — nécessitent le rôle `service_role` (bypass RLS). La clé associée est la **`SUPA_SECRET_KEY`** (format `sb_secret_*`).
 
-| Variable          | Utilisée par                 | Source autorisée             |
-| ----------------- | ---------------------------- | ---------------------------- |
-| `SUPA_SECRET_KEY` | `sync_photos_to_supabase.py` | **Variable d'env seulement** |
+| Variable          | Utilisée par                          | Source autorisée             |
+| ----------------- | ------------------------------------- | ---------------------------- |
+| `SUPA_SECRET_KEY` | `scripts/sync_photos_to_supabase.py`  | **Variable d'env seulement** |
 
 ```bash
 # Récupérer dans console Supabase → Settings → API Keys → Secret key → Reveal
@@ -262,13 +405,13 @@ Cocher la ligne → bouton **Delete** en haut. Action irréversible (pas de soft
 
 > ⚠️ **Édition concurrente.** Pas de versioning sur les POI. À deux mains sur la même ligne au même moment = la dernière écriture gagne.
 
-> 💾 **Après chaque session d'édition**, lance `sync_pois_from_supabase.py` (cf. section suivante) pour mettre à jour le snapshot offline dans le repo.
+> 💾 **Après chaque session d'édition**, lance `python scripts/update_data.py --pois` pour mettre à jour le snapshot offline dans le repo.
 
 ---
 
 ## 💾 Synchroniser les POI dans le repo
 
-Le fichier `data/pois.geojson` est un **snapshot fidèle** de la table Supabase, régénéré automatiquement par le script `sync_pois_from_supabase.py`. Ce snapshot vit dans le repo, est versionné par git, et permet :
+Le fichier `data/pois/pois.geojson` est un **snapshot fidèle** de la table Supabase, régénéré automatiquement par le script `sync_pois_from_supabase.py`. Ce snapshot vit dans le repo, est versionné par git, et permet :
 
 - Une **traçabilité historique** des évolutions du catalogue de POI (`git log`, `git blame`)
 - Un **backup déconnecté** : si le projet Supabase est perdu, le fichier permet de tout réinjecter
@@ -278,33 +421,39 @@ Le snapshot n'est **pas** utilisé en runtime par la carte — celle-ci lit Supa
 
 ### Utilisation
 
-Depuis la racine du projet, avec `config.js` déjà en place :
+Via l'orchestrateur (recommandé) :
 
 ```bash
-python sync_pois_from_supabase.py
+python scripts/update_data.py --pois
 ```
 
-C'est tout. Le script :
+Ou directement :
+
+```bash
+python scripts/sync_pois_from_supabase.py
+```
+
+Le script :
 
 1. Lit les credentials depuis `config.js` (ou env vars `SUPA_URL` + `SUPA_PUBLISHABLE_KEY` si présentes — elles ont priorité)
 2. Interroge la RPC `pois_bbox_geojson` avec une BBOX mondiale (récupère tous les POI en une requête)
 3. Trie les features par `stage` puis `name` pour des diffs git stables
-4. Écrit `data/pois.geojson` indenté à 2 espaces
+4. Écrit `data/pois/pois.geojson` indenté à 2 espaces
 
 ### Options notables
 
 ```bash
-# Sortie compacte (un seul ligne, pour la prod si besoin)
-python sync_pois_from_supabase.py --indent 0
+# Sortie compacte (une seule ligne, pour la prod si besoin)
+python scripts/sync_pois_from_supabase.py --indent 0
 
 # Chemin de sortie custom
-python sync_pois_from_supabase.py -o data/pois_backup_2026-06-01.geojson
+python scripts/sync_pois_from_supabase.py -o data/pois/pois_backup_2026-06-01.geojson
 
 # Sans tri (garder l'ordre Supabase, déconseillé pour les diffs)
-python sync_pois_from_supabase.py --no-sort
+python scripts/sync_pois_from_supabase.py --no-sort
 
 # Logs détaillés
-python sync_pois_from_supabase.py -v
+python scripts/sync_pois_from_supabase.py -v
 ```
 
 ### Workflow type après édition
@@ -312,13 +461,13 @@ python sync_pois_from_supabase.py -v
 ```bash
 # 1. Éditer dans Supabase Table Editor (cf. section précédente)
 # 2. Régénérer le snapshot
-python sync_pois_from_supabase.py
+python scripts/update_data.py --pois
 
 # 3. Vérifier les changements
-git diff data/pois.geojson
+git diff data/pois/pois.geojson
 
 # 4. Commit + push si OK
-git add data/pois.geojson
+git add data/pois/pois.geojson data/catalog/pois.json
 git commit -m "data(pois): mise à jour du snapshot après ajout étape 3"
 git push
 ```
@@ -409,19 +558,19 @@ Transforme automatiquement les photos de terrain en points d'intérêt sur la ca
 
 ### 1) Ajouter les photos
 
-Place les photos **géolocalisées** dans `./photos` (dossier gitignored). Formats supportés : JPG / JPEG, PNG, HEIC. Les photos sans GPS sont automatiquement ignorées.
+Place les photos **géolocalisées** dans `sources/photos/` (dossier gitignored). Formats supportés : JPG / JPEG, PNG, HEIC. Les photos sans GPS sont automatiquement ignorées.
 
 ### 2) Générer les miniatures WebP
 
 ```bash
-python make_thumbs.py \
-  --photos ./photos \
-  --thumbs ./thumbs \
+python scripts/make_thumbs.py \
+  --photos sources/photos \
+  --thumbs data/thumbs \
   --width 1200 \
   --quality 80
 ```
 
-Les miniatures restent dans le repo (`./thumbs/`, ~5 MB total). Elles servent à l'affichage rapide dans les popups Leaflet.
+Les miniatures restent dans le repo (`data/thumbs/`, ~5 MB total). Elles servent à l'affichage rapide dans les popups Leaflet.
 
 ### 3) Uploader les originaux sur Supabase Storage
 
@@ -432,10 +581,10 @@ Les photos originales (JPEG/HEIC, 1.6 à 5 MB chacune) sont hébergées sur **Su
 export SUPA_SECRET_KEY="sb_secret_..."
 
 # Voir ce qui serait fait
-python sync_photos_to_supabase.py --dry-run
+python scripts/sync_photos_to_supabase.py --dry-run
 
 # Lancer pour de vrai (sync additive : n'écrase rien, ne supprime rien)
-python sync_photos_to_supabase.py
+python scripts/sync_photos_to_supabase.py
 ```
 
 Le script est **idempotent** : il skip les fichiers déjà présents sur Supabase. Tu peux le relancer 10 fois de suite sans risque.
@@ -444,24 +593,13 @@ Le script est **idempotent** : il skip les fichiers déjà présents sur Supabas
 
 ```bash
 # Écraser les fichiers déjà présents (si une photo a été modifiée en local)
-python sync_photos_to_supabase.py --upsert
+python scripts/sync_photos_to_supabase.py --upsert
 
 # Sync miroir : aussi supprimer sur Supabase ce qui n'est plus en local
-python sync_photos_to_supabase.py --delete
+python scripts/sync_photos_to_supabase.py --delete
 
 # Combiner --delete avec --dry-run avant de lancer pour vrai !
-python sync_photos_to_supabase.py --dry-run --delete
-```
-
-Le script affiche un **plan** avant d'agir :
-
-```
-────────────────────────────────────────────────────────────
-Plan de synchronisation :
-  Nouveau (à uploader)       : 12
-  Existant (skip, sans --upsert) : 38
-  Distant orphelin (ignoré, sans --delete) : 0
-────────────────────────────────────────────────────────────
+python scripts/sync_photos_to_supabase.py --dry-run --delete
 ```
 
 ### 4) Générer le GeoJSON des photos
@@ -470,38 +608,43 @@ Extraction automatique des coordonnées GPS depuis les EXIF, génération des UR
 
 ```bash
 # Mode local (recommandé) : lit les EXIF en local, génère des URLs Supabase
-python photos_to_poi.py --local-photos ./photos
+python scripts/photos_to_poi.py --local-photos sources/photos
 
 # Mode pur Supabase : télécharge chaque photo depuis le bucket pour lire les EXIF
 # Plus lent mais marche depuis n'importe quelle machine sans copie locale
-python photos_to_poi.py
+python scripts/photos_to_poi.py
 ```
 
-Résultat : `data/pois_photos.geojson` avec chaque feature contenant :
+Résultat : `data/pois/pois_photos.geojson` avec chaque feature contenant :
 
 - `image` : URL Supabase Storage (ex. `https://...supabase.co/storage/v1/object/public/photos/04-amboise.jpeg`)
-- `thumb` : chemin relatif `./thumbs/04-amboise.webp`
+- `thumb` : chemin relatif `data/thumbs/04-amboise.webp`
 - `time` : DateTime EXIF
 - coordinates WGS84
 
 ### Workflow type complet après une sortie photo
 
 ```bash
-# 1. Vider la carte SD dans ./photos/
+# Méthode recommandée : orchestrateur interactif
+python scripts/update_data.py --photos
+
+# Ou étape par étape :
+
+# 1. Vider la carte SD dans sources/photos/
 # (Lightroom, Finder, etc.)
 
 # 2. Générer les miniatures
-python make_thumbs.py --photos ./photos --thumbs ./thumbs
+python scripts/make_thumbs.py --photos sources/photos --thumbs data/thumbs
 
 # 3. Uploader les originaux sur Supabase Storage
 export SUPA_SECRET_KEY="sb_secret_..."
-python sync_photos_to_supabase.py
+python scripts/sync_photos_to_supabase.py
 
 # 4. Régénérer le GeoJSON
-python photos_to_poi.py --local-photos ./photos
+python scripts/photos_to_poi.py --local-photos sources/photos
 
 # 5. Commit + push
-git add thumbs/ data/pois_photos.geojson
+git add data/thumbs/ data/pois/pois_photos.geojson data/catalog/photos.json
 git commit -m "data(photos): nouvelles photos étape 3"
 git push
 ```
@@ -516,79 +659,42 @@ Properties générées automatiquement par feature : `name`, `distance_km`, `dur
 
 ### Cas d'usage
 
-**Une étape → un fichier :**
+**Méthode recommandée** — déposer le GPX dans `sources/gpx/` puis lancer l'orchestrateur :
 
 ```bash
-python gpx_to_geojson.py etape-01-angers-chalonnes.gpx \
-  -o data/etape-01.geojson
+python scripts/update_data.py --traces
 ```
 
-**Plusieurs GPX → fichier consolidé** (style `data/route.geojson`) :
+**Appel direct du script de conversion :**
 
 ```bash
-python gpx_to_geojson.py data/gpx/*.gpx -o data/route.geojson
-```
+# Une étape → un fichier :
+python scripts/gpx_to_geojson.py sources/gpx/etape-01.gpx \
+  -o data/traces/etape-01.geojson
 
-**Version simplifiée** (style `data/route_simplified.geojson`) :
-
-```bash
-python gpx_to_geojson.py data/gpx/*.gpx \
-  -o data/route_simplified.geojson \
+# Version simplifiée :
+python scripts/gpx_to_geojson.py sources/gpx/etape-01.gpx \
+  -o data/traces/etape-01_simplified.geojson \
   --simplify 0.0001
-```
 
-La tolérance `0.0001` correspond à ≈ 11 m sur la Loire. Augmenter (`0.0002`) pour gagner plus de poids, diminuer (`0.00005`) pour préserver les virages serrés. ⚠️ La simplification perd l'altitude.
-
-**Fusionner les segments d'un GPX en MultiLineString** (style `data/boucle_angevine.geojson`) :
-
-```bash
-python gpx_to_geojson.py boucle_angevine.gpx \
-  -o data/boucle_angevine.geojson \
+# Fusionner les segments en MultiLineString :
+python scripts/gpx_to_geojson.py sources/gpx/boucle.gpx \
+  -o data/traces/boucle.geojson \
   --multilinestring
 ```
 
----
-
-## 🗺️ Intégration dans la carte Leaflet
-
-Les photos sont chargées comme une **couche POI supplémentaire**, fusionnée avec les POI venant de la base Supabase.
-
-Exemple simplifié :
-
-```js
-fetch("data/pois_photos.geojson")
-  .then((r) => r.json())
-  .then((geojson) => {
-    const photosLayer = L.geoJSON(geojson, {
-      pointToLayer: (f, latlng) =>
-        L.marker(latlng, { icon: iconByType("photo") }),
-      onEachFeature: (f, l) => {
-        const p = f.properties || {};
-        const img = p.thumb || p.image;
-        l.bindPopup(`
-          <div class="poi-popup">
-            <img src="${img}" alt="${p.name || "Photo"}" />
-            <strong>${p.name || "Photo"}</strong><br/>
-            <small>${p.time || ""}</small>
-          </div>
-        `);
-      },
-    });
-    cluster.addLayer(photosLayer);
-  });
-```
-
-⚠️ Assure-toi que le type `photo` est bien géré dans `iconByType()`.
+La tolérance `0.0001` correspond à ≈ 11 m sur la Loire. Augmenter (`0.0002`) pour gagner plus de poids, diminuer (`0.00005`) pour préserver les virages serrés. ⚠️ La simplification perd l'altitude.
 
 ---
 
 ## 🧠 Astuces & bonnes pratiques
 
-- 📍 Les photos **sans GPS** sont automatiquement ignorées par `photos_to_poi.py`.
-- 🔒 **`SUPA_SECRET_KEY` jamais committée**, jamais dans `config.js`. Uniquement en variable d'env au moment d'exécuter `sync_photos_to_supabase.py`.
-- 🍃 Garder une trace **pleine** (`route.geojson`) et une **simplifiée** (`route_simplified.geojson`). La carte tente la version simplifiée en premier et bascule sur la version pleine en cas d'erreur.
+- 📍 Les photos **sans GPS** sont automatiquement ignorées par `scripts/photos_to_poi.py`.
+- 🔒 **`SUPA_SECRET_KEY` jamais committée**, jamais dans `config.js`. Uniquement en variable d'env au moment d'exécuter `scripts/sync_photos_to_supabase.py`.
+- 🍃 Garder une trace **pleine** et une **simplifiée** par étape. La carte tente la version simplifiée en premier et bascule sur la version pleine en cas d'erreur.
 - 📱 Tester systématiquement sur mobile (drawer + clustering).
-- 🧪 **Toujours `--dry-run` d'abord** avec `sync_photos_to_supabase.py --delete`. Le sync miroir est irréversible.
+- 🧪 **Toujours `--dry-run` d'abord** avec `scripts/sync_photos_to_supabase.py --delete`. Le sync miroir est irréversible.
+- 🗂 `sources/` n'est **jamais committé** et jamais servi par Vercel (cf. `.vercelignore`).
 
 ### HEIC
 
@@ -605,6 +711,12 @@ push main → Vercel build → config.js généré → site statique servi
 ```
 
 Pour un déploiement de preview (branche secondaire), même mécanisme avec une URL `*.vercel.app` temporaire.
+
+**Ce qui est exclu du déploiement (`.vercelignore`) :**
+
+- `sources/` — matière brute (GPX, photos) non pertinente en prod
+- `scripts/` — scripts Python non exécutables côté Vercel
+- `*.py`, `requirements.txt`, `sql/`, `development/`
 
 **Vérifier après déploiement :**
 
