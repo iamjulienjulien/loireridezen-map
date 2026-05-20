@@ -27,6 +27,7 @@ export const POI_TYPES = {
   guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: false },
   hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square", defaultChecked: false },
   photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle", defaultChecked: true },
+  lapin:       { label: "Lapin en voyage", emoji: "🐰", color: "#ff9b3d", shape: "square", defaultChecked: false, hidden: true },
 };
 
 /** Types de markers calculés depuis les traces (non POI Supabase). */

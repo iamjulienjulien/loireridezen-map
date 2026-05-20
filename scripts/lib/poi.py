@@ -6,7 +6,7 @@ from typing import Optional
 
 from .supabase_client import get_client
 
-VALID_TYPES = {"chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement"}
+VALID_TYPES = {"chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "lapin"}
 CHATEAU_FIELDS = {"photo_path", "visited", "construction_date"}
 
 TYPE_EMOJIS: dict[str, str] = {

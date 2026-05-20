@@ -1503,3 +1503,26 @@ body {
   margin: 0.2rem 0 0;
   color: #555;
 }
+
+/* ─────────────────────────── LRZ-EVO-25 : Popup lapin ────────────────── */
+.lrz-poi-popup--lapin {
+  min-width: 200px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  background: linear-gradient(135deg, #fff8f0 0%, #fff 60%);
+  border-radius: 8px;
+}
+.lrz-poi-popup--lapin .lrz-poi-popup__title {
+  color: #c45c00;
+}
+.lrz-poi-popup--lapin .lrz-poi-popup__description {
+  color: #5a4030;
+}
+.lrz-poi-popup__signature {
+  display: block;
+  text-align: right;
+  font-size: 0.8125rem;
+  color: #d94e6a;
+  font-style: italic;
+  margin-top: 0.5rem;
+}

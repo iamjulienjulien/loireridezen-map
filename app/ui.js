@@ -17,6 +17,7 @@ import { triggerLocate } from "./locate.js";
 import { updatePreference, resetPreferences } from "./preferences.js";
 import { escapeHtml } from "./helpers.js";
 import { FIT_OPTIONS } from "./config.js";
+import { hiddenModes } from "./url-mode.js";
 
 const { Icon: ExtraIcon, TackCircleBorder } = leafletExtraMarkers;
 
@@ -171,7 +172,9 @@ export function renderPoiSection(prefs) {
   const list = document.getElementById("poi-list");
   if (!list) return;
 
-  const types = Object.entries(POI_TYPES).filter(([k]) => k !== "photo");
+  const types = Object.entries(POI_TYPES).filter(
+    ([k, cfg]) => k !== "photo" && (!cfg.hidden || (k === "lapin" && hiddenModes.rabbit)),
+  );
 
   const countEl = document.getElementById("poi-count");
   if (countEl) countEl.textContent = `(${types.length})`;

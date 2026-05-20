@@ -27,12 +27,19 @@ import { map } from "./map.js";
 import { POI_TYPES, SHAPES } from "./types.js";
 import { escapeHtml, safeHttpUrl, debounce } from "./helpers.js";
 import { SUPA_URL, SUPA_PUBLISHABLE_KEY } from "./config.js";
+import { hiddenModes } from "./url-mode.js";
 
 const { Icon, TackCircleBorder } = leafletExtraMarkers;
 
 // ──────────────────────────────────────────────── Cluster (LayerGroup)
 
 export const cluster = new LayerGroup().addTo(map);
+
+// Types autorisés côté serveur : les types hidden ne sont demandés que si le
+// mode correspondant est actif (sinon ils ne sont pas chargés du tout).
+const _allowedTypes = Object.entries(POI_TYPES)
+  .filter(([k, c]) => !c.hidden || (k === "lapin" && hiddenModes.rabbit))
+  .map(([k]) => k);
 
 // ──────────────────────────────────────────────────────────── Icônes
 
@@ -92,8 +99,22 @@ function renderGenericPoiPopup(p) {
   `;
 }
 
+function renderLapinPopup(p) {
+  return `
+    <div class="lrz-poi-popup lrz-poi-popup--lapin">
+      ${p.photo_path ? `<div class="lrz-poi-popup__photo"><img src="${escapeHtml(p.photo_path)}" alt="${escapeHtml(p.name || "Lapin")}"/></div>` : ""}
+      <div class="lrz-poi-popup__body">
+        <strong class="lrz-poi-popup__title">${escapeHtml(p.name || "Lapin en voyage")}</strong>
+        ${p.description ? `<p class="lrz-poi-popup__description">${escapeHtml(p.description)}</p>` : ""}
+        <span class="lrz-poi-popup__signature">💖 Papa</span>
+      </div>
+    </div>
+  `;
+}
+
 function renderPoiPopup(p) {
   if (p.type === "chateau") return renderChateauPopup(p);
+  if (p.type === "lapin") return renderLapinPopup(p);
   return renderGenericPoiPopup(p);
 }
 
@@ -143,6 +164,7 @@ async function fetchPoisFromSupabase(bounds, activeType, signal) {
     minlat: bounds.getSouth(),
     maxlon: bounds.getEast(),
     maxlat: bounds.getNorth(),
+    p_allowed_types: _allowedTypes,
   };
   if (activeType) body.p_type = activeType;
 
