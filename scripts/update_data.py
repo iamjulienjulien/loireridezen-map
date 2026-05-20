@@ -437,46 +437,297 @@ def _photo_label(scan: dict) -> str:
 
 
 def interactive_menu(scan: dict) -> tuple[str, str]:
-    """Retourne (action, mode) : action in {all,traces,photos,pois,quit}, mode in {add,delete,both}."""
-    total_add = len(scan["traces"]["to_add"]) + len(scan["photos"]["to_add"])
-    total_del = len(scan["traces"]["to_delete"]) + len(scan["photos"]["to_delete"])
-    total_diff = total_add + total_del
+    """Retourne (action, mode). action ∈ {all,traces,photos,pois,list_edit,delete_all,quit}."""
+    t_add = len(scan["traces"]["to_add"])
+    t_del = len(scan["traces"]["to_delete"])
+    p_add = len(scan["photos"]["to_add"])
+    p_del = len(scan["photos"]["to_delete"])
 
-    if total_diff == 0 and not scan["pois"]["to_add"]:
-        console.print("[green]✓ Tout est aligné[/]")
-        choice = questionary.select(
-            "Que voulez-vous faire ?",
-            choices=["POI avec la base de données", "Quitter"],
-        ).ask()
-        log_event("INFO", "system", "menu_choice", choice=choice)
-        if choice == "Quitter" or choice is None:
-            return "quit", "both"
-        return "pois", "both"
+    t_changes   = t_add > 0 or t_del > 0
+    p_changes   = p_add > 0 or p_del > 0
+    total_adds  = t_add + p_add
+    total_dels  = t_del + p_del
 
-    choices = [
-        "Tout ajouter",
-        "Tout supprimer",
-        _trace_label(scan),
-        _photo_label(scan),
-        "POI avec la base de données",
-        "Quitter",
-    ]
-    choice = questionary.select("Que voulez-vous synchroniser ?", choices=choices).ask()
+    show_all_sync = t_changes and p_changes and total_adds > 0 and total_dels > 0
+    show_all_add  = total_adds > 0
+    show_all_del  = total_dels > 0
+    show_traces   = t_changes
+    show_photos   = p_changes
+
+    catalog_has_items = (
+        scan["traces"]["catalog_count"] > 0 or
+        scan["photos"]["catalog_count"] > 0
+    )
+
+    if not t_changes and not p_changes:
+        console.print(
+            "[green]✓ Catalogs Traces et Photos alignés — rien à synchroniser[/]"
+        )
+
+    # --- Groupe 1 : Synchronisation ---
+    choices: list = []
+    if show_all_sync:
+        choices.append(
+            questionary.Choice("🔄 Tout synchroniser (ajouts + suppressions)", value="all_both")
+        )
+    if show_all_add:
+        choices.append(questionary.Choice(f"➕ Tout ajouter ({total_adds})", value="all_add"))
+    if show_all_del:
+        choices.append(questionary.Choice(f"🗑️  Tout supprimer ({total_dels})", value="all_delete"))
+    if show_traces:
+        choices.append(questionary.Choice(f"🗺️  {_trace_label(scan)}", value="traces"))
+    if show_photos:
+        choices.append(questionary.Choice(f"📷 {_photo_label(scan)}", value="photos"))
+
+    # --- Groupe 2 : Gestion catalog ---
+    choices.append(questionary.Separator())
+    if catalog_has_items:
+        choices.append(questionary.Choice("📋 Lister / modifier le catalog", value="list_edit"))
+        choices.append(questionary.Choice("🔥 Supprimer toutes les données", value="delete_all"))
+        choices.append(questionary.Separator())
+
+    # --- Groupe 3 : POI ---
+    choices.append(questionary.Choice("🌐 Synchroniser les POI (Supabase)", value="pois"))
+    choices.append(questionary.Separator())
+
+    # --- Groupe 4 : Sortie ---
+    choices.append(questionary.Choice("🚪 Quitter", value="quit"))
+
+    choice = questionary.select("Que voulez-vous faire ?", choices=choices).ask()
     log_event("INFO", "system", "menu_choice", choice=choice)
 
-    if choice is None or choice == "Quitter":
+    if choice is None or choice == "quit":
         return "quit", "both"
-    if choice == "Tout ajouter":
+    if choice == "all_both":
+        return "all", "both"
+    if choice == "all_add":
         return "all", "add"
-    if choice == "Tout supprimer":
+    if choice == "all_delete":
         return "all", "delete"
-    if choice.startswith("Traces"):
+    if choice == "traces":
         return "traces", "both"
-    if choice.startswith("Photos"):
+    if choice == "photos":
         return "photos", "both"
-    if choice.startswith("POI"):
+    if choice == "pois":
         return "pois", "both"
+    if choice == "list_edit":
+        return "list_edit", "both"
+    if choice == "delete_all":
+        return "delete_all", "both"
     return "quit", "both"
+
+
+# ---------------------------------------------------------------------------
+# Lister / modifier le catalog
+# ---------------------------------------------------------------------------
+
+def list_and_edit_catalog() -> None:
+    """Écran interactif de listage et modification des items catalog."""
+    while True:
+        cat_choice = questionary.select(
+            "Quel catalog afficher ?",
+            choices=[
+                questionary.Choice("🗺️  Traces", value="traces"),
+                questionary.Choice("📷 Photos", value="photos"),
+                questionary.Choice("← Retour", value="back"),
+            ],
+        ).ask()
+        if cat_choice is None or cat_choice == "back":
+            return
+        if cat_choice == "traces":
+            _edit_catalog_loop(CATALOG_TRACES, "traces")
+        else:
+            _edit_catalog_loop(CATALOG_PHOTOS, "photos")
+
+
+def _edit_catalog_loop(catalog_path: Path, kind: str) -> None:
+    """Boucle principale : liste les items, sélection, édition, retour à la liste."""
+    while True:
+        items, _ = load_catalog(catalog_path)
+
+        table = Table(show_header=True, header_style="bold cyan", box=None, pad_edge=False)
+        table.add_column("ID", style="dim", min_width=12)
+        table.add_column("Label", min_width=20)
+        table.add_column("Groupe", min_width=14)
+        if kind == "traces":
+            table.add_column("Order", justify="right")
+            for it in items:
+                table.add_row(
+                    it["id"], it.get("label", ""), it.get("group", ""),
+                    str(it.get("order", "")),
+                )
+        else:
+            table.add_column("Time")
+            for it in items:
+                t = it.get("time", "")
+                table.add_row(it["id"], it.get("label", ""), it.get("group", ""), t[:10] if t else "")
+        console.print(table)
+
+        item_choices: list = [
+            questionary.Choice(f"{it['id']} — {it.get('label', '')}", value=it["id"])
+            for it in items
+        ]
+        item_choices.append(questionary.Choice("← Retour", value="back"))
+
+        selected_id = questionary.select("Sélectionner un item :", choices=item_choices).ask()
+        if selected_id is None or selected_id == "back":
+            return
+
+        item = next((it for it in items if it["id"] == selected_id), None)
+        if not item:
+            continue
+
+        deleted = _edit_item(item, items, catalog_path, kind)
+        # Boucle : si suppression ou modification, rafraîchit la liste
+
+
+def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> bool:
+    """Boucle d'édition d'un item. Retourne True si l'item a été supprimé."""
+    while True:
+        fields = "\n".join(f"  [dim]{k}:[/] {v}" for k, v in item.items())
+        console.print(Panel(fields, title=f"Item : {item['id']}", border_style="cyan"))
+
+        action_choices: list = [
+            questionary.Choice("✏️  Modifier le label", value="label"),
+            questionary.Choice("📂 Modifier le groupe", value="group"),
+            questionary.Choice("📝 Modifier la description", value="description"),
+        ]
+        if kind == "traces":
+            action_choices.append(questionary.Choice("🔢 Modifier l'ordre", value="order"))
+        action_choices += [
+            questionary.Choice("🗑️  Supprimer cet item", value="delete"),
+            questionary.Choice("← Retour sans modifier", value="back"),
+        ]
+
+        action = questionary.select("Action :", choices=action_choices).ask()
+        if action is None or action == "back":
+            return False
+
+        if action == "label":
+            new_val = questionary.text("Nouveau label :", default=item.get("label", "")).ask()
+            if new_val is not None:
+                item["label"] = new_val
+                save_catalog(catalog_path, items)
+                console.print("[green]✓ Item mis à jour[/]")
+
+        elif action == "group":
+            cur = item.get("group", KNOWN_GROUPS[0])
+            default_g = cur if cur in KNOWN_GROUPS else KNOWN_GROUPS[0]
+            new_val = questionary.select(
+                "Nouveau groupe :", choices=KNOWN_GROUPS, default=default_g
+            ).ask()
+            if new_val is not None:
+                item["group"] = new_val
+                save_catalog(catalog_path, items)
+                console.print("[green]✓ Item mis à jour[/]")
+
+        elif action == "description":
+            new_val = questionary.text(
+                "Nouvelle description :", default=item.get("description", "")
+            ).ask()
+            if new_val is not None:
+                item["description"] = new_val
+                save_catalog(catalog_path, items)
+                console.print("[green]✓ Item mis à jour[/]")
+
+        elif action == "order":
+            new_val = questionary.text(
+                "Nouvel ordre :", default=str(item.get("order", ""))
+            ).ask()
+            if new_val is not None:
+                try:
+                    item["order"] = int(new_val)
+                    save_catalog(catalog_path, items)
+                    console.print("[green]✓ Item mis à jour[/]")
+                except ValueError:
+                    console.print("[red]Valeur non valide — entier attendu.[/]")
+
+        elif action == "delete":
+            label_display = item.get("label", item["id"])
+            confirmed = questionary.confirm(
+                f"Supprimer définitivement « {label_display} » ?", default=False
+            ).ask()
+            if confirmed:
+                del_tree = Tree("[bold red]Suppression")
+                if kind == "traces":
+                    for path_key in ("full", "simplified"):
+                        rel = item.get("paths", {}).get(path_key, "")
+                        if rel:
+                            p = REPO_ROOT / rel
+                            if p.exists():
+                                p.unlink()
+                                del_tree.add(f"[red]✗[/] {rel}")
+                else:
+                    thumb = item.get("paths", {}).get("thumb", "")
+                    if thumb:
+                        tp = THUMBS_DIR / (Path(thumb).stem + ".webp")
+                        if tp.exists():
+                            tp.unlink()
+                            del_tree.add(f"[red]✗[/] {tp.relative_to(REPO_ROOT)}")
+                console.print(del_tree)
+                updated = [it for it in items if it["id"] != item["id"]]
+                save_catalog(catalog_path, updated)
+                if kind == "photos":
+                    _filter_photos_geojson(del_tree)
+                console.print(f"[green]✓ « {label_display} » supprimé du catalog[/]")
+                return True
+
+
+# ---------------------------------------------------------------------------
+# Supprimer toutes les données
+# ---------------------------------------------------------------------------
+
+def delete_all_data(args: argparse.Namespace) -> None:
+    """Vide les catalogs Traces et Photos et supprime tous les fichiers dérivés."""
+    if args.non_interactive:
+        console.print("[red]Suppression de toutes les données impossible en mode non-interactif.[/]")
+        sys.exit(2)
+
+    trace_items, _ = load_catalog(CATALOG_TRACES)
+    photo_items, _ = load_catalog(CATALOG_PHOTOS)
+    trace_geojsons = sorted(TRACES_DIR.glob("*.geojson")) if TRACES_DIR.exists() else []
+    thumb_files = sorted(THUMBS_DIR.glob("*.webp")) if THUMBS_DIR.exists() else []
+
+    recap = "\n".join([
+        f"  Catalog Traces    : [bold]{len(trace_items)}[/] items vidés",
+        f"  Catalog Photos    : [bold]{len(photo_items)}[/] items vidés",
+        f"  GeoJSON (data/traces/)  : [bold]{len(trace_geojsons)}[/] fichiers supprimés",
+        f"  WebP    (data/thumbs/)  : [bold]{len(thumb_files)}[/] fichiers supprimés",
+        "",
+        "  [dim]Non touchés : sources/, groups.json, data/pois/, Supabase Storage[/]",
+    ])
+    console.print(Panel(
+        recap,
+        title="[bold red]⚠️  Suppression de toutes les données[/]",
+        border_style="red",
+    ))
+
+    confirm_text = questionary.text(
+        "Pour confirmer, tape exactement : SUPPRIMER"
+    ).ask()
+    if confirm_text is None or confirm_text.strip().upper() != "SUPPRIMER":
+        console.print("[dim]Annulé.[/]")
+        return
+
+    n_deleted = 0
+    save_catalog(CATALOG_TRACES, [])
+    save_catalog(CATALOG_PHOTOS, [])
+
+    for p in trace_geojsons:
+        p.unlink()
+        n_deleted += 1
+    for p in thumb_files:
+        p.unlink()
+        n_deleted += 1
+
+    empty_fc = {"type": "FeatureCollection", "features": []}
+    PHOTOS_GEOJSON.parent.mkdir(parents=True, exist_ok=True)
+    with PHOTOS_GEOJSON.open("w", encoding="utf-8") as f:
+        json.dump(empty_fc, f, ensure_ascii=False, indent=2)
+
+    console.print(
+        f"[green]✓ {n_deleted} fichier(s) supprimé(s). Catalogs Traces et Photos vidés.[/]"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -656,8 +907,8 @@ def sync_traces(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
     log_event("INFO", "traces", "sync_start",
               mode=mode, to_add=len(to_add), to_delete=len(to_delete))
 
-    console.rule("[bold]Traces")
-    tree = Tree("[bold cyan]Traces")
+    console.rule("[bold]🗺️  Traces")
+    tree = Tree("[bold cyan]🗺️  Traces")
     all_ok = True
     added = 0
     deleted = 0
@@ -753,8 +1004,8 @@ def sync_photos(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
         for photo in to_add:
             prompt_photo_meta(photo, non_interactive=False)
 
-    console.rule("[bold]Photos")
-    tree = Tree("[bold cyan]Photos")
+    console.rule("[bold]📷 Photos")
+    tree = Tree("[bold cyan]📷 Photos")
     all_ok = True
     added = 0
     deleted = 0
@@ -897,8 +1148,8 @@ def _filter_photos_geojson(tree: Tree) -> None:
 def sync_pois(scan: dict, args: argparse.Namespace) -> bool:
     log_event("INFO", "pois", "sync_start", mode="both", to_add=len(scan["pois"]["to_add"]))
 
-    console.rule("[bold]POI")
-    tree = Tree("[bold cyan]POI")
+    console.rule("[bold]🌐 POI")
+    tree = Tree("[bold cyan]🌐 POI")
 
     pois_cmd = [PYTHON, str(SCRIPTS_DIR / "sync_pois_from_supabase.py"), "-o", str(POIS_GEOJSON)]
     if args.verbose:
@@ -1000,11 +1251,13 @@ def main() -> None:
         scan["pois"]["to_add"]
     )
     if not has_work and not (args.all or args.traces or args.photos or args.pois):
-        console.print("[green]✓ Tout est déjà à jour.[/]")
-        log_event("INFO", "system", "done", exit_code=0,
-                  duration_s=round(time.monotonic() - t_start, 2),
-                  totals={"nothing_to_do": True})
-        sys.exit(0)
+        if args.non_interactive:
+            console.print("[green]✓ Tout est déjà à jour.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2),
+                      totals={"nothing_to_do": True})
+            sys.exit(0)
+        # Mode interactif : on continue vers le menu (POI + gestion catalog disponibles)
 
     # --- Déterminer ce qu'on synchronise ---
     if args.all:
@@ -1029,6 +1282,22 @@ def main() -> None:
         if action == "quit":
             log_event("WARN", "system", "aborted", stage="menu_quit")
             console.print("[dim]Annulé.[/]")
+            sys.exit(0)
+        if action == "list_edit":
+            try:
+                list_and_edit_catalog()
+            except KeyboardInterrupt:
+                console.print("\n[dim]Interrompu.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "delete_all":
+            try:
+                delete_all_data(args)
+            except KeyboardInterrupt:
+                console.print("\n[dim]Interrompu.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
             sys.exit(0)
         do_traces = action in ("all", "traces")
         do_photos = action in ("all", "photos")
@@ -1059,7 +1328,7 @@ def main() -> None:
 
     # --- Exécution ---
     all_ok = True
-    console.rule("[bold]Exécution")
+    console.rule("[bold]⚙️  Exécution")
 
     try:
         if do_traces:
@@ -1079,7 +1348,7 @@ def main() -> None:
         sys.exit(1)
 
     # --- Résumé ---
-    console.rule("[bold]Résumé")
+    console.rule("[bold]📊 Résumé")
     scan_after = scan_sources()
     stats_tree = Tree("[bold]Catalogs après mise à jour")
     totals = {}
@@ -1096,10 +1365,10 @@ def main() -> None:
               totals=totals)
 
     if all_ok:
-        console.print("\n[green]✓ Synchronisation terminée.[/]")
+        console.print("\n[green]✓ Synchronisation terminée avec succès.[/]")
         sys.exit(0)
     else:
-        console.print("\n[red]✗ Des erreurs ont été rencontrées (voir ci-dessus).[/]")
+        console.print("\n[red]✗ Des erreurs ont été rencontrées — voir les détails ci-dessus.[/]")
         sys.exit(1)
 
 

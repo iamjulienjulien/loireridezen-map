@@ -1,6 +1,8 @@
 .DS_Store
 .vscode/
 .venv/
+__pycache__/
+*.pyc
 
 # Runtime config — généré au build sur Vercel, créé localement par chaque dev
 .DS_Store
