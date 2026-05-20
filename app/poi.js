@@ -42,15 +42,19 @@ function iconByType(type) {
     return new Icon({
       content: "📍",
       color: "#00BCD4",
-      accentColor: "rgba(0,0,0,0.25)",
+      accentColor: "rgba(0,0,0,0.18)",
       svg: TackCircleBorder,
+      scale: 1.1,
+      shadow: "drop",
     });
   }
   return new Icon({
     content: t.emoji,
     color: t.color,
-    accentColor: "rgba(0,0,0,0.25)",
+    accentColor: "rgba(0,0,0,0.18)",
     svg: SHAPES[t.shape] || TackCircleBorder,
+    scale: 1.1,
+    shadow: "drop",
   });
 }
 

@@ -1,13 +1,27 @@
+/* ──────────────────────────────────── Design tokens */
+
+:root {
+  --lrz-background: #f7f3ee;
+  --lrz-foreground: #1c1a17;
+  --lrz-ink-soft: #6b6150;
+  --lrz-or: #c69247;
+  --lrz-card: #ffffff;
+  --lrz-card-hover: #f3ede4;
+  --lrz-tuffeau-line: #e0d5c5;
+
+  --lrz-font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --lrz-font-sans:
+    "Geist", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* ───────────────────────────────────────────── Base */
 
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: var(--lrz-font-sans);
+  color: var(--lrz-foreground);
 }
 
 #map {
@@ -20,22 +34,32 @@ body {
 
 /* ───────────────────────────────────── Panneau filtres */
 
+/* ─────────────────────────────────────── Surface partagée */
+
+.lrz-surface {
+  background: var(--lrz-card);
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
 .controls {
   position: absolute;
   z-index: 1000;
   top: 10px;
-  background: white;
+  background: var(--lrz-card);
   padding: 0.6rem 0.8rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: transform 0.25s ease;
+  border-radius: 0.75rem;
+  border: 1px solid var(--lrz-tuffeau-line);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
   max-width: 320px;
 }
 
 .controls hr {
   margin: 0.5rem 0;
   border: 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--lrz-tuffeau-line);
 }
 
 .filters-header {
@@ -52,9 +76,11 @@ body {
 }
 
 .section-title {
+  font-family: var(--lrz-font-serif);
   font-size: 0.95rem;
   font-weight: 600;
   margin: 0 0 0.35rem;
+  color: var(--lrz-foreground);
 }
 
 .filters-grid {
@@ -69,6 +95,48 @@ body {
   gap: 0.4rem;
   cursor: pointer;
   font-size: 0.9rem;
+  color: var(--lrz-foreground);
+}
+
+/* ─────────────────────────────────── Custom checkboxes */
+
+.type-filter {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border: 2px solid var(--lrz-tuffeau-line);
+  border-radius: 3px;
+  background: var(--lrz-card);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.type-filter:checked {
+  background: var(--lrz-or);
+  border-color: var(--lrz-or);
+}
+
+.type-filter:checked::after {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 3px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(45deg);
+}
+
+.type-filter:focus-visible {
+  outline: 2px solid var(--lrz-or);
+  outline-offset: 2px;
 }
 
 .legend-grid {
@@ -86,16 +154,15 @@ body {
 }
 
 .legend-marker {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #fff;
-  border-width: 2px;
-  border-style: solid;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+  position: relative;
 }
 
 /* ─────────────────────────────────────── Bouton mobile */
@@ -105,18 +172,19 @@ body {
   z-index: 1100;
   top: 10px;
   left: 10px;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--lrz-card);
+  border: 1px solid var(--lrz-tuffeau-line);
   border-radius: 0.5rem;
   padding: 0.4rem 0.6rem;
-  font-family: inherit;
+  font-family: var(--lrz-font-sans);
   font-size: 0.9rem;
+  color: var(--lrz-foreground);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .filters-toggle[aria-expanded="true"] {
-  background: #f5f5f5;
+  background: var(--lrz-card-hover);
 }
 
 /* ─────────────────────────────────── Responsive (mobile = drawer) */
@@ -132,6 +200,23 @@ body {
   }
 }
 
+/* ─────────────────────────────────── Backdrop drawer mobile */
+
+#drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+#drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 @media (max-width: 899px) {
   .controls {
     left: 0;
@@ -141,7 +226,7 @@ body {
     overflow: auto;
     transform: translateX(-100%);
     box-shadow: none;
-    border-right: 1px solid #eee;
+    border-right: 1px solid var(--lrz-tuffeau-line);
     border-radius: 0;
   }
 
@@ -153,15 +238,67 @@ body {
 
 /* ─────────────────────────────────────────── Popups POI */
 
+.poi-popup {
+  font-family: var(--lrz-font-sans);
+  color: var(--lrz-foreground);
+}
+
 .poi-popup img {
   max-width: 100%;
   display: block;
-  border-radius: 2px;
-  margin-bottom: 0.35rem;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+}
+
+.poi-popup strong {
+  font-family: var(--lrz-font-serif);
+  font-size: 1.05rem;
+}
+
+.poi-popup small {
+  color: var(--lrz-ink-soft);
 }
 
 .poi-popup p {
   margin: 0.4rem 0 0;
+}
+
+/* ──────────────────────────────── Surcharges Leaflet */
+
+.leaflet-control-layers {
+  font-family: var(--lrz-font-sans) !important;
+  background: var(--lrz-card) !important;
+  border: 1px solid var(--lrz-tuffeau-line) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+  color: var(--lrz-foreground) !important;
+}
+
+.leaflet-bar a {
+  background: var(--lrz-card) !important;
+  border-color: var(--lrz-tuffeau-line) !important;
+  color: var(--lrz-foreground) !important;
+}
+
+.leaflet-bar a:hover {
+  background: var(--lrz-card-hover) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  font-family: var(--lrz-font-sans) !important;
+  background: var(--lrz-card) !important;
+  border: 1px solid var(--lrz-tuffeau-line) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+  color: var(--lrz-foreground) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--lrz-card) !important;
+}
+
+#legendGrid .extra-marker {
+  position: relative !important;
 }
 
 /* ─────────────────────────────────── Bannière d'erreur Supabase */
@@ -170,18 +307,21 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fef3c7;
-  border: 1px solid #d97706;
-  color: #78350f;
+  background: var(--lrz-card);
+  border-top: 1px solid var(--lrz-tuffeau-line);
+  border-right: 1px solid var(--lrz-tuffeau-line);
+  border-bottom: 1px solid var(--lrz-tuffeau-line);
+  border-left: 4px solid #c0392b;
+  color: var(--lrz-foreground);
   padding: 8px 12px;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-size: 14px;
   max-width: 380px;
 }
 
 .lrz-error-banner__retry {
-  background: #d97706;
+  background: var(--lrz-or);
   color: white;
   border: 0;
   border-radius: 3px;
@@ -192,5 +332,13 @@ body {
 }
 
 .lrz-error-banner__retry:hover {
-  background: #b45309;
+  background: #a67e3e;
+}
+
+.legend-line--dashed {
+  background: repeating-linear-gradient(
+    to right,
+    #ff7f00 0 6px,
+    transparent 6px 10px
+  ) !important;
 }

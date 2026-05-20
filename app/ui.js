@@ -12,12 +12,15 @@
  */
 
 import { Control, FeatureGroup } from "leaflet";
+import * as leafletExtraMarkers from "leaflet-extra-markers";
 
 import { map, baseOSM, baseEsriSat, esriLabels } from "./map.js";
 import { traceGroups, loadAllRoutes } from "./routes.js";
 import { cluster } from "./poi.js";
-import { POI_TYPES } from "./types.js";
+import { POI_TYPES, SHAPES } from "./types.js";
 import { escapeHtml } from "./helpers.js";
+
+const { Icon: ExtraIcon, TackCircleBorder } = leafletExtraMarkers;
 
 // ───────────────────────────────────────────────────── Filtres
 
@@ -44,24 +47,35 @@ export function renderFilters() {
 
 export function renderLegend() {
   const grid = document.getElementById("legendGrid");
+  grid.innerHTML = "";
 
-  const traceRows = `
+  grid.insertAdjacentHTML("beforeend", `
     <div class="legend-line" style="background:#2E86AB"></div>
     <div>Trace principale</div>
-    <div class="legend-line" style="background:#FF7F00; border-top: 2px dashed #FF7F00; height: 0"></div>
+    <div class="legend-line legend-line--dashed"></div>
     <div>Boucle angevine</div>
-  `;
+  `);
 
-  const poiRows = Object.entries(POI_TYPES)
-    .map(
-      ([, cfg]) => `
-        <div class="legend-marker" style="border-color:${cfg.color}">${cfg.emoji}</div>
-        <div>${escapeHtml(cfg.label)}</div>
-      `,
-    )
-    .join("");
+  for (const [, cfg] of Object.entries(POI_TYPES)) {
+    const icon = new ExtraIcon({
+      content: cfg.emoji,
+      color: cfg.color,
+      accentColor: "rgba(0,0,0,0.18)",
+      svg: SHAPES[cfg.shape] || TackCircleBorder,
+      scale: 0.7,
+      shadow: "none",
+    });
+    const el = icon.createIcon();
+    // Reset Leaflet's absolute positioning for inline legend display
+    el.style.position = "static";
+    el.style.margin = "0";
 
-  grid.innerHTML = traceRows + poiRows;
+    const label = document.createElement("div");
+    label.textContent = cfg.label;
+
+    grid.appendChild(el);
+    grid.appendChild(label);
+  }
 }
 
 // ───────────────────────────────────────────────── Drawer mobile
@@ -70,14 +84,21 @@ export function initMobileDrawer() {
   const toggleBtn = document.getElementById("toggleFilters");
   const panel = document.getElementById("filtersPanel");
 
+  const backdrop = document.createElement("div");
+  backdrop.id = "drawer-backdrop";
+  document.body.appendChild(backdrop);
+
   const setOpen = (open) => {
     panel.classList.toggle("open", open);
+    backdrop.classList.toggle("open", open);
     toggleBtn.setAttribute("aria-expanded", String(open));
   };
 
   toggleBtn.addEventListener("click", () =>
     setOpen(!panel.classList.contains("open")),
   );
+
+  backdrop.addEventListener("click", () => setOpen(false));
 
   // Clic sur la carte → ferme le drawer sur mobile uniquement
   map.on("click", () => {

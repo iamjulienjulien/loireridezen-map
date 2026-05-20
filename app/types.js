@@ -21,13 +21,13 @@ const {
 } = leafletExtraMarkers;
 
 export const POI_TYPES = {
-  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#3498db", shape: "star",    defaultChecked: true },
-  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#f39c12", shape: "square",  defaultChecked: true },
-  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#9b59b6", shape: "square",  defaultChecked: true },
-  coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#f1c40f", shape: "square",  defaultChecked: true },
-  départ:      { label: "Départ",       emoji: "🏳️", color: "#2ecc71", shape: "diamond", defaultChecked: true },
-  arrivée:     { label: "Arrivée",      emoji: "🏁",  color: "#e74c3c", shape: "diamond", defaultChecked: true },
-  photo:       { label: "Photo",        emoji: "📸",  color: "#00bcd4", shape: "square",  defaultChecked: true },
+  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",    defaultChecked: true },
+  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square",  defaultChecked: true },
+  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square",  defaultChecked: true },
+  coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",    defaultChecked: true },
+  départ:      { label: "Départ",       emoji: "🏳️", color: "#27ae60", shape: "diamond", defaultChecked: true },
+  arrivée:     { label: "Arrivée",      emoji: "🏁",  color: "#c0392b", shape: "diamond", defaultChecked: true },
+  photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle",  defaultChecked: true },
 };
 
 /** Mapping nom symbolique → forme leaflet-extra-markers. */
