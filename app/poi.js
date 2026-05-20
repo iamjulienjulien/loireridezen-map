@@ -60,23 +60,45 @@ function iconByType(type) {
 
 // ──────────────────────────────────────────────────────────── Popups
 
-function bindPopupFromProps(p, layer) {
-  const img =
-    safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
+function renderChateauPopup(p) {
+  const visited = p.visited === true;
+  return `
+    <div class="lrz-poi-popup lrz-poi-popup--chateau">
+      ${p.photo_path ? `<div class="lrz-poi-popup__photo"><img src="${escapeHtml(p.photo_path)}" alt="${escapeHtml(p.name || "Château")}"/></div>` : ""}
+      <div class="lrz-poi-popup__body">
+        <strong class="lrz-poi-popup__title">${escapeHtml(p.name || "Château")}</strong>
+        <div class="lrz-poi-popup__meta">
+          <span class="lrz-poi-popup__badge lrz-poi-popup__badge--${visited ? "visited" : "planned"}">${visited ? "✓ Visité" : "À visiter"}</span>
+          ${p.construction_date ? `<span class="lrz-poi-popup__meta-date">🏗 ${escapeHtml(p.construction_date)}</span>` : ""}
+        </div>
+        ${p.description ? `<p class="lrz-poi-popup__description">${escapeHtml(p.description)}</p>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function renderGenericPoiPopup(p) {
+  const img = safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
   const insta = safeHttpUrl(p.url_insta);
   const safeImg = img ? escapeHtml(img) : null;
-
-  layer.bindPopup(`
+  return `
     <div class="poi-popup">
       ${safeImg ? `<img src="${safeImg}" alt="${escapeHtml(p.name || "POI")}"/>` : ""}
       <strong>${escapeHtml(p.name || "Point")}</strong><br/>
-      <small>${escapeHtml(p.type || "")}${
-        p.stage ? ` · Étape ${escapeHtml(String(p.stage))}` : ""
-      }</small>
+      <small>${escapeHtml(p.type || "")}${p.stage ? ` · Étape ${escapeHtml(String(p.stage))}` : ""}</small>
       ${p.description ? `<p>${escapeHtml(p.description)}</p>` : ""}
       ${insta ? `<p><a href="${escapeHtml(insta)}" target="_blank" rel="noopener noreferrer">Voir sur Instagram 📲</a></p>` : ""}
     </div>
-  `);
+  `;
+}
+
+function renderPoiPopup(p) {
+  if (p.type === "chateau") return renderChateauPopup(p);
+  return renderGenericPoiPopup(p);
+}
+
+function bindPopupFromProps(p, layer) {
+  layer.bindPopup(renderPoiPopup(p));
 }
 
 // ──────────────────────────────────────────────── Bannière d'erreur
@@ -116,19 +138,22 @@ function hideErrorBanner() {
 let lastAbort = null;
 
 async function fetchPoisFromSupabase(bounds, activeType, signal) {
-  const qs = new URLSearchParams({
+  const body = {
     minlon: bounds.getWest(),
     minlat: bounds.getSouth(),
     maxlon: bounds.getEast(),
     maxlat: bounds.getNorth(),
-  });
-  if (activeType) qs.set("p_type", activeType);
+  };
+  if (activeType) body.p_type = activeType;
 
-  const res = await fetch(`${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson?${qs}`, {
+  const res = await fetch(`${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson`, {
+    method: "POST",
     headers: {
       apikey: SUPA_PUBLISHABLE_KEY,
       Authorization: `Bearer ${SUPA_PUBLISHABLE_KEY}`,
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify(body),
     signal,
   });
   if (!res.ok) throw new Error(`Supabase ${res.status}`);

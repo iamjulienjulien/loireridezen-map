@@ -21,6 +21,7 @@ const {
 } = leafletExtraMarkers;
 
 export const POI_TYPES = {
+  chateau:     { label: "Château",      emoji: "👑",  color: "#b8860b", shape: "star",   defaultChecked: true },
   coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",   defaultChecked: true },
   patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",   defaultChecked: false },
   guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: false },

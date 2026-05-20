@@ -1,11 +1,11 @@
 {
   "active": true,
-  "label": "Rue d'Anjou",
-  "description": "Chez moi",
+  "label": "Béhuard",
+  "description": "",
   "coordinates": [
-    -0.5568501,
-    47.4663954
+    -0.6440124,
+    47.3792709
   ],
   "source": "address",
-  "updated_at": "2026-05-20T10:50:24.110549+00:00"
+  "updated_at": "2026-05-20T17:24:16.923152+00:00"
 }

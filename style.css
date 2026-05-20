@@ -1445,3 +1445,61 @@ body {
   margin-top: 0.25rem;
   border-top: 1px solid rgba(0, 0, 0, 0.07);
 }
+
+/* ─────────────────────────── LRZ-EVO-23 : Popup château ───────────────── */
+.lrz-poi-popup--chateau {
+  min-width: 210px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.lrz-poi-popup__photo {
+  margin: -12px -12px 0.5rem;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+}
+.lrz-poi-popup__photo img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+.lrz-poi-popup__body {
+  padding: 0 0.125rem;
+}
+.lrz-poi-popup__title {
+  display: block;
+  font-size: 0.9375rem;
+  margin-bottom: 0.3rem;
+  color: #1a1a1a;
+}
+.lrz-poi-popup__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+.lrz-poi-popup__badge {
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.lrz-poi-popup__badge--visited {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.lrz-poi-popup__badge--planned {
+  background: #fff3e0;
+  color: #bf360c;
+}
+.lrz-poi-popup__meta-date {
+  font-size: 0.75rem;
+  color: #888;
+}
+.lrz-poi-popup__description {
+  font-size: 0.8125rem;
+  margin: 0.2rem 0 0;
+  color: #555;
+}
