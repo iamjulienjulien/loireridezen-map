@@ -8,7 +8,7 @@ un FeatureCollection prêt à être chargé dans Leaflet.
 
 Cf. ticket LRZ-QA-10 — externaliser les photos JPEG originales hors du
 repo git, vers Supabase Storage. Les miniatures WebP restent locales
-dans `./thumbs/` (5.2 MB total, OK à versionner).
+dans `data/thumbs/` (5.2 MB total, OK à versionner).
 
 Modes d'exécution
 -----------------
@@ -34,10 +34,10 @@ Usage
     python photos_to_poi.py
 
     # Bucket et output custom
-    python photos_to_poi.py --bucket photos --out data/pois_photos.geojson
+    python scripts/photos_to_poi.py --bucket photos --out data/pois/pois_photos.geojson
 
     # Mode local (EXIF lus en local, URLs Supabase générées)
-    python photos_to_poi.py --local-photos ./photos
+    python scripts/photos_to_poi.py --local-photos sources/photos
 
     # Override de l'URL base (rare)
     python photos_to_poi.py \\
@@ -453,8 +453,8 @@ def main(argv: list[str] | None = None) -> int:
 
     # Output
     parser.add_argument(
-        "-o", "--out", type=Path, default=Path("data/pois_photos.geojson"),
-        help="Chemin du fichier GeoJSON de sortie (défaut : data/pois_photos.geojson).",
+        "-o", "--out", type=Path, default=Path("data/pois/pois_photos.geojson"),
+        help="Chemin du fichier GeoJSON de sortie (défaut : data/pois/pois_photos.geojson).",
     )
     parser.add_argument(
         "--indent", type=int, default=2,
@@ -468,8 +468,8 @@ def main(argv: list[str] | None = None) -> int:
              "(ex. https://xxx.supabase.co/storage/v1/object/public/photos).",
     )
     parser.add_argument(
-        "--thumb-prefix", default="./thumbs",
-        help="Préfixe pour les miniatures (défaut : ./thumbs). "
+        "--thumb-prefix", default="data/thumbs",
+        help="Préfixe pour les miniatures (défaut : data/thumbs). "
              "Les thumbs restent locaux (cf. ticket LRZ-QA-10).",
     )
 

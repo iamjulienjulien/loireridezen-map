@@ -133,7 +133,7 @@ async function fetchPoisFromSupabase(bounds, activeType, signal) {
 
 async function fetchLocalPhotos() {
   try {
-    const r = await fetch("data/pois_photos.geojson");
+    const r = await fetch("data/pois/pois_photos.geojson");
     if (!r.ok) return { type: "FeatureCollection", features: [] };
     return r.json();
   } catch {

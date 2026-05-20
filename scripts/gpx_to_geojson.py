@@ -11,18 +11,15 @@ Dépendances :
 
 Usage :
     # Une étape → un fichier
-    python gpx_to_geojson.py etape-01.gpx -o data/etape-01.geojson
+    python scripts/gpx_to_geojson.py sources/gpx/etape-01.gpx -o data/traces/etape-01.geojson
 
-    # Plusieurs GPX → fichier consolidé (style data/route.geojson)
-    python gpx_to_geojson.py data/gpx/*.gpx -o data/route.geojson
-
-    # Version simplifiée Douglas-Peucker (style data/route_simplified.geojson)
-    python gpx_to_geojson.py data/gpx/*.gpx \
-        -o data/route_simplified.geojson --simplify 0.0001
+    # Avec version simplifiée
+    python scripts/gpx_to_geojson.py sources/gpx/etape-01.gpx \
+        -o data/traces/etape-01_simplified.geojson --simplify 0.0001
 
     # Fusionner les segments d'un GPX en MultiLineString
-    python gpx_to_geojson.py boucle_angevine.gpx \
-        -o data/boucle_angevine.geojson --multilinestring
+    python scripts/gpx_to_geojson.py sources/gpx/boucle-angevine.gpx \
+        -o data/traces/boucle-angevine.geojson --multilinestring
 
 Properties générées par feature :
     name, source_file, distance_km, duration_s (si timestamps),

@@ -7,7 +7,7 @@
         "name": "01 chambord",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg",
-        "thumb": "./thumbs/01-chambord.webp",
+        "thumb": "data/thumbs/01-chambord.webp",
         "time": "2025:06:06 14:22:09"
       },
       "geometry": {
@@ -24,7 +24,7 @@
         "name": "02 blois",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg",
-        "thumb": "./thumbs/02-blois.webp",
+        "thumb": "data/thumbs/02-blois.webp",
         "time": "2025:06:07 12:43:09"
       },
       "geometry": {
@@ -41,7 +41,7 @@
         "name": "03 amboise",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg",
-        "thumb": "./thumbs/03-amboise.webp",
+        "thumb": "data/thumbs/03-amboise.webp",
         "time": "2025:06:08 13:31:29"
       },
       "geometry": {
@@ -58,7 +58,7 @@
         "name": "04 amboise",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg",
-        "thumb": "./thumbs/04-amboise.webp",
+        "thumb": "data/thumbs/04-amboise.webp",
         "time": "2025:06:09 20:18:52"
       },
       "geometry": {
@@ -75,7 +75,7 @@
         "name": "05 chenonceau",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg",
-        "thumb": "./thumbs/05-chenonceau.webp",
+        "thumb": "data/thumbs/05-chenonceau.webp",
         "time": "2025:06:10 16:02:27"
       },
       "geometry": {
@@ -92,7 +92,7 @@
         "name": "06 tours",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg",
-        "thumb": "./thumbs/06-tours.webp",
+        "thumb": "data/thumbs/06-tours.webp",
         "time": "2025:06:12 13:21:35"
       },
       "geometry": {
@@ -109,7 +109,7 @@
         "name": "07 delaware painter",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/07-delaware-painter.jpeg",
-        "thumb": "./thumbs/07-delaware-painter.webp",
+        "thumb": "data/thumbs/07-delaware-painter.webp",
         "time": "2025:06:12 15:04:53"
       },
       "geometry": {
@@ -126,7 +126,7 @@
         "name": "08 villandry",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg",
-        "thumb": "./thumbs/08-villandry.webp",
+        "thumb": "data/thumbs/08-villandry.webp",
         "time": "2025:06:12 17:45:05"
       },
       "geometry": {
@@ -143,7 +143,7 @@
         "name": "09 boats",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/09-boats.jpeg",
-        "thumb": "./thumbs/09-boats.webp",
+        "thumb": "data/thumbs/09-boats.webp",
         "time": "2025:06:12 20:31:39"
       },
       "geometry": {
@@ -160,7 +160,7 @@
         "name": "10 langeais",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg",
-        "thumb": "./thumbs/10-langeais.webp",
+        "thumb": "data/thumbs/10-langeais.webp",
         "time": "2025:06:13 14:29:26"
       },
       "geometry": {
@@ -177,7 +177,7 @@
         "name": "11 chinon",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg",
-        "thumb": "./thumbs/11-chinon.webp",
+        "thumb": "data/thumbs/11-chinon.webp",
         "time": "2025:06:16 13:12:24"
       },
       "geometry": {
@@ -194,7 +194,7 @@
         "name": "12 fontevraud",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg",
-        "thumb": "./thumbs/12-fontevraud.webp",
+        "thumb": "data/thumbs/12-fontevraud.webp",
         "time": "2025:06:17 11:49:26"
       },
       "geometry": {
@@ -211,7 +211,7 @@
         "name": "13 saumur",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg",
-        "thumb": "./thumbs/13-saumur.webp",
+        "thumb": "data/thumbs/13-saumur.webp",
         "time": "2025:06:17 19:47:01"
       },
       "geometry": {
@@ -225,10 +225,61 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "18 saumur",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/18-saumur.jpeg",
+        "thumb": "data/thumbs/18-saumur.webp",
+        "time": "2025:06:17 21:32:13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.071122,
+          47.261167
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "19 saumur",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/19-saumur.jpeg",
+        "thumb": "data/thumbs/19-saumur.webp",
+        "time": "2025:06:17 21:32:19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.071119,
+          47.261167
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "20 ackerman",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/20-ackerman.jpeg",
+        "thumb": "data/thumbs/20-ackerman.webp",
+        "time": "2025:06:18 12:29:52"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.106883,
+          47.271594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "14 saint mathurin",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/14-saint-mathurin.jpeg",
-        "thumb": "./thumbs/14-saint-mathurin.webp",
+        "thumb": "data/thumbs/14-saint-mathurin.webp",
         "time": "2025:06:18 15:25:58"
       },
       "geometry": {
@@ -245,7 +296,7 @@
         "name": "15 loire maine",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg",
-        "thumb": "./thumbs/15-loire-maine.webp",
+        "thumb": "data/thumbs/15-loire-maine.webp",
         "time": "2025:06:18 17:26:15"
       },
       "geometry": {
@@ -262,7 +313,7 @@
         "name": "16 angers",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg",
-        "thumb": "./thumbs/16-angers.webp",
+        "thumb": "data/thumbs/16-angers.webp",
         "time": "2025:06:18 19:58:52"
       },
       "geometry": {
@@ -279,7 +330,7 @@
         "name": "17 la chevalerie",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg",
-        "thumb": "./thumbs/17-la-chevalerie.webp",
+        "thumb": "data/thumbs/17-la-chevalerie.webp",
         "time": "2025:09:30 16:28:17"
       },
       "geometry": {

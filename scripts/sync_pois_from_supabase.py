@@ -19,15 +19,15 @@ Usage :
     python sync_pois_from_supabase.py
 
     # Chemin de sortie custom
-    python sync_pois_from_supabase.py -o data/pois.geojson
+    python scripts/sync_pois_from_supabase.py -o data/pois/pois.geojson
 
     # Verbose
-    python sync_pois_from_supabase.py -v
+    python scripts/sync_pois_from_supabase.py -v
 
 Workflow type :
     1. Éditer un POI dans la console Supabase (Table Editor)
     2. Lancer ce script localement
-    3. git diff data/pois.geojson pour vérifier les changements
+    3. git diff data/pois/pois.geojson pour vérifier les changements
     4. git commit + push → Vercel redéploie
 
 Exit codes :
@@ -168,8 +168,8 @@ def main(argv: list[str] | None = None) -> int:
         "-o",
         "--output",
         type=Path,
-        default=Path("data/pois.geojson"),
-        help="Chemin du fichier GeoJSON de sortie (défaut : data/pois.geojson)",
+        default=Path("data/pois/pois.geojson"),
+        help="Chemin du fichier GeoJSON de sortie (défaut : data/pois/pois.geojson)",
     )
     parser.add_argument(
         "--indent",

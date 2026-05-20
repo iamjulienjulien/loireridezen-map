@@ -10,7 +10,7 @@ Crée des miniatures WEBP en miroir d'arborescence.
 - Options: --skip-existing, --width, --quality, --verbose
 
 Usage :
-  python make_thumbs.py --photos ./photos --thumbs ./thumbs --width 1200 --quality 80 --skip-existing --verbose
+  python scripts/make_thumbs.py --photos sources/photos --thumbs data/thumbs --width 1200 --quality 80 --skip-existing --verbose
 """
 import os, argparse, sys
 from pathlib import Path

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T01:05:47.190311+00:00",
+  "updated_at": "2026-05-20T01:18:41.123939+00:00",
   "items": [
     {
       "id": "acte-2_etape-0_blois_chambord",
@@ -37,19 +37,6 @@
       },
       "source": "sources/gpx/acte-2_etape-2_amboise-chenonceaux.gpx",
       "order": 3,
-      "distance_km": null,
-      "elevation_gain_m": null
-    },
-    {
-      "id": "acte-2_etape-3_chenonceaux-tours",
-      "label": "Acte 2 Etape 3 Chenonceaux Tours",
-      "group": "acte-2",
-      "paths": {
-        "full": "data/traces/acte-2_etape-3_chenonceaux-tours.geojson",
-        "simplified": "data/traces/acte-2_etape-3_chenonceaux-tours_simplified.geojson"
-      },
-      "source": "sources/gpx/acte-2_etape-3_chenonceaux-tours.gpx",
-      "order": 4,
       "distance_km": null,
       "elevation_gain_m": null
     },
@@ -114,6 +101,19 @@
         "simplified": "data/traces/acte-2_etape-8_saumur-angers_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-8_saumur-angers.gpx",
+      "order": 9,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-2_etape-3_chenonceaux-tours",
+      "label": "Acte 2 Etape 3 Chenonceaux Tours",
+      "group": "acte-2",
+      "paths": {
+        "full": "data/traces/acte-2_etape-3_chenonceaux-tours.geojson",
+        "simplified": "data/traces/acte-2_etape-3_chenonceaux-tours_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-2_etape-3_chenonceaux-tours.gpx",
       "order": 9,
       "distance_km": null,
       "elevation_gain_m": null

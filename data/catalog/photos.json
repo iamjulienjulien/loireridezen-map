@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-19T23:14:19.501915+00:00",
+  "updated_at": "2026-05-20T02:04:41.688509+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -255,6 +255,51 @@
       "time": "2025-09-30T16:28:17",
       "lat": 47.440792,
       "lon": -0.456067
+    },
+    {
+      "id": "18-saumur",
+      "label": "18 saumur",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/18-saumur.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/18-saumur.jpeg"
+      },
+      "source": "sources/photos/18-saumur.jpeg",
+      "order": 31,
+      "time": "2025:06:17 21:32:13",
+      "lat": 47.261167,
+      "lon": -0.071122
+    },
+    {
+      "id": "19-saumur",
+      "label": "19 saumur",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/19-saumur.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/19-saumur.jpeg"
+      },
+      "source": "sources/photos/19-saumur.jpeg",
+      "order": 32,
+      "time": "2025:06:17 21:32:19",
+      "lat": 47.261167,
+      "lon": -0.071119
+    },
+    {
+      "id": "20-ackerman",
+      "label": "20 ackerman",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/20-ackerman.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/20-ackerman.jpeg"
+      },
+      "source": "sources/photos/20-ackerman.jpeg",
+      "order": 33,
+      "time": "2025:06:18 12:29:52",
+      "lat": 47.271594,
+      "lon": -0.106883
     }
   ]
 }

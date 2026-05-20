@@ -26,6 +26,7 @@ Usage :
     python scripts/update_data.py --add-only --traces     # ajouts traces
     python scripts/update_data.py --delete-only --photos  # suppressions photos
     python scripts/update_data.py --all --non-interactive --yes  # mode CI
+    python scripts/update_data.py --no-log                # sans fichier de log
     python scripts/update_data.py -v                      # verbose
 """
 
@@ -36,6 +37,8 @@ import json
 import os
 import subprocess
 import sys
+import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -73,11 +76,53 @@ PHOTOS_GEOJSON = POIS_DIR / "pois_photos.geojson"
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
 PYTHON = sys.executable
+LOG_DIR_DEFAULT = REPO_ROOT / "logs" / "update_data"
 
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
 KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure"]
 
 console = Console()
+
+# ---------------------------------------------------------------------------
+# Logging JSONL
+# ---------------------------------------------------------------------------
+
+_RUN_ID: str = uuid.uuid4().hex[:8]
+_LOG_PATH: Path | None = None
+_LOG_WARN_SHOWN: bool = False
+
+
+def init_logger(log_dir: Path) -> Path | None:
+    global _LOG_PATH
+    try:
+        log_dir.mkdir(parents=True, exist_ok=True)
+        today = datetime.now().strftime("%Y-%m-%d")
+        _LOG_PATH = log_dir / f"{today}.jsonl"
+        return _LOG_PATH
+    except Exception as e:
+        console.print(f"[yellow]⚠ Logger non initialisé : {e}[/]")
+        return None
+
+
+def log_event(level: str, category: str, action: str, **data) -> None:
+    global _LOG_WARN_SHOWN
+    if _LOG_PATH is None:
+        return
+    try:
+        entry = {
+            "ts": datetime.now().astimezone().isoformat(timespec="milliseconds"),
+            "run_id": _RUN_ID,
+            "level": level,
+            "category": category,
+            "action": action,
+            "data": data,
+        }
+        with _LOG_PATH.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception as e:
+        if not _LOG_WARN_SHOWN:
+            console.print(f"[yellow]⚠ Échec d'écriture dans le log ({_LOG_PATH}) : {e}[/]")
+            _LOG_WARN_SHOWN = True
 
 
 # ---------------------------------------------------------------------------
@@ -97,6 +142,16 @@ def load_catalog(path: Path) -> tuple[list[dict], str | None]:
 
 def save_catalog(path: Path, items: list[dict], verbose: bool = False) -> None:
     """Écrit {updated_at, items} en UTF-8 indenté."""
+    items_before = 0
+    if path.exists():
+        try:
+            with path.open(encoding="utf-8") as f:
+                raw = json.load(f)
+            prev = raw.get("items", raw) if isinstance(raw, dict) else raw
+            items_before = len(prev)
+        except Exception:
+            pass
+
     payload = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "items": items,
@@ -104,6 +159,12 @@ def save_catalog(path: Path, items: list[dict], verbose: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    log_event("INFO", "catalog", "update",
+              file=str(path.relative_to(REPO_ROOT)),
+              items_before=items_before,
+              items_after=len(items))
+
     if verbose:
         console.print(f"  [green]✓[/] catalog mis à jour : {path.relative_to(REPO_ROOT)}")
 
@@ -123,19 +184,14 @@ def scan_sources(verbose: bool = False) -> dict:
     trace_items, _ = load_catalog(CATALOG_TRACES)
     catalog_trace_ids = {it["id"] for it in trace_items}
 
-    # Fichiers .geojson non simplifiés présents dans data/traces/
     existing_geojsons = {
         p.stem: p for p in TRACES_DIR.glob("*.geojson")
         if "_simplified" not in p.stem
     } if TRACES_DIR.exists() else {}
 
-    # GPX en attente dans le drop dir
     pending_gpx = sorted(GPX_DROP_DIR.glob("*.gpx")) if GPX_DROP_DIR.exists() else []
-    gpx_stems = {g.stem for g in pending_gpx}
 
-    # to_add : GPX dont le stem n'est pas en catalog
     to_add_traces = [g for g in pending_gpx if g.stem not in catalog_trace_ids]
-    # to_delete : GeoJSON manquant OU source GPX déclarée mais absente de sources/gpx/
     to_delete_traces = [
         it for it in trace_items
         if (
@@ -148,7 +204,6 @@ def scan_sources(verbose: bool = False) -> dict:
         )
     ]
 
-    # "Sources" = GPX en attente uniquement (pas les GeoJSON déjà traités)
     sources_count_traces = len(pending_gpx)
     diff_traces = len(to_add_traces) - len(to_delete_traces)
 
@@ -171,11 +226,8 @@ def scan_sources(verbose: bool = False) -> dict:
     local_photos = sorted(
         p for p in PHOTOS_DIR.glob("*") if p.suffix.lower() in PHOTO_EXTS
     ) if PHOTOS_DIR.exists() else []
-    local_photo_stems = {p.stem for p in local_photos}
 
     to_add_photos = [p for p in local_photos if p.stem not in existing_thumb_stems]
-    # Une entrée catalog est orpheline si son thumb n'existe plus dans THUMBS_DIR
-    # (on compare par stem pour être agnostique au chemin relatif stocké)
     existing_thumb_files = {p.stem for p in THUMBS_DIR.glob("*.webp")} if THUMBS_DIR.exists() else set()
     to_delete_photos = [
         it for it in photo_items
@@ -226,6 +278,11 @@ def scan_sources(verbose: bool = False) -> dict:
         "to_add": [],
         "to_delete": [],
     }
+
+    log_event("INFO", "scan", "done",
+              traces={"catalog": len(trace_items), "to_add": len(to_add_traces), "to_delete": len(to_delete_traces)},
+              photos={"catalog": len(photo_items), "to_add": len(to_add_photos), "to_delete": len(to_delete_photos)},
+              pois={"catalog": len(poi_items), "to_add": len(to_add_pois)})
 
     return result
 
@@ -354,6 +411,7 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
             "Que voulez-vous faire ?",
             choices=["POI avec la base de données", "Quitter"],
         ).ask()
+        log_event("INFO", "system", "menu_choice", choice=choice)
         if choice == "Quitter" or choice is None:
             return "quit", "both"
         return "pois", "both"
@@ -367,6 +425,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         "Quitter",
     ]
     choice = questionary.select("Que voulez-vous synchroniser ?", choices=choices).ask()
+    log_event("INFO", "system", "menu_choice", choice=choice)
+
     if choice is None or choice == "Quitter":
         return "quit", "both"
     if choice == "Tout ajouter":
@@ -416,7 +476,6 @@ def confirm_operations(scan: dict, do_traces: bool, do_photos: bool, do_pois: bo
     console.print(Panel("\n".join(lines), title="Opérations prévues", border_style="yellow"))
 
     if args.non_interactive:
-        # non-interactive sans --yes : refus si suppressions
         has_deletes = (
             (do_traces and mode in ("delete", "both") and scan["traces"]["to_delete"]) or
             (do_photos and mode in ("delete", "both") and scan["photos"]["to_delete"])
@@ -442,17 +501,42 @@ def confirm_operations(scan: dict, do_traces: bool, do_photos: bool, do_pois: bo
 
 def run_script(cmd: list[str], label: str, tree: Tree, verbose: bool) -> bool:
     branch = tree.add(f"[cyan]{label}[/]")
+    script_name = Path(cmd[0]).name if cmd else ""
+    log_event("INFO", "subprocess", "call_start",
+              script=script_name, args=cmd[1:], cwd=str(REPO_ROOT))
+    t0 = time.monotonic()
     try:
-        subprocess.run(
+        result = subprocess.run(
             cmd,
             cwd=str(REPO_ROOT),
-            capture_output=not verbose,
+            capture_output=True,
             text=True,
             check=True,
         )
+        duration_ms = round((time.monotonic() - t0) * 1000)
+        if verbose and result.stdout:
+            console.print(result.stdout)
+        stderr_content = result.stderr.strip() if result.stderr else ""
+        stderr_lines = len(stderr_content.splitlines()) if stderr_content else 0
+        event_data: dict = dict(
+            script=script_name,
+            exit_code=0,
+            duration_ms=duration_ms,
+            stdout_lines=len(result.stdout.splitlines()) if result.stdout else 0,
+            stderr_lines=stderr_lines,
+        )
+        if stderr_lines:
+            event_data["stderr"] = stderr_content[:1000]
+        log_event("INFO", "subprocess", "call_done", **event_data)
         branch.add("[green]✓ succès[/]")
         return True
     except subprocess.CalledProcessError as e:
+        duration_ms = round((time.monotonic() - t0) * 1000)
+        log_event("ERROR", "subprocess", "call_error",
+                  script=script_name,
+                  exit_code=e.returncode,
+                  duration_ms=duration_ms,
+                  stderr=(e.stderr or "")[:1000])
         branch.add(f"[red]✗ erreur (exit {e.returncode})[/]")
         if e.stdout:
             console.print(e.stdout)
@@ -460,6 +544,10 @@ def run_script(cmd: list[str], label: str, tree: Tree, verbose: bool) -> bool:
             console.print(f"[red]{e.stderr}[/]")
         return False
     except FileNotFoundError:
+        duration_ms = round((time.monotonic() - t0) * 1000)
+        log_event("ERROR", "subprocess", "call_error",
+                  script=script_name, exit_code=-1, duration_ms=duration_ms,
+                  stderr=f"commande introuvable : {cmd[0]}")
         branch.add(f"[red]✗ commande introuvable : {cmd[0]}[/]")
         return False
 
@@ -473,6 +561,7 @@ def delete_orphan_traces(to_delete: list[dict], trace_items: list[dict],
     """Supprime les fichiers et retire les entrées orphelines du catalog. Retourne les items mis à jour."""
     delete_ids = {it["id"] for it in to_delete}
     for item in to_delete:
+        files_removed = []
         for path_key in ("full", "simplified"):
             rel = item.get("paths", {}).get(path_key, "")
             if not rel:
@@ -480,9 +569,12 @@ def delete_orphan_traces(to_delete: list[dict], trace_items: list[dict],
             path = REPO_ROOT / rel
             if path.exists():
                 path.unlink()
+                files_removed.append(rel)
                 tree.add(f"[red]✗[/] supprimé {path.relative_to(REPO_ROOT)}")
             else:
                 tree.add(f"[dim]déjà absent {rel}[/]")
+        log_event("INFO", "traces", "item_deleted",
+                  id=item["id"], files_removed=files_removed)
         tree.add(f"[red]−[/] retiré du catalog : {item['id']}")
     return [it for it in trace_items if it["id"] not in delete_ids]
 
@@ -494,14 +586,17 @@ def delete_orphan_photos(to_delete: list[dict], photo_items: list[dict],
     delete_ids = {it["id"] for it in to_delete}
     for item in to_delete:
         thumb = item.get("paths", {}).get("thumb", "")
+        files_removed = []
         if thumb:
-            # Chercher le thumb dans THUMBS_DIR par stem (chemin stocké peut être relatif)
             thumb_path = THUMBS_DIR / (Path(thumb).stem + ".webp")
             if thumb_path.exists():
                 thumb_path.unlink()
+                files_removed.append(str(thumb_path.relative_to(REPO_ROOT)))
                 tree.add(f"[red]✗[/] supprimé {thumb_path.relative_to(REPO_ROOT)}")
             else:
                 tree.add(f"[dim]thumb déjà absent : {thumb}[/]")
+        log_event("INFO", "photos", "item_deleted",
+                  id=item["id"], files_removed=files_removed)
         tree.add(f"[red]−[/] retiré du catalog : {item['id']}")
     return [it for it in photo_items if it["id"] not in delete_ids]
 
@@ -521,9 +616,15 @@ def sync_traces(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
         console.print("[dim]Traces : rien à faire.[/]")
         return True
 
+    log_event("INFO", "traces", "sync_start",
+              mode=mode, to_add=len(to_add), to_delete=len(to_delete))
+
     console.rule("[bold]Traces")
     tree = Tree("[bold cyan]Traces")
     all_ok = True
+    added = 0
+    deleted = 0
+    errors = 0
     trace_items, _ = load_catalog(CATALOG_TRACES)
 
     if do_add:
@@ -539,6 +640,9 @@ def sync_traces(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
                 tree, args.verbose,
             )
             if not ok:
+                log_event("ERROR", "traces", "error",
+                          message="gpx_to_geojson failed", item_id=stem)
+                errors += 1
                 all_ok = False
                 continue
 
@@ -565,12 +669,22 @@ def sync_traces(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
             if meta.get("description"):
                 entry["description"] = meta["description"]
             trace_items.append(entry)
+            log_event("INFO", "traces", "item_added",
+                      id=stem, label=meta["label"],
+                      group=meta["group"],
+                      source=str(gpx_path.relative_to(REPO_ROOT)))
+            added += 1
 
     if do_delete:
+        before = len(trace_items)
         trace_items = delete_orphan_traces(to_delete, trace_items, tree, args.verbose)
+        deleted = before - len(trace_items)
 
     save_catalog(CATALOG_TRACES, trace_items, args.verbose)
     console.print(tree)
+
+    log_event("INFO", "traces", "sync_done",
+              added=added, deleted=deleted, errors=errors)
     return all_ok
 
 
@@ -589,6 +703,9 @@ def sync_photos(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
         console.print("[dim]Photos : rien à faire.[/]")
         return True
 
+    log_event("INFO", "photos", "sync_start",
+              mode=mode, to_add=len(to_add), to_delete=len(to_delete))
+
     if do_add and not os.environ.get("SUPA_SECRET_KEY"):
         console.print(
             "[yellow]⚠ SUPA_SECRET_KEY non définie — l'upload Supabase sera ignoré.[/]\n"
@@ -602,6 +719,9 @@ def sync_photos(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
     console.rule("[bold]Photos")
     tree = Tree("[bold cyan]Photos")
     all_ok = True
+    added = 0
+    deleted = 0
+    errors = 0
     photo_items, _ = load_catalog(CATALOG_PHOTOS)
 
     if do_add:
@@ -614,6 +734,10 @@ def sync_photos(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
         if args.verbose:
             thumbs_cmd.append("--verbose")
         ok = run_script(thumbs_cmd, "make_thumbs.py", tree, args.verbose)
+        if not ok:
+            log_event("ERROR", "photos", "error",
+                      message="make_thumbs failed", item_id=None)
+            errors += 1
         all_ok = all_ok and ok
 
         if os.environ.get("SUPA_SECRET_KEY"):
@@ -621,6 +745,10 @@ def sync_photos(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
                 [PYTHON, str(SCRIPTS_DIR / "sync_photos_to_supabase.py")],
                 "sync_photos_to_supabase.py", tree, args.verbose,
             )
+            if not ok:
+                log_event("ERROR", "photos", "error",
+                          message="sync_photos_to_supabase failed", item_id=None)
+                errors += 1
             all_ok = all_ok and ok
         else:
             tree.add("[yellow]⚠ sync_photos_to_supabase.py ignoré (pas de SUPA_SECRET_KEY)[/]")
@@ -629,16 +757,26 @@ def sync_photos(scan: dict, args: argparse.Namespace, mode: str = "both") -> boo
             [PYTHON, str(SCRIPTS_DIR / "photos_to_poi.py"), "--out", str(PHOTOS_GEOJSON)],
             "photos_to_poi.py", tree, args.verbose,
         )
+        if not ok:
+            log_event("ERROR", "photos", "error",
+                      message="photos_to_poi failed", item_id=None)
+            errors += 1
         all_ok = all_ok and ok
+        before = len(photo_items)
         photo_items = _merge_photos_from_geojson(photo_items, tree, args.verbose)
+        added = len(photo_items) - before
 
     if do_delete:
+        before = len(photo_items)
         photo_items = delete_orphan_photos(to_delete, photo_items, tree, args.verbose)
-        # Nettoyer pois_photos.geojson des entrées dont le thumb n'existe plus
+        deleted = before - len(photo_items)
         _filter_photos_geojson(tree)
 
     save_catalog(CATALOG_PHOTOS, photo_items, args.verbose)
     console.print(tree)
+
+    log_event("INFO", "photos", "sync_done",
+              added=added, deleted=deleted, errors=errors)
     return all_ok
 
 
@@ -668,7 +806,6 @@ def _merge_photos_from_geojson(photo_items: list[dict], tree: Tree, verbose: boo
         if not ext:
             ext = ".jpeg"
         time_raw = p.get("time", "")
-        # Convert EXIF time "2025:06:06 14:22:09" → ISO "2025-06-06T14:22:09"
         if time_raw and ":" in time_raw[:4]:
             try:
                 date_part, time_part = time_raw.split(" ", 1)
@@ -721,6 +858,8 @@ def _filter_photos_geojson(tree: Tree) -> None:
 # ---------------------------------------------------------------------------
 
 def sync_pois(scan: dict, args: argparse.Namespace) -> bool:
+    log_event("INFO", "pois", "sync_start", mode="both", to_add=len(scan["pois"]["to_add"]))
+
     console.rule("[bold]POI")
     tree = Tree("[bold cyan]POI")
 
@@ -729,6 +868,7 @@ def sync_pois(scan: dict, args: argparse.Namespace) -> bool:
         pois_cmd.append("-v")
     ok = run_script(pois_cmd, "sync_pois_from_supabase.py", tree, args.verbose)
 
+    added = 0
     if ok and POIS_GEOJSON.exists():
         with POIS_GEOJSON.open(encoding="utf-8") as f:
             features = json.load(f).get("features", [])
@@ -742,7 +882,7 @@ def sync_pois(scan: dict, args: argparse.Namespace) -> bool:
             }
             for f in features
         ]
-        # pois.json has extra top-level fields beyond {updated_at, items}
+        added = len(poi_items)
         payload = {
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "synced_from": "supabase",
@@ -755,8 +895,14 @@ def sync_pois(scan: dict, args: argparse.Namespace) -> bool:
         if args.verbose:
             console.print(f"  [green]✓[/] catalog mis à jour : {CATALOG_POIS.relative_to(REPO_ROOT)}")
         tree.add(f"[green]✓ pois.json mis à jour ({len(poi_items)} entrées)[/]")
+    elif not ok:
+        log_event("ERROR", "pois", "error",
+                  message="sync_pois_from_supabase failed", item_id=None)
 
     console.print(tree)
+
+    log_event("INFO", "pois", "sync_done",
+              added=added, deleted=0, errors=0 if ok else 1)
     return ok
 
 
@@ -778,12 +924,27 @@ def main() -> None:
     parser.add_argument("--delete-only", action="store_true", help="Suppressions uniquement (pas d'ajout)")
     parser.add_argument("--non-interactive", action="store_true", help="Pas de prompts interactifs (mode CI)")
     parser.add_argument("--yes", "-y", action="store_true", help="Skip l'écran de confirmation")
+    parser.add_argument("--log-dir", type=Path, default=LOG_DIR_DEFAULT,
+                        help=f"Dossier de logs JSONL (défaut : {LOG_DIR_DEFAULT})")
+    parser.add_argument("--no-log", action="store_true", help="Désactiver le fichier de log")
     parser.add_argument("-v", "--verbose", action="store_true", help="Logs détaillés")
     args = parser.parse_args()
 
-    # Déduire le mode add/delete/both depuis les flags
+    # Initialiser le logger
+    if not args.no_log:
+        init_logger(args.log_dir)
+
+    t_start = time.monotonic()
+    log_event("INFO", "system", "start",
+              argv=sys.argv[1:],
+              python_version=sys.version,
+              cwd=str(Path.cwd()))
+
     if args.add_only and args.delete_only:
         console.print("[red]--add-only et --delete-only sont mutuellement exclusifs.[/]")
+        log_event("ERROR", "system", "done", exit_code=1,
+                  duration_s=round(time.monotonic() - t_start, 2),
+                  totals={})
         sys.exit(1)
     if args.add_only:
         mode = "add"
@@ -796,7 +957,6 @@ def main() -> None:
     scan = scan_sources(verbose=args.verbose)
     print_scan_table(scan)
 
-    # Vérifier si tout est déjà aligné (sans flag de sync explicite)
     has_work = (
         scan["traces"]["to_add"] or scan["traces"]["to_delete"] or
         scan["photos"]["to_add"] or scan["photos"]["to_delete"] or
@@ -804,6 +964,9 @@ def main() -> None:
     )
     if not has_work and not (args.all or args.traces or args.photos or args.pois):
         console.print("[green]✓ Tout est déjà à jour.[/]")
+        log_event("INFO", "system", "done", exit_code=0,
+                  duration_s=round(time.monotonic() - t_start, 2),
+                  totals={"nothing_to_do": True})
         sys.exit(0)
 
     # --- Déterminer ce qu'on synchronise ---
@@ -815,10 +978,19 @@ def main() -> None:
         do_pois = args.pois
     elif args.non_interactive:
         console.print("[dim]Aucun flag de sync fourni. Utiliser --all ou --traces/--photos/--pois.[/]")
+        log_event("INFO", "system", "done", exit_code=0,
+                  duration_s=round(time.monotonic() - t_start, 2),
+                  totals={"nothing_to_do": True})
         sys.exit(0)
     else:
-        action, mode = interactive_menu(scan)
+        try:
+            action, mode = interactive_menu(scan)
+        except KeyboardInterrupt:
+            log_event("WARN", "system", "aborted", stage="menu")
+            console.print("\n[dim]Interrompu.[/]")
+            sys.exit(0)
         if action == "quit":
+            log_event("WARN", "system", "aborted", stage="menu_quit")
             console.print("[dim]Annulé.[/]")
             sys.exit(0)
         do_traces = action in ("all", "traces")
@@ -835,35 +1007,56 @@ def main() -> None:
             "[red]Refus de procéder : suppressions détectées en mode non-interactif. "
             "Utiliser --yes pour confirmer.[/]"
         )
+        log_event("WARN", "system", "aborted", stage="non_interactive_delete_guard")
         sys.exit(2)
 
     # --- Confirmation ---
-    if not confirm_operations(scan, do_traces, do_photos, do_pois, mode, args):
+    try:
+        if not confirm_operations(scan, do_traces, do_photos, do_pois, mode, args):
+            log_event("WARN", "system", "aborted", stage="confirmation")
+            sys.exit(0)
+    except KeyboardInterrupt:
+        log_event("WARN", "system", "aborted", stage="confirmation")
+        console.print("\n[dim]Interrompu.[/]")
         sys.exit(0)
 
     # --- Exécution ---
     all_ok = True
     console.rule("[bold]Exécution")
 
-    if do_traces:
-        ok = sync_traces(scan, args, mode=mode)
-        all_ok = all_ok and ok
+    try:
+        if do_traces:
+            ok = sync_traces(scan, args, mode=mode)
+            all_ok = all_ok and ok
 
-    if do_photos:
-        ok = sync_photos(scan, args, mode=mode)
-        all_ok = all_ok and ok
+        if do_photos:
+            ok = sync_photos(scan, args, mode=mode)
+            all_ok = all_ok and ok
 
-    if do_pois:
-        ok = sync_pois(scan, args)
-        all_ok = all_ok and ok
+        if do_pois:
+            ok = sync_pois(scan, args)
+            all_ok = all_ok and ok
+    except KeyboardInterrupt:
+        log_event("WARN", "system", "aborted", stage="execution")
+        console.print("\n[dim]Interrompu pendant l'exécution.[/]")
+        sys.exit(1)
 
     # --- Résumé ---
     console.rule("[bold]Résumé")
     scan_after = scan_sources()
     stats_tree = Tree("[bold]Catalogs après mise à jour")
+    totals = {}
     for label, key in [("Traces", "traces"), ("Photos", "photos"), ("POI", "pois"), ("Groupes", "groups")]:
-        stats_tree.add(f"{label} : [cyan]{scan_after[key]['catalog_count']}[/] entrées")
+        count = scan_after[key]["catalog_count"]
+        stats_tree.add(f"{label} : [cyan]{count}[/] entrées")
+        totals[key] = count
     console.print(stats_tree)
+
+    exit_code = 0 if all_ok else 1
+    log_event("INFO", "system", "done",
+              exit_code=exit_code,
+              duration_s=round(time.monotonic() - t_start, 2),
+              totals=totals)
 
     if all_ok:
         console.print("\n[green]✓ Synchronisation terminée.[/]")

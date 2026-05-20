@@ -7,6 +7,7 @@ data/boucle_angevine.gpx
 
 sources/
 scripts/
+logs/
 
 # Python scripts and environment
 *.py

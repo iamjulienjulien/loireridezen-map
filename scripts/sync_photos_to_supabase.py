@@ -2,7 +2,7 @@
 """
 sync_photos_to_supabase.py — pousse les photos locales vers Supabase Storage.
 
-Synchronise le dossier `./photos/` (ou autre) vers le bucket Supabase
+Synchronise le dossier `sources/photos/` (ou autre) vers le bucket Supabase
 Storage `photos`. Sync **additive** par défaut : n'écrase rien, ne
 supprime rien. Flags explicites pour activer ces comportements.
 
@@ -45,7 +45,7 @@ Usage
     python sync_photos_to_supabase.py --delete
 
     # Dossier source et bucket custom
-    python sync_photos_to_supabase.py --photos ./mes_photos --bucket photos
+    python scripts/sync_photos_to_supabase.py --photos ./mes_photos --bucket photos
 
 Exit codes :
     0 — succès complet
@@ -68,6 +68,9 @@ import urllib.request
 from pathlib import Path
 
 logger = logging.getLogger("sync_photos")
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+_DEFAULT_PHOTOS_DIR = _REPO_ROOT / "sources" / "photos"
 
 PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".heic", ".heif"}
 
@@ -275,8 +278,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--photos", type=Path, default=Path("photos"),
-        help="Dossier local à synchroniser (défaut : ./photos).",
+        "--photos", type=Path, default=_DEFAULT_PHOTOS_DIR,
+        help="Dossier local à synchroniser (défaut : sources/photos/).",
     )
     parser.add_argument(
         "--bucket", default="photos",
