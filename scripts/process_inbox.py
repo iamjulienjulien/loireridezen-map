@@ -3,7 +3,12 @@
 process_inbox.py — Déplace les photos de sources/photos/inbox/ vers sources/photos/
 en suivant la convention <NN>-<slug>.ext (NN auto-incrémenté, extension préservée).
 
-Idempotent : un slug déjà présent dans sources/photos/ est ignoré.
+Architecture : sources/photos/ est gitignorée (photos externalisées sur Supabase
+Storage, cf. LRZ-QA-10). Côté GitHub Actions, ce dossier est vide après checkout.
+Le NN et les slugs existants sont donc déduits de data/thumbs/ (versionné, 1 thumb
+= 1 photo traîtée), qui est la source de vérité accessible partout.
+
+Idempotent : un slug déjà présent dans data/thumbs/ est ignoré.
 Utilisation :
     python scripts/process_inbox.py
     python scripts/process_inbox.py --dry-run   # affiche sans déplacer
@@ -20,6 +25,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INBOX_DIR = REPO_ROOT / "sources" / "photos" / "inbox"
 PHOTOS_DIR = REPO_ROOT / "sources" / "photos"
+THUMBS_DIR = REPO_ROOT / "data" / "thumbs"
 
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
 _NN_SLUG_RE = re.compile(r"^(\d+)-(.+)$")
@@ -33,10 +39,12 @@ def _to_slug(stem: str) -> str:
 
 
 def _max_nn() -> int:
-    """Return the highest NN prefix found in sources/photos/ (direct children only)."""
+    """Return the highest NN prefix found in data/thumbs/ (source of truth)."""
     max_n = 0
-    for p in PHOTOS_DIR.iterdir():
-        if p.is_file() and p.suffix.lower() in PHOTO_EXTS:
+    if not THUMBS_DIR.exists():
+        return max_n
+    for p in THUMBS_DIR.iterdir():
+        if p.is_file() and p.suffix.lower() == ".webp":
             m = _NN_SLUG_RE.match(p.stem)
             if m:
                 max_n = max(max_n, int(m.group(1)))
@@ -44,10 +52,12 @@ def _max_nn() -> int:
 
 
 def _existing_slugs() -> set[str]:
-    """Collect all slugs currently present in sources/photos/ (direct children)."""
+    """Collect all slugs from data/thumbs/ (source of truth, versioned)."""
     slugs: set[str] = set()
-    for p in PHOTOS_DIR.iterdir():
-        if not (p.is_file() and p.suffix.lower() in PHOTO_EXTS):
+    if not THUMBS_DIR.exists():
+        return slugs
+    for p in THUMBS_DIR.iterdir():
+        if not (p.is_file() and p.suffix.lower() == ".webp"):
             continue
         m = _NN_SLUG_RE.match(p.stem)
         raw_slug = m.group(2) if m else p.stem
@@ -90,7 +100,7 @@ def main() -> int:
             slug = _to_slug(src_stem) or f"photo-{nn + 1:02d}"
 
         if slug in existing:
-            print(f"[skip] {src.name} — slug '{slug}' déjà présent dans sources/photos/")
+            print(f"[skip] {src.name} — slug '{slug}' déjà présent dans data/thumbs/")
             skipped += 1
             continue
 
