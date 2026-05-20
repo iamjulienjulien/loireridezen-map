@@ -93,6 +93,10 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 │  ├─ types.js
 │  └─ ui.js
 ├─ scripts/
+│  ├─ lib/
+│  │  ├─ __init__.py
+│  │  ├─ supabase_client.py     ← client Supabase partagé (SUPA_URL + SUPA_SECRET_KEY)
+│  │  └─ poi.py                 ← fonctions CRUD POI (list, get, create, update, delete)
 │  ├─ gpx_to_geojson.py
 │  ├─ make_thumbs.py
 │  ├─ migrate.py
@@ -415,6 +419,57 @@ Cocher la ligne → bouton **Delete** en haut. Action irréversible (pas de soft
 > ⚠️ **Édition concurrente.** Pas de versioning sur les POI. À deux mains sur la même ligne au même moment = la dernière écriture gagne.
 
 > 💾 **Après chaque session d'édition**, lance `python scripts/update_data.py --pois` pour mettre à jour le snapshot offline dans le repo.
+
+---
+
+## 🗂 Gestion des POI en ligne de commande
+
+`scripts/update_data.py` intègre un **sous-menu CRUD complet** pour gérer les POI Supabase sans passer par la console web. Accessible via le menu principal → **Lister / modifier le catalog** → **POI (Supabase)**.
+
+### Prérequis
+
+Deux variables d'env sont nécessaires (secret key, pas la publishable) :
+
+```bash
+export SUPA_URL="https://covxsekavbmeqysdqnjh.supabase.co"
+export SUPA_SECRET_KEY="sb_secret_..."   # Settings → API Keys → Secret key
+```
+
+La dépendance Python est dans `requirements.txt` :
+
+```bash
+pip install supabase>=2.5.0
+# ou si venv actif :
+pip install -r requirements.txt
+```
+
+### Opérations disponibles
+
+| Action | Description |
+|---|---|
+| **Lister tous les POI** | Tableau rich : ID, type, nom, coordonnées, statut visité (pagination si > 100) |
+| **Filtrer par type** | Affiche seulement les POI d'un type donné |
+| **Ajouter un POI** | Saisie guidée : type, nom, description, coordonnées, URL Instagram, champs château |
+| **Modifier un POI** | Sélection dans la liste, édition champ par champ, diff calculé avant envoi |
+| **Supprimer un POI** | Sélection + confirmation explicite "SUPPRIMER" (irréversible) |
+
+### Lancer
+
+```bash
+python scripts/update_data.py
+# → Lister / modifier le catalog → POI (Supabase)
+```
+
+### Logs
+
+Chaque opération CRUD (create / update / delete) est tracée dans `logs/update_data/YYYY-MM-DD.jsonl` avec timestamp, run_id, et données modifiées.
+
+### Notes
+
+- La confirmation "SUPPRIMER" est obligatoire même avec `--yes` (protection intentionnelle).
+- Pour les châteaux : trois champs supplémentaires — `construction_date`, `photo_path`, `visited`.
+- Un avertissement s'affiche si `photo_path` pointe vers un fichier absent localement.
+- Après une session CRUD, lancer `python scripts/update_data.py --pois` pour régénérer le snapshot `data/pois/pois.geojson`.
 
 ---
 

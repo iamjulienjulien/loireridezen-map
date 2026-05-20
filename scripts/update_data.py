@@ -87,6 +87,42 @@ DEFAULT_GROUP_ID = "acte-3"
 console = Console()
 
 # ---------------------------------------------------------------------------
+# POI — constantes visuelles (indépendant de supabase-py)
+# ---------------------------------------------------------------------------
+
+_POI_TYPE_EMOJIS: dict[str, str] = {
+    "chateau": "👑",
+    "coupdecoeur": "💖",
+    "patrimoine": "🏰",
+    "guinguette": "🍻",
+    "hébergement": "🏕️",
+    "photo": "📸",
+}
+_POI_VALID_TYPES: tuple[str, ...] = (
+    "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement"
+)
+_INSTA_RE = re.compile(r"^https?://(www\.)?instagram\.com/.+")
+
+# Lib Supabase — import optionnel (dispo si supabase>=2.5.0 installé)
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+_SUPABASE_AVAILABLE = False
+try:
+    from lib.poi import (  # type: ignore[import]
+        list_pois as _list_pois,
+        get_poi as _get_poi,
+        create_poi as _create_poi,
+        update_poi as _update_poi,
+        delete_poi as _delete_poi,
+        coords_from_poi as _coords_from_poi,
+        ewkt_point as _ewkt_point,
+    )
+    _SUPABASE_AVAILABLE = True
+except ImportError:
+    pass
+
+# ---------------------------------------------------------------------------
 # Logging JSONL
 # ---------------------------------------------------------------------------
 
@@ -534,6 +570,462 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
 
 
 # ---------------------------------------------------------------------------
+# POI CRUD (Supabase)
+# ---------------------------------------------------------------------------
+
+def _check_supa_env() -> bool:
+    url = os.environ.get("SUPA_URL")
+    key = os.environ.get("SUPA_SECRET_KEY")
+    if not url or not key:
+        console.print(
+            "[yellow]⚠ Variables d'env manquantes :[/]\n"
+            f"  SUPA_URL            {'[green]✓[/]' if url else '[red]✗ manquante[/]'}\n"
+            f"  SUPA_SECRET_KEY     {'[green]✓[/]' if key else '[red]✗ manquante[/]'}\n\n"
+            "  Définir avec :\n"
+            "    export SUPA_URL='https://...supabase.co'\n"
+            "    export SUPA_SECRET_KEY='sb_secret_...'"
+        )
+        return False
+    return True
+
+
+def _display_pois_table(pois: list[dict], title: str = "POI Supabase") -> None:
+    table = Table(
+        show_header=True, header_style="bold cyan",
+        box=None, pad_edge=False, title=title,
+    )
+    table.add_column("ID", style="dim", min_width=5, justify="right")
+    table.add_column("Type", min_width=16)
+    table.add_column("Nom", min_width=24)
+    table.add_column("Coordonnées", min_width=20, justify="right")
+    table.add_column("Visité", min_width=7, justify="center")
+
+    type_counts: dict[str, int] = {}
+    for poi in pois:
+        poi_id = str(poi.get("id", ""))
+        poi_type = poi.get("type", "")
+        emoji = _POI_TYPE_EMOJIS.get(poi_type, "📍")
+        name = poi.get("name", "")
+
+        coords = _coords_from_poi(poi) if _SUPABASE_AVAILABLE else None
+        coords_str = f"{coords[1]:.4f}, {coords[0]:.4f}" if coords else "—"
+
+        visited_str = "✓" if (poi_type == "chateau" and poi.get("visited")) else "—"
+
+        table.add_row(poi_id, f"{emoji} {poi_type}", name, coords_str, visited_str)
+        type_counts[poi_type] = type_counts.get(poi_type, 0) + 1
+
+    console.print(table)
+    breakdown = "  ".join(
+        f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}: {n}"
+        for t, n in sorted(type_counts.items())
+    )
+    console.print(f"\n[dim]Total : {len(pois)} POI — {breakdown}[/]\n")
+
+
+def _select_poi_from_list(pois: list[dict], prompt: str = "Sélectionner un POI :") -> dict | None:
+    choices = []
+    for poi in pois:
+        poi_id = poi.get("id", "")
+        poi_type = poi.get("type", "")
+        emoji = _POI_TYPE_EMOJIS.get(poi_type, "📍")
+        name = poi.get("name", "")
+        coords = _coords_from_poi(poi) if _SUPABASE_AVAILABLE else None
+        coords_str = f"({coords[1]:.3f}, {coords[0]:.3f})" if coords else ""
+        choices.append(questionary.Choice(f"#{poi_id} {emoji} {name} {coords_str}", value=poi_id))
+    choices.append(questionary.Choice("← Annuler", value=None))
+
+    selected_id = questionary.select(prompt, choices=choices).ask()
+    if selected_id is None:
+        return None
+    return next((p for p in pois if p.get("id") == selected_id), None)
+
+
+def _parse_coords(text: str) -> tuple[float, float] | None:
+    text = text.strip().replace(",", " ")
+    parts = text.split()
+    if len(parts) != 2:
+        return None
+    try:
+        lat, lon = float(parts[0]), float(parts[1])
+        if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):
+            return None
+        return lat, lon
+    except ValueError:
+        return None
+
+
+def _show_poi_panel(poi: dict, title: str = "POI") -> None:
+    coords = _coords_from_poi(poi) if _SUPABASE_AVAILABLE else None
+    coords_str = f"{coords[1]:.6f}, {coords[0]:.6f}" if coords else "N/A"
+    emoji = _POI_TYPE_EMOJIS.get(poi.get("type", ""), "📍")
+    lines = [
+        f"[dim]id:[/]           {poi.get('id', '')}",
+        f"[dim]type:[/]         {emoji} {poi.get('type', '')}",
+        f"[dim]nom:[/]          {poi.get('name', '')}",
+        f"[dim]coordonnées:[/]  {coords_str}",
+        f"[dim]description:[/]  {poi.get('description', '') or ''}",
+        f"[dim]url_insta:[/]    {poi.get('url_insta', '') or ''}",
+    ]
+    if poi.get("type") == "chateau":
+        lines += [
+            f"[dim]construction:[/] {poi.get('construction_date', '') or ''}",
+            f"[dim]photo_path:[/]   {poi.get('photo_path', '') or ''}",
+            f"[dim]visité:[/]       {'✓ Oui' if poi.get('visited') else '— Non'}",
+        ]
+    console.print(Panel("\n".join(lines), title=title, border_style="cyan"))
+
+
+def prompt_new_poi() -> None:
+    if not _SUPABASE_AVAILABLE:
+        console.print("[red]Module supabase non disponible. Installer avec : pip install supabase>=2.5.0[/]")
+        return
+    if not _check_supa_env():
+        return
+
+    type_choices = [
+        questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
+        for t in _POI_VALID_TYPES
+    ]
+    poi_type = questionary.select("Type de POI :", choices=type_choices).ask()
+    if poi_type is None:
+        return
+
+    name = questionary.text("Nom du POI :").ask()
+    if not name or not name.strip():
+        console.print("[dim]Annulé.[/]")
+        return
+
+    description = questionary.text("Description (optionnelle) :", default="").ask() or ""
+
+    lat, lon = None, None
+    while lat is None:
+        raw = questionary.text("Coordonnées (lat, lon) — ex. 47.62, 1.52 :").ask()
+        if raw is None:
+            console.print("[dim]Annulé.[/]")
+            return
+        result = _parse_coords(raw)
+        if result:
+            lat, lon = result
+        else:
+            console.print("[yellow]Format invalide. Utiliser : lat, lon  (ex. 47.6160, 1.5171)[/]")
+
+    url_insta_raw = questionary.text("URL Instagram (optionnel) :", default="").ask() or ""
+    url_insta = url_insta_raw.strip() if _INSTA_RE.match(url_insta_raw.strip()) else None
+    if url_insta_raw.strip() and not url_insta:
+        console.print("[yellow]⚠ URL Instagram invalide — ignorée.[/]")
+
+    construction_date = photo_path = None
+    visited = False
+    if poi_type == "chateau":
+        construction_date = questionary.text("Date de construction (texte libre) :", default="").ask() or None
+        photo_path = questionary.text("Chemin photo (ex. data/thumbs/nom.webp) :", default="").ask() or None
+        if photo_path and not (REPO_ROOT / photo_path).exists():
+            console.print(f"[yellow]⚠ Fichier non trouvé localement : {photo_path}[/]")
+        visited = questionary.confirm("Visité ?", default=False).ask() or False
+
+    data: dict = {
+        "name": name.strip(),
+        "type": poi_type,
+        "geom": _ewkt_point(lon, lat),
+    }
+    if description:
+        data["description"] = description.strip()
+    if url_insta:
+        data["url_insta"] = url_insta
+    if poi_type == "chateau":
+        data["construction_date"] = construction_date
+        data["photo_path"] = photo_path
+        data["visited"] = visited
+
+    _show_poi_panel({**data, "id": "—"}, title="Récapitulatif du nouveau POI")
+
+    confirmed = questionary.confirm("Créer ce POI ?", default=True).ask()
+    if not confirmed:
+        console.print("[dim]Annulé.[/]")
+        return
+
+    try:
+        result = _create_poi(data)
+        new_id = result.get("id", "?")
+        log_event("INFO", "poi", "create", id=new_id, name=data["name"], type=poi_type)
+        console.print(f"[green]✓ POI ajouté : ID {new_id}[/]")
+    except Exception as e:
+        console.print(f"[red]Erreur lors de la création : {e}[/]")
+
+
+def prompt_edit_poi() -> None:
+    if not _SUPABASE_AVAILABLE:
+        console.print("[red]Module supabase non disponible.[/]")
+        return
+    if not _check_supa_env():
+        return
+
+    try:
+        pois = _list_pois()
+    except Exception as e:
+        console.print(f"[red]Erreur lors du chargement des POI : {e}[/]")
+        return
+    if not pois:
+        console.print("[dim]Aucun POI trouvé.[/]")
+        return
+
+    poi = _select_poi_from_list(pois, "Sélectionner le POI à modifier :")
+    if poi is None:
+        return
+
+    original = dict(poi)
+    local = dict(poi)
+    modified = False
+
+    while True:
+        _show_poi_panel(local, title=f"POI #{local.get('id', '')}")
+
+        field_choices: list = [
+            questionary.Choice("✏️  Nom", value="name"),
+            questionary.Choice("📝 Description", value="description"),
+            questionary.Choice("📍 Coordonnées", value="coords"),
+            questionary.Choice("📸 URL Instagram", value="url_insta"),
+        ]
+        if local.get("type") == "chateau":
+            field_choices += [
+                questionary.Choice("🏗  Date de construction", value="construction_date"),
+                questionary.Choice("🖼  Chemin photo", value="photo_path"),
+                questionary.Choice("✅ Visité", value="visited"),
+            ]
+        field_choices += [
+            questionary.Choice("🔄 Changer le type", value="type"),
+            questionary.Separator(),
+            questionary.Choice("💾 Sauvegarder", value="save"),
+            questionary.Choice("✖  Annuler", value="cancel"),
+        ]
+
+        action = questionary.select("Champ à modifier :", choices=field_choices).ask()
+        if action is None or action == "cancel":
+            if modified and questionary.confirm("Annuler les modifications ?", default=True).ask():
+                console.print("[dim]Modifications annulées.[/]")
+            return
+
+        if action == "save":
+            break
+
+        if action == "name":
+            val = questionary.text("Nouveau nom :", default=local.get("name", "")).ask()
+            if val is not None:
+                local["name"] = val
+                modified = True
+
+        elif action == "description":
+            val = questionary.text("Nouvelle description :", default=local.get("description") or "").ask()
+            if val is not None:
+                local["description"] = val
+                modified = True
+
+        elif action == "coords":
+            coords = _coords_from_poi(local)
+            default_str = f"{coords[1]:.6f}, {coords[0]:.6f}" if coords else ""
+            raw = questionary.text("Nouvelles coordonnées (lat, lon) :", default=default_str).ask()
+            if raw:
+                result = _parse_coords(raw)
+                if result:
+                    lat, lon = result
+                    local["geom"] = _ewkt_point(lon, lat)
+                    modified = True
+                else:
+                    console.print("[yellow]Format invalide.[/]")
+
+        elif action == "url_insta":
+            val = questionary.text("URL Instagram :", default=local.get("url_insta") or "").ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped and not _INSTA_RE.match(stripped):
+                    console.print("[yellow]⚠ URL invalide — ignorée.[/]")
+                else:
+                    local["url_insta"] = stripped or None
+                    modified = True
+
+        elif action == "construction_date":
+            val = questionary.text("Date de construction :", default=local.get("construction_date") or "").ask()
+            if val is not None:
+                local["construction_date"] = val.strip() or None
+                modified = True
+
+        elif action == "photo_path":
+            val = questionary.text("Chemin photo :", default=local.get("photo_path") or "").ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped and not (REPO_ROOT / stripped).exists():
+                    console.print(f"[yellow]⚠ Fichier non trouvé localement : {stripped}[/]")
+                local["photo_path"] = stripped or None
+                modified = True
+
+        elif action == "visited":
+            val = questionary.confirm("Visité ?", default=bool(local.get("visited"))).ask()
+            if val is not None:
+                local["visited"] = val
+                modified = True
+
+        elif action == "type":
+            old_type = local.get("type", "")
+            type_choices = [
+                questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
+                for t in _POI_VALID_TYPES
+            ]
+            new_type = questionary.select("Nouveau type :", choices=type_choices).ask()
+            if new_type and new_type != old_type:
+                if old_type == "chateau" and new_type != "chateau":
+                    console.print(
+                        "[yellow]⚠ Les champs château (construction_date, photo_path, visited) "
+                        "seront conservés en base mais ignorés visuellement.[/]"
+                    )
+                local["type"] = new_type
+                modified = True
+
+    if not modified:
+        console.print("[dim]Aucune modification.[/]")
+        return
+
+    diff = {k: v for k, v in local.items() if v != original.get(k) and k != "id"}
+    if not diff:
+        console.print("[dim]Aucun changement à sauvegarder.[/]")
+        return
+
+    poi_id = original.get("id")
+    try:
+        _update_poi(poi_id, diff)
+        log_event("INFO", "poi", "update", id=poi_id, diff={k: str(v)[:200] for k, v in diff.items()})
+        console.print("[green]✓ POI mis à jour[/]")
+    except Exception as e:
+        console.print(f"[red]Erreur lors de la mise à jour : {e}[/]")
+
+
+def prompt_delete_poi() -> None:
+    if not _SUPABASE_AVAILABLE:
+        console.print("[red]Module supabase non disponible.[/]")
+        return
+    if not _check_supa_env():
+        return
+
+    try:
+        pois = _list_pois()
+    except Exception as e:
+        console.print(f"[red]Erreur lors du chargement des POI : {e}[/]")
+        return
+    if not pois:
+        console.print("[dim]Aucun POI trouvé.[/]")
+        return
+
+    poi = _select_poi_from_list(pois, "Sélectionner le POI à supprimer :")
+    if poi is None:
+        return
+
+    _show_poi_panel(poi, title="POI à supprimer")
+    console.print("[bold red]⚠ Cette action est irréversible.[/]\n")
+
+    confirm_text = questionary.text("Pour confirmer, saisir exactement : SUPPRIMER").ask()
+    if not confirm_text or confirm_text.strip() != "SUPPRIMER":
+        console.print("[dim]❌ Annulé.[/]")
+        return
+
+    poi_id = poi.get("id")
+    name = poi.get("name", "")
+    try:
+        _delete_poi(poi_id)
+        log_event("INFO", "poi", "delete", id=poi_id, name=name)
+        console.print(f"[green]✓ POI #{poi_id} « {name} » supprimé.[/]")
+    except Exception as e:
+        console.print(f"[red]Erreur lors de la suppression : {e}[/]")
+
+
+def poi_crud_menu() -> None:
+    if not _SUPABASE_AVAILABLE:
+        console.print(
+            "[yellow]⚠ Module supabase non disponible.\n"
+            "  Installer avec : pip install supabase>=2.5.0[/]"
+        )
+        return
+
+    while True:
+        choice = questionary.select(
+            "POI (Supabase) — que voulez-vous faire ?",
+            choices=[
+                questionary.Choice("📋 Lister tous les POI", value="list"),
+                questionary.Choice("🔍 Filtrer par type", value="filter"),
+                questionary.Choice("➕ Ajouter un POI", value="add"),
+                questionary.Choice("✏️  Modifier un POI", value="edit"),
+                questionary.Choice("🗑️  Supprimer un POI", value="delete"),
+                questionary.Separator(),
+                questionary.Choice("← Retour", value="back"),
+            ],
+        ).ask()
+
+        if choice is None or choice == "back":
+            return
+
+        if choice == "list":
+            if not _check_supa_env():
+                continue
+            try:
+                pois = _list_pois()
+                if not pois:
+                    console.print("[dim]Aucun POI.[/]")
+                    continue
+                if len(pois) <= 100:
+                    _display_pois_table(pois)
+                else:
+                    page, page_size = 0, 100
+                    total_pages = (len(pois) + page_size - 1) // page_size
+                    while True:
+                        start = page * page_size
+                        _display_pois_table(
+                            pois[start:start + page_size],
+                            title=f"POI — page {page + 1}/{total_pages}",
+                        )
+                        nav_choices: list = []
+                        if page > 0:
+                            nav_choices.append(questionary.Choice("← Précédent", value="prev"))
+                        if page < total_pages - 1:
+                            nav_choices.append(questionary.Choice("Suivant →", value="next"))
+                        nav_choices.append(questionary.Choice("Quitter", value="quit"))
+                        nav = questionary.select("Navigation :", choices=nav_choices).ask()
+                        if nav == "next":
+                            page += 1
+                        elif nav == "prev":
+                            page -= 1
+                        else:
+                            break
+            except Exception as e:
+                console.print(f"[red]Erreur : {e}[/]")
+
+        elif choice == "filter":
+            if not _check_supa_env():
+                continue
+            type_choices = [
+                questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
+                for t in _POI_VALID_TYPES
+            ] + [questionary.Choice("📸 photo", value="photo")]
+            poi_type = questionary.select("Type à afficher :", choices=type_choices).ask()
+            if poi_type:
+                try:
+                    pois = _list_pois(type_filter=poi_type)
+                    if pois:
+                        _display_pois_table(pois, title=f"POI — type : {poi_type}")
+                    else:
+                        console.print(f"[dim]Aucun POI de type « {poi_type} ».[/]")
+                except Exception as e:
+                    console.print(f"[red]Erreur : {e}[/]")
+
+        elif choice == "add":
+            prompt_new_poi()
+
+        elif choice == "edit":
+            prompt_edit_poi()
+
+        elif choice == "delete":
+            prompt_delete_poi()
+
+
+# ---------------------------------------------------------------------------
 # Lister / modifier le catalog
 # ---------------------------------------------------------------------------
 
@@ -545,6 +1037,7 @@ def list_and_edit_catalog() -> None:
             choices=[
                 questionary.Choice("🗺️  Traces", value="traces"),
                 questionary.Choice("📷 Photos", value="photos"),
+                questionary.Choice("🌐 POI (Supabase)", value="pois"),
                 questionary.Choice("← Retour", value="back"),
             ],
         ).ask()
@@ -552,8 +1045,10 @@ def list_and_edit_catalog() -> None:
             return
         if cat_choice == "traces":
             _edit_catalog_loop(CATALOG_TRACES, "traces")
-        else:
+        elif cat_choice == "photos":
             _edit_catalog_loop(CATALOG_PHOTOS, "photos")
+        elif cat_choice == "pois":
+            poi_crud_menu()
 
 
 def _edit_catalog_loop(catalog_path: Path, kind: str) -> None:
