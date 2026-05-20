@@ -1300,3 +1300,55 @@ body {
 .lrz-trace-emoji--arrivée { font-size: 1.25rem; }
 .lrz-trace-emoji--étape   { font-size: 1rem; }
 .lrz-trace-emoji:hover    { transform: scale(1.2); }
+
+/* ─────────────────────────── LRZ-EVO-19 : Popups d'étape ──────────────── */
+.lrz-step-popup {
+  font-size: 0.875rem;
+  min-width: 190px;
+  line-height: 1.4;
+}
+.lrz-step-popup__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.lrz-step-popup__header strong {
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+}
+.lrz-step-popup__date {
+  font-size: 0.8125rem;
+  color: #666;
+}
+.lrz-step-popup__status {
+  font-style: italic;
+  opacity: 0.8;
+}
+.lrz-step-popup__stats {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.75rem;
+}
+.lrz-step-popup__stats li {
+  font-size: 0.8125rem;
+  color: #444;
+}
+.lrz-step-popup__stats:empty {
+  display: none;
+}
+.lrz-step-popup__weather {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  padding: 0.3rem 0.5rem;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+  margin-top: 0.2rem;
+}

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T06:54:12.614675+00:00",
+  "updated_at": "2026-05-20T07:59:09.497674+00:00",
   "items": [
     {
       "id": "acte-1_etape-2_boissy-st-culle_etampes",
@@ -12,7 +12,11 @@
       "source": "sources/gpx/acte-1_etape-2_boissy-st-culle_etampes.gpx",
       "order": 1,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "approximative",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-1_etape-3_etampes_artenay",
@@ -25,7 +29,11 @@
       "source": "sources/gpx/acte-1_etape-3_etampes_artenay.gpx",
       "order": 2,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "approximative",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-1_etape-4_artenay_orleans",
@@ -38,7 +46,11 @@
       "source": "sources/gpx/acte-1_etape-4_artenay_orleans.gpx",
       "order": 3,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "approximative",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-1_etape-5_orleans_beaugency",
@@ -51,7 +63,11 @@
       "source": "sources/gpx/acte-1_etape-5_orleans_beaugency.gpx",
       "order": 4,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "approximative",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-1_etape-6_beaugency_blois",
@@ -64,7 +80,11 @@
       "source": "sources/gpx/acte-1_etape-6_beaugency_blois.gpx",
       "order": 5,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "approximative",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-0_blois_chambord",
@@ -77,7 +97,11 @@
       "source": "sources/gpx/acte-2_etape-0_blois_chambord.gpx",
       "order": 6,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-06",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-1_blois_amboise",
@@ -90,7 +114,11 @@
       "source": "sources/gpx/acte-2_etape-1_blois_amboise.gpx",
       "order": 7,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-07",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-2_amboise_chenonceaux",
@@ -103,7 +131,11 @@
       "source": "sources/gpx/acte-2_etape-2_amboise_chenonceaux.gpx",
       "order": 8,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-09",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-3_chenonceaux_tours",
@@ -116,7 +148,11 @@
       "source": "sources/gpx/acte-2_etape-3_chenonceaux_tours.gpx",
       "order": 9,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-10",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-4_tours_villandry",
@@ -129,7 +165,11 @@
       "source": "sources/gpx/acte-2_etape-4_tours_villandry.gpx",
       "order": 10,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-12",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-5_villandry_chinon",
@@ -142,7 +182,11 @@
       "source": "sources/gpx/acte-2_etape-5_villandry_chinon.gpx",
       "order": 11,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-13",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-6_chinon_montsoreaux",
@@ -155,7 +199,11 @@
       "source": "sources/gpx/acte-2_etape-6_chinon_montsoreaux.gpx",
       "order": 12,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-16",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-7_montsoreau_saumur",
@@ -168,7 +216,11 @@
       "source": "sources/gpx/acte-2_etape-7_montsoreau_saumur.gpx",
       "order": 13,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-17",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-2_etape-8_saumur_angers",
@@ -181,7 +233,11 @@
       "source": "sources/gpx/acte-2_etape-8_saumur_angers.gpx",
       "order": 14,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "effective",
+      "date": "2025-06-18",
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-3_etape-1_angers_behuard",
@@ -194,7 +250,11 @@
       "source": "sources/gpx/acte-3_etape-1_angers_behuard.gpx",
       "order": 15,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
@@ -207,7 +267,11 @@
       "source": "sources/gpx/acte-3_etape-2_behuard_st-florent-le-vieil.gpx",
       "order": 16,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-3_etape-3_st-florent-le-vieil_ancenis",
@@ -220,7 +284,11 @@
       "source": "sources/gpx/acte-3_etape-3_st-florent-le-vieil_ancenis.gpx",
       "order": 17,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-3_etape-4_ancenis_nantes",
@@ -233,7 +301,11 @@
       "source": "sources/gpx/acte-3_etape-4_ancenis_nantes.gpx",
       "order": 18,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-3_etape-5_nantes_paimboeuf",
@@ -246,7 +318,11 @@
       "source": "sources/gpx/acte-3_etape-5_nantes_paimboeuf.gpx",
       "order": 19,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
@@ -259,7 +335,11 @@
       "source": "sources/gpx/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.gpx",
       "order": 20,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     },
     {
       "id": "micro-aventure_boucle-angevine",
@@ -272,7 +352,11 @@
       "source": "sources/gpx/micro-aventure_boucle-angevine.gpx",
       "order": 21,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date_status": "prévue",
+      "date": null,
+      "duration_h": null,
+      "weather": null
     }
   ]
 }

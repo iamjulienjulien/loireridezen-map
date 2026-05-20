@@ -11,6 +11,7 @@ import { GeoJSON, FeatureGroup } from "leaflet";
 import { map } from "./map.js";
 import { resolveColor } from "./types.js";
 import { FIT_OPTIONS } from "./config.js";
+import { renderStepPopup } from "./step-popup.js";
 
 /** Map<groupId, {group, layers: GeoJSON[]}> — peuplée par loadAllRoutes() */
 export const traceGroups = new Map();
@@ -74,7 +75,15 @@ async function _doLoad() {
       if (!url) continue;
       const data = await _fetchGeoJson(url);
       if (!data) continue;
-      layers.push(new GeoJSON(data, { style: _layerStyle(group, item, 0) }));
+      const itemsByStage = new Map(items.map((it) => [(it.order ?? 1) - 1, it]));
+      layers.push(new GeoJSON(data, {
+        style: _layerStyle(group, item, 0),
+        onEachFeature(feature, layer) {
+          const stage = feature.properties?.stage ?? 0;
+          const matched = itemsByStage.get(stage) ?? items[0];
+          layer.bindPopup(renderStepPopup(matched), { maxWidth: 280 });
+        },
+      }));
     } else {
       const loaded = await Promise.all(
         items.map(async (item) => {
@@ -84,7 +93,13 @@ async function _doLoad() {
           const data = await _fetchGeoJson(primary, fallback);
           if (!data) return null;
           const featureIndex = (item.order ?? 1) - 1;
-          return new GeoJSON(data, { style: _layerStyle(group, item, featureIndex) });
+          const popup = renderStepPopup(item);
+          return new GeoJSON(data, {
+            style: _layerStyle(group, item, featureIndex),
+            onEachFeature(feature, layer) {
+              layer.bindPopup(popup, { maxWidth: 280 });
+            },
+          });
         }),
       );
       layers.push(...loaded.filter(Boolean));
