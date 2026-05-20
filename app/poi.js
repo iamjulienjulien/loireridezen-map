@@ -186,6 +186,7 @@ export async function loadPoisForViewport() {
     );
     cluster.addLayer(layer);
     hideErrorBanner();
+    document.dispatchEvent(new CustomEvent("lrz:poi-loaded"));
   } catch (err) {
     if (err.name === "AbortError") return;
     console.error("[loireridezen] fetchPoisFromSupabase failed", {
@@ -200,6 +201,13 @@ export async function loadPoisForViewport() {
     });
     showErrorBanner(loadPoisForViewport);
   }
+}
+
+/** Compte les POI visibles dans le cluster (pour le badge du panel). */
+export function getVisiblePoiCount() {
+  return cluster.getLayers().reduce((acc, l) => {
+    return acc + (l.getLayers ? l.getLayers().length : 1);
+  }, 0);
 }
 
 /**

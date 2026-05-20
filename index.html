@@ -51,7 +51,7 @@
     </script>
   </head>
   <body>
-    <!-- Skeleton de chargement -->
+    <!-- Skeleton de chargement plein écran -->
     <div id="lrz-loading" class="lrz-loading">
       <div class="lrz-loading__inner">
         <img src="assets/logo_loire_ride_zen.jpg" alt="Chargement…" />
@@ -59,45 +59,102 @@
       </div>
     </div>
 
-    <!-- Header flottant -->
-    <div class="lrz-header">
-      <a href="https://loireridezen.link" target="_blank" rel="noopener">
-        <img src="assets/logo_loire_ride_zen.jpg" alt="Loire Ride Zen" />
-        <div class="lrz-header__text">
-          <strong>Loire Ride Zen</strong>
-          <span>Carte interactive</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- Panneau de filtres + légende (rempli par app.js depuis POI_TYPES) -->
+    <!-- Panel cockpit -->
     <aside
       id="filtersPanel"
-      class="controls"
+      class="lrz-panel"
       role="region"
       aria-label="Filtres et légende"
     >
-      <div class="filters-header">
+      <!-- En-tête avec logo rond -->
+      <header class="lrz-panel__header">
         <img
-          src="/assets/logo_loire_ride_zen.jpg"
-          class="logo"
-          alt="Logo Loire Ride Zen"
+          class="lrz-panel__logo"
+          src="assets/logo_loire_ride_zen.jpg"
+          alt="Loire Ride Zen"
         />
+        <div class="lrz-panel__heading">
+          <h1>Loire Ride Zen</h1>
+          <p>Carte interactive</p>
+        </div>
+      </header>
+
+      <!-- Section 1 : Contrôles -->
+      <section class="lrz-section" data-section="controls">
+        <header class="lrz-section__header">
+          <h3>Contrôles</h3>
+          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+        </header>
+        <div class="lrz-section__body lrz-controls">
+          <button class="lrz-ctrl-btn" id="ctrl-zoom-in" title="Zoom avant">+</button>
+          <button class="lrz-ctrl-btn" id="ctrl-zoom-out" title="Zoom arrière">−</button>
+          <button class="lrz-ctrl-btn" id="ctrl-locate" title="Localiser ma position"><span style="font-size:1.125rem">📍</span></button>
+          <button class="lrz-ctrl-btn" id="ctrl-fit" title="Recentrer sur les traces"><span style="font-size:1.125rem">🧭</span></button>
+          <div class="lrz-segmented" role="group" aria-label="Type de carte">
+            <button class="lrz-segmented__opt is-active" data-basemap="osm">Plan</button>
+            <button class="lrz-segmented__opt" data-basemap="sat">Satellite</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2 : Traces -->
+      <section class="lrz-section" data-section="traces">
+        <header class="lrz-section__header">
+          <h3>Traces <span class="lrz-section__count" id="traces-count"></span></h3>
+          <button class="lrz-section__all" data-target="traces">Tout</button>
+          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+        </header>
+        <div class="lrz-section__body" id="traces-list">
+          <!-- rempli par app.js depuis groups.json -->
+        </div>
+        <div class="lrz-section__footer">
+          <a
+            class="lrz-link-btn lrz-link-btn--komoot"
+            href="https://www.komoot.com/user/1484664526803"
+            target="_blank"
+            rel="noopener noreferrer"
+          >🚲 Voir sur Komoot</a>
+        </div>
+      </section>
+
+      <!-- Section 3 : Photos (avant POI) -->
+      <section class="lrz-section" data-section="photos">
+        <header class="lrz-section__header">
+          <h3>Photos</h3>
+          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+        </header>
+        <div class="lrz-section__body" id="photos-list">
+          <!-- rempli par app.js -->
+        </div>
+        <div class="lrz-section__footer">
+          <a
+            class="lrz-link-btn lrz-link-btn--instagram"
+            href="https://www.instagram.com/loireridezen"
+            target="_blank"
+            rel="noopener noreferrer"
+          >📷 Suivre @loireridezen</a>
+        </div>
+      </section>
+
+      <!-- Section 4 : Points d'intérêt -->
+      <section class="lrz-section" data-section="poi">
+        <header class="lrz-section__header">
+          <h3>Points d'intérêt <span class="lrz-section__count" id="poi-count"></span> <span class="lrz-section__badge" id="poi-visible"></span></h3>
+          <button class="lrz-section__all" data-target="poi">Tout</button>
+          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+        </header>
+        <div class="lrz-section__body" id="poi-list">
+          <!-- rempli par app.js depuis POI_TYPES -->
+        </div>
+      </section>
+
+      <!-- Actions panel -->
+      <div class="lrz-panel__actions">
+        <button class="lrz-reset-btn" id="reset-prefs">Réinitialiser les filtres</button>
       </div>
-
-      <section class="filters-section">
-        <h2 class="section-title">Filtres</h2>
-        <div id="filtersGrid" class="filters-grid"></div>
-      </section>
-
-      <hr />
-
-      <section class="legend-section">
-        <h2 class="section-title">Légende</h2>
-        <div id="legendGrid" class="legend-grid"></div>
-      </section>
     </aside>
 
+    <!-- Bouton d'ouverture du drawer mobile -->
     <button
       id="toggleFilters"
       class="filters-toggle"
@@ -106,6 +163,12 @@
     >
       Filtres
     </button>
+
+    <!-- Signature en bas à droite -->
+    <div class="lrz-signature">
+      <strong>Bonne route 🚲</strong>
+      <span>Une création de <a href="https://julienjulien.fr" target="_blank" rel="noopener">Julien Julien</a></span>
+    </div>
 
     <div id="map"></div>
 

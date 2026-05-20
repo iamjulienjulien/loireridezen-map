@@ -11,13 +11,25 @@
  *   - esriLabels    : couche de labels superposée au satellite
  */
 
-import { Map, TileLayer } from "leaflet";
+import { Map, TileLayer, Control, DomUtil } from "leaflet";
 import { DEFAULT_VIEW } from "./config.js";
 
 export const map = new Map("map", {
-  zoomControl: true,
+  zoomControl: false,
+  attributionControl: false,
   scrollWheelZoom: true,
 }).setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom);
+
+// Attribution custom positionnée en bas-gauche
+const attrControl = new Control({ position: "bottomleft" });
+attrControl.onAdd = function () {
+  const div = DomUtil.create("div", "lrz-custom-attribution");
+  div.innerHTML =
+    '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' +
+    ' · <span style="color:#c69247">Loire Ride Zen</span>';
+  return div;
+};
+attrControl.addTo(map);
 
 export const baseOSM = new TileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",

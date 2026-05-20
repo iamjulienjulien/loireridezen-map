@@ -55,6 +55,25 @@ export const COLOR_FNS = {
   },
 };
 
+/**
+ * Retourne un descripteur visuel {type, colors} pour afficher une barre de
+ * couleur représentant le groupe dans le panel traces.
+ */
+export function getGroupColorPreview(group) {
+  const c = group.color;
+  const dashed = group.dashed === true;
+  if (typeof c === "string" && !c.startsWith("fn:")) {
+    return { type: dashed ? "dashed" : "solid", colors: [c] };
+  }
+  if (Array.isArray(c)) {
+    return { type: "gradient", colors: c.slice(0, 3) };
+  }
+  if (typeof c === "string" && c.startsWith("fn:")) {
+    return { type: "gradient", colors: STAGE_COLORS.slice(0, 3) };
+  }
+  return { type: "solid", colors: [STAGE_COLORS[0]] };
+}
+
 export function resolveColor(colorSpec, context = {}) {
   if (!colorSpec) return STAGE_COLORS[0];
   if (typeof colorSpec === "string") {
