@@ -4,7 +4,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "01 chambord",
+        "name": "Chambord",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg",
         "thumb": "data/thumbs/01-chambord.webp",
@@ -21,7 +21,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "02 blois",
+        "name": "Blois",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg",
         "thumb": "data/thumbs/02-blois.webp",
@@ -38,7 +38,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "03 amboise",
+        "name": "Amboise",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg",
         "thumb": "data/thumbs/03-amboise.webp",
@@ -55,7 +55,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "04 amboise",
+        "name": "Amboise",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg",
         "thumb": "data/thumbs/04-amboise.webp",
@@ -72,7 +72,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "05 chenonceau",
+        "name": "Chenonceau",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg",
         "thumb": "data/thumbs/05-chenonceau.webp",
@@ -89,7 +89,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "06 tours",
+        "name": "Tours",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg",
         "thumb": "data/thumbs/06-tours.webp",
@@ -106,7 +106,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "07 delaware painter",
+        "name": "Delaware Painter",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/07-delaware-painter.jpeg",
         "thumb": "data/thumbs/07-delaware-painter.webp",
@@ -123,7 +123,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "08 villandry",
+        "name": "Villandry",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg",
         "thumb": "data/thumbs/08-villandry.webp",
@@ -140,7 +140,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "09 boats",
+        "name": "Boats",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/09-boats.jpeg",
         "thumb": "data/thumbs/09-boats.webp",
@@ -157,7 +157,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "10 langeais",
+        "name": "Langeais",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg",
         "thumb": "data/thumbs/10-langeais.webp",
@@ -174,7 +174,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "11 chinon",
+        "name": "Chinon",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg",
         "thumb": "data/thumbs/11-chinon.webp",
@@ -191,7 +191,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "12 fontevraud",
+        "name": "Fontevraud",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg",
         "thumb": "data/thumbs/12-fontevraud.webp",
@@ -208,7 +208,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "13 saumur",
+        "name": "Saumur",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg",
         "thumb": "data/thumbs/13-saumur.webp",
@@ -225,7 +225,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "18 saumur",
+        "name": "Saumur",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/18-saumur.jpeg",
         "thumb": "data/thumbs/18-saumur.webp",
@@ -242,7 +242,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "19 saumur",
+        "name": "Saumur",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/19-saumur.jpeg",
         "thumb": "data/thumbs/19-saumur.webp",
@@ -259,7 +259,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "20 ackerman",
+        "name": "Ackerman",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/20-ackerman.jpeg",
         "thumb": "data/thumbs/20-ackerman.webp",
@@ -276,7 +276,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "14 saint mathurin",
+        "name": "Saint Mathurin",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/14-saint-mathurin.jpeg",
         "thumb": "data/thumbs/14-saint-mathurin.webp",
@@ -293,7 +293,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "15 loire maine",
+        "name": "Loire Maine",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg",
         "thumb": "data/thumbs/15-loire-maine.webp",
@@ -310,7 +310,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "16 angers",
+        "name": "Angers",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg",
         "thumb": "data/thumbs/16-angers.webp",
@@ -327,7 +327,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "17 la chevalerie",
+        "name": "La Chevalerie",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg",
         "thumb": "data/thumbs/17-la-chevalerie.webp",

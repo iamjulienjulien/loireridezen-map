@@ -80,6 +80,7 @@ PYTHON = sys.executable
 LOG_DIR_DEFAULT = REPO_ROOT / "logs" / "update_data"
 
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
+PHOTO_FILENAME_RE = re.compile(r"^(\d+)-(.+)$")
 KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure"]
 DEFAULT_GROUP_ID = "acte-3"
 
@@ -363,6 +364,17 @@ def _clean(s: str) -> str:
     return " ".join(p.title() for p in parts if p)
 
 
+def build_photo_defaults(stem: str) -> dict:
+    """Parse <order>-<slug> filenames → label propre + order numérique."""
+    m = PHOTO_FILENAME_RE.match(stem)
+    if m:
+        return {
+            "label": m.group(2).replace("-", " ").title(),
+            "order": int(m.group(1)),
+        }
+    return {"label": _humanize(stem), "order": None}
+
+
 def build_trace_defaults(gpx_path: Path) -> dict:
     stem = gpx_path.stem
     group_id = DEFAULT_GROUP_ID
@@ -393,9 +405,9 @@ def prompt_trace_meta(gpx_path: Path, non_interactive: bool) -> dict:
 
 
 def prompt_photo_meta(photo_path: Path, non_interactive: bool) -> dict:
-    defaults = {"label": _humanize(photo_path.stem), "description": ""}
+    defaults = build_photo_defaults(photo_path.stem)
     if non_interactive:
-        return defaults
+        return {"label": defaults["label"], "description": "", "order": defaults["order"]}
 
     label = questionary.text(
         f"Label pour '{photo_path.name}' :", default=defaults["label"]
@@ -405,7 +417,11 @@ def prompt_photo_meta(photo_path: Path, non_interactive: bool) -> dict:
     if label is None:
         console.print("[red]Annulé.[/]")
         sys.exit(0)
-    return {"label": label or defaults["label"], "description": description or ""}
+    return {
+        "label": label or defaults["label"],
+        "description": description or "",
+        "order": defaults["order"],
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1080,8 +1096,11 @@ def _merge_photos_from_geojson(photo_items: list[dict], tree: Tree, verbose: boo
         for it in photo_items
         if it.get("paths", {}).get("thumb")
     }
+
+    max_order = max((it.get("order") or 0 for it in photo_items), default=0)
+
     added = 0
-    for i, feature in enumerate(features, start=len(photo_items) + 1):
+    for feature in features:
         p = feature["properties"]
         thumb = p.get("thumb", "")
         stem = Path(thumb).stem if thumb else ""
@@ -1102,9 +1121,16 @@ def _merge_photos_from_geojson(photo_items: list[dict], tree: Tree, verbose: boo
                 time_iso = time_raw
         else:
             time_iso = time_raw
+
+        photo_defaults = build_photo_defaults(stem) if stem else {}
+        order = photo_defaults.get("order")
+        if order is None:
+            max_order += 1
+            order = max_order
+
         photo_items.append({
-            "id": stem or f"photo-{i:02d}",
-            "label": p.get("name", ""),
+            "id": stem or f"photo-{order:02d}",
+            "label": photo_defaults.get("label") or p.get("name", "") or stem,
             "description": "",
             "group": "acte-2",
             "paths": {
@@ -1112,12 +1138,15 @@ def _merge_photos_from_geojson(photo_items: list[dict], tree: Tree, verbose: boo
                 "remote": remote,
             },
             "source": f"sources/photos/{stem}{ext}" if stem else "",
-            "order": i,
+            "order": order,
             "time": time_iso,
             "lat": lat,
             "lon": lon,
         })
         added += 1
+
+    photo_items.sort(key=lambda it: (it.get("order") is None, it.get("order") or 0))
+
     if added:
         tree.add(f"[green]+{added}[/] photo(s) ajoutée(s) au catalog")
     return photo_items

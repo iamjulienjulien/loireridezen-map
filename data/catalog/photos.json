@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-05-20T02:04:41.688509+00:00",
+  "updated_at": "2026-05-20T06:54:38.447279+00:00",
   "items": [
     {
       "id": "01-chambord",
-      "label": "01 chambord",
+      "label": "Chambord",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -12,13 +12,13 @@
       },
       "source": "sources/photos/01-chambord.jpeg",
       "order": 1,
-      "time": "2025-06-06T14:22:09",
+      "time": "2025:06:06 14:22:09",
       "lat": 47.616978,
       "lon": 1.514094
     },
     {
       "id": "02-blois",
-      "label": "02 blois",
+      "label": "Blois",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -27,13 +27,13 @@
       },
       "source": "sources/photos/02-blois.jpeg",
       "order": 2,
-      "time": "2025-06-07T12:43:09",
+      "time": "2025:06:07 12:43:09",
       "lat": 47.584869,
       "lon": 1.339997
     },
     {
       "id": "03-amboise",
-      "label": "03 amboise",
+      "label": "Amboise",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -42,13 +42,13 @@
       },
       "source": "sources/photos/03-amboise.jpeg",
       "order": 3,
-      "time": "2025-06-08T13:31:29",
+      "time": "2025:06:08 13:31:29",
       "lat": 47.412772,
       "lon": 0.984936
     },
     {
       "id": "04-amboise",
-      "label": "04 amboise",
+      "label": "Amboise",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -57,13 +57,13 @@
       },
       "source": "sources/photos/04-amboise.jpeg",
       "order": 4,
-      "time": "2025-06-09T20:18:52",
+      "time": "2025:06:09 20:18:52",
       "lat": 47.415961,
       "lon": 0.985108
     },
     {
       "id": "05-chenonceau",
-      "label": "05 chenonceau",
+      "label": "Chenonceau",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -72,13 +72,13 @@
       },
       "source": "sources/photos/05-chenonceau.jpeg",
       "order": 5,
-      "time": "2025-06-10T16:02:27",
+      "time": "2025:06:10 16:02:27",
       "lat": 47.324047,
       "lon": 1.070181
     },
     {
       "id": "06-tours",
-      "label": "06 tours",
+      "label": "Tours",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -87,13 +87,13 @@
       },
       "source": "sources/photos/06-tours.jpeg",
       "order": 6,
-      "time": "2025-06-12T13:21:35",
+      "time": "2025:06:12 13:21:35",
       "lat": 47.395386,
       "lon": 0.693394
     },
     {
       "id": "07-delaware-painter",
-      "label": "07 delaware painter",
+      "label": "Delaware Painter",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -102,13 +102,13 @@
       },
       "source": "sources/photos/07-delaware-painter.jpeg",
       "order": 7,
-      "time": "2025-06-12T15:04:53",
+      "time": "2025:06:12 15:04:53",
       "lat": 47.360572,
       "lon": 0.557225
     },
     {
       "id": "08-villandry",
-      "label": "08 villandry",
+      "label": "Villandry",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -117,13 +117,13 @@
       },
       "source": "sources/photos/08-villandry.jpeg",
       "order": 8,
-      "time": "2025-06-12T17:45:05",
+      "time": "2025:06:12 17:45:05",
       "lat": 47.340325,
       "lon": 0.514278
     },
     {
       "id": "09-boats",
-      "label": "09 boats",
+      "label": "Boats",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -132,13 +132,13 @@
       },
       "source": "sources/photos/09-boats.jpeg",
       "order": 9,
-      "time": "2025-06-12T20:31:39",
+      "time": "2025:06:12 20:31:39",
       "lat": 47.348706,
       "lon": 0.547658
     },
     {
       "id": "10-langeais",
-      "label": "10 langeais",
+      "label": "Langeais",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -147,13 +147,13 @@
       },
       "source": "sources/photos/10-langeais.jpeg",
       "order": 10,
-      "time": "2025-06-13T14:29:26",
+      "time": "2025:06:13 14:29:26",
       "lat": 47.324856,
       "lon": 0.406594
     },
     {
       "id": "11-chinon",
-      "label": "11 chinon",
+      "label": "Chinon",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -162,13 +162,13 @@
       },
       "source": "sources/photos/11-chinon.jpeg",
       "order": 11,
-      "time": "2025-06-16T13:12:24",
+      "time": "2025:06:16 13:12:24",
       "lat": 47.163967,
       "lon": 0.237903
     },
     {
       "id": "12-fontevraud",
-      "label": "12 fontevraud",
+      "label": "Fontevraud",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -177,13 +177,13 @@
       },
       "source": "sources/photos/12-fontevraud.jpeg",
       "order": 12,
-      "time": "2025-06-17T11:49:26",
+      "time": "2025:06:17 11:49:26",
       "lat": 47.18105,
       "lon": 0.051558
     },
     {
       "id": "13-saumur",
-      "label": "13 saumur",
+      "label": "Saumur",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -192,13 +192,13 @@
       },
       "source": "sources/photos/13-saumur.jpeg",
       "order": 13,
-      "time": "2025-06-17T19:47:01",
+      "time": "2025:06:17 19:47:01",
       "lat": 47.262183,
       "lon": -0.072797
     },
     {
       "id": "14-saint-mathurin",
-      "label": "14 saint mathurin",
+      "label": "Saint Mathurin",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -207,13 +207,13 @@
       },
       "source": "sources/photos/14-saint-mathurin.jpeg",
       "order": 14,
-      "time": "2025-06-18T15:25:58",
+      "time": "2025:06:18 15:25:58",
       "lat": 47.405106,
       "lon": -0.319983
     },
     {
       "id": "15-loire-maine",
-      "label": "15 loire maine",
+      "label": "Loire Maine",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -222,13 +222,13 @@
       },
       "source": "sources/photos/15-loire-maine.jpeg",
       "order": 15,
-      "time": "2025-06-18T17:26:15",
+      "time": "2025:06:18 17:26:15",
       "lat": 47.411853,
       "lon": -0.613789
     },
     {
       "id": "16-angers",
-      "label": "16 angers",
+      "label": "Angers",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -237,13 +237,13 @@
       },
       "source": "sources/photos/16-angers.jpeg",
       "order": 16,
-      "time": "2025-06-18T19:58:52",
+      "time": "2025:06:18 19:58:52",
       "lat": 47.470325,
       "lon": -0.566106
     },
     {
       "id": "17-la-chevalerie",
-      "label": "17 la chevalerie",
+      "label": "La Chevalerie",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -252,13 +252,13 @@
       },
       "source": "sources/photos/17-la-chevalerie.jpeg",
       "order": 17,
-      "time": "2025-09-30T16:28:17",
+      "time": "2025:09:30 16:28:17",
       "lat": 47.440792,
       "lon": -0.456067
     },
     {
       "id": "18-saumur",
-      "label": "18 saumur",
+      "label": "Saumur",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -266,14 +266,14 @@
         "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/18-saumur.jpeg"
       },
       "source": "sources/photos/18-saumur.jpeg",
-      "order": 31,
+      "order": 18,
       "time": "2025:06:17 21:32:13",
       "lat": 47.261167,
       "lon": -0.071122
     },
     {
       "id": "19-saumur",
-      "label": "19 saumur",
+      "label": "Saumur",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -281,14 +281,14 @@
         "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/19-saumur.jpeg"
       },
       "source": "sources/photos/19-saumur.jpeg",
-      "order": 32,
+      "order": 19,
       "time": "2025:06:17 21:32:19",
       "lat": 47.261167,
       "lon": -0.071119
     },
     {
       "id": "20-ackerman",
-      "label": "20 ackerman",
+      "label": "Ackerman",
       "description": "",
       "group": "acte-2",
       "paths": {
@@ -296,7 +296,7 @@
         "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/20-ackerman.jpeg"
       },
       "source": "sources/photos/20-ackerman.jpeg",
-      "order": 33,
+      "order": 20,
       "time": "2025:06:18 12:29:52",
       "lat": 47.271594,
       "lon": -0.106883
