@@ -1,223 +1,260 @@
-[
-  {
-    "id": "photo-01-chambord",
-    "label": "01 chambord",
-    "time": "2025:06:06 14:22:09",
-    "coordinates": [
-      1.514094,
-      47.616978
-    ],
-    "paths": {
-      "thumb": "./thumbs/01-chambord.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg"
+{
+  "updated_at": "2026-05-19T23:14:19.501915+00:00",
+  "items": [
+    {
+      "id": "01-chambord",
+      "label": "01 chambord",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/01-chambord.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg"
+      },
+      "source": "sources/photos/01-chambord.jpeg",
+      "order": 1,
+      "time": "2025-06-06T14:22:09",
+      "lat": 47.616978,
+      "lon": 1.514094
+    },
+    {
+      "id": "02-blois",
+      "label": "02 blois",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/02-blois.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg"
+      },
+      "source": "sources/photos/02-blois.jpeg",
+      "order": 2,
+      "time": "2025-06-07T12:43:09",
+      "lat": 47.584869,
+      "lon": 1.339997
+    },
+    {
+      "id": "03-amboise",
+      "label": "03 amboise",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/03-amboise.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg"
+      },
+      "source": "sources/photos/03-amboise.jpeg",
+      "order": 3,
+      "time": "2025-06-08T13:31:29",
+      "lat": 47.412772,
+      "lon": 0.984936
+    },
+    {
+      "id": "04-amboise",
+      "label": "04 amboise",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/04-amboise.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg"
+      },
+      "source": "sources/photos/04-amboise.jpeg",
+      "order": 4,
+      "time": "2025-06-09T20:18:52",
+      "lat": 47.415961,
+      "lon": 0.985108
+    },
+    {
+      "id": "05-chenonceau",
+      "label": "05 chenonceau",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/05-chenonceau.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg"
+      },
+      "source": "sources/photos/05-chenonceau.jpeg",
+      "order": 5,
+      "time": "2025-06-10T16:02:27",
+      "lat": 47.324047,
+      "lon": 1.070181
+    },
+    {
+      "id": "06-tours",
+      "label": "06 tours",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/06-tours.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg"
+      },
+      "source": "sources/photos/06-tours.jpeg",
+      "order": 6,
+      "time": "2025-06-12T13:21:35",
+      "lat": 47.395386,
+      "lon": 0.693394
+    },
+    {
+      "id": "07-delaware-painter",
+      "label": "07 delaware painter",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/07-delaware-painter.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/07-delaware-painter.jpeg"
+      },
+      "source": "sources/photos/07-delaware-painter.jpeg",
+      "order": 7,
+      "time": "2025-06-12T15:04:53",
+      "lat": 47.360572,
+      "lon": 0.557225
+    },
+    {
+      "id": "08-villandry",
+      "label": "08 villandry",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/08-villandry.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg"
+      },
+      "source": "sources/photos/08-villandry.jpeg",
+      "order": 8,
+      "time": "2025-06-12T17:45:05",
+      "lat": 47.340325,
+      "lon": 0.514278
+    },
+    {
+      "id": "09-boats",
+      "label": "09 boats",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/09-boats.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/09-boats.jpeg"
+      },
+      "source": "sources/photos/09-boats.jpeg",
+      "order": 9,
+      "time": "2025-06-12T20:31:39",
+      "lat": 47.348706,
+      "lon": 0.547658
+    },
+    {
+      "id": "10-langeais",
+      "label": "10 langeais",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/10-langeais.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg"
+      },
+      "source": "sources/photos/10-langeais.jpeg",
+      "order": 10,
+      "time": "2025-06-13T14:29:26",
+      "lat": 47.324856,
+      "lon": 0.406594
+    },
+    {
+      "id": "11-chinon",
+      "label": "11 chinon",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/11-chinon.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg"
+      },
+      "source": "sources/photos/11-chinon.jpeg",
+      "order": 11,
+      "time": "2025-06-16T13:12:24",
+      "lat": 47.163967,
+      "lon": 0.237903
+    },
+    {
+      "id": "12-fontevraud",
+      "label": "12 fontevraud",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/12-fontevraud.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg"
+      },
+      "source": "sources/photos/12-fontevraud.jpeg",
+      "order": 12,
+      "time": "2025-06-17T11:49:26",
+      "lat": 47.18105,
+      "lon": 0.051558
+    },
+    {
+      "id": "13-saumur",
+      "label": "13 saumur",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/13-saumur.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg"
+      },
+      "source": "sources/photos/13-saumur.jpeg",
+      "order": 13,
+      "time": "2025-06-17T19:47:01",
+      "lat": 47.262183,
+      "lon": -0.072797
+    },
+    {
+      "id": "14-saint-mathurin",
+      "label": "14 saint mathurin",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/14-saint-mathurin.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/14-saint-mathurin.jpeg"
+      },
+      "source": "sources/photos/14-saint-mathurin.jpeg",
+      "order": 14,
+      "time": "2025-06-18T15:25:58",
+      "lat": 47.405106,
+      "lon": -0.319983
+    },
+    {
+      "id": "15-loire-maine",
+      "label": "15 loire maine",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/15-loire-maine.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg"
+      },
+      "source": "sources/photos/15-loire-maine.jpeg",
+      "order": 15,
+      "time": "2025-06-18T17:26:15",
+      "lat": 47.411853,
+      "lon": -0.613789
+    },
+    {
+      "id": "16-angers",
+      "label": "16 angers",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/16-angers.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg"
+      },
+      "source": "sources/photos/16-angers.jpeg",
+      "order": 16,
+      "time": "2025-06-18T19:58:52",
+      "lat": 47.470325,
+      "lon": -0.566106
+    },
+    {
+      "id": "17-la-chevalerie",
+      "label": "17 la chevalerie",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/17-la-chevalerie.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg"
+      },
+      "source": "sources/photos/17-la-chevalerie.jpeg",
+      "order": 17,
+      "time": "2025-09-30T16:28:17",
+      "lat": 47.440792,
+      "lon": -0.456067
     }
-  },
-  {
-    "id": "photo-02-blois",
-    "label": "02 blois",
-    "time": "2025:06:07 12:43:09",
-    "coordinates": [
-      1.339997,
-      47.584869
-    ],
-    "paths": {
-      "thumb": "./thumbs/02-blois.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg"
-    }
-  },
-  {
-    "id": "photo-03-amboise",
-    "label": "03 amboise",
-    "time": "2025:06:08 13:31:29",
-    "coordinates": [
-      0.984936,
-      47.412772
-    ],
-    "paths": {
-      "thumb": "./thumbs/03-amboise.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg"
-    }
-  },
-  {
-    "id": "photo-04-amboise",
-    "label": "04 amboise",
-    "time": "2025:06:09 20:18:52",
-    "coordinates": [
-      0.985108,
-      47.415961
-    ],
-    "paths": {
-      "thumb": "./thumbs/04-amboise.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg"
-    }
-  },
-  {
-    "id": "photo-05-chenonceau",
-    "label": "05 chenonceau",
-    "time": "2025:06:10 16:02:27",
-    "coordinates": [
-      1.070181,
-      47.324047
-    ],
-    "paths": {
-      "thumb": "./thumbs/05-chenonceau.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg"
-    }
-  },
-  {
-    "id": "photo-06-tours",
-    "label": "06 tours",
-    "time": "2025:06:12 13:21:35",
-    "coordinates": [
-      0.693394,
-      47.395386
-    ],
-    "paths": {
-      "thumb": "./thumbs/06-tours.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg"
-    }
-  },
-  {
-    "id": "photo-07-delaware-painter",
-    "label": "07 delaware painter",
-    "time": "2025:06:12 15:04:53",
-    "coordinates": [
-      0.557225,
-      47.360572
-    ],
-    "paths": {
-      "thumb": "./thumbs/07-delaware-painter.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/07-delaware-painter.jpeg"
-    }
-  },
-  {
-    "id": "photo-08-villandry",
-    "label": "08 villandry",
-    "time": "2025:06:12 17:45:05",
-    "coordinates": [
-      0.514278,
-      47.340325
-    ],
-    "paths": {
-      "thumb": "./thumbs/08-villandry.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg"
-    }
-  },
-  {
-    "id": "photo-09-boats",
-    "label": "09 boats",
-    "time": "2025:06:12 20:31:39",
-    "coordinates": [
-      0.547658,
-      47.348706
-    ],
-    "paths": {
-      "thumb": "./thumbs/09-boats.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/09-boats.jpeg"
-    }
-  },
-  {
-    "id": "photo-10-langeais",
-    "label": "10 langeais",
-    "time": "2025:06:13 14:29:26",
-    "coordinates": [
-      0.406594,
-      47.324856
-    ],
-    "paths": {
-      "thumb": "./thumbs/10-langeais.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg"
-    }
-  },
-  {
-    "id": "photo-11-chinon",
-    "label": "11 chinon",
-    "time": "2025:06:16 13:12:24",
-    "coordinates": [
-      0.237903,
-      47.163967
-    ],
-    "paths": {
-      "thumb": "./thumbs/11-chinon.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg"
-    }
-  },
-  {
-    "id": "photo-12-fontevraud",
-    "label": "12 fontevraud",
-    "time": "2025:06:17 11:49:26",
-    "coordinates": [
-      0.051558,
-      47.18105
-    ],
-    "paths": {
-      "thumb": "./thumbs/12-fontevraud.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg"
-    }
-  },
-  {
-    "id": "photo-13-saumur",
-    "label": "13 saumur",
-    "time": "2025:06:17 19:47:01",
-    "coordinates": [
-      -0.072797,
-      47.262183
-    ],
-    "paths": {
-      "thumb": "./thumbs/13-saumur.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg"
-    }
-  },
-  {
-    "id": "photo-14-saint-mathurin",
-    "label": "14 saint mathurin",
-    "time": "2025:06:18 15:25:58",
-    "coordinates": [
-      -0.319983,
-      47.405106
-    ],
-    "paths": {
-      "thumb": "./thumbs/14-saint-mathurin.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/14-saint-mathurin.jpeg"
-    }
-  },
-  {
-    "id": "photo-15-loire-maine",
-    "label": "15 loire maine",
-    "time": "2025:06:18 17:26:15",
-    "coordinates": [
-      -0.613789,
-      47.411853
-    ],
-    "paths": {
-      "thumb": "./thumbs/15-loire-maine.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg"
-    }
-  },
-  {
-    "id": "photo-16-angers",
-    "label": "16 angers",
-    "time": "2025:06:18 19:58:52",
-    "coordinates": [
-      -0.566106,
-      47.470325
-    ],
-    "paths": {
-      "thumb": "./thumbs/16-angers.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg"
-    }
-  },
-  {
-    "id": "photo-17-la-chevalerie",
-    "label": "17 la chevalerie",
-    "time": "2025:09:30 16:28:17",
-    "coordinates": [
-      -0.456067,
-      47.440792
-    ],
-    "paths": {
-      "thumb": "./thumbs/17-la-chevalerie.webp",
-      "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg"
-    }
-  }
-]
+  ]
+}

@@ -1,5 +1,5 @@
 """
-One-shot migration: données existantes → architecture catalog.
+One-shot migration: données existantes → architecture catalog (LRZ-EVO-1).
 
 Fichiers d'entrée :
   data/route.geojson                  9 étapes Acte 2 (stage 0-8)
@@ -24,6 +24,8 @@ import argparse
 import json
 import os
 import sys
+from datetime import datetime, timezone
+from pathlib import Path
 
 
 # ---------------------------------------------------------------------------
@@ -50,28 +52,68 @@ CATALOG_DIR = os.path.join(DATA, "catalog")
 # ---------------------------------------------------------------------------
 
 STAGES = {
-    0: {"departure": "blois", "arrival": "chambord", "label": "Blois ↔ Chambord"},
-    1: {"departure": "blois", "arrival": "amboise", "label": "Blois → Amboise"},
-    2: {"departure": "amboise", "arrival": "chenonceaux", "label": "Amboise → Chenonceaux"},
-    3: {"departure": "chenonceaux", "arrival": "tours", "label": "Chenonceaux → Tours"},
-    4: {"departure": "tours", "arrival": "villandry", "label": "Tours → Villandry"},
-    5: {"departure": "villandry", "arrival": "chinon", "label": "Villandry → Chinon"},
-    6: {"departure": "chinon", "arrival": "montsoreau", "label": "Chinon → Montsoreau"},
-    7: {"departure": "montsoreau", "arrival": "saumur", "label": "Montsoreau → Saumur"},
-    8: {"departure": "saumur", "arrival": "angers", "label": "Saumur → Angers"},
+    0: {"departure": "blois", "arrival": "chambord", "label": "Étape 0 — Blois ↔ Chambord"},
+    1: {"departure": "blois", "arrival": "amboise", "label": "Étape 1 — Blois → Amboise"},
+    2: {"departure": "amboise", "arrival": "chenonceaux", "label": "Étape 2 — Amboise → Chenonceaux"},
+    3: {"departure": "chenonceaux", "arrival": "tours", "label": "Étape 3 — Chenonceaux → Tours"},
+    4: {"departure": "tours", "arrival": "villandry", "label": "Étape 4 — Tours → Villandry"},
+    5: {"departure": "villandry", "arrival": "chinon", "label": "Étape 5 — Villandry → Chinon"},
+    6: {"departure": "chinon", "arrival": "montsoreau", "label": "Étape 6 — Chinon → Montsoreau"},
+    7: {"departure": "montsoreau", "arrival": "saumur", "label": "Étape 7 — Montsoreau → Saumur"},
+    8: {"departure": "saumur", "arrival": "angers", "label": "Étape 8 — Saumur → Angers"},
 }
 
+# Groupes complets per LRZ-EVO-1 spec
 GROUPS_DATA = [
-    {"id": "acte-1", "label": "Acte 1"},
-    {"id": "acte-2", "label": "Acte 2 — Blois → Angers"},
-    {"id": "acte-3", "label": "Acte 3"},
-    {"id": "micro-aventure", "label": "Micro-aventure"},
+    {
+        "id": "acte-1",
+        "label": "Acte 1 — Paris → Blois",
+        "description": "Voyage initiatique de 2018, hors compte Instagram.",
+        "year": 2018,
+        "unified": True,
+        "color": "#34495E",
+        "order": 1,
+    },
+    {
+        "id": "acte-2",
+        "label": "Acte 2 — Blois → Angers",
+        "description": "Le voyage fondateur du projet, 8 étapes en juin 2025.",
+        "year": 2025,
+        "unified": False,
+        "color": [
+            "#2E86AB", "#1F77B4", "#5DADE2", "#9B59B6",
+            "#E74C3C", "#F39C12", "#27AE60", "#16A085", "#34495E",
+        ],
+        "order": 2,
+    },
+    {
+        "id": "acte-3",
+        "label": "Acte 3 — Angers → Saint-Brévin",
+        "description": "Bouclage symbolique au Serpent de Huang Yong Ping, mai 2026.",
+        "year": 2026,
+        "unified": False,
+        "color": "fn:byStage",
+        "order": 3,
+    },
+    {
+        "id": "micro-aventure",
+        "label": "Micro-aventures",
+        "description": "Boucles locales autour d'Angers.",
+        "unified": False,
+        "color": "#FF7F00",
+        "dashed": True,
+        "order": 4,
+    },
 ]
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
 
 def load_geojson(path):
     with open(path, encoding="utf-8") as f:
@@ -89,6 +131,15 @@ def write_json(path, data, dry_run, verbose, label):
         print(f"  wrote {os.path.relpath(path, REPO_ROOT)}  ({label})")
 
 
+def write_catalog(path, items, extra=None, dry_run=False, verbose=False, label=""):
+    """Write {updated_at, [extra fields], items} JSON catalog."""
+    payload: dict = {"updated_at": now_iso()}
+    if extra:
+        payload.update(extra)
+    payload["items"] = items
+    write_json(path, payload, dry_run, verbose, label)
+
+
 def should_skip(path, force, verbose):
     if os.path.exists(path) and not force:
         if verbose:
@@ -100,6 +151,17 @@ def should_skip(path, force, verbose):
 def stage_id(stage_num):
     s = STAGES[stage_num]
     return f"etape-{stage_num:02d}-{s['departure']}-{s['arrival']}"
+
+
+def exif_time_to_iso(time_str: str) -> str:
+    """Convert '2025:06:06 14:22:09' (EXIF) to '2025-06-06T14:22:09'."""
+    if not time_str:
+        return ""
+    try:
+        date_part, time_part = time_str.split(" ", 1)
+        return f"{date_part.replace(':', '-')}T{time_part}"
+    except Exception:
+        return time_str
 
 
 # ---------------------------------------------------------------------------
@@ -134,12 +196,10 @@ def split_route_by_stage(args):
             fc = {"type": "FeatureCollection", "features": [feature]}
             write_json(simp_path, fc, args.dry_run, args.verbose, f"stage {stage_num} simplified")
 
-    # acte-1
     acte1_out = os.path.join(TRACES_DIR, "acte-1.geojson")
     if not should_skip(acte1_out, args.force, args.verbose):
         write_json(acte1_out, load_geojson(INPUT["acte1"]), args.dry_run, args.verbose, "acte-1")
 
-    # boucle-angevine
     boucle_out = os.path.join(TRACES_DIR, "boucle-angevine.geojson")
     if not should_skip(boucle_out, args.force, args.verbose):
         write_json(boucle_out, load_geojson(INPUT["boucle"]), args.dry_run, args.verbose, "boucle-angevine")
@@ -154,7 +214,8 @@ def build_groups_catalog(args):
     out = os.path.join(CATALOG_DIR, "groups.json")
     if should_skip(out, args.force, args.verbose):
         return
-    write_json(out, GROUPS_DATA, args.dry_run, args.verbose, f"{len(GROUPS_DATA)} groups")
+    write_catalog(out, GROUPS_DATA, dry_run=args.dry_run, verbose=args.verbose,
+                  label=f"{len(GROUPS_DATA)} groups")
 
 
 # ---------------------------------------------------------------------------
@@ -169,42 +230,56 @@ def build_traces_catalog(args):
 
     entries = []
 
-    # Acte 2 stages
+    # Acte 1 (unified single trace)
+    entries.append({
+        "id": "acte-1",
+        "label": "Paris → Blois",
+        "description": "Le voyage initiatique de 2018.",
+        "group": "acte-1",
+        "paths": {
+            "full": "data/traces/acte-1.geojson",
+        },
+        "source": "sources/gpx/acte-1.gpx",
+        "order": 1,
+        "distance_km": None,
+        "elevation_gain_m": None,
+    })
+
+    # Acte 2 stages (9 étapes)
     for stage_num in range(9):
         s = STAGES[stage_num]
         tid = stage_id(stage_num)
         entries.append({
             "id": tid,
-            "group_id": "acte-2",
             "label": s["label"],
-            "stage": stage_num,
-            "files": {
-                "geojson": f"data/traces/etape-{stage_num:02d}.geojson",
+            "group": "acte-2",
+            "paths": {
+                "full": f"data/traces/etape-{stage_num:02d}.geojson",
                 "simplified": f"data/traces/etape-{stage_num:02d}_simplified.geojson",
             },
+            "source": f"sources/gpx/{tid}.gpx",
+            "order": stage_num + 1,
+            "distance_km": None,
+            "elevation_gain_m": None,
         })
 
-    # Acte 1
-    entries.append({
-        "id": "acte-1",
-        "group_id": "acte-1",
-        "label": "Acte 1",
-        "files": {
-            "geojson": "data/traces/acte-1.geojson",
-        },
-    })
-
-    # Boucle Angevine
+    # Boucle Angevine (micro-aventure)
     entries.append({
         "id": "boucle-angevine",
-        "group_id": "micro-aventure",
-        "label": "Boucle Angevine",
-        "files": {
-            "geojson": "data/traces/boucle-angevine.geojson",
+        "label": "Boucle angevine",
+        "description": "45 km de gravel autour d'Angers.",
+        "group": "micro-aventure",
+        "paths": {
+            "full": "data/traces/boucle-angevine.geojson",
         },
+        "source": "sources/gpx/boucle-angevine.gpx",
+        "order": 1,
+        "distance_km": None,
+        "elevation_gain_m": None,
     })
 
-    write_json(out, entries, args.dry_run, args.verbose, f"{len(entries)} traces")
+    write_catalog(out, entries, dry_run=args.dry_run, verbose=args.verbose,
+                  label=f"{len(entries)} traces")
 
 
 # ---------------------------------------------------------------------------
@@ -222,23 +297,40 @@ def build_photos_catalog(args):
     for i, feature in enumerate(src["features"], start=1):
         p = feature["properties"]
         coords = feature["geometry"]["coordinates"]
-        slug = p.get("name", f"photo-{i:02d}").lower().replace(" ", "-")
+        lon, lat = coords[0], coords[1]
+
+        # Derive stem from thumb path: "./thumbs/01-chambord.webp" → "01-chambord"
+        thumb_raw = p.get("thumb", "")
+        stem = Path(thumb_raw).stem if thumb_raw else f"photo-{i:02d}"
+
+        # Detect source extension from Supabase URL
+        remote = p.get("image", "")
+        ext = Path(remote.split("?")[0]).suffix if remote else ".jpeg"
+        if not ext:
+            ext = ".jpeg"
+
         entries.append({
-            "id": f"photo-{slug}",
+            "id": stem,
             "label": p.get("name", ""),
-            "time": p.get("time", ""),
-            "coordinates": coords,
+            "description": "",
+            "group": "acte-2",
             "paths": {
-                "thumb": p.get("thumb", ""),
-                "remote": p.get("image", ""),
+                "thumb": f"data/thumbs/{stem}.webp",
+                "remote": remote,
             },
+            "source": f"sources/photos/{stem}{ext}",
+            "order": i,
+            "time": exif_time_to_iso(p.get("time", "")),
+            "lat": lat,
+            "lon": lon,
         })
 
-    write_json(out, entries, args.dry_run, args.verbose, f"{len(entries)} photos")
+    write_catalog(out, entries, dry_run=args.dry_run, verbose=args.verbose,
+                  label=f"{len(entries)} photos")
 
 
 # ---------------------------------------------------------------------------
-# 5. Build POIs catalog
+# 5. Build POIs catalog (light inventory, no coordinates/description)
 # ---------------------------------------------------------------------------
 
 def build_pois_catalog(args):
@@ -251,17 +343,17 @@ def build_pois_catalog(args):
     entries = []
     for feature in src["features"]:
         p = feature["properties"]
-        coords = feature["geometry"]["coordinates"]
         entries.append({
             "id": p.get("id", ""),
             "label": p.get("name", ""),
             "type": p.get("type", ""),
+            "group": "acte-2",
             "stage": p.get("stage"),
-            "description": p.get("description", ""),
-            "coordinates": coords,
         })
 
-    write_json(out, entries, args.dry_run, args.verbose, f"{len(entries)} POIs")
+    extra = {"synced_from": "supabase", "count": len(entries)}
+    write_catalog(out, entries, extra=extra, dry_run=args.dry_run, verbose=args.verbose,
+                  label=f"{len(entries)} POIs")
 
 
 # ---------------------------------------------------------------------------

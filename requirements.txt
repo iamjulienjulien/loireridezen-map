@@ -3,3 +3,5 @@ pillow-heif
 exifread>=3.5
 gpxpy>=1.6
 shapely>=2.0
+rich>=13
+questionary>=2

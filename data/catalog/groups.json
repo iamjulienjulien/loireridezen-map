@@ -1,18 +1,51 @@
-[
-  {
-    "id": "acte-1",
-    "label": "Acte 1"
-  },
-  {
-    "id": "acte-2",
-    "label": "Acte 2 — Blois → Angers"
-  },
-  {
-    "id": "acte-3",
-    "label": "Acte 3"
-  },
-  {
-    "id": "micro-aventure",
-    "label": "Micro-aventure"
-  }
-]
+{
+  "updated_at": "2026-05-19T23:14:19.501271+00:00",
+  "items": [
+    {
+      "id": "acte-1",
+      "label": "Acte 1 — Paris → Blois",
+      "description": "Voyage initiatique de 2018, hors compte Instagram.",
+      "year": 2018,
+      "unified": true,
+      "color": "#34495E",
+      "order": 1
+    },
+    {
+      "id": "acte-2",
+      "label": "Acte 2 — Blois → Angers",
+      "description": "Le voyage fondateur du projet, 8 étapes en juin 2025.",
+      "year": 2025,
+      "unified": false,
+      "color": [
+        "#2E86AB",
+        "#1F77B4",
+        "#5DADE2",
+        "#9B59B6",
+        "#E74C3C",
+        "#F39C12",
+        "#27AE60",
+        "#16A085",
+        "#34495E"
+      ],
+      "order": 2
+    },
+    {
+      "id": "acte-3",
+      "label": "Acte 3 — Angers → Saint-Brévin",
+      "description": "Bouclage symbolique au Serpent de Huang Yong Ping, mai 2026.",
+      "year": 2026,
+      "unified": false,
+      "color": "fn:byStage",
+      "order": 3
+    },
+    {
+      "id": "micro-aventure",
+      "label": "Micro-aventures",
+      "description": "Boucles locales autour d'Angers.",
+      "unified": false,
+      "color": "#FF7F00",
+      "dashed": true,
+      "order": 4
+    }
+  ]
+}
