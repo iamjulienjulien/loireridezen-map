@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-20T02:40:31.002989+00:00",
+  "updated_at": "2026-05-20T06:09:39.751177+00:00",
   "items": [
     {
       "id": "acte-1_etape-2_boissy-st-culle_etampes",
@@ -193,6 +193,84 @@
       },
       "source": "sources/gpx/acte-1_etape-5_orleans_beaugency.gpx",
       "order": 15,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-3_etape-1_angers_behuard",
+      "label": "Étape 1 Angers ➡️ Behuard",
+      "group": "acte-3",
+      "paths": {
+        "full": "data/traces/acte-3_etape-1_angers_behuard.geojson",
+        "simplified": "data/traces/acte-3_etape-1_angers_behuard_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-3_etape-1_angers_behuard.gpx",
+      "order": 16,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
+      "label": "Étape 2 Behuard ➡️ St-Florent-Le-Vieil",
+      "group": "acte-3",
+      "paths": {
+        "full": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil.geojson",
+        "simplified": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-3_etape-2_behuard_st-florent-le-vieil.gpx",
+      "order": 17,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-3_etape-3_st-florent-le-vieil_ancenis",
+      "label": "Étape 3 St-Florent-Le-Vieil ➡️ Ancenis",
+      "group": "acte-3",
+      "paths": {
+        "full": "data/traces/acte-3_etape-3_st-florent-le-vieil_ancenis.geojson",
+        "simplified": "data/traces/acte-3_etape-3_st-florent-le-vieil_ancenis_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-3_etape-3_st-florent-le-vieil_ancenis.gpx",
+      "order": 18,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-3_etape-4_ancenis_nantes",
+      "label": "Étape 4 Ancenis ➡️ Nantes",
+      "group": "acte-3",
+      "paths": {
+        "full": "data/traces/acte-3_etape-4_ancenis_nantes.geojson",
+        "simplified": "data/traces/acte-3_etape-4_ancenis_nantes_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-3_etape-4_ancenis_nantes.gpx",
+      "order": 19,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-3_etape-5_nantes_paimboeuf",
+      "label": "Étape 5 Nantes ➡️ Paimboeuf",
+      "group": "acte-3",
+      "paths": {
+        "full": "data/traces/acte-3_etape-5_nantes_paimboeuf.geojson",
+        "simplified": "data/traces/acte-3_etape-5_nantes_paimboeuf_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-3_etape-5_nantes_paimboeuf.gpx",
+      "order": 20,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
+      "label": "Étape 6 Paimboeuf ➡️ Saint-Brevin-Les-Pins",
+      "group": "acte-3",
+      "paths": {
+        "full": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.geojson",
+        "simplified": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.gpx",
+      "order": 21,
       "distance_km": null,
       "elevation_gain_m": null
     }

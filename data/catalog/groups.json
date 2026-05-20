@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-19T23:14:19.501271+00:00",
+  "updated_at": "2026-05-20T00:00:00.000000+00:00",
   "items": [
     {
       "id": "acte-1",
@@ -7,17 +7,8 @@
       "description": "Voyage initiatique de 2018, hors compte Instagram.",
       "year": 2018,
       "unified": false,
-      "color": [
-        "#2E86AB",
-        "#1F77B4",
-        "#5DADE2",
-        "#9B59B6",
-        "#E74C3C",
-        "#F39C12",
-        "#27AE60",
-        "#16A085",
-        "#34495E"
-      ],
+      "color": "#a8c8d8",
+      "dashed": false,
       "order": 1
     },
     {
@@ -26,17 +17,8 @@
       "description": "Le voyage fondateur du projet, 8 étapes en juin 2025.",
       "year": 2025,
       "unified": false,
-      "color": [
-        "#2E86AB",
-        "#1F77B4",
-        "#5DADE2",
-        "#9B59B6",
-        "#E74C3C",
-        "#F39C12",
-        "#27AE60",
-        "#16A085",
-        "#34495E"
-      ],
+      "color": "#5a9bb8",
+      "dashed": false,
       "order": 2
     },
     {
@@ -45,7 +27,8 @@
       "description": "Bouclage symbolique au Serpent de Huang Yong Ping, mai 2026.",
       "year": 2026,
       "unified": false,
-      "color": "fn:byStage",
+      "color": "#2e6a8f",
+      "dashed": true,
       "order": 3
     },
     {
@@ -53,8 +36,8 @@
       "label": "Micro-aventures",
       "description": "Boucles locales autour d'Angers.",
       "unified": false,
-      "color": "#FF7F00",
-      "dashed": true,
+      "color": "#c69247",
+      "dashed": false,
       "order": 4
     }
   ]
