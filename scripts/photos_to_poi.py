@@ -415,7 +415,9 @@ def photos_from_local(
 
     files = sorted(
         f for f in photos_dir.rglob("*")
-        if f.is_file() and f.suffix.lower() in PHOTO_EXTENSIONS
+        if f.is_file()
+        and f.suffix.lower() in PHOTO_EXTENSIONS
+        and "inbox" not in f.parts  # skip dossier de transit
     )
     logger.info("%d photo(s) trouvée(s) dans %s", len(files), photos_dir)
 

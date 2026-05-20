@@ -57,6 +57,7 @@ def main():
     count = skipped = 0
     for src in sorted(photos.rglob("*")):
         if src.suffix.lower() not in exts: continue
+        if "inbox" in src.parts: continue  # skip dossier de transit
         rel = src.relative_to(photos)
         out = (thumbs / rel).with_suffix(".webp")
         if args.skip_existing and out.exists():
