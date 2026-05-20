@@ -1,5 +1,5 @@
 pillow>=11
-pillow-heif
+pillow-heif>=0.13
 exifread>=3.5
 gpxpy>=1.6
 shapely>=2.0

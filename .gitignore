@@ -13,9 +13,11 @@ AUDIT-carte-loireridezen-brief.md
 memory/
 development/
 supabase/
-# Photos originales — externalisées sur Supabase Storage (LRZ-QA-10)
-photos/
-sources/
+# Sources locales — non versionnées, sauf inbox pipeline iOS (LRZ-EVO-22)
+sources/*
+!sources/photos/
+sources/photos/*
+!sources/photos/inbox/
 gpx/
 /config.js
 logs/

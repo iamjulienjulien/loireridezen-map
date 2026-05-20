@@ -1,0 +1,52 @@
+name: Process inbox photos
+
+on:
+  push:
+    paths:
+      - "sources/photos/inbox/**"
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Move inbox photos → sources/photos/
+        run: python scripts/process_inbox.py
+
+      - name: Sync photos (thumbs + Supabase Storage + catalog)
+        env:
+          SUPA_URL: ${{ secrets.SUPA_URL }}
+          SUPA_PUBLISHABLE_KEY: ${{ secrets.SUPA_PUBLISHABLE_KEY }}
+          SUPA_SECRET_KEY: ${{ secrets.SUPA_SECRET_KEY }}
+        run: |
+          python scripts/update_data.py \
+            --photos-only \
+            --non-interactive \
+            --yes
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add \
+            data/thumbs/ \
+            data/catalog/photos.json \
+            data/pois/pois_photos.geojson \
+            sources/photos/inbox/
+          git diff --cached --quiet && echo "Rien à commiter." && exit 0
+          git commit -m "data(photos): pipeline inbox iOS [skip ci]"
+          git push

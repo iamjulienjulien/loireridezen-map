@@ -1731,6 +1731,8 @@ def main() -> None:
     parser.add_argument("--all", action="store_true", help="Synchroniser toutes les catégories")
     parser.add_argument("--traces", action="store_true", help="Traces seulement")
     parser.add_argument("--photos", action="store_true", help="Photos seulement")
+    parser.add_argument("--photos-only", action="store_true",
+                        help="Photos uniquement — alias explicite pour CI (équiv. --photos --non-interactive)")
     parser.add_argument("--pois", action="store_true", help="POI seulement")
     parser.add_argument("--add-only", action="store_true", help="Ajouts uniquement (pas de suppression)")
     parser.add_argument("--delete-only", action="store_true", help="Suppressions uniquement (pas d'ajout)")
@@ -1774,7 +1776,7 @@ def main() -> None:
         scan["photos"]["to_add"] or scan["photos"]["to_delete"] or
         scan["pois"]["to_add"]
     )
-    if not has_work and not (args.all or args.traces or args.photos or args.pois):
+    if not has_work and not (args.all or args.traces or args.photos or args.photos_only or args.pois):
         if args.non_interactive:
             console.print("[green]✓ Tout est déjà à jour.[/]")
             log_event("INFO", "system", "done", exit_code=0,
@@ -1783,12 +1785,17 @@ def main() -> None:
             sys.exit(0)
         # Mode interactif : on continue vers le menu (POI + gestion catalog disponibles)
 
+    # --photos-only : alias CI explicite → force photos, désactive traces et POI
+    if args.photos_only:
+        args.photos = True
+        args.non_interactive = True
+
     # --- Déterminer ce qu'on synchronise ---
     if args.all:
         do_traces = do_photos = do_pois = True
     elif args.traces or args.photos or args.pois:
         do_traces = args.traces
-        do_photos = args.photos
+        do_photos = args.photos or args.photos_only
         do_pois = args.pois
     elif args.non_interactive:
         console.print("[dim]Aucun flag de sync fourni. Utiliser --all ou --traces/--photos/--pois.[/]")
