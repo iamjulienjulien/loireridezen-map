@@ -340,6 +340,23 @@
           47.440792
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "21 test prod evo22",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/21-test-prod-evo22.jpeg",
+        "thumb": "data/thumbs/21-test-prod-evo22.webp",
+        "time": "2025:10:05 12:15:32"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.556978,
+          47.466439
+        ]
+      }
     }
   ]
 }
