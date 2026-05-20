@@ -11,7 +11,7 @@ import * as leafletExtraMarkers from "leaflet-extra-markers";
 
 import { map, baseOSM, baseEsriSat, esriLabels } from "./map.js";
 import { traceGroups, loadAllRoutes } from "./routes.js";
-import { POI_TYPES, SHAPES, getGroupColorPreview } from "./types.js";
+import { POI_TYPES, SHAPES, TRACE_MARKER_TYPES, getGroupColorPreview } from "./types.js";
 import { getVisiblePoiCount } from "./poi.js";
 import { triggerLocate } from "./locate.js";
 import { updatePreference, resetPreferences } from "./preferences.js";
@@ -99,18 +99,15 @@ export function renderTracesSection(groups, prefs) {
       </div>`;
   });
 
-  rows.push(`
-    <div class="lrz-row">
-      <div class="lrz-row__visual lrz-row__visual--emoji">🏳️</div>
-      <label class="lrz-row__label">Départs</label>
-      <input type="checkbox" class="lrz-checkbox type-filter" value="départ" ${(prefs.poi?.["départ"] ?? true) ? "checked" : ""} />
-    </div>
-    <div class="lrz-row">
-      <div class="lrz-row__visual lrz-row__visual--emoji">🏁</div>
-      <label class="lrz-row__label">Arrivées</label>
-      <input type="checkbox" class="lrz-checkbox type-filter" value="arrivée" ${(prefs.poi?.["arrivée"] ?? true) ? "checked" : ""} />
-    </div>
-  `);
+  for (const [type, cfg] of Object.entries(TRACE_MARKER_TYPES)) {
+    const isChecked = prefs.traceMarkers?.[type] ?? true;
+    rows.push(`
+      <div class="lrz-row">
+        <div class="lrz-row__visual lrz-row__visual--emoji">${cfg.emoji}</div>
+        <label class="lrz-row__label">${escapeHtml(cfg.labelPlural)}</label>
+        <input type="checkbox" class="lrz-checkbox" data-trace-marker="${escapeHtml(type)}" ${isChecked ? "checked" : ""} />
+      </div>`);
+  }
 
   list.innerHTML = rows.join("");
 }
@@ -133,6 +130,20 @@ export async function wireTraceCheckboxes() {
       if (cb.checked) map.addLayer(fg);
       else map.removeLayer(fg);
       updatePreference(`traces.${cb.dataset.groupId}`, cb.checked);
+    });
+  });
+}
+
+export function wireTraceMarkerCheckboxes(traceMarkersObj, prefs) {
+  document.querySelectorAll("[data-trace-marker]").forEach((cb) => {
+    const type = cb.dataset.traceMarker;
+    const fg = traceMarkersObj[type];
+    if (!fg) return;
+    if (cb.checked) fg.addTo(map);
+    cb.addEventListener("change", () => {
+      if (cb.checked) map.addLayer(fg);
+      else map.removeLayer(fg);
+      updatePreference(`traceMarkers.${type}`, cb.checked);
     });
   });
 }
@@ -160,8 +171,7 @@ export function renderPoiSection(prefs) {
   const list = document.getElementById("poi-list");
   if (!list) return;
 
-  const excluded = new Set(["départ", "arrivée", "photo"]);
-  const types = Object.entries(POI_TYPES).filter(([k]) => !excluded.has(k));
+  const types = Object.entries(POI_TYPES).filter(([k]) => k !== "photo");
 
   const countEl = document.getElementById("poi-count");
   if (countEl) countEl.textContent = `(${types.length})`;

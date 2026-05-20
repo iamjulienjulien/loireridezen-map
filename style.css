@@ -1285,3 +1285,18 @@ body {
   position: relative;
   z-index: 1;
 }
+
+/* ─────────────────────────── LRZ-EVO-18 : Trace emoji markers ─────────── */
+.lrz-trace-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  user-select: none;
+}
+.lrz-trace-emoji--départ,
+.lrz-trace-emoji--arrivée { font-size: 1.25rem; }
+.lrz-trace-emoji--étape   { font-size: 1rem; }
+.lrz-trace-emoji:hover    { transform: scale(1.2); }

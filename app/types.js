@@ -21,13 +21,18 @@ const {
 } = leafletExtraMarkers;
 
 export const POI_TYPES = {
-  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",    defaultChecked: true },
-  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square",  defaultChecked: true },
-  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square",  defaultChecked: true },
-  coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",    defaultChecked: true },
-  départ:      { label: "Départ",       emoji: "🏳️", color: "#27ae60", shape: "diamond", defaultChecked: true },
-  arrivée:     { label: "Arrivée",      emoji: "🏁",  color: "#c0392b", shape: "diamond", defaultChecked: true },
-  photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle",  defaultChecked: true },
+  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",   defaultChecked: true },
+  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: true },
+  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square", defaultChecked: true },
+  coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",   defaultChecked: true },
+  photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle", defaultChecked: true },
+};
+
+/** Types de markers calculés depuis les traces (non POI Supabase). */
+export const TRACE_MARKER_TYPES = {
+  départ:  { label: "Départ",  labelPlural: "Départs",  emoji: "🏳️", size: 28 },
+  étape:   { label: "Étape",   labelPlural: "Étapes",   emoji: "🚴",  size: 24 },
+  arrivée: { label: "Arrivée", labelPlural: "Arrivées", emoji: "🏁",  size: 28 },
 };
 
 /** Mapping nom symbolique → forme leaflet-extra-markers. */

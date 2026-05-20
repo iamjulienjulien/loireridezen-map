@@ -11,11 +11,13 @@
 import { map } from "./app/map.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
+import { buildTraceMarkersFromCatalog, traceMarkers } from "./app/trace-markers.js";
 import {
   renderTracesSection,
   renderPoiSection,
   renderPhotosSection,
   wireTraceCheckboxes,
+  wireTraceMarkerCheckboxes,
   initControls,
   initMobileDrawer,
   initAccordion,
@@ -56,7 +58,10 @@ document.addEventListener("lrz:poi-loaded", removeMiniSkeleton, { once: true });
 async function init() {
   const prefs = loadPreferences();
 
-  const groups = await fetch("data/catalog/groups.json").then((r) => r.json());
+  const [groups, traces] = await Promise.all([
+    fetch("data/catalog/groups.json").then((r) => r.json()),
+    fetch("data/catalog/traces.json").then((r) => r.json()),
+  ]);
 
   renderTracesSection(groups, prefs);
   renderPhotosSection(prefs);
@@ -89,9 +94,12 @@ async function init() {
     createMiniSkeleton("Chargement des traces…");
   });
 
-  // Phase 3 : traces chargées → mettre à jour le mini skeleton
+  // Phase 3 : traces chargées → markers calculés + mini skeleton "lieux"
   wireTraceCheckboxes().then(() => {
     createMiniSkeleton("Chargement des lieux…");
+    buildTraceMarkersFromCatalog(groups, traces).then(() => {
+      wireTraceMarkerCheckboxes(traceMarkers, prefs);
+    });
   });
 }
 
