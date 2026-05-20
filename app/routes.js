@@ -1,91 +1,112 @@
 /**
- * app/routes.js — Traces GPX (trace principale, Acte 1, boucle angevine)
+ * app/routes.js — Chargeur de traces depuis data/catalog/
  *
- * Définit les trois couches de traces avec leur style, et fournit une
- * fonction loadAllRoutes() qui :
- *   - charge les 3 GeoJSON en parallèle (avec fallback simplified → full)
- *   - ajoute à la carte ceux qui ont chargé avec succès
- *   - fitBounds une seule fois sur l'union des layers chargés
+ * Lit groups.json et traces.json en parallèle, crée un GeoJSON layer par item
+ * (ou un seul pour les groupes unified), et expose :
+ *   - traceGroups : Map<groupId, {group, layers}> peuplée après loadAllRoutes()
+ *   - loadAllRoutes() : singleton async — safe à appeler plusieurs fois
  */
 
 import { GeoJSON, FeatureGroup } from "leaflet";
 import { map } from "./map.js";
-import { STAGE_COLORS } from "./types.js";
+import { resolveColor } from "./types.js";
 import { FIT_OPTIONS } from "./config.js";
 
-/** Style par étape (trace principale et Acte 1). */
-const stageStyle = (f) => {
-  const s = f.properties?.stage || 0;
-  return {
-    color: STAGE_COLORS[s % STAGE_COLORS.length],
-    weight: 4,
-    opacity: 0.9,
-  };
-};
+/** Map<groupId, {group, layers: GeoJSON[]}> — peuplée par loadAllRoutes() */
+export const traceGroups = new Map();
 
-export const routeLayer = new GeoJSON(null, { style: stageStyle });
-export const routeLayerActe1 = new GeoJSON(null, { style: stageStyle });
-export const boucleLayer = new GeoJSON(null, {
-  style: () => ({
-    color: "#FF7F00",
-    weight: 4,
-    opacity: 0.9,
-    dashArray: "6,4",
-  }),
-});
+let _promise = null;
 
-/**
- * Charge un GeoJSON dans un layer, avec fallback optionnel sur une seconde URL.
- * Retourne le layer rempli, ou null en cas d'échec.
- */
-async function loadGeoJsonInto(layer, primaryUrl, fallbackUrl = null) {
+async function _fetchGeoJson(primaryUrl, fallbackUrl = null) {
   try {
     let res = await fetch(primaryUrl);
-    if (!res.ok && fallbackUrl) {
-      res = await fetch(fallbackUrl);
-    }
+    if (!res.ok && fallbackUrl) res = await fetch(fallbackUrl);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    layer.addData(data);
-    return layer;
+    return await res.json();
   } catch (err) {
-    console.warn(`[loireridezen] route load failed: ${primaryUrl}`, err);
+    console.warn(`[loireridezen] trace load failed: ${primaryUrl}`, err);
     return null;
   }
 }
 
-/**
- * Charge toutes les routes en parallèle, ajoute à la carte celles qui
- * ont chargé avec succès, puis fitBounds une seule fois sur l'union.
- */
-export async function loadAllRoutes() {
-  const results = await Promise.all([
-    loadGeoJsonInto(
-      routeLayer,
-      "data/route_simplified.geojson",
-      "data/route.geojson",
-    ),
-    loadGeoJsonInto(
-      routeLayerActe1,
-      "data/route-acte1_simplified.geojson",
-      "data/route-acte1.geojson",
-    ),
-    loadGeoJsonInto(boucleLayer, "data/route_boucle_angevine.geojson"),
-  ]);
-
-  // Ajouter à la carte les layers chargés avec succès
-  results.forEach((layer) => {
-    if (layer) layer.addTo(map);
+function _layerStyle(group, item, featureIndex) {
+  const base = {
+    weight: 4,
+    opacity: 0.9,
+    ...(group.dashed ? { dashArray: "6,4" } : {}),
+  };
+  return (feature) => ({
+    ...base,
+    color: resolveColor(group.color, { feature, item, group, featureIndex }),
   });
+}
 
-  // FitBounds unique sur l'union (évite les écrasements en cascade)
-  const loaded = results.filter(Boolean);
-  if (loaded.length > 0) {
+async function _doLoad() {
+  let groupsCatalog, tracesCatalog;
+  try {
+    [groupsCatalog, tracesCatalog] = await Promise.all([
+      fetch("data/catalog/groups.json").then((r) => r.json()),
+      fetch("data/catalog/traces.json").then((r) => r.json()),
+    ]);
+  } catch (err) {
+    console.warn("[loireridezen] catalog load failed", err);
+    return;
+  }
+
+  const groups = (groupsCatalog.items ?? []).sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
+  const allItems = tracesCatalog.items ?? [];
+  const allLayers = [];
+
+  for (const group of groups) {
+    const items = allItems
+      .filter((it) => it.group === group.id)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    if (!items.length) continue;
+
+    const layers = [];
+
+    if (group.unified) {
+      const item = items[0];
+      const url = item.paths?.full;
+      if (!url) continue;
+      const data = await _fetchGeoJson(url);
+      if (!data) continue;
+      layers.push(new GeoJSON(data, { style: _layerStyle(group, item, 0) }));
+    } else {
+      const loaded = await Promise.all(
+        items.map(async (item) => {
+          const primary = item.paths?.simplified ?? item.paths?.full;
+          const fallback = item.paths?.simplified ? item.paths?.full : null;
+          if (!primary) return null;
+          const data = await _fetchGeoJson(primary, fallback);
+          if (!data) return null;
+          const featureIndex = (item.order ?? 1) - 1;
+          return new GeoJSON(data, { style: _layerStyle(group, item, featureIndex) });
+        }),
+      );
+      layers.push(...loaded.filter(Boolean));
+    }
+
+    if (layers.length) {
+      traceGroups.set(group.id, { group, layers });
+      allLayers.push(...layers);
+    }
+  }
+
+  if (allLayers.length) {
     try {
-      const group = new FeatureGroup(loaded);
-      map.fitBounds(group.getBounds(), FIT_OPTIONS);
+      map.fitBounds(new FeatureGroup(allLayers).getBounds(), FIT_OPTIONS);
     } catch (err) {
       console.warn("[loireridezen] fitBounds failed:", err);
     }
   }
+}
+
+/** Charge toutes les traces depuis le catalog. Singleton : safe à appeler plusieurs fois. */
+export function loadAllRoutes() {
+  if (!_promise) _promise = _doLoad();
+  return _promise;
 }

@@ -11,10 +11,10 @@
  * connaît pas la logique métier, juste le rendu et les interactions UI.
  */
 
-import { Control } from "leaflet";
+import { Control, FeatureGroup } from "leaflet";
 
 import { map, baseOSM, baseEsriSat, esriLabels } from "./map.js";
-import { routeLayer, routeLayerActe1, boucleLayer } from "./routes.js";
+import { traceGroups, loadAllRoutes } from "./routes.js";
 import { cluster } from "./poi.js";
 import { POI_TYPES } from "./types.js";
 import { escapeHtml } from "./helpers.js";
@@ -87,18 +87,13 @@ export function initMobileDrawer() {
 
 // ───────────────────────────────────────────────── Layer control
 
-export function initLayerControl() {
+export async function initLayerControl() {
   const baseMaps = {
     "Plan (OSM)": baseOSM,
     "Satellite (Esri)": baseEsriSat,
   };
-  const overlays = {
-    "Trace principale": routeLayer,
-    "Acte 1": routeLayerActe1,
-    "Boucle Angevine": boucleLayer,
-    "Points d'intérêt": cluster,
-  };
-  new Control.Layers(baseMaps, overlays, { collapsed: false }).addTo(map);
+
+  const control = new Control.Layers(baseMaps, {}, { collapsed: false }).addTo(map);
 
   // Synchroniser les labels Esri avec le fond + persister le choix
   map.on("baselayerchange", (e) => {
@@ -110,4 +105,16 @@ export function initLayerControl() {
       localStorage.setItem("baseLayer", "osm");
     }
   });
+
+  // Attendre que les traces soient chargées (singleton : pas de double fetch)
+  await loadAllRoutes();
+
+  for (const [groupId, { group, layers }] of traceGroups) {
+    const fg = new FeatureGroup(layers);
+    const visible = group.visible_by_default ?? groupId !== "acte-1";
+    if (visible) fg.addTo(map);
+    control.addOverlay(fg, group.label);
+  }
+
+  control.addOverlay(cluster, "Points d'intérêt");
 }

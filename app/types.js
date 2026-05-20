@@ -43,3 +43,30 @@ export const STAGE_COLORS = [
   "#2E86AB", "#1F77B4", "#5DADE2", "#9B59B6", "#E74C3C",
   "#F39C12", "#27AE60", "#16A085", "#34495E",
 ];
+
+export const COLOR_FNS = {
+  byStage: (feature, item, group) => {
+    const s = feature.properties?.stage ?? 0;
+    return STAGE_COLORS[s % STAGE_COLORS.length];
+  },
+  byOrder: (feature, item, group) => {
+    const o = (item?.order ?? 1) - 1;
+    return STAGE_COLORS[o % STAGE_COLORS.length];
+  },
+};
+
+export function resolveColor(colorSpec, context = {}) {
+  if (!colorSpec) return STAGE_COLORS[0];
+  if (typeof colorSpec === "string") {
+    if (colorSpec.startsWith("fn:")) {
+      const fn = COLOR_FNS[colorSpec.slice(3)];
+      return fn ? fn(context.feature, context.item, context.group) : STAGE_COLORS[0];
+    }
+    return colorSpec;
+  }
+  if (Array.isArray(colorSpec)) {
+    const idx = context.featureIndex ?? 0;
+    return colorSpec[idx % colorSpec.length];
+  }
+  return STAGE_COLORS[0];
+}
