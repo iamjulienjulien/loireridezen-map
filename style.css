@@ -739,10 +739,19 @@ body {
   cursor: pointer;
   color: var(--lrz-ink-soft);
   padding: 0;
-  font-size: 0.75rem;
+  font-size: 1.125rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
   flex-shrink: 0;
   line-height: 1;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.15s;
+}
+.lrz-section__toggle:hover {
+  background: var(--lrz-card-hover, rgba(0,0,0,0.05));
 }
 
 .lrz-section[data-collapsed="true"] .lrz-section__toggle {
@@ -757,6 +766,9 @@ body {
 
 .lrz-section[data-collapsed="true"] .lrz-section__body {
   max-height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 /* ─────────────────────────────────────── Rows */
@@ -856,6 +868,21 @@ body {
   flex-wrap: wrap;
 }
 
+.lrz-btn-group {
+  display: flex;
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lrz-btn-group .lrz-ctrl-btn {
+  border: none;
+  border-radius: 0;
+}
+.lrz-btn-group .lrz-ctrl-btn + .lrz-ctrl-btn {
+  border-left: 1px solid var(--lrz-tuffeau-line);
+}
+
 .lrz-ctrl-btn {
   width: 32px;
   height: 32px;
@@ -888,7 +915,7 @@ body {
 
 .lrz-segmented__opt {
   padding: 0.25rem 0.625rem;
-  font-size: 0.75rem;
+  font-size: 1.125rem;
   font-family: var(--lrz-font-sans);
   border: none;
   background: transparent;

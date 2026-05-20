@@ -86,13 +86,15 @@
           <button class="lrz-section__toggle" aria-expanded="true">▾</button>
         </header>
         <div class="lrz-section__body lrz-controls">
-          <button class="lrz-ctrl-btn" id="ctrl-zoom-in" title="Zoom avant">+</button>
-          <button class="lrz-ctrl-btn" id="ctrl-zoom-out" title="Zoom arrière">−</button>
+          <div class="lrz-btn-group">
+            <button class="lrz-ctrl-btn" id="ctrl-zoom-in" title="Zoom avant">+</button>
+            <button class="lrz-ctrl-btn" id="ctrl-zoom-out" title="Zoom arrière">−</button>
+          </div>
           <button class="lrz-ctrl-btn" id="ctrl-locate" title="Localiser ma position"><span style="font-size:1.125rem">📍</span></button>
           <button class="lrz-ctrl-btn" id="ctrl-fit" title="Recentrer sur les traces"><span style="font-size:1.125rem">🧭</span></button>
           <div class="lrz-segmented" role="group" aria-label="Type de carte">
-            <button class="lrz-segmented__opt is-active" data-basemap="osm">Plan</button>
-            <button class="lrz-segmented__opt" data-basemap="sat">Satellite</button>
+            <button class="lrz-segmented__opt is-active" data-basemap="osm" title="Plan">🗺️</button>
+            <button class="lrz-segmented__opt" data-basemap="sat" title="Satellite">🛰️</button>
           </div>
         </div>
         <div class="lrz-row lrz-row--position">

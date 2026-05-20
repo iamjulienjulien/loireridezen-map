@@ -90,7 +90,7 @@ export function renderTracesSection(groups, prefs) {
     const preview = getGroupColorPreview(group);
     const style = colorPreviewStyle(preview);
     const isChecked =
-      prefs.traces?.[group.id] ?? (group.visible_by_default ?? group.id !== "acte-1");
+      prefs.traces?.[group.id] ?? (group.visible_by_default ?? true);
     return `
       <div class="lrz-row">
         <div class="lrz-row__visual" style="${style}"></div>

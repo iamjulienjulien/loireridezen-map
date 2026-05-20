@@ -21,10 +21,10 @@ const {
 } = leafletExtraMarkers;
 
 export const POI_TYPES = {
-  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",   defaultChecked: true },
-  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: true },
-  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square", defaultChecked: true },
   coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",   defaultChecked: true },
+  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",   defaultChecked: false },
+  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: false },
+  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square", defaultChecked: false },
   photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle", defaultChecked: true },
 };
 
