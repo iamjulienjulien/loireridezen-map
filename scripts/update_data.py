@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -80,6 +81,7 @@ LOG_DIR_DEFAULT = REPO_ROOT / "logs" / "update_data"
 
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
 KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure"]
+DEFAULT_GROUP_ID = "acte-3"
 
 console = Console()
 
@@ -337,12 +339,47 @@ def _humanize(stem: str) -> str:
     return stem.replace("-", " ").replace("_", " ").title()
 
 
-def prompt_trace_meta(gpx_path: Path, non_interactive: bool) -> dict:
+def _clean(s: str) -> str:
+    """Remove known group prefixes and numeric step markers, then title-case."""
+    s = re.sub(r"^(acte-\d+|micro-aventure)[_-]", "", s, flags=re.IGNORECASE)
+    # etape-N or etape_N → keep "Étape N " prefix
+    m = re.match(r"etape[_-](\d+)[_-]?(.*)", s, re.IGNORECASE)
+    if m:
+        step = m.group(1)
+        # Split on underscore only: dashes stay inside place names (e.g. boissy-st-culle)
+        rest_parts = [p.title() for p in m.group(2).strip().split("_") if p]
+        if len(rest_parts) == 2:
+            rest = f"{rest_parts[0]} ➡️ {rest_parts[1]}"
+        else:
+            rest = " ".join(rest_parts)
+        return f"Étape {step} {rest}".strip() if rest else f"Étape {step}"
+    # Underscore-separated → distinct place names (A ➡️ B); dash → compound word
+    if "_" in s and "-" not in s:
+        parts = [p.title() for p in s.split("_") if p]
+        if len(parts) == 2:
+            return f"{parts[0]} ➡️ {parts[1]}"
+        return " ".join(parts)
+    parts = re.split(r"[_-]", s)
+    return " ".join(p.title() for p in parts if p)
+
+
+def build_trace_defaults(gpx_path: Path) -> dict:
     stem = gpx_path.stem
-    defaults = {"label": _humanize(stem), "group": "acte-2", "description": ""}
+    group_id = DEFAULT_GROUP_ID
+    for g in KNOWN_GROUPS:
+        if stem.lower().startswith(g + "_") or stem.lower().startswith(g + "-"):
+            group_id = g
+            break
+    label = _clean(stem)
+    return {"label": label, "group": group_id, "description": ""}
+
+
+def prompt_trace_meta(gpx_path: Path, non_interactive: bool) -> dict:
+    defaults = build_trace_defaults(gpx_path)
     if non_interactive:
         return defaults
 
+    stem = gpx_path.stem
     label = questionary.text(f"Label pour '{stem}' :", default=defaults["label"]).ask()
     group = questionary.select(
         "Groupe :", choices=KNOWN_GROUPS, default=defaults["group"]

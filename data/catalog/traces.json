@@ -1,133 +1,198 @@
 {
-  "updated_at": "2026-05-20T01:18:41.123939+00:00",
+  "updated_at": "2026-05-20T02:40:31.002989+00:00",
   "items": [
     {
+      "id": "acte-1_etape-2_boissy-st-culle_etampes",
+      "label": "Étape 2 Boissy-St-Culle ➡️ Etampes",
+      "group": "acte-1",
+      "paths": {
+        "full": "data/traces/acte-1_etape-2_boissy-st-culle_etampes.geojson",
+        "simplified": "data/traces/acte-1_etape-2_boissy-st-culle_etampes_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-1_etape-2_boissy-st-culle_etampes.gpx",
+      "order": 1,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-1_etape-3_etampes_artenay",
+      "label": "Étape 3 Etampes ➡️ Artenay",
+      "group": "acte-1",
+      "paths": {
+        "full": "data/traces/acte-1_etape-3_etampes_artenay.geojson",
+        "simplified": "data/traces/acte-1_etape-3_etampes_artenay_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-1_etape-3_etampes_artenay.gpx",
+      "order": 2,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-1_etape-6_beaugency_blois",
+      "label": "Étape 6 Beaugency ➡️ Blois",
+      "group": "acte-1",
+      "paths": {
+        "full": "data/traces/acte-1_etape-6_beaugency_blois.geojson",
+        "simplified": "data/traces/acte-1_etape-6_beaugency_blois_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-1_etape-6_beaugency_blois.gpx",
+      "order": 3,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
       "id": "acte-2_etape-0_blois_chambord",
-      "label": "Acte 2 Etape 0 Blois Chambord",
+      "label": "Étape 0 Blois ➡️ Chambord",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-0_blois_chambord.geojson",
         "simplified": "data/traces/acte-2_etape-0_blois_chambord_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-0_blois_chambord.gpx",
-      "order": 1,
+      "order": 4,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
-      "id": "acte-2_etape-1_blois-amboise",
-      "label": "Acte 2 Etape 1 Blois Amboise",
+      "id": "acte-2_etape-1_blois_amboise",
+      "label": "Étape 1 Blois ➡️ Amboise",
       "group": "acte-2",
       "paths": {
-        "full": "data/traces/acte-2_etape-1_blois-amboise.geojson",
-        "simplified": "data/traces/acte-2_etape-1_blois-amboise_simplified.geojson"
+        "full": "data/traces/acte-2_etape-1_blois_amboise.geojson",
+        "simplified": "data/traces/acte-2_etape-1_blois_amboise_simplified.geojson"
       },
-      "source": "sources/gpx/acte-2_etape-1_blois-amboise.gpx",
-      "order": 2,
-      "distance_km": null,
-      "elevation_gain_m": null
-    },
-    {
-      "id": "acte-2_etape-2_amboise-chenonceaux",
-      "label": "Acte 2 Etape 2 Amboise Chenonceaux",
-      "group": "acte-2",
-      "paths": {
-        "full": "data/traces/acte-2_etape-2_amboise-chenonceaux.geojson",
-        "simplified": "data/traces/acte-2_etape-2_amboise-chenonceaux_simplified.geojson"
-      },
-      "source": "sources/gpx/acte-2_etape-2_amboise-chenonceaux.gpx",
-      "order": 3,
-      "distance_km": null,
-      "elevation_gain_m": null
-    },
-    {
-      "id": "acte-2_etape-4_tours-villandry",
-      "label": "Acte 2 Etape 4 Tours Villandry",
-      "group": "acte-2",
-      "paths": {
-        "full": "data/traces/acte-2_etape-4_tours-villandry.geojson",
-        "simplified": "data/traces/acte-2_etape-4_tours-villandry_simplified.geojson"
-      },
-      "source": "sources/gpx/acte-2_etape-4_tours-villandry.gpx",
+      "source": "sources/gpx/acte-2_etape-1_blois_amboise.gpx",
       "order": 5,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
-      "id": "acte-2_etape-5_villandry-chinon",
-      "label": "Acte 2 Etape 5 Villandry Chinon",
+      "id": "acte-2_etape-2_amboise_chenonceaux",
+      "label": "Étape 2 Amboise ➡️ Chenonceaux",
       "group": "acte-2",
       "paths": {
-        "full": "data/traces/acte-2_etape-5_villandry-chinon.geojson",
-        "simplified": "data/traces/acte-2_etape-5_villandry-chinon_simplified.geojson"
+        "full": "data/traces/acte-2_etape-2_amboise_chenonceaux.geojson",
+        "simplified": "data/traces/acte-2_etape-2_amboise_chenonceaux_simplified.geojson"
       },
-      "source": "sources/gpx/acte-2_etape-5_villandry-chinon.gpx",
+      "source": "sources/gpx/acte-2_etape-2_amboise_chenonceaux.gpx",
       "order": 6,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
-      "id": "acte-2_etape-6_chinon-montsoreaux",
-      "label": "Acte 2 Etape 6 Chinon Montsoreaux",
+      "id": "acte-2_etape-3_chenonceaux_tours",
+      "label": "Étape 3 Chenonceaux ➡️ Tours",
       "group": "acte-2",
       "paths": {
-        "full": "data/traces/acte-2_etape-6_chinon-montsoreaux.geojson",
-        "simplified": "data/traces/acte-2_etape-6_chinon-montsoreaux_simplified.geojson"
+        "full": "data/traces/acte-2_etape-3_chenonceaux_tours.geojson",
+        "simplified": "data/traces/acte-2_etape-3_chenonceaux_tours_simplified.geojson"
       },
-      "source": "sources/gpx/acte-2_etape-6_chinon-montsoreaux.gpx",
+      "source": "sources/gpx/acte-2_etape-3_chenonceaux_tours.gpx",
       "order": 7,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
-      "id": "acte-2_etape-7_montsoreau-saumur",
-      "label": "Acte 2 Etape 7 Montsoreau Saumur",
+      "id": "acte-2_etape-4_tours_villandry",
+      "label": "Étape 4 Tours ➡️ Villandry",
       "group": "acte-2",
       "paths": {
-        "full": "data/traces/acte-2_etape-7_montsoreau-saumur.geojson",
-        "simplified": "data/traces/acte-2_etape-7_montsoreau-saumur_simplified.geojson"
+        "full": "data/traces/acte-2_etape-4_tours_villandry.geojson",
+        "simplified": "data/traces/acte-2_etape-4_tours_villandry_simplified.geojson"
       },
-      "source": "sources/gpx/acte-2_etape-7_montsoreau-saumur.gpx",
+      "source": "sources/gpx/acte-2_etape-4_tours_villandry.gpx",
       "order": 8,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
-      "id": "acte-2_etape-8_saumur-angers",
-      "label": "Acte 2 Etape 8 Saumur Angers",
+      "id": "acte-2_etape-5_villandry_chinon",
+      "label": "Étape 5 Villandry ➡️ Chinon",
       "group": "acte-2",
       "paths": {
-        "full": "data/traces/acte-2_etape-8_saumur-angers.geojson",
-        "simplified": "data/traces/acte-2_etape-8_saumur-angers_simplified.geojson"
+        "full": "data/traces/acte-2_etape-5_villandry_chinon.geojson",
+        "simplified": "data/traces/acte-2_etape-5_villandry_chinon_simplified.geojson"
       },
-      "source": "sources/gpx/acte-2_etape-8_saumur-angers.gpx",
+      "source": "sources/gpx/acte-2_etape-5_villandry_chinon.gpx",
       "order": 9,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
-      "id": "acte-2_etape-3_chenonceaux-tours",
-      "label": "Acte 2 Etape 3 Chenonceaux Tours",
+      "id": "acte-2_etape-6_chinon_montsoreaux",
+      "label": "Étape 6 Chinon ➡️ Montsoreaux",
       "group": "acte-2",
       "paths": {
-        "full": "data/traces/acte-2_etape-3_chenonceaux-tours.geojson",
-        "simplified": "data/traces/acte-2_etape-3_chenonceaux-tours_simplified.geojson"
+        "full": "data/traces/acte-2_etape-6_chinon_montsoreaux.geojson",
+        "simplified": "data/traces/acte-2_etape-6_chinon_montsoreaux_simplified.geojson"
       },
-      "source": "sources/gpx/acte-2_etape-3_chenonceaux-tours.gpx",
-      "order": 9,
+      "source": "sources/gpx/acte-2_etape-6_chinon_montsoreaux.gpx",
+      "order": 10,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-2_etape-7_montsoreau_saumur",
+      "label": "Étape 7 Montsoreau ➡️ Saumur",
+      "group": "acte-2",
+      "paths": {
+        "full": "data/traces/acte-2_etape-7_montsoreau_saumur.geojson",
+        "simplified": "data/traces/acte-2_etape-7_montsoreau_saumur_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-2_etape-7_montsoreau_saumur.gpx",
+      "order": 11,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-2_etape-8_saumur_angers",
+      "label": "Étape 8 Saumur ➡️ Angers",
+      "group": "acte-2",
+      "paths": {
+        "full": "data/traces/acte-2_etape-8_saumur_angers.geojson",
+        "simplified": "data/traces/acte-2_etape-8_saumur_angers_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-2_etape-8_saumur_angers.gpx",
+      "order": 12,
       "distance_km": null,
       "elevation_gain_m": null
     },
     {
       "id": "micro-aventure_boucle-angevine",
-      "label": "Micro Aventure Boucle Angevine",
+      "label": "Boucle Angevine",
       "group": "micro-aventure",
       "paths": {
         "full": "data/traces/micro-aventure_boucle-angevine.geojson",
         "simplified": "data/traces/micro-aventure_boucle-angevine_simplified.geojson"
       },
       "source": "sources/gpx/micro-aventure_boucle-angevine.gpx",
-      "order": 10,
+      "order": 13,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-1_etape-4_artenay_orleans",
+      "label": "Étape 4 Artenay ➡️ Orleans",
+      "group": "acte-1",
+      "paths": {
+        "full": "data/traces/acte-1_etape-4_artenay_orleans.geojson",
+        "simplified": "data/traces/acte-1_etape-4_artenay_orleans_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-1_etape-4_artenay_orleans.gpx",
+      "order": 14,
+      "distance_km": null,
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-1_etape-5_orleans_beaugency",
+      "label": "Étape 5 Orleans ➡️ Beaugency",
+      "group": "acte-1",
+      "paths": {
+        "full": "data/traces/acte-1_etape-5_orleans_beaugency.geojson",
+        "simplified": "data/traces/acte-1_etape-5_orleans_beaugency_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-1_etape-5_orleans_beaugency.gpx",
+      "order": 15,
       "distance_km": null,
       "elevation_gain_m": null
     }

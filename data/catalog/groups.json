@@ -6,8 +6,18 @@
       "label": "Acte 1 — Paris → Blois",
       "description": "Voyage initiatique de 2018, hors compte Instagram.",
       "year": 2018,
-      "unified": true,
-      "color": "#34495E",
+      "unified": false,
+      "color": [
+        "#2E86AB",
+        "#1F77B4",
+        "#5DADE2",
+        "#9B59B6",
+        "#E74C3C",
+        "#F39C12",
+        "#27AE60",
+        "#16A085",
+        "#34495E"
+      ],
       "order": 1
     },
     {
