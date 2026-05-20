@@ -21,7 +21,7 @@ export const map = new Map("map", {
 
 export const baseOSM = new TileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  { attribution: "&copy; OpenStreetMap contributors" },
+  { attribution: "&copy; OpenStreetMap contributors · <span style='color:#c69247'>Loire Ride Zen</span>" },
 );
 
 export const baseEsriSat = new TileLayer(

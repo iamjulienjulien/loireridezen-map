@@ -11,6 +11,7 @@
  *   4. Premier chargement des POI + branchement des listeners viewport
  */
 
+import { map } from "./app/map.js";
 import { loadAllRoutes } from "./app/routes.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import {
@@ -19,12 +20,14 @@ import {
   initMobileDrawer,
   initLayerControl,
 } from "./app/ui.js";
+import { initLocateControl } from "./app/locate.js";
 
 function init() {
   renderFilters();
   renderLegend();
   initMobileDrawer();
   initLayerControl();
+  initLocateControl(map);
 
   // Traces GPX : fire-and-forget (fitBounds géré en interne)
   loadAllRoutes();
@@ -32,6 +35,13 @@ function init() {
   // POI : premier chargement + listeners "moveend" / filtres
   bindViewportListeners();
   loadPoisForViewport();
+
+  // Retirer le skeleton dès que la carte est prête
+  const loadingEl = document.getElementById("lrz-loading");
+  if (loadingEl) {
+    loadingEl.classList.add("lrz-loading--hidden");
+    setTimeout(() => loadingEl.remove(), 400);
+  }
 }
 
 init();
