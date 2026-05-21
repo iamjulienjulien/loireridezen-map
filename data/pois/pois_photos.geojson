@@ -360,6 +360,24 @@
           47.440792
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "21 test",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/21-test.jpeg",
+        "thumb": "data/thumbs/21-test.webp",
+        "time": "2026:05:19 20:51:51",
+        "id": "21-test"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.556992,
+          47.466442
+        ]
+      }
     }
   ]
 }
