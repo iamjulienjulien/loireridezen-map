@@ -1255,6 +1255,7 @@ body {
 /* ─────────────────────────────────────── Chantier 8 : Mini skeleton */
 
 .lrz-loading-mini {
+  display: none;
   position: fixed;
   bottom: 1rem;
   left: 50%;
@@ -2128,7 +2129,7 @@ body {
 .lrz-bisou-toast {
   position: fixed;
   right: 16px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 148px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 128px);
   z-index: 9998;
   background: rgba(255, 248, 250, 0.97);
   color: #cc4488;
