@@ -4,13 +4,6 @@
   "count": 36,
   "items": [
     {
-      "id": "a819386b-2895-425a-a690-4a1a2d99484a",
-      "label": "Arrivée — Étape 0 - Blois ↔️ Chambord",
-      "type": "arrivée",
-      "group": "acte-2",
-      "stage": 0
-    },
-    {
       "id": "f83db4f7-960a-4b90-8614-c6f121e59bab",
       "label": "Camping municipal de lîle dOr",
       "type": "hébergement",
