@@ -12,6 +12,7 @@
  */
 
 import { map } from "./map.js";
+import { centerOnStep, openStepPopup } from "./routes.js";
 import { formatRelativeTime, formatDateFr } from "./time-format.js";
 import { escapeHtml } from "./helpers.js";
 
@@ -59,7 +60,7 @@ function renderStepBlock(info) {
     : "lrz-info-block__badge--next";
   const date = trace.date ? formatDateFr(trace.date) : "";
   return `
-    <div class="lrz-info-block lrz-info-block--step">
+    <div class="lrz-info-block lrz-info-block--step" role="button" tabindex="0" title="Centrer sur cette étape">
       <div class="lrz-info-block__icon">🛤️</div>
       <div class="lrz-info-block__body">
         <span class="lrz-info-block__badge ${badgeClass}">${badge}</span>
@@ -91,6 +92,21 @@ function _render() {
     posBlock?.addEventListener("click", flyTo);
     posBlock?.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") flyTo();
+    });
+  }
+
+  if (_stepInfo) {
+    const stepId = _stepInfo.trace.id;
+    const stepBlock = container.querySelector(".lrz-info-block--step");
+    stepBlock?.addEventListener("click", () => {
+      centerOnStep(stepId);
+      setTimeout(() => openStepPopup(stepId), 500);
+    });
+    stepBlock?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        centerOnStep(stepId);
+        setTimeout(() => openStepPopup(stepId), 500);
+      }
     });
   }
 }

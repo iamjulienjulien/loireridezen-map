@@ -1837,3 +1837,126 @@ body {
   color: #e65100;
 }
 
+/* ═══════════════════════════════ LRZ-EVO-32 — Vague UI 7 ═══════════════════ */
+
+/* ─── Header panel : 3 boutons liens externes ─── */
+
+.lrz-panel-header {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.75rem 0.875rem;
+  border-top: 1px solid var(--lrz-tuffeau-line);
+}
+
+.lrz-panel-header__link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.25rem;
+  background: var(--lrz-background);
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--lrz-foreground);
+  font-size: 0.75rem;
+  font-family: var(--lrz-font-sans);
+  transition: background 0.15s, border-color 0.15s;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.lrz-panel-header__link:hover {
+  background: rgba(198, 146, 71, 0.08);
+  border-color: var(--lrz-or);
+}
+
+.lrz-panel-header__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.lrz-panel-header__label {
+  color: var(--lrz-ink-soft);
+  font-size: 0.7rem;
+}
+
+/* ─── Météo dans le popup d'étape ─── */
+
+.lrz-step-popup__weather {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--lrz-foreground);
+  margin: 0.25rem 0;
+}
+
+.lrz-step-popup__weather-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.lrz-step-popup__weather-temp {
+  color: var(--lrz-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Actions popup d'étape (Instagram / Komoot) ─── */
+
+.lrz-step-popup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.625rem;
+}
+
+.lrz-step-popup__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: var(--lrz-font-sans);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.lrz-step-popup__btn:hover {
+  opacity: 0.85;
+}
+
+.lrz-step-popup__btn--insta {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
+  color: #fff;
+}
+
+.lrz-step-popup__btn--komoot {
+  background: #5090b5;
+  color: #fff;
+}
+
+.lrz-step-popup__btn--center {
+  background: var(--lrz-card);
+  border: 1px solid var(--lrz-tuffeau-line);
+  color: var(--lrz-foreground);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.6rem;
+}
+
+/* Bloc étape cliquable */
+.lrz-info-block--step {
+  cursor: pointer;
+}
+
+.lrz-info-block--step:hover,
+.lrz-info-block--step:focus-visible {
+  background: var(--lrz-card-hover);
+  outline: none;
+}
+

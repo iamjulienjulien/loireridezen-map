@@ -107,6 +107,7 @@ _POI_VALID_TYPES: tuple[str, ...] = (
     "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement"
 )
 _INSTA_RE = re.compile(r"^https?://(www\.)?instagram\.com/.+")
+_KOMOOT_RE = re.compile(r"^https?://(www\.)?komoot\.(com|de)/tour/\d+")
 
 
 def parse_duration(s: str) -> float | None:
@@ -1497,6 +1498,8 @@ def _show_trace_panel(item: dict, title: str = "Trace") -> None:
         f"[dim]distance:[/]       {dist}",
         f"[dim]dénivelé:[/]       {elev}",
         f"[dim]météo:[/]          {format_weather(item.get('weather'))}",
+        f"[dim]instagram_url:[/]  {item.get('instagram_url') or '—'}",
+        f"[dim]komoot_url:[/]     {item.get('komoot_url') or '—'}",
     ]
     console.print(Panel("\n".join(lines), title=title, border_style="cyan"))
 
@@ -1758,6 +1761,8 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
                 questionary.Choice("☀️  Météo", value="weather"),
                 questionary.Choice("🔄 Recalculer stats GPX", value="gpx_stats"),
                 questionary.Choice("🗺️  Régénérer le GeoJSON depuis le GPX", value="regen_geojson"),
+                questionary.Choice("📷 Lien Instagram", value="instagram_url"),
+                questionary.Choice("🌍 Lien Komoot", value="komoot_url"),
                 questionary.Separator(),
                 questionary.Choice("🗑️  Supprimer cette trace", value="delete"),
                 questionary.Choice("← Retour", value="back"),
@@ -1866,6 +1871,38 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
         elif action == "regen_geojson":
             if _regenerate_trace_geojson(item):
                 save_catalog(catalog_path, items)
+
+        elif action == "instagram_url":
+            current = item.get("instagram_url") or ""
+            val = questionary.text("URL Instagram (vide pour effacer) :", default=current).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped and not _INSTA_RE.match(stripped):
+                    console.print("[yellow]⚠ URL invalide — doit commencer par https://www.instagram.com/[/]")
+                else:
+                    old = item.get("instagram_url")
+                    item["instagram_url"] = stripped or None
+                    save_catalog(catalog_path, items)
+                    log_event("INFO", "traces", "item_updated",
+                              id=item["id"], field="instagram_url",
+                              old=old, new=item["instagram_url"])
+                    console.print("[green]✓ Lien Instagram mis à jour[/]")
+
+        elif action == "komoot_url":
+            current = item.get("komoot_url") or ""
+            val = questionary.text("URL Komoot (vide pour effacer) :", default=current).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped and not _KOMOOT_RE.match(stripped):
+                    console.print("[yellow]⚠ URL invalide — doit matcher https://www.komoot.com/tour/XXXXXXX[/]")
+                else:
+                    old = item.get("komoot_url")
+                    item["komoot_url"] = stripped or None
+                    save_catalog(catalog_path, items)
+                    log_event("INFO", "traces", "item_updated",
+                              id=item["id"], field="komoot_url",
+                              old=old, new=item["komoot_url"])
+                    console.print("[green]✓ Lien Komoot mis à jour[/]")
 
         elif action == "delete":
             label_display = item.get("label", item["id"])

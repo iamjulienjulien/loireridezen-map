@@ -16,7 +16,11 @@ import { renderStepPopup } from "./step-popup.js";
 /** Map<groupId, {group, layers: GeoJSON[]}> — peuplée par loadAllRoutes() */
 export const traceGroups = new Map();
 
+/** Map<stepId, GeoJSON> — pour center-on-step et openStepPopup */
+const _stepLayersById = new Map();
+
 let _promise = null;
+let _centerListenerAdded = false;
 
 async function _fetchGeoJson(primaryUrl, fallbackUrl = null) {
   try {
@@ -42,23 +46,54 @@ function _layerStyle(group, item, featureIndex) {
   });
 }
 
-async function _doLoad() {
-  let groupsCatalog, tracesCatalog;
+async function _safeFetchJSON(url) {
   try {
-    [groupsCatalog, tracesCatalog] = await Promise.all([
+    const r = await fetch(url);
+    return r.ok ? r.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+function _photosInBounds(photos, bounds) {
+  return photos.filter((f) => {
+    const [lon, lat] = f.geometry?.coordinates ?? [];
+    return lon != null && bounds.contains([lat, lon]);
+  }).length;
+}
+
+async function _doLoad() {
+  let groupsCatalog, tracesCatalog, photosFC;
+  try {
+    [groupsCatalog, tracesCatalog, photosFC] = await Promise.all([
       fetch("data/catalog/groups.json").then((r) => r.json()),
       fetch("data/catalog/traces.json").then((r) => r.json()),
+      _safeFetchJSON("data/pois/pois_photos.geojson"),
     ]);
   } catch (err) {
     console.warn("[loireridezen] catalog load failed", err);
     return;
   }
+  const photoFeatures = (photosFC?.features ?? []).filter(
+    (f) => !(f.properties?.poi_id),
+  );
 
   const groups = (groupsCatalog.items ?? []).sort(
     (a, b) => (a.order ?? 0) - (b.order ?? 0),
   );
   const allItems = tracesCatalog.items ?? [];
   const allLayers = [];
+
+  if (!_centerListenerAdded) {
+    _centerListenerAdded = true;
+    map.getContainer().addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-action='center-on-step']");
+      if (!btn) return;
+      const layer = _stepLayersById.get(btn.dataset.stepId);
+      if (!layer) return;
+      try { map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 14 }); } catch {}
+    });
+  }
 
   for (const group of groups) {
     const items = allItems
@@ -93,13 +128,17 @@ async function _doLoad() {
           const data = await _fetchGeoJson(primary, fallback);
           if (!data) return null;
           const featureIndex = (item.order ?? 1) - 1;
-          const popup = renderStepPopup(item);
-          return new GeoJSON(data, {
+          const geoLayer = new GeoJSON(data, {
             style: _layerStyle(group, item, featureIndex),
-            onEachFeature(feature, layer) {
-              layer.bindPopup(popup, { maxWidth: 280 });
-            },
           });
+          try {
+            const bounds = geoLayer.getBounds();
+            item._photo_count = _photosInBounds(photoFeatures, bounds);
+          } catch { item._photo_count = 0; }
+          const popup = renderStepPopup(item);
+          geoLayer.eachLayer((l) => l.bindPopup(popup, { maxWidth: 280 }));
+          _stepLayersById.set(item.id, geoLayer);
+          return geoLayer;
         }),
       );
       layers.push(...loaded.filter(Boolean));
@@ -124,4 +163,19 @@ async function _doLoad() {
 export function loadAllRoutes() {
   if (!_promise) _promise = _doLoad();
   return _promise;
+}
+
+/** Zoome la carte sur les bounds d'une étape. */
+export function centerOnStep(stepId) {
+  const layer = _stepLayersById.get(stepId);
+  if (!layer) return;
+  try { map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 14 }); } catch {}
+}
+
+/** Ouvre programmatiquement le popup de la première feature d'une étape. */
+export function openStepPopup(stepId) {
+  const layer = _stepLayersById.get(stepId);
+  if (!layer) return;
+  const sub = layer.getLayers();
+  if (sub.length) sub[0].openPopup();
 }
