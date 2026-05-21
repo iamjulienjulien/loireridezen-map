@@ -21,3 +21,4 @@ sources/photos/*
 gpx/
 /config.js
 logs/
+.env

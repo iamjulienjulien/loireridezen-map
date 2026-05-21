@@ -300,21 +300,6 @@
       "time": "2025:06:18 12:29:52",
       "lat": 47.271594,
       "lon": -0.106883
-    },
-    {
-      "id": "21-test",
-      "label": "Test",
-      "description": "",
-      "group": "acte-2",
-      "paths": {
-        "thumb": "data/thumbs/21-test.webp",
-        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/21-test.jpeg"
-      },
-      "source": "sources/photos/21-test.jpeg",
-      "order": 21,
-      "time": "2026:05:19 20:51:51",
-      "lat": 47.466442,
-      "lon": -0.556992
     }
   ]
 }
