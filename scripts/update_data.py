@@ -1520,6 +1520,127 @@ def _recalc_gpx_stats(item: dict, items: list[dict], catalog_path: Path) -> None
         console.print(f"[red]Résultat GPX invalide : {e}[/]")
 
 
+def _regenerate_trace_geojson(item: dict) -> bool:
+    """Régénère les GeoJSON full + simplified depuis le GPX source et rafraîchit les stats.
+    Retourne True si succès complet (les stats peuvent rester inchangées si --stats-only échoue).
+    """
+    source = item.get("source")
+    if not source:
+        console.print(
+            "[yellow]⚠ Cet item n'a pas de fichier GPX source associé.\n"
+            "  La régénération nécessite un GPX original.[/]"
+        )
+        return False
+
+    gpx_path = REPO_ROOT / source
+    if not gpx_path.exists():
+        console.print(
+            f"[yellow]⚠ Fichier GPX introuvable : {source}\n"
+            "  Soit le fichier a été supprimé, soit le chemin est obsolète.\n"
+            "  → Replacer le GPX et relancer, ou supprimer cet item du catalog.[/]"
+        )
+        return False
+
+    paths = item.get("paths", {})
+    out_full = REPO_ROOT / paths.get("full", "")
+    out_simplified = REPO_ROOT / paths.get("simplified", "")
+
+    console.print(Panel(
+        f"Régénération du GeoJSON depuis :\n  [cyan]{source}[/]\n\n"
+        f"Vers :\n  [cyan]{paths.get('full', '?')}[/]\n  [cyan]{paths.get('simplified', '?')}[/]\n\n"
+        "Les fichiers actuels seront écrasés. Les stats (distance, dénivelé) seront recalculées.",
+        title="🔄 Régénérer le GeoJSON",
+        border_style="yellow",
+    ))
+    if not questionary.confirm("Continuer ?", default=True).ask():
+        console.print("[dim]Annulé.[/]")
+        return False
+
+    old_dist = item.get("distance_km")
+    old_elev = item.get("elevation_gain_m")
+    tree = Tree("[bold cyan]🔄 Régénération")
+
+    # 1. Full GeoJSON
+    ok = run_script(
+        [PYTHON, str(SCRIPTS_DIR / "gpx_to_geojson.py"), str(gpx_path), "-o", str(out_full)],
+        f"{gpx_path.name} → {out_full.name}",
+        tree, verbose=False,
+    )
+    if not ok:
+        log_event("ERROR", "traces", "geojson_regenerate_failed",
+                  id=item.get("id"), stage="full", source=source)
+        console.print(tree)
+        console.print(
+            "[red]Erreur sur le full GeoJSON. Le simplified et le catalog n'ont pas été modifiés.\n"
+            "  Relancer la régénération ou restaurer depuis Git.[/]"
+        )
+        return False
+
+    # 2. Simplified GeoJSON
+    ok = run_script(
+        [PYTHON, str(SCRIPTS_DIR / "gpx_to_geojson.py"), str(gpx_path),
+         "-o", str(out_simplified), "--simplify", "0.0001"],
+        f"{gpx_path.name} → {out_simplified.name}",
+        tree, verbose=False,
+    )
+    if not ok:
+        log_event("ERROR", "traces", "geojson_regenerate_failed",
+                  id=item.get("id"), stage="simplified", source=source)
+        console.print(tree)
+        console.print(
+            "[red]Erreur sur le simplified GeoJSON. Le full a été régénéré mais le catalog\n"
+            "  n'a pas été mis à jour. Relancer la régénération pour compléter.[/]"
+        )
+        return False
+
+    # 3. Stats refresh
+    new_dist, new_elev = old_dist, old_elev
+    try:
+        result = subprocess.run(
+            [PYTHON, str(SCRIPTS_DIR / "gpx_to_geojson.py"), str(gpx_path), "--stats-only"],
+            capture_output=True, text=True, check=True,
+        )
+        stats = json.loads(result.stdout.strip())
+        new_dist = stats.get("distance_km", old_dist)
+        new_elev = stats.get("elevation_gain_m", old_elev)
+        item["distance_km"] = new_dist
+        item["elevation_gain_m"] = new_elev
+        tree.add("[green]✓ stats rafraîchies[/]")
+    except (subprocess.CalledProcessError, json.JSONDecodeError, FileNotFoundError) as e:
+        tree.add(f"[yellow]⚠ stats non recalculées : {e}[/]")
+
+    console.print(tree)
+
+    log_event("INFO", "traces", "geojson_regenerated",
+              id=item.get("id"),
+              source=source,
+              old_stats={"distance_km": old_dist, "elevation_gain_m": old_elev},
+              new_stats={"distance_km": new_dist, "elevation_gain_m": new_elev})
+
+    def _stat_diff(label: str, unit: str, old, new) -> str | None:
+        if old == new:
+            return None
+        if old is None or new is None:
+            return f"  {label:14} : {old or '—'} → {new or '—'} {unit}"
+        delta = new - old
+        sign = "+" if delta > 0 else ""
+        return f"  {label:14} : {old} → {new} {unit}  ({sign}{delta:.1f} {unit})"
+
+    diffs = [
+        _stat_diff("Distance", "km", old_dist, new_dist),
+        _stat_diff("Dénivelé D+", "m", old_elev, new_elev),
+    ]
+    diffs = [d for d in diffs if d]
+    if diffs:
+        console.print("\n[green]✓ GeoJSON régénéré.[/]")
+        for d in diffs:
+            console.print(d)
+    else:
+        console.print("[green]✓ GeoJSON régénéré. Stats inchangées.[/]")
+
+    return True
+
+
 def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
     """Boucle d'édition complète d'une trace. Retourne True si supprimée."""
     while True:
@@ -1536,6 +1657,7 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
                 questionary.Choice("⏱  Durée", value="duration_h"),
                 questionary.Choice("☀️  Météo", value="weather"),
                 questionary.Choice("🔄 Recalculer stats GPX", value="gpx_stats"),
+                questionary.Choice("🗺️  Régénérer le GeoJSON depuis le GPX", value="regen_geojson"),
                 questionary.Separator(),
                 questionary.Choice("🗑️  Supprimer cette trace", value="delete"),
                 questionary.Choice("← Retour", value="back"),
@@ -1640,6 +1762,10 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
 
         elif action == "gpx_stats":
             _recalc_gpx_stats(item, items, catalog_path)
+
+        elif action == "regen_geojson":
+            if _regenerate_trace_geojson(item):
+                save_catalog(catalog_path, items)
 
         elif action == "delete":
             label_display = item.get("label", item["id"])
