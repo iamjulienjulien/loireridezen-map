@@ -938,43 +938,29 @@ body {
 
 /* ─────────────────────────────────────── Signature */
 
-.lrz-signature {
-  position: fixed;
-  right: 16px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
-  z-index: 800;
-  background: rgba(253, 250, 243, 0.92);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--lrz-tuffeau-line);
-  border-radius: 12px;
-  padding: 0.625rem 0.875rem;
-  box-shadow: 0 4px 12px rgba(42, 31, 21, 0.08);
-  font-family: var(--lrz-font-sans);
-  line-height: 1.4;
-  max-width: 240px;
-}
-
-.lrz-signature strong {
-  display: block;
-  font-family: var(--lrz-font-serif);
-  font-style: italic;
-  font-size: 0.875rem;
-  color: var(--lrz-foreground);
-}
-
-.lrz-signature span {
-  display: block;
-  font-size: 0.75rem;
+.lrz-panel-credit {
+  margin: 0 0 2px;
+  padding: 0.375rem 0.875rem 0;
+  font-size: 0.7rem;
   color: var(--lrz-ink-soft);
-  margin-top: 0.125rem;
+  text-align: center;
 }
 
-.lrz-signature a {
+.lrz-panel-credit--attr {
+  padding-top: 0.2rem;
+  padding-bottom: 0.5rem;
+}
+
+.lrz-panel-credit--attr span {
+  color: var(--lrz-or);
+}
+
+.lrz-panel-credit a {
   color: var(--lrz-or);
   text-decoration: none;
 }
 
-.lrz-signature a:hover {
+.lrz-panel-credit a:hover {
   text-decoration: underline;
 }
 
@@ -1041,11 +1027,6 @@ body {
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
 
-  .lrz-signature {
-    font-size: 0.75rem;
-    max-width: 200px;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 60px);
-  }
 }
 
 /* ═══════════════════════════════ LRZ-EVO-16 — Vague UI 4 ═══════════════════ */
@@ -1959,4 +1940,74 @@ body {
   background: var(--lrz-card-hover);
   outline: none;
 }
+
+/* ═══════════════════════════════ LRZ-EVO-33 — Compteur cyclonautes ══════════ */
+
+.lrz-visit-counter {
+  position: fixed;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 800;
+  width: 185px;
+  max-width: 185px;
+  background: rgba(253, 250, 243, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 12px;
+  padding: 0.4rem 0.2rem;
+  box-shadow: 0 4px 12px rgba(42, 31, 21, 0.08);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: 'ZCOOL QingKe HuangYou', 'Courier New', monospace;
+  font-size: 14px;
+  color: #cc6600;
+  letter-spacing: 0.1em;
+  user-select: none;
+  pointer-events: none;
+}
+
+.lrz-visit-counter__label {
+  font-family: var(--lrz-font-sans);
+  text-transform: uppercase;
+  font-size: 10px;
+  margin-bottom: 1px;
+}
+
+.lrz-visit-counter__digits {
+  display: inline-flex;
+  gap: 1px;
+  padding: 1px 4px 2px;
+  background: #0a0a0a;
+  border: 1px inset #4a3010;
+  border-radius: 2px;
+}
+
+.lrz-visit-counter__digit {
+  display: inline-block;
+  overflow: hidden;
+  width: 10px;
+  height: 16px;
+  text-align: center;
+}
+
+.lrz-visit-counter__digit-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lrz-visit-counter__digit-strip span {
+  display: block;
+  width: 10px;
+  height: 16px;
+  line-height: 16px;
+  color: #ff9933;
+  font-size: 16px;
+  text-shadow: 0 0 6px #ff9933, 0 0 3px #ff6600;
+  font-variant-numeric: tabular-nums;
+}
+
 

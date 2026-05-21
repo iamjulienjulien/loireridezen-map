@@ -9,6 +9,7 @@
  */
 
 import { map } from "./app/map.js";
+import { initVisitCounter } from "./app/visit-counter.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
 import { buildTraceMarkersFromCatalog, traceMarkers } from "./app/trace-markers.js";
@@ -78,6 +79,7 @@ async function init() {
   initResetButton();
   initKeyboardShortcuts(map);
   initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
+  initVisitCounter().catch((err) => console.warn("[visit-counter] init failed", err));
   setInterval(() => {
     const toggle = document.getElementById("position-toggle");
     if (!toggle || toggle.checked) loadCurrentPosition();
