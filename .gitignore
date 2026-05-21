@@ -12,7 +12,10 @@ audit-carte-2026-05-19.md
 AUDIT-carte-loireridezen-brief.md
 memory/
 development/
-supabase/
+supabase/*
+!supabase/functions/
+supabase/functions/*
+!supabase/functions/notify-bisou/
 # Sources locales — non versionnées, sauf inbox pipeline iOS (LRZ-EVO-22)
 sources/*
 !sources/photos/
