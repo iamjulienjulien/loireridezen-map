@@ -2,6 +2,7 @@ import { SUPA_URL, SUPA_PUBLISHABLE_KEY } from "./config.js";
 import { isForElle } from "./url-mode.js";
 import { currentPositionLayer } from "./current-position.js";
 import { map } from "./map.js";
+import { trackForElle } from "./analytics.js";
 
 const COOLDOWN_MS = 60_000;
 let cooldownEnd = 0;
@@ -181,6 +182,8 @@ async function sendBisou() {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     showToast("Papa va le recevoir 💗");
+    const fromToken = new URL(window.location.href).searchParams.get('from') || 'unknown';
+    trackForElle('Bisou Sent', { from: fromToken });
   } catch (err) {
     console.warn("[bisou] send failed", err);
     showToast("Bisou pas envoyé, mais Papa pense à toi 💗");

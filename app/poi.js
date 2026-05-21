@@ -28,6 +28,7 @@ import { POI_TYPES, SHAPES } from "./types.js";
 import { escapeHtml, safeHttpUrl, debounce, lightenHex } from "./helpers.js";
 import { SUPA_URL, SUPA_PUBLISHABLE_KEY } from "./config.js";
 import { hiddenModes } from "./url-mode.js";
+import { track, trackAndNavigate } from "./analytics.js";
 
 const { Icon, TackCircleBorder } = leafletExtraMarkers;
 
@@ -293,7 +294,28 @@ export async function loadPoisForViewport() {
       {
         pointToLayer: (f, latlng) =>
           new Marker(latlng, { icon: iconByType((f.properties || {}).type) }),
-        onEachFeature: (f, l) => bindPopupFromProps(f.properties || {}, l),
+        onEachFeature: (f, l) => {
+          const p = f.properties || {};
+          bindPopupFromProps(p, l);
+          l.on('click', () => {
+            if (p.type === 'photo') {
+              track('Photo Opened', { id: p.id || '', caption: p.caption || '' });
+            } else {
+              track('POI Opened', { type: p.type || '', name: p.name || '' });
+            }
+          });
+          if (p.type !== 'photo' && p.url_insta) {
+            l.on('popupopen', () => {
+              const el = l.getPopup()?.getElement();
+              const link = el?.querySelector('a[href*="instagram"]');
+              if (!link) return;
+              link.addEventListener('click', (e) => {
+                e.preventDefault();
+                trackAndNavigate('POI Instagram', link.href, { poi_id: p.id || '', type: p.type || '' });
+              });
+            });
+          }
+        },
       },
     );
     cluster.addLayer(layer);

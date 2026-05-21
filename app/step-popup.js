@@ -41,10 +41,10 @@ function renderWeather(weather) {
   return `<div class="lrz-step-popup__weather">${parts.join(" ")}</div>`;
 }
 
-function renderExternalBtn(url, label, cls) {
+function renderExternalBtn(url, label, cls, stepId) {
   const safe = safeHttpUrl(url);
   if (!safe) return "";
-  return `<a href="${escapeHtml(safe)}" target="_blank" rel="noopener noreferrer" class="lrz-step-popup__btn ${cls}">${label}</a>`;
+  return `<a href="${escapeHtml(safe)}" target="_blank" rel="noopener noreferrer" class="lrz-step-popup__btn ${cls}" data-step-id="${escapeHtml(stepId || '')}">${label}</a>`;
 }
 
 export function renderStepPopup(item) {
@@ -53,8 +53,8 @@ export function renderStepPopup(item) {
   const duration = formatDurationFr(item.duration_h);
   const elev = item.elevation_gain_m ? `${item.elevation_gain_m} m D+` : null;
   const weatherHTML = renderWeather(item.weather);
-  const instaHTML = renderExternalBtn(item.instagram_url, "📷 Instagram", "lrz-step-popup__btn--insta");
-  const komootHTML = renderExternalBtn(item.komoot_url, "🗺️ Komoot", "lrz-step-popup__btn--komoot");
+  const instaHTML = renderExternalBtn(item.instagram_url, "📷 Instagram", "lrz-step-popup__btn--insta", item.id);
+  const komootHTML = renderExternalBtn(item.komoot_url, "🗺️ Komoot", "lrz-step-popup__btn--komoot", item.id);
   const hasActions = instaHTML || komootHTML;
 
   return `

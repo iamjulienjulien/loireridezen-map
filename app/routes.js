@@ -12,6 +12,7 @@ import { map } from "./map.js";
 import { resolveColor } from "./types.js";
 import { FIT_OPTIONS } from "./config.js";
 import { renderStepPopup } from "./step-popup.js";
+import { track, trackAndNavigate } from "./analytics.js";
 
 /** Map<groupId, {group, layers: GeoJSON[]}> — peuplée par loadAllRoutes() */
 export const traceGroups = new Map();
@@ -87,11 +88,26 @@ async function _doLoad() {
   if (!_centerListenerAdded) {
     _centerListenerAdded = true;
     map.getContainer().addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-action='center-on-step']");
-      if (!btn) return;
-      const layer = _stepLayersById.get(btn.dataset.stepId);
-      if (!layer) return;
-      try { map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 14 }); } catch {}
+      const centerBtn = e.target.closest("[data-action='center-on-step']");
+      if (centerBtn) {
+        const layer = _stepLayersById.get(centerBtn.dataset.stepId);
+        if (!layer) return;
+        try { map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 14 }); } catch {}
+        return;
+      }
+
+      const instaBtn = e.target.closest('.lrz-step-popup__btn--insta');
+      if (instaBtn) {
+        e.preventDefault();
+        trackAndNavigate('Step Instagram', instaBtn.href, { step_id: instaBtn.dataset.stepId || '' });
+        return;
+      }
+
+      const komootBtn = e.target.closest('.lrz-step-popup__btn--komoot');
+      if (komootBtn) {
+        e.preventDefault();
+        trackAndNavigate('Step Komoot', komootBtn.href, { step_id: komootBtn.dataset.stepId || '' });
+      }
     });
   }
 
@@ -117,6 +133,7 @@ async function _doLoad() {
           const stage = feature.properties?.stage ?? 0;
           const matched = itemsByStage.get(stage) ?? items[0];
           layer.bindPopup(renderStepPopup(matched), { maxWidth: 280 });
+          layer.on('click', () => track('Step Opened', { step_id: matched.id, act: group.id }));
         },
       }));
     } else {
@@ -137,6 +154,7 @@ async function _doLoad() {
           } catch { item._photo_count = 0; }
           const popup = renderStepPopup(item);
           geoLayer.eachLayer((l) => l.bindPopup(popup, { maxWidth: 280 }));
+          geoLayer.on('click', () => track('Step Opened', { step_id: item.id, act: group.id }));
           _stepLayersById.set(item.id, geoLayer);
           return geoLayer;
         }),

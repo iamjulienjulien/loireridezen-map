@@ -12,10 +12,12 @@ import { traceGroups } from "./routes.js";
 import { FIT_OPTIONS } from "./config.js";
 import { triggerLocate } from "./locate.js";
 import { loadPreferences, updatePreference } from "./preferences.js";
+import { track } from "./analytics.js";
 
 let _currentBase = "osm";
 
 function _setBase(base) {
+  track('Map Style Changed', { style: base });
   _currentBase = base;
   if (base === "sat") {
     map.removeLayer(baseOSM);
@@ -51,9 +53,11 @@ export function initActionsPanel() {
     btn.addEventListener("click", () => {
       switch (btn.dataset.action) {
         case "zoom-in":
+          track('Zoom In', { from_zoom: map.getZoom() });
           map.zoomIn();
           break;
         case "zoom-out":
+          track('Zoom Out', { from_zoom: map.getZoom() });
           map.zoomOut();
           break;
         case "set-plan":
@@ -63,6 +67,7 @@ export function initActionsPanel() {
           _setBase("sat");
           break;
         case "reset-view": {
+          track('Reset View');
           const layers = [];
           traceGroups.forEach(({ layers: ls }) => layers.push(...ls));
           if (layers.length) {
@@ -71,6 +76,7 @@ export function initActionsPanel() {
           break;
         }
         case "locate-me":
+          track('Locate Me');
           triggerLocate(map);
           break;
       }

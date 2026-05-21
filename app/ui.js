@@ -18,6 +18,7 @@ import { triggerLocate } from "./locate.js";
 import { loadPreferences, updatePreference, resetPreferences } from "./preferences.js";
 import { escapeHtml, lightenHex } from "./helpers.js";
 import { hiddenModes } from "./url-mode.js";
+import { track } from "./analytics.js";
 
 // Map<groupId, FeatureGroup> peuplée après wireTraceCheckboxes()
 const traceFeatureGroups = new Map();
@@ -85,6 +86,7 @@ export async function wireTraceCheckboxes() {
       if (!fg) return;
       if (cb.checked) map.addLayer(fg);
       else map.removeLayer(fg);
+      track('Layer Item Toggled', { section: 'traces', item: cb.dataset.groupId, state: cb.checked ? 'on' : 'off' });
       updatePreference(`traces.${cb.dataset.groupId}`, cb.checked);
     });
   });
@@ -99,6 +101,7 @@ export function wireTraceMarkerCheckboxes(traceMarkersObj, prefs) {
     cb.addEventListener("change", () => {
       if (cb.checked) map.addLayer(fg);
       else map.removeLayer(fg);
+      track('Layer Item Toggled', { section: 'traces', item: type, state: cb.checked ? 'on' : 'off' });
       updatePreference(`traceMarkers.${type}`, cb.checked);
     });
   });
@@ -188,6 +191,7 @@ export function initMobileDrawer() {
     panel.classList.toggle("open", open);
     backdrop.classList.toggle("open", open);
     toggleBtn.setAttribute("aria-expanded", String(open));
+    track('Filters Toggled', { state: open ? 'open' : 'close' });
   };
 
   toggleBtn.addEventListener("click", () =>
@@ -212,6 +216,7 @@ export function initAccordion(prefs) {
     const toggleSection = () => {
       const wasCollapsed = section.dataset.collapsed === "true";
       section.dataset.collapsed = wasCollapsed ? "false" : "true";
+      track('Layer Toggled', { section: sectionKey, state: wasCollapsed ? 'on' : 'off' });
       updatePreference(`sections.${sectionKey}`, !wasCollapsed);
     };
 
@@ -225,8 +230,10 @@ export function initAccordion(prefs) {
   document.querySelectorAll(".lrz-section__all").forEach((btn) => {
     btn.addEventListener("click", () => {
       const section = btn.closest(".lrz-section");
+      const sectionKey = section?.dataset.section || '';
       const checkboxes = [...section.querySelectorAll(".lrz-checkbox")];
       const allChecked = checkboxes.every((cb) => cb.checked);
+      track('Layer Tout Clicked', { section: sectionKey });
       checkboxes.forEach((cb) => {
         cb.checked = !allChecked;
         cb.dispatchEvent(new Event("change", { bubbles: true }));
@@ -253,6 +260,7 @@ export function initCurrentPositionToggle(layer, loadFn, prefs) {
 
 export function initResetButton() {
   document.getElementById("reset-prefs")?.addEventListener("click", () => {
+    track('Preferences Reset');
     resetPreferences();
     location.reload();
   });

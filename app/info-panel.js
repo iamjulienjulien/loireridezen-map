@@ -15,6 +15,7 @@ import { map } from "./map.js";
 import { centerOnStep, openStepPopup } from "./routes.js";
 import { formatRelativeTime, formatDateFr } from "./time-format.js";
 import { escapeHtml } from "./helpers.js";
+import { track } from "./analytics.js";
 
 let _positionDetail = null;
 let _stepInfo = null;
@@ -87,7 +88,10 @@ function _render() {
 
   if (_positionDetail?.active) {
     const { lat, lon } = _positionDetail;
-    const flyTo = () => map.flyTo([lat, lon], 14, { duration: 1.2 });
+    const flyTo = () => {
+      track('Position Block Clicked');
+      map.flyTo([lat, lon], 14, { duration: 1.2 });
+    };
     const posBlock = container.querySelector("#lrz-position-block");
     posBlock?.addEventListener("click", flyTo);
     posBlock?.addEventListener("keydown", (e) => {
@@ -99,11 +103,13 @@ function _render() {
     const stepId = _stepInfo.trace.id;
     const stepBlock = container.querySelector(".lrz-info-block--step");
     stepBlock?.addEventListener("click", () => {
+      track('Step Block Clicked', { step_id: stepId });
       centerOnStep(stepId);
       setTimeout(() => openStepPopup(stepId), 500);
     });
     stepBlock?.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
+        track('Step Block Clicked', { step_id: stepId });
         centerOnStep(stepId);
         setTimeout(() => openStepPopup(stepId), 500);
       }

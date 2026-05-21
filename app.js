@@ -13,6 +13,7 @@ import { initVisitCounter } from "./app/visit-counter.js";
 import { initVisitCounterForElle } from "./app/visit-counter-for-elle.js";
 import { initBisouButton } from "./app/bisou-button.js";
 import { hiddenModes } from "./app/url-mode.js";
+import { track, trackAndNavigate, trackForElle } from "./app/analytics.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
 import {
@@ -106,7 +107,21 @@ async function init() {
   // Sauvegarder la préférence POI à chaque changement de type-filter
   document.querySelectorAll(".type-filter").forEach((cb) => {
     cb.addEventListener("change", () => {
+      const section = cb.value === 'photo' ? 'photos' : 'poi';
+      track('Layer Item Toggled', { section, item: cb.value, state: cb.checked ? 'on' : 'off' });
       updatePreference(`poi.${cb.value}`, cb.checked);
+    });
+  });
+
+  // Tracking liens externes du footer (hors mode for=elle)
+  document.querySelectorAll('.lrz-panel-header__link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.href;
+      const dest = href.includes('instagram') ? 'instagram'
+                : href.includes('komoot') ? 'komoot'
+                : 'site';
+      trackAndNavigate('External Link', href, { destination: dest });
     });
   });
 
@@ -115,6 +130,8 @@ async function init() {
   loadPoisForViewport();
 
   if (hiddenModes.rabbit) {
+    const _fromToken = new URL(location.href).searchParams.get('from') || 'unknown';
+    trackForElle('View', { from: _fromToken });
     // Bonus A — masquer liens externes + crédits
     document.querySelector(".lrz-panel-header")?.remove();
     document.querySelectorAll(".lrz-panel-credit").forEach((el) => el.remove());
