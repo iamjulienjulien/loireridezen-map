@@ -25,7 +25,7 @@ import * as leafletExtraMarkers from "leaflet-extra-markers";
 
 import { map } from "./map.js";
 import { POI_TYPES, SHAPES } from "./types.js";
-import { escapeHtml, safeHttpUrl, debounce } from "./helpers.js";
+import { escapeHtml, safeHttpUrl, debounce, lightenHex } from "./helpers.js";
 import { SUPA_URL, SUPA_PUBLISHABLE_KEY } from "./config.js";
 import { hiddenModes } from "./url-mode.js";
 
@@ -48,8 +48,9 @@ function iconByType(type) {
   if (!t) {
     return new Icon({
       content: "📍",
-      color: "#00BCD4",
-      accentColor: "rgba(0,0,0,0.18)",
+      color: lightenHex("#00BCD4", 0.8),
+      accentColor: "#00BCD4",
+      svgStyle: { stroke: "#00BCD4", "stroke-width": "1.5" },
       svg: TackCircleBorder,
       scale: 1.1,
       shadow: "drop",
@@ -57,8 +58,9 @@ function iconByType(type) {
   }
   return new Icon({
     content: t.emoji,
-    color: t.color,
-    accentColor: "rgba(0,0,0,0.18)",
+    color: lightenHex(t.color, 0.7),
+    accentColor: t.color,
+    svgStyle: { stroke: t.color, "stroke-width": "0.5" },
     svg: SHAPES[t.shape] || TackCircleBorder,
     scale: 1.1,
     shadow: "drop",
@@ -85,7 +87,8 @@ function renderChateauPopup(p) {
 }
 
 function renderGenericPoiPopup(p) {
-  const img = safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
+  const img =
+    safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
   const insta = safeHttpUrl(p.url_insta);
   const safeImg = img ? escapeHtml(img) : null;
   return `

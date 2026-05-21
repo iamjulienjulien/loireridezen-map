@@ -1,9 +1,9 @@
 /**
  * app/ui.js — Rendu et interactions du panel cockpit
  *
- * 4 sections : Contrôles · Traces · Photos · Points d'intérêt
- * Accordion pliable (état persisté via preferences.js), bouton "Tout",
- * raccourcis clavier, badge "X visibles" pour les POI.
+ * 4 sections : Traces · POI · Photos · Options
+ * Accordion pliable (état persisté via preferences.js), badge "X visibles".
+ * Lignes d'actions : zoom, toggle-map, reset-view, goto-julien, locate-me.
  */
 
 import { FeatureGroup } from "leaflet";
@@ -12,57 +12,119 @@ import * as leafletExtraMarkers from "leaflet-extra-markers";
 import { map, baseOSM, baseEsriSat, esriLabels } from "./map.js";
 import { traceGroups, loadAllRoutes } from "./routes.js";
 import { POI_TYPES, SHAPES, TRACE_MARKER_TYPES, getGroupColorPreview } from "./types.js";
-import { getVisiblePoiCount } from "./poi.js";
-import { triggerLocate } from "./locate.js";
-import { updatePreference, resetPreferences } from "./preferences.js";
-import { escapeHtml } from "./helpers.js";
-import { FIT_OPTIONS } from "./config.js";
-import { hiddenModes } from "./url-mode.js";
 
 const { Icon: ExtraIcon, TackCircleBorder } = leafletExtraMarkers;
+import { getVisiblePoiCount } from "./poi.js";
+import { triggerLocate } from "./locate.js";
+import { loadPreferences, updatePreference, resetPreferences } from "./preferences.js";
+import { escapeHtml, lightenHex } from "./helpers.js";
+import { FIT_OPTIONS } from "./config.js";
+import { hiddenModes } from "./url-mode.js";
 
 // Map<groupId, FeatureGroup> peuplée après wireTraceCheckboxes()
 const traceFeatureGroups = new Map();
 
+// Coordonnées de Julien (mises à jour via lrz:position-loaded)
+let _gotoJulienCoords = null;
+
 // ─────────────────────────────────────── Section 1 : Contrôles
 
-export function initControls(map) {
-  document.getElementById("ctrl-zoom-in")?.addEventListener("click", () => map.zoomIn());
-  document.getElementById("ctrl-zoom-out")?.addEventListener("click", () => map.zoomOut());
-  document.getElementById("ctrl-locate")?.addEventListener("click", () => triggerLocate(map));
+function _updateMapToggleLabel(base) {
+  const label = document.getElementById("map-toggle-label");
+  if (label) label.textContent = base === "sat" ? "🛰️ Satellite" : "🗺️ Plan";
+}
 
-  document.getElementById("ctrl-fit")?.addEventListener("click", () => {
-    const layers = [];
-    traceGroups.forEach(({ layers: ls }) => layers.push(...ls));
-    if (layers.length) {
-      map.fitBounds(new FeatureGroup(layers).getBounds(), FIT_OPTIONS);
-    }
+export function updateGotoJulienButton(active) {
+  const btn = document.getElementById("btn-goto-julien");
+  if (!btn) return;
+  btn.disabled = !active;
+  btn.classList.toggle("lrz-btn--disabled", !active);
+  btn.title = active ? "Aller à la position de Julien" : "Pas de position active";
+}
+
+export function initControls(map) {
+  const prefs = loadPreferences();
+  let currentBase = prefs.baseLayer || "osm";
+
+  // Initialiser le fond de carte depuis les prefs
+  if (currentBase === "sat") {
+    map.removeLayer(baseOSM);
+    baseEsriSat.addTo(map);
+    esriLabels.addTo(map);
+  }
+  _updateMapToggleLabel(currentBase);
+
+  // Boutons data-action
+  document.querySelectorAll("[data-action]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      switch (btn.dataset.action) {
+        case "zoom-in":
+          map.zoomIn();
+          break;
+        case "zoom-out":
+          map.zoomOut();
+          break;
+        case "toggle-map": {
+          currentBase = currentBase === "osm" ? "sat" : "osm";
+          if (currentBase === "sat") {
+            map.removeLayer(baseOSM);
+            baseEsriSat.addTo(map);
+            esriLabels.addTo(map);
+          } else {
+            map.removeLayer(baseEsriSat);
+            map.removeLayer(esriLabels);
+            baseOSM.addTo(map);
+          }
+          updatePreference("baseLayer", currentBase);
+          _updateMapToggleLabel(currentBase);
+          break;
+        }
+        case "reset-view": {
+          const layers = [];
+          traceGroups.forEach(({ layers: ls }) => layers.push(...ls));
+          if (layers.length) {
+            map.fitBounds(new FeatureGroup(layers).getBounds(), FIT_OPTIONS);
+          }
+          break;
+        }
+        case "goto-julien":
+          if (_gotoJulienCoords) {
+            map.flyTo(_gotoJulienCoords, 14, { duration: 1.2 });
+          }
+          break;
+        case "locate-me":
+          triggerLocate(map);
+          break;
+      }
+    });
   });
 
+  // Activer le bouton goto-julien quand la position est chargée
+  document.addEventListener("lrz:position-loaded", ({ detail }) => {
+    _gotoJulienCoords = detail.active ? [detail.lat, detail.lon] : null;
+    updateGotoJulienButton(detail.active);
+  });
+
+  // Backward compat : segmented basemap (si HTML ancien encore présent)
   const opts = document.querySelectorAll(".lrz-segmented__opt");
-  const savedBase = localStorage.getItem("baseLayer") || "osm";
-
   opts.forEach((btn) =>
-    btn.classList.toggle("is-active", btn.dataset.basemap === savedBase),
+    btn.classList.toggle("is-active", btn.dataset.basemap === currentBase),
   );
-
   opts.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const bm = btn.dataset.basemap;
+      currentBase = btn.dataset.basemap;
       opts.forEach((b) => b.classList.toggle("is-active", b === btn));
-      if (bm === "sat") {
+      if (currentBase === "sat") {
         map.removeLayer(baseOSM);
         baseEsriSat.addTo(map);
         esriLabels.addTo(map);
-        localStorage.setItem("baseLayer", "sat");
-        updatePreference("baseLayer", "sat");
       } else {
         map.removeLayer(baseEsriSat);
         map.removeLayer(esriLabels);
         baseOSM.addTo(map);
-        localStorage.setItem("baseLayer", "osm");
-        updatePreference("baseLayer", "osm");
       }
+      updatePreference("baseLayer", currentBase);
+      _updateMapToggleLabel(currentBase);
     });
   });
 }
@@ -156,8 +218,9 @@ function renderMiniMarker(type) {
   if (!t) return `<span style="font-size:1.1rem">📍</span>`;
   const icon = new ExtraIcon({
     content: t.emoji,
-    color: t.color,
-    accentColor: "rgba(0,0,0,0.18)",
+    color: lightenHex(t.color, 0.8),
+    accentColor: t.color,
+    svgStyle: { stroke: t.color, "stroke-width": "2" },
     svg: SHAPES[t.shape] || TackCircleBorder,
     scale: 0.75,
     shadow: "none",
@@ -216,10 +279,12 @@ export function renderPhotosSection(prefs) {
     });
 }
 
-// ─────────────────────────────────────── Drawer mobile
+// ─────────────────────────────────────── Drawer mobile (legacy guard)
 
 export function initMobileDrawer() {
   const toggleBtn = document.getElementById("toggleFilters");
+  if (!toggleBtn) return; // nouveau layout : pas de drawer toggle
+
   const panel = document.getElementById("filtersPanel");
 
   const backdrop = document.createElement("div");

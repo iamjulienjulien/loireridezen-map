@@ -1526,3 +1526,121 @@ body {
   font-style: italic;
   margin-top: 0.5rem;
 }
+
+/* ═══════════════════════════════ LRZ-EVO-27 — Vague UI 5 ═══════════════════ */
+
+/* ─── Variables supplémentaires ─── */
+
+:root {
+  --lrz-panel-width: 280px;
+  --lrz-trace-marker-size: 28px;
+  --lrz-poi-marker-size: 36px;
+}
+
+/* ─── Lignes d'actions ─── */
+
+.lrz-action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--lrz-tuffeau-line);
+}
+
+.lrz-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lrz-card);
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--lrz-font-sans);
+  font-size: 1rem;
+  color: var(--lrz-foreground);
+  transition: background 0.15s, opacity 0.15s;
+  line-height: 1;
+}
+
+.lrz-btn:hover:not(:disabled) {
+  background: var(--lrz-card-hover);
+}
+
+.lrz-btn--zoom {
+  width: 32px;
+  height: 32px;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+/* btn-group override : fusionne les boutons zoom */
+.lrz-action-row .lrz-btn-group {
+  display: flex;
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lrz-action-row .lrz-btn-group .lrz-btn {
+  border: none;
+  border-radius: 0;
+}
+.lrz-action-row .lrz-btn-group .lrz-btn + .lrz-btn {
+  border-left: 1px solid var(--lrz-tuffeau-line);
+}
+
+.lrz-btn--map-toggle {
+  flex: 1;
+  height: 32px;
+  padding: 0 0.625rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  justify-content: flex-start;
+  gap: 0.3rem;
+}
+
+.lrz-btn--action {
+  width: 36px;
+  height: 32px;
+  font-size: 1.1rem;
+}
+
+.lrz-btn--disabled,
+.lrz-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ─── Tooltip permanent "Je suis là" ─── */
+
+.lrz-position-tooltip {
+  background: rgba(253, 250, 243, 0.97) !important;
+  border: 1px solid var(--lrz-tuffeau-line) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(42, 31, 21, 0.12) !important;
+  font-family: var(--lrz-font-sans) !important;
+  font-size: 0.8rem !important;
+  padding: 0.375rem 0.625rem !important;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.lrz-position-tooltip::before {
+  border-top-color: var(--lrz-tuffeau-line) !important;
+}
+
+.lrz-position-tooltip strong {
+  display: block;
+  font-size: 0.875rem;
+  font-family: var(--lrz-font-serif);
+  color: var(--lrz-foreground);
+}
+
+.lrz-position-tooltip__time {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--lrz-ink-soft);
+  margin-top: 0.1rem;
+}
+

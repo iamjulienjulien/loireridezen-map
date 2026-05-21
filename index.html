@@ -79,33 +79,26 @@
         </div>
       </header>
 
-      <!-- Section 1 : Contrôles -->
-      <section class="lrz-section" data-section="controls">
-        <header class="lrz-section__header">
-          <h3>Contrôles</h3>
-          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
-        </header>
-        <div class="lrz-section__body lrz-controls">
-          <div class="lrz-btn-group">
-            <button class="lrz-ctrl-btn" id="ctrl-zoom-in" title="Zoom avant">+</button>
-            <button class="lrz-ctrl-btn" id="ctrl-zoom-out" title="Zoom arrière">−</button>
-          </div>
-          <button class="lrz-ctrl-btn" id="ctrl-locate" title="Localiser ma position"><span style="font-size:1.125rem">📍</span></button>
-          <button class="lrz-ctrl-btn" id="ctrl-fit" title="Recentrer sur les traces"><span style="font-size:1.125rem">🧭</span></button>
-          <div class="lrz-segmented" role="group" aria-label="Type de carte">
-            <button class="lrz-segmented__opt is-active" data-basemap="osm" title="Plan">🗺️</button>
-            <button class="lrz-segmented__opt" data-basemap="sat" title="Satellite">🛰️</button>
-          </div>
+      <!-- Ligne 1 : zoom + map toggle -->
+      <div class="lrz-action-row lrz-action-row--primary">
+        <div class="lrz-btn-group">
+          <button class="lrz-btn lrz-btn--zoom" data-action="zoom-in" title="Zoom avant" aria-label="Zoom avant">+</button>
+          <button class="lrz-btn lrz-btn--zoom" data-action="zoom-out" title="Zoom arrière" aria-label="Zoom arrière">−</button>
         </div>
-        <div class="lrz-row lrz-row--position">
-          <div class="lrz-row__visual lrz-row__visual--emoji">🚲</div>
-          <label class="lrz-row__label" for="position-toggle">Afficher ma position</label>
-          <input type="checkbox" class="lrz-checkbox" id="position-toggle" />
-        </div>
-      </section>
+        <button class="lrz-btn lrz-btn--map-toggle" data-action="toggle-map" title="Changer le fond de carte" aria-label="Basculer Plan / Satellite">
+          <span id="map-toggle-label">🗺️ Plan</span>
+        </button>
+      </div>
 
-      <!-- Section 2 : Traces -->
-      <section class="lrz-section" data-section="traces">
+      <!-- Ligne 2 : reset · goto-julien · locate-me -->
+      <div class="lrz-action-row lrz-action-row--secondary">
+        <button class="lrz-btn lrz-btn--action" data-action="reset-view" title="Recentrer sur les traces" aria-label="Recentrer">🧭</button>
+        <button class="lrz-btn lrz-btn--action lrz-btn--disabled" data-action="goto-julien" title="Pas de position active" aria-label="Aller à la position de Julien" id="btn-goto-julien" disabled>🚲</button>
+        <button class="lrz-btn lrz-btn--action" data-action="locate-me" title="Ma position" aria-label="Ma position">📍</button>
+      </div>
+
+      <!-- Section Traces -->
+      <section class="lrz-section lrz-panel-section--actes" data-section="traces">
         <header class="lrz-section__header">
           <h3>Traces <span class="lrz-section__count" id="traces-count"></span></h3>
           <button class="lrz-section__all" data-target="traces">Tout</button>
@@ -124,8 +117,20 @@
         </div>
       </section>
 
-      <!-- Section 3 : Photos (avant POI) -->
-      <section class="lrz-section" data-section="photos">
+      <!-- Section Points d'intérêt -->
+      <section class="lrz-section lrz-panel-section--poi" data-section="poi">
+        <header class="lrz-section__header">
+          <h3>Points d'intérêt <span class="lrz-section__count" id="poi-count"></span> <span class="lrz-section__badge" id="poi-visible"></span></h3>
+          <button class="lrz-section__all" data-target="poi">Tout</button>
+          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+        </header>
+        <div class="lrz-section__body" id="poi-list">
+          <!-- rempli par app.js depuis POI_TYPES -->
+        </div>
+      </section>
+
+      <!-- Section Photos -->
+      <section class="lrz-section lrz-panel-section--photos" data-section="photos">
         <header class="lrz-section__header">
           <h3>Photos</h3>
           <button class="lrz-section__toggle" aria-expanded="true">▾</button>
@@ -143,22 +148,23 @@
         </div>
       </section>
 
-      <!-- Section 4 : Points d'intérêt -->
-      <section class="lrz-section" data-section="poi">
+      <!-- Section Options -->
+      <section class="lrz-section lrz-panel-section--options" data-section="options">
         <header class="lrz-section__header">
-          <h3>Points d'intérêt <span class="lrz-section__count" id="poi-count"></span> <span class="lrz-section__badge" id="poi-visible"></span></h3>
-          <button class="lrz-section__all" data-target="poi">Tout</button>
+          <h3>Options</h3>
           <button class="lrz-section__toggle" aria-expanded="true">▾</button>
         </header>
-        <div class="lrz-section__body" id="poi-list">
-          <!-- rempli par app.js depuis POI_TYPES -->
+        <div class="lrz-section__body">
+          <div class="lrz-row">
+            <div class="lrz-row__visual lrz-row__visual--emoji">🚲</div>
+            <label class="lrz-row__label" for="position-toggle">Afficher ma position</label>
+            <input type="checkbox" class="lrz-checkbox" id="position-toggle" />
+          </div>
+          <div class="lrz-panel__actions">
+            <button class="lrz-reset-btn" id="reset-prefs">Réinitialiser les filtres</button>
+          </div>
         </div>
       </section>
-
-      <!-- Actions panel -->
-      <div class="lrz-panel__actions">
-        <button class="lrz-reset-btn" id="reset-prefs">Réinitialiser les filtres</button>
-      </div>
     </aside>
 
     <!-- Bouton d'ouverture du drawer mobile -->

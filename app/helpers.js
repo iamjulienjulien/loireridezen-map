@@ -30,6 +30,20 @@ export function safeHttpUrl(url) {
 }
 
 /**
+ * Éclaircit une couleur hex en la mélangeant avec du blanc.
+ * factor=0 → couleur originale, factor=1 → blanc pur.
+ */
+export function lightenHex(hex, factor = 0.8) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const lr = Math.round(r + (255 - r) * factor);
+  const lg = Math.round(g + (255 - g) * factor);
+  const lb = Math.round(b + (255 - b) * factor);
+  return `#${lr.toString(16).padStart(2, "0")}${lg.toString(16).padStart(2, "0")}${lb.toString(16).padStart(2, "0")}`;
+}
+
+/**
  * Debounce : retarde l'exécution de fn tant que des appels arrivent.
  * Utile pour `moveend` de Leaflet (évite un fetch à chaque pixel).
  */
