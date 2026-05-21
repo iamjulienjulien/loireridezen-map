@@ -150,6 +150,48 @@ def format_weather(w: dict | None) -> str:
     return " ".join(parts) if parts else "—"
 
 
+def _resolve_poi_name(poi_id: str | None) -> str:
+    """Résout un poi_id en 'emoji nom' lisible. Retourne '' si absent."""
+    if not poi_id or not _SUPABASE_AVAILABLE:
+        return ""
+    try:
+        poi = _get_poi(poi_id)
+        if not poi:
+            return f"⚠ POI orphelin ({poi_id[:8]}...)"
+        emoji = _POI_TYPE_EMOJIS.get(poi.get("type", ""), "📍")
+        return f"{emoji} {poi.get('name', '(sans nom)')}"
+    except Exception:
+        return f"⚠ Erreur résolution ({poi_id[:8]}...)"
+
+
+def _find_photos_attached_to_poi(poi_id: str) -> list[dict]:
+    """Retourne les items de photos.json dont le poi_id correspond."""
+    photos, _ = load_catalog(CATALOG_PHOTOS)
+    return [p for p in photos if p.get("poi_id") == poi_id]
+
+
+def _update_photo_poi_in_geojson(photo_id: str, poi_id: str | None) -> None:
+    """Met à jour (ou retire) poi_id dans pois_photos.geojson pour un photo donné."""
+    if not PHOTOS_GEOJSON.exists():
+        return
+    with PHOTOS_GEOJSON.open(encoding="utf-8") as f:
+        fc = json.load(f)
+    changed = False
+    for feat in fc.get("features", []):
+        props = feat.get("properties", {})
+        # Match par id exact (nouveau format) ou par stem du thumb (legacy)
+        feat_id = props.get("id") or Path(props.get("thumb", "")).stem
+        if feat_id == photo_id:
+            if poi_id:
+                props["poi_id"] = poi_id
+            else:
+                props.pop("poi_id", None)
+            changed = True
+    if changed:
+        with PHOTOS_GEOJSON.open("w", encoding="utf-8") as f:
+            json.dump(fc, f, ensure_ascii=False, indent=2)
+
+
 # Lib Supabase — import optionnel (dispo si supabase>=2.5.0 installé)
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -967,6 +1009,37 @@ def prompt_delete_poi() -> None:
         return
 
     _show_poi_panel(poi, title="POI à supprimer")
+
+    poi_id = poi.get("id")
+    name = poi.get("name", "")
+
+    # Vérifier les photos rattachées à ce POI
+    attached_photos = _find_photos_attached_to_poi(poi_id) if poi_id else []
+    if attached_photos:
+        console.print(f"\n[yellow]⚠ Ce POI a {len(attached_photos)} photo(s) rattachée(s) :[/]")
+        for p in attached_photos[:5]:
+            console.print(f"  - {p['id']}")
+        if len(attached_photos) > 5:
+            console.print(f"  ... et {len(attached_photos) - 5} autres")
+        orphan_choice = questionary.select(
+            "Que faire des photos ?",
+            choices=[
+                questionary.Choice("↪ Les détacher (elles redeviendront des markers)", value="detach"),
+                questionary.Choice("↪ Annuler la suppression", value="cancel"),
+            ],
+        ).ask()
+        if orphan_choice is None or orphan_choice == "cancel":
+            console.print("[dim]❌ Suppression annulée.[/]")
+            return
+        if orphan_choice == "detach":
+            photos, _ = load_catalog(CATALOG_PHOTOS)
+            for p in photos:
+                if p.get("poi_id") == poi_id:
+                    p["poi_id"] = None
+                    _update_photo_poi_in_geojson(p["id"], None)
+            save_catalog(CATALOG_PHOTOS, photos)
+            console.print(f"[dim]{len(attached_photos)} photo(s) détachée(s).[/]")
+
     console.print("[bold red]⚠ Cette action est irréversible.[/]\n")
 
     confirm_text = questionary.text("Pour confirmer, saisir exactement : SUPPRIMER").ask()
@@ -974,8 +1047,6 @@ def prompt_delete_poi() -> None:
         console.print("[dim]❌ Annulé.[/]")
         return
 
-    poi_id = poi.get("id")
-    name = poi.get("name", "")
     try:
         _delete_poi(poi_id)
         log_event("INFO", "poi", "delete", id=poi_id, name=name)
@@ -1145,7 +1216,22 @@ def _edit_catalog_loop(catalog_path: Path, kind: str) -> None:
 def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> bool:
     """Boucle d'édition d'un item. Retourne True si l'item a été supprimé."""
     while True:
-        fields = "\n".join(f"  [dim]{k}:[/] {v}" for k, v in item.items())
+        if kind == "photos":
+            poi_id = item.get("poi_id")
+            poi_label = _resolve_poi_name(poi_id) if poi_id else "—"
+            lines = [
+                f"  [dim]id:[/]           {item.get('id', '')}",
+                f"  [dim]label:[/]        {item.get('label', '')}",
+                f"  [dim]description:[/]  {item.get('description', '') or ''}",
+                f"  [dim]group:[/]        {item.get('group', '')}",
+                f"  [dim]order:[/]        {item.get('order', '')}",
+                f"  [dim]poi_id:[/]       {poi_label or '—'}",
+                f"  [dim]time:[/]         {item.get('time', '')}",
+                f"  [dim]coords:[/]       {item.get('lat', '')}, {item.get('lon', '')}",
+            ]
+            fields = "\n".join(lines)
+        else:
+            fields = "\n".join(f"  [dim]{k}:[/] {v}" for k, v in item.items())
         console.print(Panel(fields, title=f"Item : {item['id']}", border_style="cyan"))
 
         action_choices: list = [
@@ -1155,6 +1241,13 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
         ]
         if kind == "traces":
             action_choices.append(questionary.Choice("🔢 Modifier l'ordre", value="order"))
+        if kind == "photos":
+            action_choices.append(questionary.Separator())
+            if item.get("poi_id"):
+                action_choices.append(questionary.Choice("🔗 Détacher du POI", value="detach_poi"))
+            else:
+                action_choices.append(questionary.Choice("🌐 Rattacher à un POI", value="attach_poi"))
+            action_choices.append(questionary.Separator())
         action_choices += [
             questionary.Choice("🗑️  Supprimer cet item", value="delete"),
             questionary.Choice("← Retour sans modifier", value="back"),
@@ -1202,6 +1295,48 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                     console.print("[green]✓ Item mis à jour[/]")
                 except ValueError:
                     console.print("[red]Valeur non valide — entier attendu.[/]")
+
+        elif action == "attach_poi":
+            if not _SUPABASE_AVAILABLE:
+                console.print("[yellow]⚠ Module supabase non disponible.[/]")
+                continue
+            if not _check_supa_env():
+                continue
+            try:
+                pois = _list_pois()
+            except Exception as e:
+                console.print(f"[red]Erreur chargement POI : {e}[/]")
+                continue
+            if item.get("poi_id"):
+                console.print(
+                    f"[dim]Photo actuellement rattachée à : {_resolve_poi_name(item['poi_id'])}[/]"
+                )
+                replace = questionary.confirm("Remplacer par un autre POI ?", default=True).ask()
+                if not replace:
+                    continue
+            selected = _select_poi_from_list(pois, "Rattacher la photo à ce POI :")
+            if selected:
+                item["poi_id"] = selected["id"]
+                save_catalog(catalog_path, items)
+                _update_photo_poi_in_geojson(item["id"], selected["id"])
+                log_event("INFO", "photos", "photo_poi_attached",
+                          id=item["id"], poi_id=selected["id"], poi_name=selected.get("name", ""))
+                console.print(
+                    f"[green]✓ Photo « {item.get('label', item['id'])} » rattachée "
+                    f"au POI « {selected.get('name', '')} »[/]"
+                )
+
+        elif action == "detach_poi":
+            poi_name = _resolve_poi_name(item.get("poi_id"))
+            confirmed = questionary.confirm(
+                f"Détacher la photo du POI « {poi_name} » ?", default=False
+            ).ask()
+            if confirmed:
+                item["poi_id"] = None
+                save_catalog(catalog_path, items)
+                _update_photo_poi_in_geojson(item["id"], None)
+                log_event("INFO", "photos", "photo_poi_detached", id=item["id"])
+                console.print("[green]✓ Photo détachée — redeviendra un marker sur la carte.[/]")
 
         elif action == "delete":
             label_display = item.get("label", item["id"])

@@ -35,6 +35,9 @@ const { Icon, TackCircleBorder } = leafletExtraMarkers;
 
 export const cluster = new LayerGroup().addTo(map);
 
+// Index des photos rattachées à des POI — Map<poi_id, photo_props[]>
+const photosByPoi = new Map();
+
 // Types autorisés côté serveur : les types hidden ne sont demandés que si le
 // mode correspondant est actif (sinon ils ne sont pas chargés du tout).
 const _allowedTypes = Object.entries(POI_TYPES)
@@ -69,8 +72,34 @@ function iconByType(type) {
 
 // ──────────────────────────────────────────────────────────── Popups
 
+function renderAttachedPhotos(poiId) {
+  const attached = photosByPoi.get(poiId) || [];
+  if (!attached.length) return "";
+
+  if (attached.length === 1) {
+    const ph = attached[0];
+    const thumb = escapeHtml(ph.thumb || "");
+    const remote = escapeHtml(safeHttpUrl(ph.image) || "");
+    const name = escapeHtml(ph.name || "");
+    const img = `<img src="${thumb}" alt="${name}"/>`;
+    return `<div class="lrz-poi-popup__hero-photo">${remote ? `<a href="${remote}" target="_blank" rel="noopener noreferrer">${img}</a>` : img}</div>`;
+  }
+
+  const thumbs = attached.map((ph) => {
+    const thumb = escapeHtml(ph.thumb || "");
+    const remote = escapeHtml(safeHttpUrl(ph.image) || "");
+    const name = escapeHtml(ph.name || "");
+    const img = `<img src="${thumb}" alt="${name}"/>`;
+    return remote
+      ? `<a href="${remote}" target="_blank" rel="noopener noreferrer" class="lrz-poi-popup__thumb">${img}</a>`
+      : `<span class="lrz-poi-popup__thumb">${img}</span>`;
+  }).join("");
+  return `<div class="lrz-poi-popup__attached"><h4>Mes clichés</h4><div class="lrz-poi-popup__grid">${thumbs}</div></div>`;
+}
+
 function renderChateauPopup(p) {
   const visited = p.visited === true;
+  const clichés = renderAttachedPhotos(p.id);
   return `
     <div class="lrz-poi-popup lrz-poi-popup--chateau">
       ${p.photo_path ? `<div class="lrz-poi-popup__photo"><img src="${escapeHtml(p.photo_path)}" alt="${escapeHtml(p.name || "Château")}"/></div>` : ""}
@@ -81,6 +110,7 @@ function renderChateauPopup(p) {
           ${p.construction_date ? `<span class="lrz-poi-popup__meta-date">🏗 ${escapeHtml(p.construction_date)}</span>` : ""}
         </div>
         ${p.description ? `<p class="lrz-poi-popup__description">${escapeHtml(p.description)}</p>` : ""}
+        ${clichés}
       </div>
     </div>
   `;
@@ -91,24 +121,33 @@ function renderGenericPoiPopup(p) {
     safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
   const insta = safeHttpUrl(p.url_insta);
   const safeImg = img ? escapeHtml(img) : null;
+  const attached = photosByPoi.get(p.id) || [];
+  const heroSection = attached.length === 1 ? renderAttachedPhotos(p.id) : "";
+  const gridSection = attached.length > 1 ? renderAttachedPhotos(p.id) : "";
   return `
     <div class="poi-popup">
+      ${heroSection}
       ${safeImg ? `<img src="${safeImg}" alt="${escapeHtml(p.name || "POI")}"/>` : ""}
       <strong>${escapeHtml(p.name || "Point")}</strong><br/>
       <small>${escapeHtml(p.type || "")}${p.stage ? ` · Étape ${escapeHtml(String(p.stage))}` : ""}</small>
       ${p.description ? `<p>${escapeHtml(p.description)}</p>` : ""}
       ${insta ? `<p><a href="${escapeHtml(insta)}" target="_blank" rel="noopener noreferrer">Voir sur Instagram 📲</a></p>` : ""}
+      ${gridSection}
     </div>
   `;
 }
 
 function renderLapinPopup(p) {
+  const attached = photosByPoi.get(p.id) || [];
+  const heroSection = attached.length === 1 ? renderAttachedPhotos(p.id) : "";
+  const gridSection = attached.length > 1 ? renderAttachedPhotos(p.id) : "";
   return `
     <div class="lrz-poi-popup lrz-poi-popup--lapin">
-      ${p.photo_path ? `<div class="lrz-poi-popup__photo"><img src="${escapeHtml(p.photo_path)}" alt="${escapeHtml(p.name || "Lapin")}"/></div>` : ""}
+      ${heroSection || (p.photo_path ? `<div class="lrz-poi-popup__photo"><img src="${escapeHtml(p.photo_path)}" alt="${escapeHtml(p.name || "Lapin")}"/></div>` : "")}
       <div class="lrz-poi-popup__body">
         <strong class="lrz-poi-popup__title">${escapeHtml(p.name || "Lapin en voyage")}</strong>
         ${p.description ? `<p class="lrz-poi-popup__description">${escapeHtml(p.description)}</p>` : ""}
+        ${gridSection}
         <span class="lrz-poi-popup__signature">💖 Papa</span>
       </div>
     </div>
@@ -195,6 +234,17 @@ async function fetchLocalPhotos() {
   }
 }
 
+function buildPhotosByPoi(features) {
+  photosByPoi.clear();
+  for (const f of features) {
+    const { poi_id } = f.properties || {};
+    if (poi_id) {
+      if (!photosByPoi.has(poi_id)) photosByPoi.set(poi_id, []);
+      photosByPoi.get(poi_id).push(f.properties);
+    }
+  }
+}
+
 /**
  * Charge les POI visibles dans la BBOX courante.
  * Annule le fetch précédent si encore en cours (déplacement rapide).
@@ -217,7 +267,11 @@ export async function loadPoisForViewport() {
       fetchPoisFromSupabase(bounds, activeType, controller.signal),
       fetchLocalPhotos(),
     ]);
-    const all = (fcDB.features || []).concat(fcLocal.features || []);
+    const localFeatures = fcLocal.features || [];
+    buildPhotosByPoi(localFeatures);
+    // Photos rattachées à un POI n'ont pas de marker séparé
+    const photosForMarkers = localFeatures.filter((f) => !(f.properties || {}).poi_id);
+    const all = (fcDB.features || []).concat(photosForMarkers);
     const activeSet = new Set(activeTypes);
     const filtered = all.filter((f) =>
       activeSet.has((f.properties || {}).type),

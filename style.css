@@ -1644,3 +1644,51 @@ body {
   margin-top: 0.1rem;
 }
 
+/* ─────────────────────────────── LRZ-EVO-28 — Photos rattachées dans les popups POI */
+
+.lrz-poi-popup__hero-photo {
+  margin: -12px -12px 10px;
+}
+
+.lrz-poi-popup__hero-photo img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+  display: block;
+}
+
+.lrz-poi-popup__attached {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--lrz-tuffeau-line);
+}
+
+.lrz-poi-popup__attached h4 {
+  margin: 0 0 0.5rem;
+  font-family: var(--lrz-font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--lrz-ink-soft);
+  text-align: center;
+}
+
+.lrz-poi-popup__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+}
+
+.lrz-poi-popup__thumb img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  transition: transform 0.15s;
+}
+
+.lrz-poi-popup__thumb:hover img {
+  transform: scale(1.05);
+}
+

@@ -90,13 +90,25 @@ PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".heic", ".heif"}
 CATALOG_PHOTOS = Path(__file__).resolve().parent.parent / "data" / "catalog" / "photos.json"
 
 
-def load_catalog_labels() -> dict[str, str]:
-    """Retourne un dict {stem → label} depuis data/catalog/photos.json."""
+def load_catalog_data() -> dict[str, dict]:
+    """Retourne {stem → {"label": ..., "poi_id": ...}} depuis data/catalog/photos.json."""
     if not CATALOG_PHOTOS.exists():
         return {}
     with CATALOG_PHOTOS.open(encoding="utf-8") as f:
         data = json.load(f)
-    return {item["id"]: item["label"] for item in data.get("items", []) if item.get("id") and item.get("label")}
+    result = {}
+    for item in data.get("items", []):
+        if item.get("id"):
+            result[item["id"]] = {
+                "label": item.get("label", ""),
+                "poi_id": item.get("poi_id") or None,
+            }
+    return result
+
+
+def load_catalog_labels() -> dict[str, str]:
+    """Retourne un dict {stem → label} depuis data/catalog/photos.json (compat)."""
+    return {k: v["label"] for k, v in load_catalog_data().items()}
 
 
 # ───────────────────────────────────────────────────────────── Credentials
@@ -327,17 +339,25 @@ def build_feature(
     lat: float,
     lon: float,
     when: str | None,
+    *,
+    stem: str | None = None,
+    poi_id: str | None = None,
 ) -> dict:
     """Construit un Feature GeoJSON RFC 7946 (Point WGS84)."""
+    props: dict = {
+        "name": name,
+        "type": "photo",
+        "image": image_url,
+        "thumb": thumb_url,
+        "time": when,
+    }
+    if stem:
+        props["id"] = stem
+    if poi_id:
+        props["poi_id"] = poi_id
     return {
         "type": "Feature",
-        "properties": {
-            "name": name,
-            "type": "photo",
-            "image": image_url,
-            "thumb": thumb_url,
-            "time": when,
-        },
+        "properties": props,
         "geometry": {
             "type": "Point",
             "coordinates": [round(lon, 6), round(lat, 6)],
@@ -360,6 +380,7 @@ def photos_from_supabase(
     image_base: str,
     thumb_prefix: str,
     catalog_labels: dict[str, str] | None = None,
+    catalog_data: dict[str, dict] | None = None,
 ) -> list[dict]:
     """Liste le bucket Supabase, télécharge chaque photo en mémoire, extrait EXIF."""
     logger.info("Liste du bucket '%s' sur %s", bucket, supa_url)
@@ -388,10 +409,13 @@ def photos_from_supabase(
         stem = Path(name).stem
         image_url = f"{image_base.rstrip('/')}/{name}"
         thumb_url = f"{thumb_prefix.rstrip('/')}/{stem}.webp"
-        label = (catalog_labels or {}).get(stem) or pretty_name(stem)
+        cat_entry = (catalog_data or {}).get(stem) or {}
+        label = cat_entry.get("label") or (catalog_labels or {}).get(stem) or pretty_name(stem)
+        poi_id = cat_entry.get("poi_id")
 
         features.append(build_feature(
-            label, image_url, thumb_url, lat, lon, info.get("time")
+            label, image_url, thumb_url, lat, lon, info.get("time"),
+            stem=stem, poi_id=poi_id,
         ))
 
     if skipped_no_gps:
@@ -407,6 +431,7 @@ def photos_from_local(
     image_base: str,
     thumb_prefix: str,
     catalog_labels: dict[str, str] | None = None,
+    catalog_data: dict[str, dict] | None = None,
 ) -> list[dict]:
     """Lit les EXIF depuis un dossier local, génère les URLs configurées."""
     if not photos_dir.exists():
@@ -437,10 +462,13 @@ def photos_from_local(
         stem = Path(rel).stem
         image_url = f"{image_base.rstrip('/')}/{rel}"
         thumb_url = f"{thumb_prefix.rstrip('/')}/{stem}.webp"
-        label = (catalog_labels or {}).get(stem) or pretty_name(stem)
+        cat_entry = (catalog_data or {}).get(stem) or {}
+        label = cat_entry.get("label") or (catalog_labels or {}).get(stem) or pretty_name(stem)
+        poi_id = cat_entry.get("poi_id")
 
         features.append(build_feature(
-            label, image_url, thumb_url, lat, lon, info.get("time")
+            label, image_url, thumb_url, lat, lon, info.get("time"),
+            stem=stem, poi_id=poi_id,
         ))
 
     if skipped_no_gps:
@@ -517,17 +545,17 @@ def main(argv: list[str] | None = None) -> int:
         image_base = f"{supa_url.rstrip('/')}/storage/v1/object/public/{args.bucket}"
         logger.info("image_base auto : %s", image_base)
 
-    catalog_labels = load_catalog_labels()
-    if catalog_labels:
-        logger.info("%d label(s) chargés depuis le catalogue photos", len(catalog_labels))
+    catalog_data = load_catalog_data()
+    if catalog_data:
+        logger.info("%d entrée(s) chargées depuis le catalogue photos", len(catalog_data))
 
     # Aiguillage de mode
     if args.local_photos:
-        features = photos_from_local(args.local_photos, image_base, args.thumb_prefix, catalog_labels)
+        features = photos_from_local(args.local_photos, image_base, args.thumb_prefix, catalog_data=catalog_data)
     else:
         supa_url, supa_key = get_credentials()
         features = photos_from_supabase(
-            supa_url, supa_key, args.bucket, image_base, args.thumb_prefix, catalog_labels
+            supa_url, supa_key, args.bucket, image_base, args.thumb_prefix, catalog_data=catalog_data
         )
 
     if not features:
