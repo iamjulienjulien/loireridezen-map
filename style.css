@@ -2088,7 +2088,7 @@ body {
   position: fixed;
   right: 16px;
   /* au-dessus de .lrz-signature (hauteur ~50px, bottom 16px) + 8px marge */
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 69px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 79px);
   z-index: 999;
   padding: 12px 20px;
   background: linear-gradient(135deg, #ff66aa 0%, #ff88bb 100%);
