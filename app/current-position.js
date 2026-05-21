@@ -8,22 +8,12 @@
 
 import { DivIcon, Marker, Tooltip } from "leaflet";
 import { map } from "./map.js";
+import { formatRelativeTime } from "./time-format.js";
 
 export const currentPositionLayer = new Marker([0, 0], { opacity: 0 });
 
 let _updatedAt = null;
 let _tooltipInterval = null;
-
-function formatRelativeTime(iso) {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const diffMin = Math.floor(diffMs / 60_000);
-  if (diffMin < 1) return "il y a moins d'une minute";
-  if (diffMin < 60) return `il y a ${diffMin} min`;
-  const diffH = Math.floor(diffMin / 60);
-  if (diffH < 24) return `il y a ${diffH}h`;
-  const diffD = Math.floor(diffH / 24);
-  return `il y a ${diffD} j`;
-}
 
 function tooltipContent(updatedAt) {
   return `<strong>Je suis là</strong><span class="lrz-position-tooltip__time">${formatRelativeTime(updatedAt)}</span>`;
@@ -81,7 +71,14 @@ export async function loadCurrentPosition() {
     }
 
     document.dispatchEvent(new CustomEvent("lrz:position-loaded", {
-      detail: { active: true, lat, lon },
+      detail: {
+        active: true,
+        lat,
+        lon,
+        label: data.label || "",
+        description: data.description || "",
+        updated_at: data.updated_at || null,
+      },
     }));
   } catch (err) {
     console.warn("[loireridezen] current_position load failed", err);

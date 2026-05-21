@@ -79,23 +79,8 @@
         </div>
       </header>
 
-      <!-- Ligne 1 : zoom + map toggle -->
-      <div class="lrz-action-row lrz-action-row--primary">
-        <div class="lrz-btn-group">
-          <button class="lrz-btn lrz-btn--zoom" data-action="zoom-in" title="Zoom avant" aria-label="Zoom avant">+</button>
-          <button class="lrz-btn lrz-btn--zoom" data-action="zoom-out" title="Zoom arrière" aria-label="Zoom arrière">−</button>
-        </div>
-        <button class="lrz-btn lrz-btn--map-toggle" data-action="toggle-map" title="Changer le fond de carte" aria-label="Basculer Plan / Satellite">
-          <span id="map-toggle-label">🗺️ Plan</span>
-        </button>
-      </div>
-
-      <!-- Ligne 2 : reset · goto-julien · locate-me -->
-      <div class="lrz-action-row lrz-action-row--secondary">
-        <button class="lrz-btn lrz-btn--action" data-action="reset-view" title="Recentrer sur les traces" aria-label="Recentrer">🧭</button>
-        <button class="lrz-btn lrz-btn--action lrz-btn--disabled" data-action="goto-julien" title="Pas de position active" aria-label="Aller à la position de Julien" id="btn-goto-julien" disabled>🚲</button>
-        <button class="lrz-btn lrz-btn--action" data-action="locate-me" title="Ma position" aria-label="Ma position">📍</button>
-      </div>
+      <!-- Blocs éditoriaux : position + étape (rempli par info-panel.js) -->
+      <div id="lrz-info-panel"></div>
 
       <!-- Section Traces -->
       <section class="lrz-section lrz-panel-section--actes" data-section="traces">
@@ -184,6 +169,22 @@
     </div>
 
     <div id="map"></div>
+
+    <!-- Panel flottant d'actions (top-right) -->
+    <aside id="lrz-actions-panel" class="lrz-actions-panel" aria-label="Actions carte">
+      <div class="lrz-actions-panel__group">
+        <button class="lrz-apanel-btn" data-action="zoom-in" title="Zoom avant" aria-label="Zoom avant">+</button>
+        <button class="lrz-apanel-btn" data-action="zoom-out" title="Zoom arrière" aria-label="Zoom arrière">−</button>
+      </div>
+      <div class="lrz-actions-panel__group">
+        <button class="lrz-apanel-btn" data-action="set-plan" data-basemap="osm" title="Fond Plan" aria-label="Plan">🗺️</button>
+        <button class="lrz-apanel-btn" data-action="set-sat" data-basemap="sat" title="Fond Satellite" aria-label="Satellite">🛰️</button>
+      </div>
+      <div class="lrz-actions-panel__group">
+        <button class="lrz-apanel-btn" data-action="reset-view" title="Recentrer sur les traces" aria-label="Recentrer">🧭</button>
+        <button class="lrz-apanel-btn" data-action="locate-me" title="Ma position" aria-label="Ma position">📍</button>
+      </div>
+    </aside>
 
     <script type="module" src="app.js"></script>
   </body>

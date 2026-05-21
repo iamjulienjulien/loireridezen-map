@@ -3,13 +3,12 @@
  *
  * 4 sections : Traces · POI · Photos · Options
  * Accordion pliable (état persisté via preferences.js), badge "X visibles".
- * Lignes d'actions : zoom, toggle-map, reset-view, goto-julien, locate-me.
  */
 
 import { FeatureGroup } from "leaflet";
 import * as leafletExtraMarkers from "leaflet-extra-markers";
 
-import { map, baseOSM, baseEsriSat, esriLabels } from "./map.js";
+import { map } from "./map.js";
 import { traceGroups, loadAllRoutes } from "./routes.js";
 import { POI_TYPES, SHAPES, TRACE_MARKER_TYPES, getGroupColorPreview } from "./types.js";
 
@@ -18,118 +17,12 @@ import { getVisiblePoiCount } from "./poi.js";
 import { triggerLocate } from "./locate.js";
 import { loadPreferences, updatePreference, resetPreferences } from "./preferences.js";
 import { escapeHtml, lightenHex } from "./helpers.js";
-import { FIT_OPTIONS } from "./config.js";
 import { hiddenModes } from "./url-mode.js";
 
 // Map<groupId, FeatureGroup> peuplée après wireTraceCheckboxes()
 const traceFeatureGroups = new Map();
 
-// Coordonnées de Julien (mises à jour via lrz:position-loaded)
-let _gotoJulienCoords = null;
-
-// ─────────────────────────────────────── Section 1 : Contrôles
-
-function _updateMapToggleLabel(base) {
-  const label = document.getElementById("map-toggle-label");
-  if (label) label.textContent = base === "sat" ? "🛰️ Satellite" : "🗺️ Plan";
-}
-
-export function updateGotoJulienButton(active) {
-  const btn = document.getElementById("btn-goto-julien");
-  if (!btn) return;
-  btn.disabled = !active;
-  btn.classList.toggle("lrz-btn--disabled", !active);
-  btn.title = active ? "Aller à la position de Julien" : "Pas de position active";
-}
-
-export function initControls(map) {
-  const prefs = loadPreferences();
-  let currentBase = prefs.baseLayer || "osm";
-
-  // Initialiser le fond de carte depuis les prefs
-  if (currentBase === "sat") {
-    map.removeLayer(baseOSM);
-    baseEsriSat.addTo(map);
-    esriLabels.addTo(map);
-  }
-  _updateMapToggleLabel(currentBase);
-
-  // Boutons data-action
-  document.querySelectorAll("[data-action]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      switch (btn.dataset.action) {
-        case "zoom-in":
-          map.zoomIn();
-          break;
-        case "zoom-out":
-          map.zoomOut();
-          break;
-        case "toggle-map": {
-          currentBase = currentBase === "osm" ? "sat" : "osm";
-          if (currentBase === "sat") {
-            map.removeLayer(baseOSM);
-            baseEsriSat.addTo(map);
-            esriLabels.addTo(map);
-          } else {
-            map.removeLayer(baseEsriSat);
-            map.removeLayer(esriLabels);
-            baseOSM.addTo(map);
-          }
-          updatePreference("baseLayer", currentBase);
-          _updateMapToggleLabel(currentBase);
-          break;
-        }
-        case "reset-view": {
-          const layers = [];
-          traceGroups.forEach(({ layers: ls }) => layers.push(...ls));
-          if (layers.length) {
-            map.fitBounds(new FeatureGroup(layers).getBounds(), FIT_OPTIONS);
-          }
-          break;
-        }
-        case "goto-julien":
-          if (_gotoJulienCoords) {
-            map.flyTo(_gotoJulienCoords, 14, { duration: 1.2 });
-          }
-          break;
-        case "locate-me":
-          triggerLocate(map);
-          break;
-      }
-    });
-  });
-
-  // Activer le bouton goto-julien quand la position est chargée
-  document.addEventListener("lrz:position-loaded", ({ detail }) => {
-    _gotoJulienCoords = detail.active ? [detail.lat, detail.lon] : null;
-    updateGotoJulienButton(detail.active);
-  });
-
-  // Backward compat : segmented basemap (si HTML ancien encore présent)
-  const opts = document.querySelectorAll(".lrz-segmented__opt");
-  opts.forEach((btn) =>
-    btn.classList.toggle("is-active", btn.dataset.basemap === currentBase),
-  );
-  opts.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      currentBase = btn.dataset.basemap;
-      opts.forEach((b) => b.classList.toggle("is-active", b === btn));
-      if (currentBase === "sat") {
-        map.removeLayer(baseOSM);
-        baseEsriSat.addTo(map);
-        esriLabels.addTo(map);
-      } else {
-        map.removeLayer(baseEsriSat);
-        map.removeLayer(esriLabels);
-        baseOSM.addTo(map);
-      }
-      updatePreference("baseLayer", currentBase);
-      _updateMapToggleLabel(currentBase);
-    });
-  });
-}
-
-// ─────────────────────────────────────── Section 2 : Traces
+// ─────────────────────────────────────── Section 1 : Traces
 
 function colorPreviewStyle(preview) {
   if (preview.type === "solid") return `background:${preview.colors[0]}`;

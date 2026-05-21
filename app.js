@@ -13,13 +13,14 @@ import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
 import { buildTraceMarkersFromCatalog, traceMarkers } from "./app/trace-markers.js";
 import { loadCurrentPosition, currentPositionLayer } from "./app/current-position.js";
+import { initActionsPanel } from "./app/actions-panel.js";
+import { initInfoPanel } from "./app/info-panel.js";
 import {
   renderTracesSection,
   renderPoiSection,
   renderPhotosSection,
   wireTraceCheckboxes,
   wireTraceMarkerCheckboxes,
-  initControls,
   initMobileDrawer,
   initAccordion,
   initPoiBadge,
@@ -69,7 +70,8 @@ async function init() {
   renderPhotosSection(prefs);
   renderPoiSection(prefs);
 
-  initControls(map);
+  initActionsPanel();
+  initInfoPanel();
   initMobileDrawer();
   initAccordion(prefs);
   initPoiBadge();
