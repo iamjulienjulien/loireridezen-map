@@ -10,6 +10,7 @@
 
 import { map } from "./app/map.js";
 import { initVisitCounter } from "./app/visit-counter.js";
+import { hiddenModes } from "./app/url-mode.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
 import { buildTraceMarkersFromCatalog, traceMarkers } from "./app/trace-markers.js";
@@ -79,7 +80,11 @@ async function init() {
   initResetButton();
   initKeyboardShortcuts(map);
   initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
-  initVisitCounter().catch((err) => console.warn("[visit-counter] init failed", err));
+
+  if (!hiddenModes.rabbit) {
+    initVisitCounter().catch((err) => console.warn("[visit-counter] init failed", err));
+    document.querySelector(".lrz-signature")?.remove();
+  }
   setInterval(() => {
     const toggle = document.getElementById("position-toggle");
     if (!toggle || toggle.checked) loadCurrentPosition();
@@ -92,9 +97,21 @@ async function init() {
     });
   });
 
-  // POI : premier chargement + listeners viewport
-  bindViewportListeners();
+  // POI : premier chargement + listeners viewport (pas de listener moveend en mode for=elle)
+  if (!hiddenModes.rabbit) bindViewportListeners();
   loadPoisForViewport();
+
+  if (hiddenModes.rabbit) {
+    // Bonus A — masquer liens externes + crédits
+    document.querySelector(".lrz-panel-header")?.remove();
+    document.querySelectorAll(".lrz-panel-credit").forEach((el) => el.remove());
+    // Masquer sections non pertinentes
+    ["traces", "poi", "photos", "options"].forEach((s) => {
+      document.querySelector(`[data-section="${s}"]`)?.remove();
+    });
+    // Charger la position directement (le toggle #position-toggle a été supprimé)
+    loadCurrentPosition();
+  }
 
   // Phase 2 : UI rendue → masquer le skeleton plein écran, démarrer le mini
   requestAnimationFrame(() => {

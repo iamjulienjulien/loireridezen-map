@@ -148,6 +148,7 @@ function renderLapinPopup(p) {
         <strong class="lrz-poi-popup__title">${escapeHtml(p.name || "Lapin en voyage")}</strong>
         ${p.description ? `<p class="lrz-poi-popup__description">${escapeHtml(p.description)}</p>` : ""}
         ${gridSection}
+        ${hiddenModes.rabbit ? `<span class="lrz-poi-popup__closing">Je pense à toi 💗</span>` : ""}
         <span class="lrz-poi-popup__signature">💖 Papa</span>
       </div>
     </div>
@@ -251,21 +252,28 @@ function buildPhotosByPoi(features) {
  * En cas d'erreur, conserve les markers précédents et affiche la bannière.
  */
 export async function loadPoisForViewport() {
-  const activeTypes = Array.from(
-    document.querySelectorAll(".type-filter:checked"),
-  ).map((i) => i.value);
-  const activeType = activeTypes.length === 1 ? activeTypes[0] : null;
+  let activeTypes, activeType, bounds;
+
+  if (hiddenModes.rabbit) {
+    activeTypes = ["lapin"];
+    activeType = "lapin";
+    bounds = { getWest: () => -5, getSouth: () => 41, getEast: () => 10, getNorth: () => 51 };
+  } else {
+    activeTypes = Array.from(
+      document.querySelectorAll(".type-filter:checked"),
+    ).map((i) => i.value);
+    activeType = activeTypes.length === 1 ? activeTypes[0] : null;
+    bounds = map.getBounds();
+  }
 
   if (lastAbort) lastAbort.abort();
   const controller = new AbortController();
   lastAbort = controller;
 
-  const bounds = map.getBounds();
-
   try {
     const [fcDB, fcLocal] = await Promise.all([
       fetchPoisFromSupabase(bounds, activeType, controller.signal),
-      fetchLocalPhotos(),
+      hiddenModes.rabbit ? Promise.resolve({ features: [] }) : fetchLocalPhotos(),
     ]);
     const localFeatures = fcLocal.features || [];
     buildPhotosByPoi(localFeatures);

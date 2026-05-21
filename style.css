@@ -748,10 +748,12 @@ body {
   border-radius: 4px;
   flex-shrink: 0;
   line-height: 1;
-  transition: transform 0.2s ease, background 0.15s;
+  transition:
+    transform 0.2s ease,
+    background 0.15s;
 }
 .lrz-section__toggle:hover {
-  background: var(--lrz-card-hover, rgba(0,0,0,0.05));
+  background: var(--lrz-card-hover, rgba(0, 0, 0, 0.05));
 }
 
 .lrz-section[data-collapsed="true"] .lrz-section__toggle {
@@ -938,6 +940,46 @@ body {
 
 /* ─────────────────────────────────────── Signature */
 
+.lrz-signature {
+  position: fixed;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 800;
+  background: rgba(253, 250, 243, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 12px;
+  padding: 0.625rem 0.875rem;
+  box-shadow: 0 4px 12px rgba(42, 31, 21, 0.08);
+  font-family: var(--lrz-font-sans);
+  line-height: 1.4;
+  width: 172px;
+}
+
+.lrz-signature strong {
+  display: block;
+  font-family: var(--lrz-font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--lrz-foreground);
+}
+
+.lrz-signature span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--lrz-ink-soft);
+  margin-top: 0.125rem;
+}
+
+.lrz-signature a {
+  color: var(--lrz-or);
+  text-decoration: none;
+}
+
+.lrz-signature a:hover {
+  text-decoration: underline;
+}
+
 .lrz-panel-credit {
   margin: 0 0 2px;
   padding: 0.375rem 0.875rem 0;
@@ -1026,7 +1068,6 @@ body {
     transform: translateX(0);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
   }
-
 }
 
 /* ═══════════════════════════════ LRZ-EVO-16 — Vague UI 4 ═══════════════════ */
@@ -1305,9 +1346,15 @@ body {
   user-select: none;
 }
 .lrz-trace-emoji--départ,
-.lrz-trace-emoji--arrivée { font-size: 1.25rem; }
-.lrz-trace-emoji--étape   { font-size: 1rem; }
-.lrz-trace-emoji:hover    { transform: scale(1.2); }
+.lrz-trace-emoji--arrivée {
+  font-size: 1.25rem;
+}
+.lrz-trace-emoji--étape {
+  font-size: 1rem;
+}
+.lrz-trace-emoji:hover {
+  transform: scale(1.2);
+}
 
 /* ─────────────────────────── LRZ-EVO-19 : Popups d'étape ──────────────── */
 .lrz-step-popup {
@@ -1390,12 +1437,23 @@ body {
   animation: lrz-ripple 2s ease-out infinite;
 }
 @keyframes lrz-pulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.18); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
 }
 @keyframes lrz-ripple {
-  0%   { transform: scale(0.4); opacity: 1; }
-  100% { transform: scale(2.2); opacity: 0; }
+  0% {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 /* Popup position */
@@ -1499,13 +1557,20 @@ body {
 .lrz-poi-popup--lapin .lrz-poi-popup__description {
   color: #5a4030;
 }
+.lrz-poi-popup__closing {
+  display: block;
+  font-size: 0.875rem;
+  color: #d94e6a;
+  margin-top: 0.5rem;
+}
+
 .lrz-poi-popup__signature {
   display: block;
   text-align: right;
   font-size: 0.8125rem;
   color: #d94e6a;
   font-style: italic;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 /* ═══════════════════════════════ LRZ-EVO-27 — Vague UI 5 ═══════════════════ */
@@ -1539,7 +1604,9 @@ body {
   font-family: var(--lrz-font-sans);
   font-size: 1rem;
   color: var(--lrz-foreground);
-  transition: background 0.15s, opacity 0.15s;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
   line-height: 1;
 }
 
@@ -1843,7 +1910,9 @@ body {
   color: var(--lrz-foreground);
   font-size: 0.75rem;
   font-family: var(--lrz-font-sans);
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
   min-height: 44px;
   justify-content: center;
 }
@@ -1961,7 +2030,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  font-family: 'ZCOOL QingKe HuangYou', 'Courier New', monospace;
+  font-family: "ZCOOL QingKe HuangYou", "Courier New", monospace;
   font-size: 14px;
   color: #cc6600;
   letter-spacing: 0.1em;
@@ -2006,8 +2075,8 @@ body {
   line-height: 16px;
   color: #ff9933;
   font-size: 16px;
-  text-shadow: 0 0 6px #ff9933, 0 0 3px #ff6600;
+  text-shadow:
+    0 0 6px #ff9933,
+    0 0 3px #ff6600;
   font-variant-numeric: tabular-nums;
 }
-
-

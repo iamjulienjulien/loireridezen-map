@@ -9,6 +9,7 @@
 import { DivIcon, Marker, Tooltip } from "leaflet";
 import { map } from "./map.js";
 import { formatRelativeTime } from "./time-format.js";
+import { hiddenModes } from "./url-mode.js";
 
 export const currentPositionLayer = new Marker([0, 0], { opacity: 0 });
 
@@ -16,7 +17,8 @@ let _updatedAt = null;
 let _tooltipInterval = null;
 
 function tooltipContent(updatedAt) {
-  return `<strong>Je suis là</strong><span class="lrz-position-tooltip__time">${formatRelativeTime(updatedAt)}</span>`;
+  const label = hiddenModes.rabbit ? "Papa est là" : "Je suis là";
+  return `<strong>${label}</strong><span class="lrz-position-tooltip__time">${formatRelativeTime(updatedAt)}</span>`;
 }
 
 function _refreshTooltip() {

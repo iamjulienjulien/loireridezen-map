@@ -9,6 +9,7 @@
 import { DivIcon, Marker, FeatureGroup } from "leaflet";
 import { TRACE_MARKER_TYPES } from "./types.js";
 import { escapeHtml } from "./helpers.js";
+import { hiddenModes } from "./url-mode.js";
 
 export const traceMarkers = {
   départ:  new FeatureGroup(),
@@ -50,6 +51,8 @@ async function safeFetch(url) {
 }
 
 export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog) {
+  if (hiddenModes.rabbit) return;
+
   for (const group of (groupsCatalog.items ?? [])) {
     const items = (tracesCatalog.items ?? [])
       .filter((it) => it.group === group.id)
