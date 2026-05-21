@@ -170,5 +170,11 @@ export function initBisouButton() {
   btn.innerHTML = "💗 Envoyer un bisou";
   btn.setAttribute("aria-label", "Envoyer un bisou à Papa");
   btn.addEventListener("click", sendBisou);
-  document.body.appendChild(btn);
+
+  const wrapper = document.querySelector(".lrz-bottom-right");
+  if (wrapper) {
+    wrapper.insertBefore(btn, wrapper.firstChild);
+  } else {
+    document.body.appendChild(btn);
+  }
 }

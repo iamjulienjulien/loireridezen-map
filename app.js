@@ -10,6 +10,7 @@
 
 import { map } from "./app/map.js";
 import { initVisitCounter } from "./app/visit-counter.js";
+import { initVisitCounterForElle } from "./app/visit-counter-for-elle.js";
 import { initBisouButton } from "./app/bisou-button.js";
 import { hiddenModes } from "./app/url-mode.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
@@ -84,7 +85,7 @@ async function init() {
 
   if (!hiddenModes.rabbit) {
     initVisitCounter().catch((err) => console.warn("[visit-counter] init failed", err));
-    document.querySelector(".lrz-signature")?.remove();
+    document.querySelector(".lrz-bottom-right")?.remove();
   }
   setInterval(() => {
     const toggle = document.getElementById("position-toggle");
@@ -112,6 +113,7 @@ async function init() {
     });
     // Charger la position directement (le toggle #position-toggle a été supprimé)
     loadCurrentPosition();
+    initVisitCounterForElle().catch((err) => console.warn("[visit-counter-for-elle] init failed", err));
     initBisouButton();
   }
 

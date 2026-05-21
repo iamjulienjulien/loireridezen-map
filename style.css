@@ -940,11 +940,18 @@ body {
 
 /* ─────────────────────────────────────── Signature */
 
-.lrz-signature {
+.lrz-bottom-right {
   position: fixed;
   right: 16px;
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
-  z-index: 800;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.lrz-signature {
   background: rgba(253, 250, 243, 0.92);
   backdrop-filter: blur(8px);
   border: 1px solid var(--lrz-tuffeau-line);
@@ -2082,14 +2089,29 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ═══════════════════════════════ LRZ-EVO-35 — Compteur for=elle ═════════════ */
+
+.lrz-visit-counter--for-elle {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 124px);
+  border-color: #4a1030;
+  color: #cc4488;
+  display: none;
+}
+
+.lrz-visit-counter--for-elle .lrz-visit-counter__digits {
+  border-color: #4a1030;
+}
+
+.lrz-visit-counter--for-elle .lrz-visit-counter__digit-strip span {
+  color: #ff66aa;
+  text-shadow:
+    0 0 8px #ff66aa,
+    0 0 4px #ff3388;
+}
+
 /* ═══════════════════════════════ LRZ-EVO-36 — Bouton bisou ══════════════════ */
 
 .lrz-bisou-button {
-  position: fixed;
-  right: 16px;
-  /* au-dessus de .lrz-signature (hauteur ~50px, bottom 16px) + 8px marge */
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 79px);
-  z-index: 999;
   padding: 12px 20px;
   background: linear-gradient(135deg, #ff66aa 0%, #ff88bb 100%);
   color: #fff8fa;
@@ -2129,7 +2151,7 @@ body {
 .lrz-bisou-toast {
   position: fixed;
   right: 16px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 128px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 120px);
   z-index: 9998;
   background: rgba(255, 248, 250, 0.97);
   color: #cc4488;
