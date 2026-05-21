@@ -178,8 +178,14 @@ def main(argv: list[str] | None = None) -> int:
         "-o",
         "--output",
         type=Path,
-        required=True,
-        help="Chemin du fichier GeoJSON de sortie.",
+        required=False,
+        default=None,
+        help="Chemin du fichier GeoJSON de sortie (requis sauf avec --stats-only).",
+    )
+    parser.add_argument(
+        "--stats-only",
+        action="store_true",
+        help="Affiche distance_km et elevation_gain_m en JSON sur stdout, sans écrire de fichier.",
     )
     parser.add_argument(
         "--no-z",
@@ -211,8 +217,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    if not args.stats_only and args.output is None:
+        parser.error("-o/--output est requis sauf avec --stats-only")
+
     logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
+        level=logging.ERROR if args.stats_only else (logging.DEBUG if args.verbose else logging.INFO),
         format="%(levelname)s %(message)s",
     )
 
@@ -221,6 +230,29 @@ def main(argv: list[str] | None = None) -> int:
         for p in missing:
             logger.error("Fichier introuvable : %s", p)
         return 1
+
+    if args.stats_only:
+        total_dist = 0.0
+        total_elev = 0.0
+        for path in args.inputs:
+            with path.open("r", encoding="utf-8") as f:
+                gpx = gpxpy.parse(f)
+            for track in gpx.tracks:
+                try:
+                    total_dist += (track.length_2d() or 0.0) / 1000.0
+                except Exception:
+                    pass
+                try:
+                    ud = track.get_uphill_downhill()
+                    if ud:
+                        total_elev += ud.uphill
+                except Exception:
+                    pass
+        print(json.dumps({
+            "distance_km": round(total_dist, 2),
+            "elevation_gain_m": round(total_elev, 1),
+        }))
+        return 0
 
     geojson = convert(
         gpx_paths=args.inputs,

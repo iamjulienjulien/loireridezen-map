@@ -84,6 +84,11 @@ PHOTO_FILENAME_RE = re.compile(r"^(\d+)-(.+)$")
 KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure"]
 DEFAULT_GROUP_ID = "acte-3"
 
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+DURATION_HM_RE = re.compile(r"^(\d+)h(\d{0,2})$", re.IGNORECASE)
+DATE_STATUS_CHOICES = ["effective", "approximative", "planned", "inconnue"]
+WEATHER_ICONS = ["☀️", "🌤️", "⛅", "🌥️", "☁️", "🌦️", "🌧️", "⛈️", "🌩️", "❄️", "🌬️", "🌫️"]
+
 console = Console()
 
 # ---------------------------------------------------------------------------
@@ -102,6 +107,48 @@ _POI_VALID_TYPES: tuple[str, ...] = (
     "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement"
 )
 _INSTA_RE = re.compile(r"^https?://(www\.)?instagram\.com/.+")
+
+
+def parse_duration(s: str) -> float | None:
+    """Parse '3h30', '3h', '1h45' → float heures. Accepte aussi un float brut."""
+    s = s.strip()
+    m = DURATION_HM_RE.match(s)
+    if m:
+        h = int(m.group(1))
+        mins = int(m.group(2)) if m.group(2) else 0
+        return round(h + mins / 60, 4)
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def parse_temp(s: str) -> int | None:
+    """Parse '22', '22°', '-5°C' → int."""
+    cleaned = s.strip().rstrip("C").rstrip("°").strip()
+    try:
+        return int(cleaned)
+    except ValueError:
+        return None
+
+
+def format_weather(w: dict | None) -> str:
+    if not w:
+        return "—"
+    parts = []
+    if w.get("icon"):
+        parts.append(w["icon"])
+    if w.get("description"):
+        parts.append(w["description"])
+    temps = []
+    if w.get("temp_min") is not None:
+        temps.append(f"{w['temp_min']}°")
+    if w.get("temp_max") is not None:
+        temps.append(f"{w['temp_max']}°")
+    if temps:
+        parts.append(f"({' / '.join(temps)})")
+    return " ".join(parts) if parts else "—"
+
 
 # Lib Supabase — import optionnel (dispo si supabase>=2.5.0 installé)
 if str(SCRIPTS_DIR) not in sys.path:
@@ -1088,7 +1135,10 @@ def _edit_catalog_loop(catalog_path: Path, kind: str) -> None:
         if not item:
             continue
 
-        deleted = _edit_item(item, items, catalog_path, kind)
+        if kind == "traces":
+            deleted = _edit_trace_item(item, items, catalog_path)
+        else:
+            deleted = _edit_item(item, items, catalog_path, kind)
         # Boucle : si suppression ou modification, rafraîchit la liste
 
 
@@ -1182,6 +1232,300 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                     _filter_photos_geojson(del_tree)
                 console.print(f"[green]✓ « {label_display} » supprimé du catalog[/]")
                 return True
+
+
+# ---------------------------------------------------------------------------
+# Édition complète des traces (LRZ-EVO-26)
+# ---------------------------------------------------------------------------
+
+def _show_trace_panel(item: dict, title: str = "Trace") -> None:
+    def _v(val) -> str:
+        return str(val) if val is not None else "—"
+
+    dur_str = "—"
+    if item.get("duration_h") is not None:
+        total_min = round(item["duration_h"] * 60)
+        h, m = divmod(total_min, 60)
+        dur_str = f"{h}h{m:02d}" if m else f"{h}h"
+
+    dist = f"{item['distance_km']} km" if item.get("distance_km") is not None else "—"
+    elev = f"{item['elevation_gain_m']} m" if item.get("elevation_gain_m") is not None else "—"
+
+    lines = [
+        f"[dim]id:[/]             {item.get('id', '')}",
+        f"[dim]label:[/]          {_v(item.get('label'))}",
+        f"[dim]groupe:[/]         {_v(item.get('group'))}",
+        f"[dim]order:[/]          {_v(item.get('order'))}",
+        f"[dim]date_status:[/]    {_v(item.get('date_status'))}",
+        f"[dim]date:[/]           {_v(item.get('date'))}",
+        f"[dim]durée:[/]          {dur_str}",
+        f"[dim]distance:[/]       {dist}",
+        f"[dim]dénivelé:[/]       {elev}",
+        f"[dim]météo:[/]          {format_weather(item.get('weather'))}",
+    ]
+    console.print(Panel("\n".join(lines), title=title, border_style="cyan"))
+
+
+def _edit_weather_submenu(item: dict, items: list[dict], catalog_path: Path) -> None:
+    """Sous-menu d'édition de la météo d'une trace, avec sauvegarde par champ."""
+    while True:
+        w = dict(item.get("weather") or {})
+        desc_cur = w.get("description") or ""
+        tmin_cur = str(w.get("temp_min")) if w.get("temp_min") is not None else ""
+        tmax_cur = str(w.get("temp_max")) if w.get("temp_max") is not None else ""
+        icon_cur = w.get("icon") or ""
+
+        action = questionary.select(
+            "Météo — champ à modifier :",
+            choices=[
+                questionary.Choice(f"📝 Description  ({desc_cur or '—'})", value="description"),
+                questionary.Choice(f"🌡  Temp. min    ({tmin_cur + '°' if tmin_cur else '—'})", value="temp_min"),
+                questionary.Choice(f"🌡  Temp. max    ({tmax_cur + '°' if tmax_cur else '—'})", value="temp_max"),
+                questionary.Choice(f"🎨 Icône        ({icon_cur or '—'})", value="icon"),
+                questionary.Separator(),
+                questionary.Choice("🗑️  Effacer toute la météo", value="clear"),
+                questionary.Choice("← Retour", value="back"),
+            ],
+        ).ask()
+
+        if action is None or action == "back":
+            return
+
+        if action == "clear":
+            if questionary.confirm("Effacer toute la météo ?", default=False).ask():
+                item["weather"] = None
+                save_catalog(catalog_path, items)
+                log_event("INFO", "traces", "field_updated",
+                          id=item.get("id"), field="weather", value=None)
+                console.print("[green]✓ Météo effacée[/]")
+            return
+
+        changed = False
+
+        if action == "description":
+            val = questionary.text("Description météo (vide pour null) :", default=desc_cur).ask()
+            if val is not None:
+                w["description"] = val.strip() or None
+                changed = True
+
+        elif action == "temp_min":
+            val = questionary.text("Température min (ex. 12 ou vide pour null) :", default=tmin_cur).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped:
+                    t = parse_temp(stripped)
+                    if t is None:
+                        console.print("[yellow]Format invalide — entier attendu.[/]")
+                        continue
+                    w["temp_min"] = t
+                else:
+                    w["temp_min"] = None
+                changed = True
+
+        elif action == "temp_max":
+            val = questionary.text("Température max (ex. 28 ou vide pour null) :", default=tmax_cur).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped:
+                    t = parse_temp(stripped)
+                    if t is None:
+                        console.print("[yellow]Format invalide — entier attendu.[/]")
+                        continue
+                    w["temp_max"] = t
+                else:
+                    w["temp_max"] = None
+                changed = True
+
+        elif action == "icon":
+            icon_choices = [questionary.Choice(ic, value=ic) for ic in WEATHER_ICONS]
+            icon_choices.append(questionary.Choice("← Aucune icône", value=""))
+            val = questionary.select("Choisir une icône :", choices=icon_choices).ask()
+            if val is None:
+                continue
+            w["icon"] = val or None
+            changed = True
+
+        if changed:
+            item["weather"] = w if any(v is not None for v in w.values()) else None
+            save_catalog(catalog_path, items)
+            log_event("INFO", "traces", "field_updated", id=item.get("id"),
+                      field="weather", value=format_weather(item.get("weather")))
+            console.print("[green]✓ Météo mise à jour[/]")
+
+
+def _recalc_gpx_stats(item: dict, items: list[dict], catalog_path: Path) -> None:
+    """Appelle gpx_to_geojson.py --stats-only et met à jour distance_km / elevation_gain_m."""
+    source = item.get("source", "")
+    if not source:
+        console.print("[yellow]Aucune source GPX définie pour cette trace.[/]")
+        return
+    gpx_path = REPO_ROOT / source
+    if not gpx_path.exists():
+        console.print(f"[yellow]Fichier GPX introuvable : {gpx_path}[/]")
+        return
+    try:
+        result = subprocess.run(
+            [PYTHON, str(SCRIPTS_DIR / "gpx_to_geojson.py"), str(gpx_path), "--stats-only"],
+            capture_output=True, text=True, check=True,
+        )
+        stats = json.loads(result.stdout.strip())
+        dist = stats.get("distance_km")
+        elev = stats.get("elevation_gain_m")
+        if dist is not None:
+            item["distance_km"] = dist
+        if elev is not None:
+            item["elevation_gain_m"] = elev
+        save_catalog(catalog_path, items)
+        log_event("INFO", "traces", "field_updated", id=item.get("id"),
+                  field="gpx_stats", value={"distance_km": dist, "elevation_gain_m": elev})
+        console.print(f"[green]✓ Stats GPX : {dist} km · {elev} m D+[/]")
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]Erreur GPX (exit {e.returncode}) : {e.stderr}[/]")
+    except (json.JSONDecodeError, KeyError) as e:
+        console.print(f"[red]Résultat GPX invalide : {e}[/]")
+
+
+def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
+    """Boucle d'édition complète d'une trace. Retourne True si supprimée."""
+    while True:
+        _show_trace_panel(item, title=f"Trace : {item.get('id', '')}")
+
+        action = questionary.select(
+            "Champ à modifier :",
+            choices=[
+                questionary.Choice("✏️  Label", value="label"),
+                questionary.Choice("📂 Groupe", value="group"),
+                questionary.Choice("🔢 Ordre", value="order"),
+                questionary.Choice("📅 Statut de date", value="date_status"),
+                questionary.Choice("📆 Date", value="date"),
+                questionary.Choice("⏱  Durée", value="duration_h"),
+                questionary.Choice("☀️  Météo", value="weather"),
+                questionary.Choice("🔄 Recalculer stats GPX", value="gpx_stats"),
+                questionary.Separator(),
+                questionary.Choice("🗑️  Supprimer cette trace", value="delete"),
+                questionary.Choice("← Retour", value="back"),
+            ],
+        ).ask()
+
+        if action is None or action == "back":
+            return False
+
+        if action == "label":
+            val = questionary.text("Nouveau label :", default=item.get("label", "")).ask()
+            if val is not None:
+                item["label"] = val
+                save_catalog(catalog_path, items)
+                log_event("INFO", "traces", "field_updated",
+                          id=item.get("id"), field="label", value=val)
+                console.print("[green]✓ Label mis à jour[/]")
+
+        elif action == "group":
+            cur = item.get("group", KNOWN_GROUPS[0])
+            default_g = cur if cur in KNOWN_GROUPS else KNOWN_GROUPS[0]
+            val = questionary.select("Groupe :", choices=KNOWN_GROUPS, default=default_g).ask()
+            if val is not None:
+                item["group"] = val
+                save_catalog(catalog_path, items)
+                log_event("INFO", "traces", "field_updated",
+                          id=item.get("id"), field="group", value=val)
+                console.print("[green]✓ Groupe mis à jour[/]")
+
+        elif action == "order":
+            val = questionary.text("Ordre :", default=str(item.get("order", ""))).ask()
+            if val is not None:
+                try:
+                    item["order"] = int(val)
+                    save_catalog(catalog_path, items)
+                    log_event("INFO", "traces", "field_updated",
+                              id=item.get("id"), field="order", value=item["order"])
+                    console.print("[green]✓ Ordre mis à jour[/]")
+                except ValueError:
+                    console.print("[red]Entier attendu.[/]")
+
+        elif action == "date_status":
+            cur = item.get("date_status", DATE_STATUS_CHOICES[0])
+            default_ds = cur if cur in DATE_STATUS_CHOICES else DATE_STATUS_CHOICES[0]
+            val = questionary.select(
+                "Statut de date :", choices=DATE_STATUS_CHOICES, default=default_ds
+            ).ask()
+            if val is not None:
+                item["date_status"] = val
+                save_catalog(catalog_path, items)
+                log_event("INFO", "traces", "field_updated",
+                          id=item.get("id"), field="date_status", value=val)
+                console.print("[green]✓ Statut mis à jour[/]")
+
+        elif action == "date":
+            val = questionary.text(
+                "Date (YYYY-MM-DD, vide pour null) :", default=item.get("date") or ""
+            ).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped and not DATE_RE.match(stripped):
+                    console.print("[yellow]Format invalide — utiliser YYYY-MM-DD.[/]")
+                else:
+                    item["date"] = stripped or None
+                    save_catalog(catalog_path, items)
+                    log_event("INFO", "traces", "field_updated",
+                              id=item.get("id"), field="date", value=item["date"])
+                    console.print("[green]✓ Date mise à jour[/]")
+
+        elif action == "duration_h":
+            cur_h = item.get("duration_h")
+            if cur_h is not None:
+                total_min = round(cur_h * 60)
+                h, m = divmod(total_min, 60)
+                default_dur = f"{h}h{m:02d}" if m else f"{h}h"
+            else:
+                default_dur = ""
+            val = questionary.text(
+                "Durée (ex. 3h30 ou 3h, vide pour null) :", default=default_dur
+            ).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped:
+                    parsed = parse_duration(stripped)
+                    if parsed is None:
+                        console.print("[yellow]Format invalide — utiliser 3h30 ou 3.5.[/]")
+                    else:
+                        item["duration_h"] = parsed
+                        save_catalog(catalog_path, items)
+                        log_event("INFO", "traces", "field_updated",
+                                  id=item.get("id"), field="duration_h", value=parsed)
+                        console.print("[green]✓ Durée mise à jour[/]")
+                else:
+                    item["duration_h"] = None
+                    save_catalog(catalog_path, items)
+                    log_event("INFO", "traces", "field_updated",
+                              id=item.get("id"), field="duration_h", value=None)
+                    console.print("[green]✓ Durée effacée[/]")
+
+        elif action == "weather":
+            _edit_weather_submenu(item, items, catalog_path)
+
+        elif action == "gpx_stats":
+            _recalc_gpx_stats(item, items, catalog_path)
+
+        elif action == "delete":
+            label_display = item.get("label", item["id"])
+            if questionary.confirm(
+                f"Supprimer définitivement « {label_display} » ?", default=False
+            ).ask():
+                del_tree = Tree("[bold red]Suppression")
+                for path_key in ("full", "simplified"):
+                    rel = item.get("paths", {}).get(path_key, "")
+                    if rel:
+                        p = REPO_ROOT / rel
+                        if p.exists():
+                            p.unlink()
+                            del_tree.add(f"[red]✗[/] {rel}")
+                console.print(del_tree)
+                updated = [it for it in items if it["id"] != item["id"]]
+                save_catalog(catalog_path, updated)
+                console.print(f"[green]✓ « {label_display} » supprimé du catalog[/]")
+                return True
+
+    return False
 
 
 # ---------------------------------------------------------------------------
