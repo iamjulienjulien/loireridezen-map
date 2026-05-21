@@ -52,12 +52,10 @@ export function renderStepPopup(item) {
   const distance = formatDistance(item.distance_km);
   const duration = formatDurationFr(item.duration_h);
   const elev = item.elevation_gain_m ? `${item.elevation_gain_m} m D+` : null;
-  const photoCount = item._photo_count || 0;
   const weatherHTML = renderWeather(item.weather);
   const instaHTML = renderExternalBtn(item.instagram_url, "📷 Instagram", "lrz-step-popup__btn--insta");
   const komootHTML = renderExternalBtn(item.komoot_url, "🗺️ Komoot", "lrz-step-popup__btn--komoot");
-  const centerHTML = `<button class="lrz-step-popup__btn lrz-step-popup__btn--center" data-action="center-on-step" data-step-id="${escapeHtml(item.id)}" title="Centrer sur cette étape">🎯</button>`;
-  const hasActions = instaHTML || komootHTML || centerHTML;
+  const hasActions = instaHTML || komootHTML;
 
   return `
     <div class="lrz-step-popup">
@@ -70,9 +68,8 @@ export function renderStepPopup(item) {
         ${distance ? `<li>📏 <strong>${escapeHtml(distance)}</strong></li>` : ""}
         ${duration ? `<li>⏱ <strong>${escapeHtml(duration)}</strong></li>` : ""}
         ${elev ? `<li>⛰ <strong>${escapeHtml(elev)}</strong></li>` : ""}
-        ${photoCount ? `<li>📷 <strong>${photoCount}</strong> photo${photoCount > 1 ? "s" : ""}</li>` : ""}
       </ul>
-      ${hasActions ? `<div class="lrz-step-popup__actions">${instaHTML}${komootHTML}${centerHTML}</div>` : ""}
+      ${hasActions ? `<div class="lrz-step-popup__actions">${instaHTML}${komootHTML}</div>` : ""}
     </div>
   `;
 }
