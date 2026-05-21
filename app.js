@@ -15,8 +15,14 @@ import { initBisouButton } from "./app/bisou-button.js";
 import { hiddenModes } from "./app/url-mode.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
-import { buildTraceMarkersFromCatalog, traceMarkers } from "./app/trace-markers.js";
-import { loadCurrentPosition, currentPositionLayer } from "./app/current-position.js";
+import {
+  buildTraceMarkersFromCatalog,
+  traceMarkers,
+} from "./app/trace-markers.js";
+import {
+  loadCurrentPosition,
+  currentPositionLayer,
+} from "./app/current-position.js";
 import { initActionsPanel } from "./app/actions-panel.js";
 import { initInfoPanel } from "./app/info-panel.js";
 import {
@@ -46,7 +52,7 @@ function createMiniSkeleton(text) {
   miniSkeleton = document.createElement("div");
   miniSkeleton.className = "lrz-loading-mini";
   miniSkeleton.innerHTML = `<span class="lrz-loading-mini__text">${text}</span>`;
-  document.body.appendChild(miniSkeleton);
+  // document.body.appendChild(miniSkeleton);
 }
 
 function removeMiniSkeleton() {
@@ -84,13 +90,18 @@ async function init() {
   initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
 
   if (!hiddenModes.rabbit) {
-    initVisitCounter().catch((err) => console.warn("[visit-counter] init failed", err));
+    initVisitCounter().catch((err) =>
+      console.warn("[visit-counter] init failed", err),
+    );
     document.querySelector(".lrz-bottom-right")?.remove();
   }
-  setInterval(() => {
-    const toggle = document.getElementById("position-toggle");
-    if (!toggle || toggle.checked) loadCurrentPosition();
-  }, 5 * 60 * 1000);
+  setInterval(
+    () => {
+      const toggle = document.getElementById("position-toggle");
+      if (!toggle || toggle.checked) loadCurrentPosition();
+    },
+    5 * 60 * 1000,
+  );
 
   // Sauvegarder la préférence POI à chaque changement de type-filter
   document.querySelectorAll(".type-filter").forEach((cb) => {
@@ -113,7 +124,9 @@ async function init() {
     });
     // Charger la position directement (le toggle #position-toggle a été supprimé)
     loadCurrentPosition();
-    initVisitCounterForElle().catch((err) => console.warn("[visit-counter-for-elle] init failed", err));
+    initVisitCounterForElle().catch((err) =>
+      console.warn("[visit-counter-for-elle] init failed", err),
+    );
     initBisouButton();
   }
 
