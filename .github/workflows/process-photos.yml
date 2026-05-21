@@ -36,7 +36,64 @@ jobs:
           python scripts/update_data.py \
             --photos-only \
             --non-interactive \
-            --yes
+            --yes \
+            -v
+
+      - name: Debug — état du filesystem après sync
+        run: |
+          echo "════════════════════════════════════════════════════"
+          echo "📂 sources/photos/"
+          echo "════════════════════════════════════════════════════"
+          ls -la sources/photos/ 2>&1 || echo "(vide ou inexistant)"
+
+          echo "════════════════════════════════════════════════════"
+          echo "📂 data/thumbs/ (derniers 5)"
+          echo "════════════════════════════════════════════════════"
+          ls -la data/thumbs/ 2>&1 | tail -7
+
+          echo "════════════════════════════════════════════════════"
+          echo "📂 data/pois/"
+          echo "════════════════════════════════════════════════════"
+          ls -la data/pois/ 2>&1
+
+          echo "════════════════════════════════════════════════════"
+          echo "🗺️  pois_photos.geojson — count + 3 dernières features"
+          echo "════════════════════════════════════════════════════"
+          python3 -c "
+          import json
+          try:
+              d = json.load(open('data/pois/pois_photos.geojson'))
+              feats = d.get('features', [])
+              print(f'{len(feats)} features')
+              for f in feats[-3:]:
+                  p = f.get('properties', {})
+                  c = f.get('geometry', {}).get('coordinates', [])
+                  print(f'  - thumb={p.get(\"thumb\", \"?\")}  coords={c}')
+          except Exception as e:
+              print(f'ERREUR: {e}')
+          "
+
+          echo "════════════════════════════════════════════════════"
+          echo "📒 photos.json — count + 3 dernières entrées"
+          echo "════════════════════════════════════════════════════"
+          python3 -c "
+          import json
+          d = json.load(open('data/catalog/photos.json'))
+          items = d.get('items', [])
+          print(f'{len(items)} entries')
+          for it in items[-3:]:
+              print(f'  - id={it.get(\"id\")}  thumb={it.get(\"paths\", {}).get(\"thumb\")}')
+          "
+
+          echo "════════════════════════════════════════════════════"
+          echo "📋 git status (avec ignored)"
+          echo "════════════════════════════════════════════════════"
+          git status --short --ignored | head -30
+
+          echo "════════════════════════════════════════════════════"
+          echo "🚫 .gitignore (lignes data/ et sources/)"
+          echo "════════════════════════════════════════════════════"
+          grep -E "data/|sources/|thumbs|photos|pois" .gitignore || echo "(aucune ligne)"
 
       - name: Commit results
         run: |
