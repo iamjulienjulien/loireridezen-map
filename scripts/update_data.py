@@ -196,6 +196,15 @@ def _update_photo_poi_in_geojson(photo_id: str, poi_id: str | None) -> None:
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+_GEOCODING_AVAILABLE = False
+try:
+    import requests as _requests
+    from lib.geocoding import geocode_address as _geocode_address  # type: ignore[import]
+    from lib.geocoding import format_result_label as _format_result_label  # type: ignore[import]
+    _GEOCODING_AVAILABLE = True
+except ImportError:
+    pass
+
 _SUPABASE_AVAILABLE = False
 try:
     from lib.poi import (  # type: ignore[import]
@@ -765,6 +774,105 @@ def _show_poi_panel(poi: dict, title: str = "POI") -> None:
     console.print(Panel("\n".join(lines), title=title, border_style="cyan"))
 
 
+def _prompt_coords_direct(default: str = "") -> tuple[float, float] | None:
+    """Saisie directe lat/lon. Retourne (lat, lon) ou None si annulé."""
+    while True:
+        raw = questionary.text(
+            "Coordonnées (lat, lon) — ex. 47.62, 1.52 :", default=default
+        ).ask()
+        if raw is None:
+            return None
+        result = _parse_coords(raw)
+        if result:
+            return result
+        console.print("[yellow]Format invalide. Utiliser : lat, lon  (ex. 47.6160, 1.5171)[/]")
+
+
+def _prompt_coords_by_address() -> tuple[tuple[float, float], str, str] | None:
+    """
+    Recherche par adresse via Nominatim. Retourne :
+    - ((lat, lon), address_used, suggested_label) si succès
+    - None si annulé ou erreur réseau
+    """
+    address = questionary.text("Adresse :").ask()
+    if not address or not address.strip():
+        return None
+
+    console.print("[dim]Géocodage en cours…[/]")
+    try:
+        results = _geocode_address(address.strip())
+    except Exception as err:
+        console.print(f"[red]Erreur réseau : {err}[/]")
+        return None
+
+    if not results:
+        console.print(f"[yellow]Aucun résultat pour « {address} ».[/]")
+        return None
+
+    choices = [
+        questionary.Choice(_format_result_label(r), value=r) for r in results
+    ] + [questionary.Choice("← Annuler", value=None)]
+
+    chosen = questionary.select("Choisir le bon résultat :", choices=choices).ask()
+    if chosen is None:
+        return None
+
+    lat = float(chosen["lat"])
+    lon = float(chosen["lon"])
+    display_name = chosen.get("display_name", "")
+    suggested_label = display_name.split(",")[0].strip() if display_name else ""
+    return (lat, lon), address.strip(), suggested_label
+
+
+def _prompt_coords_with_method(
+    default_direct: str = "",
+) -> tuple[tuple[float, float], str | None, str | None] | None:
+    """
+    Propose 2 méthodes (adresse / direct).
+    Retourne ((lat, lon), geocoded_from, suggested_label) ou None si annulé.
+    geocoded_from et suggested_label sont None si saisie directe.
+    """
+    if not _GEOCODING_AVAILABLE:
+        coords = _prompt_coords_direct(default_direct)
+        return ((coords, None, None) if coords else None)
+
+    while True:
+        method = questionary.select(
+            "Coordonnées :",
+            choices=[
+                questionary.Choice("🔍 Rechercher par adresse", value="address"),
+                questionary.Choice("📍 Saisir lat/lon directement", value="direct"),
+                questionary.Choice("← Annuler", value=None),
+            ],
+        ).ask()
+
+        if method is None:
+            return None
+
+        if method == "address":
+            result = _prompt_coords_by_address()
+            if result is None:
+                fallback = questionary.select(
+                    "Que faire ?",
+                    choices=[
+                        questionary.Choice("🔍 Réessayer avec une autre adresse", value="retry"),
+                        questionary.Choice("📍 Saisir lat/lon directement", value="direct"),
+                        questionary.Choice("← Annuler", value=None),
+                    ],
+                ).ask()
+                if fallback is None:
+                    return None
+                if fallback == "retry":
+                    continue
+                coords = _prompt_coords_direct(default_direct)
+                return (coords, None, None) if coords else None
+            (lat, lon), address_used, suggested = result
+            return (lat, lon), address_used, suggested
+
+        coords = _prompt_coords_direct(default_direct)
+        return (coords, None, None) if coords else None
+
+
 def prompt_new_poi() -> None:
     if not _SUPABASE_AVAILABLE:
         console.print("[red]Module supabase non disponible. Installer avec : pip install supabase>=2.5.0[/]")
@@ -780,24 +888,19 @@ def prompt_new_poi() -> None:
     if poi_type is None:
         return
 
-    name = questionary.text("Nom du POI :").ask()
+    # Coordonnées en premier pour pré-remplir le nom via Nominatim
+    coords_result = _prompt_coords_with_method()
+    if coords_result is None:
+        console.print("[dim]Annulé.[/]")
+        return
+    (lat, lon), geocoded_from, suggested_label = coords_result
+
+    name = questionary.text("Nom du POI :", default=suggested_label or "").ask()
     if not name or not name.strip():
         console.print("[dim]Annulé.[/]")
         return
 
     description = questionary.text("Description (optionnelle) :", default="").ask() or ""
-
-    lat, lon = None, None
-    while lat is None:
-        raw = questionary.text("Coordonnées (lat, lon) — ex. 47.62, 1.52 :").ask()
-        if raw is None:
-            console.print("[dim]Annulé.[/]")
-            return
-        result = _parse_coords(raw)
-        if result:
-            lat, lon = result
-        else:
-            console.print("[yellow]Format invalide. Utiliser : lat, lon  (ex. 47.6160, 1.5171)[/]")
 
     url_insta_raw = questionary.text("URL Instagram (optionnel) :", default="").ask() or ""
     url_insta = url_insta_raw.strip() if _INSTA_RE.match(url_insta_raw.strip()) else None
@@ -837,7 +940,8 @@ def prompt_new_poi() -> None:
     try:
         result = _create_poi(data)
         new_id = result.get("id", "?")
-        log_event("INFO", "poi", "create", id=new_id, name=data["name"], type=poi_type)
+        log_event("INFO", "poi", "create", id=new_id, name=data["name"], type=poi_type,
+                  geocoded_from=geocoded_from)
         console.print(f"[green]✓ POI ajouté : ID {new_id}[/]")
     except Exception as e:
         console.print(f"[red]Erreur lors de la création : {e}[/]")
@@ -913,15 +1017,11 @@ def prompt_edit_poi() -> None:
         elif action == "coords":
             coords = _coords_from_poi(local)
             default_str = f"{coords[1]:.6f}, {coords[0]:.6f}" if coords else ""
-            raw = questionary.text("Nouvelles coordonnées (lat, lon) :", default=default_str).ask()
-            if raw:
-                result = _parse_coords(raw)
-                if result:
-                    lat, lon = result
-                    local["geom"] = _ewkt_point(lon, lat)
-                    modified = True
-                else:
-                    console.print("[yellow]Format invalide.[/]")
+            result = _prompt_coords_with_method(default_direct=default_str)
+            if result is not None:
+                (lat, lon), _geocoded_from, _suggested = result
+                local["geom"] = _ewkt_point(lon, lat)
+                modified = True
 
         elif action == "url_insta":
             val = questionary.text("URL Instagram :", default=local.get("url_insta") or "").ask()

@@ -22,8 +22,11 @@ import questionary
 from rich.console import Console
 
 CATALOG = Path(__file__).resolve().parent.parent / "data" / "catalog" / "current_position.json"
-NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-USER_AGENT = "loireridezen-update-position/1.0"
+
+_SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+from lib.geocoding import geocode_address  # type: ignore[import]
 
 console = Console()
 
@@ -38,17 +41,6 @@ def save_current(data: dict) -> None:
     data["updated_at"] = datetime.now(timezone.utc).isoformat()
     CATALOG.parent.mkdir(parents=True, exist_ok=True)
     CATALOG.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def geocode(address: str) -> list[dict]:
-    r = requests.get(
-        NOMINATIM_URL,
-        params={"q": address, "format": "json", "limit": 5, "countrycodes": "fr"},
-        headers={"User-Agent": USER_AGENT},
-        timeout=10,
-    )
-    r.raise_for_status()
-    return r.json()
 
 
 def parse_gps(text: str) -> tuple[float, float] | None:
@@ -70,7 +62,7 @@ def update_by_address() -> None:
 
     console.print("[dim]Géocodage en cours…[/]")
     try:
-        results = geocode(address)
+        results = geocode_address(address)
     except requests.RequestException as err:
         console.print(f"[red]Erreur réseau : {err}[/]")
         return
