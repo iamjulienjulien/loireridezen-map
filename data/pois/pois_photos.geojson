@@ -8,11 +8,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg",
         "thumb": "data/thumbs/01-chambord.webp",
-        "time": "2025:06:06 14:22:09"
+        "time": "2025:06:06 14:22:09",
+        "id": "01-chambord"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [1.514094, 47.616978]
+        "coordinates": [
+          1.514094,
+          47.616978
+        ]
       }
     },
     {
@@ -22,11 +26,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg",
         "thumb": "data/thumbs/02-blois.webp",
-        "time": "2025:06:07 12:43:09"
+        "time": "2025:06:07 12:43:09",
+        "id": "02-blois"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [1.339997, 47.584869]
+        "coordinates": [
+          1.339997,
+          47.584869
+        ]
       }
     },
     {
@@ -36,11 +44,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg",
         "thumb": "data/thumbs/03-amboise.webp",
-        "time": "2025:06:08 13:31:29"
+        "time": "2025:06:08 13:31:29",
+        "id": "03-amboise"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.984936, 47.412772]
+        "coordinates": [
+          0.984936,
+          47.412772
+        ]
       }
     },
     {
@@ -50,11 +62,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg",
         "thumb": "data/thumbs/04-amboise.webp",
-        "time": "2025:06:09 20:18:52"
+        "time": "2025:06:09 20:18:52",
+        "id": "04-amboise"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.985108, 47.415961]
+        "coordinates": [
+          0.985108,
+          47.415961
+        ]
       }
     },
     {
@@ -64,11 +80,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg",
         "thumb": "data/thumbs/05-chenonceau.webp",
-        "time": "2025:06:10 16:02:27"
+        "time": "2025:06:10 16:02:27",
+        "id": "05-chenonceau"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [1.070181, 47.324047]
+        "coordinates": [
+          1.070181,
+          47.324047
+        ]
       }
     },
     {
@@ -78,11 +98,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg",
         "thumb": "data/thumbs/06-tours.webp",
-        "time": "2025:06:12 13:21:35"
+        "time": "2025:06:12 13:21:35",
+        "id": "06-tours"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.693394, 47.395386]
+        "coordinates": [
+          0.693394,
+          47.395386
+        ]
       }
     },
     {
@@ -92,11 +116,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/07-delaware-painter.jpeg",
         "thumb": "data/thumbs/07-delaware-painter.webp",
-        "time": "2025:06:12 15:04:53"
+        "time": "2025:06:12 15:04:53",
+        "id": "07-delaware-painter"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.557225, 47.360572]
+        "coordinates": [
+          0.557225,
+          47.360572
+        ]
       }
     },
     {
@@ -106,11 +134,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg",
         "thumb": "data/thumbs/08-villandry.webp",
-        "time": "2025:06:12 17:45:05"
+        "time": "2025:06:12 17:45:05",
+        "id": "08-villandry"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.514278, 47.340325]
+        "coordinates": [
+          0.514278,
+          47.340325
+        ]
       }
     },
     {
@@ -120,11 +152,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/09-boats.jpeg",
         "thumb": "data/thumbs/09-boats.webp",
-        "time": "2025:06:12 20:31:39"
+        "time": "2025:06:12 20:31:39",
+        "id": "09-boats"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.547658, 47.348706]
+        "coordinates": [
+          0.547658,
+          47.348706
+        ]
       }
     },
     {
@@ -134,11 +170,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg",
         "thumb": "data/thumbs/10-langeais.webp",
-        "time": "2025:06:13 14:29:26"
+        "time": "2025:06:13 14:29:26",
+        "id": "10-langeais"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.406594, 47.324856]
+        "coordinates": [
+          0.406594,
+          47.324856
+        ]
       }
     },
     {
@@ -148,11 +188,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg",
         "thumb": "data/thumbs/11-chinon.webp",
-        "time": "2025:06:16 13:12:24"
+        "time": "2025:06:16 13:12:24",
+        "id": "11-chinon"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.237903, 47.163967]
+        "coordinates": [
+          0.237903,
+          47.163967
+        ]
       }
     },
     {
@@ -162,11 +206,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg",
         "thumb": "data/thumbs/12-fontevraud.webp",
-        "time": "2025:06:17 11:49:26"
+        "time": "2025:06:17 11:49:26",
+        "id": "12-fontevraud"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [0.051558, 47.18105]
+        "coordinates": [
+          0.051558,
+          47.18105
+        ]
       }
     },
     {
@@ -176,11 +224,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg",
         "thumb": "data/thumbs/13-saumur.webp",
-        "time": "2025:06:17 19:47:01"
+        "time": "2025:06:17 19:47:01",
+        "id": "13-saumur"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.072797, 47.262183]
+        "coordinates": [
+          -0.072797,
+          47.262183
+        ]
       }
     },
     {
@@ -190,11 +242,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/18-saumur.jpeg",
         "thumb": "data/thumbs/18-saumur.webp",
-        "time": "2025:06:17 21:32:13"
+        "time": "2025:06:17 21:32:13",
+        "id": "18-saumur"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.071122, 47.261167]
+        "coordinates": [
+          -0.071122,
+          47.261167
+        ]
       }
     },
     {
@@ -204,11 +260,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/19-saumur.jpeg",
         "thumb": "data/thumbs/19-saumur.webp",
-        "time": "2025:06:17 21:32:19"
+        "time": "2025:06:17 21:32:19",
+        "id": "19-saumur"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.071119, 47.261167]
+        "coordinates": [
+          -0.071119,
+          47.261167
+        ]
       }
     },
     {
@@ -218,11 +278,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/20-ackerman.jpeg",
         "thumb": "data/thumbs/20-ackerman.webp",
-        "time": "2025:06:18 12:29:52"
+        "time": "2025:06:18 12:29:52",
+        "id": "20-ackerman"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.106883, 47.271594]
+        "coordinates": [
+          -0.106883,
+          47.271594
+        ]
       }
     },
     {
@@ -232,11 +296,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/14-saint-mathurin.jpeg",
         "thumb": "data/thumbs/14-saint-mathurin.webp",
-        "time": "2025:06:18 15:25:58"
+        "time": "2025:06:18 15:25:58",
+        "id": "14-saint-mathurin"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.319983, 47.405106]
+        "coordinates": [
+          -0.319983,
+          47.405106
+        ]
       }
     },
     {
@@ -246,11 +314,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg",
         "thumb": "data/thumbs/15-loire-maine.webp",
-        "time": "2025:06:18 17:26:15"
+        "time": "2025:06:18 17:26:15",
+        "id": "15-loire-maine"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.613789, 47.411853]
+        "coordinates": [
+          -0.613789,
+          47.411853
+        ]
       }
     },
     {
@@ -260,11 +332,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg",
         "thumb": "data/thumbs/16-angers.webp",
-        "time": "2025:06:18 19:58:52"
+        "time": "2025:06:18 19:58:52",
+        "id": "16-angers"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.566106, 47.470325]
+        "coordinates": [
+          -0.566106,
+          47.470325
+        ]
       }
     },
     {
@@ -274,11 +350,15 @@
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg",
         "thumb": "data/thumbs/17-la-chevalerie.webp",
-        "time": "2025:09:30 16:28:17"
+        "time": "2025:09:30 16:28:17",
+        "id": "17-la-chevalerie"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-0.456067, 47.440792]
+        "coordinates": [
+          -0.456067,
+          47.440792
+        ]
       }
     }
   ]
