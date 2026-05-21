@@ -2080,3 +2080,74 @@ body {
     0 0 3px #ff6600;
   font-variant-numeric: tabular-nums;
 }
+
+/* ═══════════════════════════════ LRZ-EVO-36 — Bouton bisou ══════════════════ */
+
+.lrz-bisou-button {
+  position: fixed;
+  right: 16px;
+  /* au-dessus de .lrz-signature (hauteur ~50px, bottom 16px) + 8px marge */
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 69px);
+  z-index: 999;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff66aa 0%, #ff88bb 100%);
+  color: #fff8fa;
+  border: none;
+  border-radius: 24px;
+  font-family: var(--lrz-font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(204, 68, 136, 0.3);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+  white-space: nowrap;
+  width: 205px;
+}
+
+.lrz-bisou-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(204, 68, 136, 0.4);
+}
+
+.lrz-bisou-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.lrz-bisou-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lrz-bisou-button__cooldown {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.lrz-bisou-toast {
+  position: fixed;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 148px);
+  z-index: 9998;
+  background: rgba(255, 248, 250, 0.97);
+  color: #cc4488;
+  border: 1px solid #ffb3d1;
+  border-radius: 12px;
+  padding: 0.5rem 0.875rem;
+  font-family: var(--lrz-font-sans);
+  font-size: 0.875rem;
+  box-shadow: 0 2px 8px rgba(204, 68, 136, 0.15);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.lrz-bisou-toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}

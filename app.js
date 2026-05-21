@@ -10,6 +10,7 @@
 
 import { map } from "./app/map.js";
 import { initVisitCounter } from "./app/visit-counter.js";
+import { initBisouButton } from "./app/bisou-button.js";
 import { hiddenModes } from "./app/url-mode.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
@@ -111,6 +112,7 @@ async function init() {
     });
     // Charger la position directement (le toggle #position-toggle a été supprimé)
     loadCurrentPosition();
+    initBisouButton();
   }
 
   // Phase 2 : UI rendue → masquer le skeleton plein écran, démarrer le mini
