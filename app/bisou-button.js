@@ -11,7 +11,8 @@ function shouldSendBisou() {
   const hostname = window.location.hostname;
   const ua = navigator.userAgent;
 
-  if (url.searchParams.has("ignore-count") || url.searchParams.has("nocount")) return false;
+  if (url.searchParams.has("ignore-count") || url.searchParams.has("nocount"))
+    return false;
 
   const LOCAL = ["localhost", "127.0.0.1", "0.0.0.0", "::1"];
   if (LOCAL.includes(hostname)) return false;
@@ -21,10 +22,24 @@ function shouldSendBisou() {
   if (/^172\.(1[6-9]|2\d|3[01])\./.test(hostname)) return false;
 
   const BOTS = [
-    /googlebot/i, /bingbot/i, /slurp/i, /duckduckbot/i, /baiduspider/i,
-    /yandexbot/i, /facebookexternalhit/i, /twitterbot/i, /linkedinbot/i,
-    /whatsapp/i, /telegrambot/i, /discordbot/i, /applebot/i,
-    /headless/i, /phantomjs/i, /puppeteer/i, /playwright/i, /selenium/i,
+    /googlebot/i,
+    /bingbot/i,
+    /slurp/i,
+    /duckduckbot/i,
+    /baiduspider/i,
+    /yandexbot/i,
+    /facebookexternalhit/i,
+    /twitterbot/i,
+    /linkedinbot/i,
+    /whatsapp/i,
+    /telegrambot/i,
+    /discordbot/i,
+    /applebot/i,
+    /headless/i,
+    /phantomjs/i,
+    /puppeteer/i,
+    /playwright/i,
+    /selenium/i,
   ];
   if (BOTS.some((re) => re.test(ua))) return false;
 
@@ -33,11 +48,15 @@ function shouldSendBisou() {
 
 function isDebugContext() {
   const url = new URL(window.location.href);
+  if (url.searchParams.has("nodebug")) return false;
   const h = window.location.hostname;
-  return url.searchParams.has("ignore-count") ||
+  return (
+    url.searchParams.has("ignore-count") ||
     url.searchParams.has("nocount") ||
     ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(h) ||
-    h.endsWith(".test") || h.endsWith(".local");
+    h.endsWith(".test") ||
+    h.endsWith(".local")
+  );
 }
 
 function getButtonCenter() {
@@ -83,13 +102,18 @@ function flyHeartToPapa() {
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      el.style.transition = "transform 1200ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 300ms ease";
+      el.style.transition =
+        "transform 1200ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 300ms ease";
       el.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(1.5)`;
     });
   });
 
-  setTimeout(() => { el.style.opacity = "0"; }, 900);
-  setTimeout(() => { el.remove(); }, 1300);
+  setTimeout(() => {
+    el.style.opacity = "0";
+  }, 900);
+  setTimeout(() => {
+    el.remove();
+  }, 1300);
 }
 
 function showToast(message) {
@@ -102,7 +126,9 @@ function showToast(message) {
   document.body.appendChild(toast);
 
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => toast.classList.add("lrz-bisou-toast--visible"));
+    requestAnimationFrame(() =>
+      toast.classList.add("lrz-bisou-toast--visible"),
+    );
   });
 
   setTimeout(() => {
@@ -134,7 +160,9 @@ async function sendBisou() {
   flyHeartToPapa();
 
   if (!shouldSendBisou()) {
-    showToast(isDebugContext() ? "Bisou simulé 💗 (mode test)" : "Papa va le recevoir 💗");
+    showToast(
+      isDebugContext() ? "Bisou simulé 💗 (est)" : "Papa va le recevoir 💗",
+    );
     return;
   }
 
@@ -158,7 +186,10 @@ async function sendBisou() {
     showToast("Bisou pas envoyé, mais Papa pense à toi 💗");
     cooldownEnd = 0;
     const btn = document.querySelector(".lrz-bisou-button");
-    if (btn) { btn.innerHTML = "💗 Envoyer un bisou"; btn.disabled = false; }
+    if (btn) {
+      btn.innerHTML = "💗 Envoyer un bisou";
+      btn.disabled = false;
+    }
   }
 }
 
