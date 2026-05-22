@@ -26,6 +26,8 @@ export const POI_TYPES = {
   patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",   defaultChecked: false },
   guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: false },
   hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square", defaultChecked: false },
+  vigneron:    { label: "Vignerons",    emoji: "🍷",  color: "#722f37", shape: "diamond", defaultChecked: true },
+  nature:      { label: "Coins nature", emoji: "🌿",  color: "#6b8e4e", shape: "circle", defaultChecked: true },
   photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle", defaultChecked: true },
   lapin:       { label: "Lapin en voyage", emoji: "🐰", color: "#ff9b3d", shape: "square", defaultChecked: false, hidden: true },
 };

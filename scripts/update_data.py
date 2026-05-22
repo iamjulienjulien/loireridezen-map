@@ -101,10 +101,13 @@ _POI_TYPE_EMOJIS: dict[str, str] = {
     "patrimoine": "🏰",
     "guinguette": "🍻",
     "hébergement": "🏕️",
+    "vigneron": "🍷",
+    "nature": "🌿",
     "photo": "📸",
 }
 _POI_VALID_TYPES: tuple[str, ...] = (
-    "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement"
+    "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement",
+    "vigneron", "nature",
 )
 _INSTA_RE = re.compile(r"^https?://(www\.)?instagram\.com/.+")
 _KOMOOT_RE = re.compile(r"^https?://(www\.)?komoot\.(com|de)/tour/\d+")
