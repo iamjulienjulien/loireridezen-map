@@ -4,6 +4,24 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "21 parc de chambord",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/21-parc-de-chambord.jpeg",
+        "thumb": "data/thumbs/21-parc-de-chambord.webp",
+        "time": "2025:06:06 14:09:56",
+        "id": "21-parc-de-chambord"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.499047,
+          47.629736
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Chambord",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg",

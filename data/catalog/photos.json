@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-21T07:49:57.038245+00:00",
+  "updated_at": "2026-05-22T12:02:42.731585+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -302,6 +302,21 @@
       "time": "2025:06:18 12:29:52",
       "lat": 47.271594,
       "lon": -0.106883
+    },
+    {
+      "id": "21-parc-de-chambord",
+      "label": "Parc De Chambord",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/21-parc-de-chambord.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/21-parc-de-chambord.jpeg"
+      },
+      "source": "sources/photos/21-parc-de-chambord.jpeg",
+      "order": 21,
+      "time": "2025:06:06 14:09:56",
+      "lat": 47.629736,
+      "lon": 1.499047
     }
   ]
 }
