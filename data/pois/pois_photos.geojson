@@ -382,7 +382,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "22 pont de bouchemaine",
+        "name": "Pont De Bouchemaine",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/22-pont-de-bouchemaine.jpeg",
         "thumb": "data/thumbs/22-pont-de-bouchemaine.webp",
@@ -394,6 +394,24 @@
         "coordinates": [
           -0.6046,
           47.426436
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "23 lapin soleil",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/23-lapin-soleil.jpeg",
+        "thumb": "data/thumbs/23-lapin-soleil.webp",
+        "time": "2026:05:25 09:36:29",
+        "id": "23-lapin-soleil"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.12475,
+          47.366203
         ]
       }
     }

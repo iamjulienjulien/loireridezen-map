@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-25T20:40:41.590765+00:00",
+  "updated_at": "2026-05-25T21:42:35.981245+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -332,6 +332,21 @@
       "time": "2026:05:22 18:23:48",
       "lat": 47.426436,
       "lon": -0.6046
+    },
+    {
+      "id": "23-lapin-soleil",
+      "label": "Lapin Soleil",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/23-lapin-soleil.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/23-lapin-soleil.jpeg"
+      },
+      "source": "sources/photos/23-lapin-soleil.jpeg",
+      "order": 23,
+      "time": "2026:05:25 09:36:29",
+      "lat": 47.366203,
+      "lon": -1.12475
     }
   ]
 }
