@@ -821,6 +821,35 @@ body {
   cursor: pointer;
 }
 
+/* ─────────────────────────────────────── Légende traces */
+
+.lrz-legend__title {
+  font-family: var(--lrz-font-serif, serif);
+  font-style: italic;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--lrz-ink-soft);
+  padding: 0.5rem 0.875rem 0.25rem;
+}
+
+.lrz-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.875rem;
+  font-size: 0.85rem;
+  color: var(--lrz-ink-soft);
+  cursor: default;
+}
+
+.lrz-legend-row__emoji {
+  font-size: 1rem;
+  width: 1.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
 /* ─────────────────────────────────────── Checkbox unifiée */
 
 .lrz-checkbox {

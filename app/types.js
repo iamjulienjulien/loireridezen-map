@@ -35,7 +35,7 @@ export const POI_TYPES = {
 /** Types de markers calculés depuis les traces (non POI Supabase). */
 export const TRACE_MARKER_TYPES = {
   départ:  { label: "Départ",  labelPlural: "Départs",  emoji: "🏳️", size: 28 },
-  étape:   { label: "Étape",   labelPlural: "Étapes",   emoji: "🚴",  size: 24 },
+  étape:   { label: "Étape",   labelPlural: "Étapes",   emoji: "🚩",  size: 24 },
   arrivée: { label: "Arrivée", labelPlural: "Arrivées", emoji: "🏁",  size: 28 },
 };
 

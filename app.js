@@ -16,10 +16,7 @@ import { hiddenModes } from "./app/url-mode.js";
 import { track, trackAndNavigate, trackForElle } from "./app/analytics.js";
 import { loadPoisForViewport, bindViewportListeners } from "./app/poi.js";
 import { loadPreferences, updatePreference } from "./app/preferences.js";
-import {
-  buildTraceMarkersFromCatalog,
-  traceMarkers,
-} from "./app/trace-markers.js";
+import { buildTraceMarkersFromCatalog } from "./app/trace-markers.js";
 import {
   loadCurrentPosition,
   currentPositionLayer,
@@ -31,7 +28,7 @@ import {
   renderPoiSection,
   renderPhotosSection,
   wireTraceCheckboxes,
-  wireTraceMarkerCheckboxes,
+  traceFeatureGroups,
   initMobileDrawer,
   initAccordion,
   initPoiBadge,
@@ -159,9 +156,7 @@ async function init() {
   // Phase 3 : traces chargées → markers calculés + mini skeleton "lieux"
   wireTraceCheckboxes().then(() => {
     createMiniSkeleton("Chargement des lieux…");
-    buildTraceMarkersFromCatalog(groups, traces).then(() => {
-      wireTraceMarkerCheckboxes(traceMarkers, prefs);
-    });
+    buildTraceMarkersFromCatalog(groups, traces, traceFeatureGroups);
   });
 }
 

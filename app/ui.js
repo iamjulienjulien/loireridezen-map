@@ -21,7 +21,7 @@ import { hiddenModes } from "./url-mode.js";
 import { track } from "./analytics.js";
 
 // Map<groupId, FeatureGroup> peuplée après wireTraceCheckboxes()
-const traceFeatureGroups = new Map();
+export const traceFeatureGroups = new Map();
 
 // ─────────────────────────────────────── Section 1 : Traces
 
@@ -56,17 +56,18 @@ export function renderTracesSection(groups, prefs) {
       </div>`;
   });
 
-  for (const [type, cfg] of Object.entries(TRACE_MARKER_TYPES)) {
-    const isChecked = prefs.traceMarkers?.[type] ?? true;
-    rows.push(`
-      <div class="lrz-row">
-        <div class="lrz-row__visual lrz-row__visual--emoji">${cfg.emoji}</div>
-        <label class="lrz-row__label">${escapeHtml(cfg.labelPlural)}</label>
-        <input type="checkbox" class="lrz-checkbox" data-trace-marker="${escapeHtml(type)}" ${isChecked ? "checked" : ""} />
-      </div>`);
-  }
+  const legendRows = Object.entries(TRACE_MARKER_TYPES)
+    .map(([, cfg]) => `
+      <div class="lrz-legend-row">
+        <span class="lrz-legend-row__emoji">${cfg.emoji}</span>
+        <span>${escapeHtml(cfg.label)}</span>
+      </div>`)
+    .join("");
 
-  list.innerHTML = rows.join("");
+  list.innerHTML =
+    rows.join("") +
+    `<div class="lrz-legend__title">Légende</div>` +
+    legendRows;
 }
 
 export async function wireTraceCheckboxes() {
@@ -88,21 +89,6 @@ export async function wireTraceCheckboxes() {
       else map.removeLayer(fg);
       track('Layer Item Toggled', { section: 'traces', item: cb.dataset.groupId, state: cb.checked ? 'on' : 'off' });
       updatePreference(`traces.${cb.dataset.groupId}`, cb.checked);
-    });
-  });
-}
-
-export function wireTraceMarkerCheckboxes(traceMarkersObj, prefs) {
-  document.querySelectorAll("[data-trace-marker]").forEach((cb) => {
-    const type = cb.dataset.traceMarker;
-    const fg = traceMarkersObj[type];
-    if (!fg) return;
-    if (cb.checked) fg.addTo(map);
-    cb.addEventListener("change", () => {
-      if (cb.checked) map.addLayer(fg);
-      else map.removeLayer(fg);
-      track('Layer Item Toggled', { section: 'traces', item: type, state: cb.checked ? 'on' : 'off' });
-      updatePreference(`traceMarkers.${type}`, cb.checked);
     });
   });
 }

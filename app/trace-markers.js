@@ -1,21 +1,14 @@
 /**
  * app/trace-markers.js — Markers Départ / Étape / Arrivée calculés depuis les traces
  *
- * Les coordonnées sont extraites des GeoJSON des étapes (premier/dernier point).
- * Les markers sont ajoutés dans 3 FeatureGroups distincts pour un contrôle
- * indépendant de la visibilité depuis le panel.
+ * Les markers sont ajoutés au même LayerGroup que la trace parente :
+ * toggler une trace masque/affiche aussi ses markers.
  */
 
-import { DivIcon, Marker, FeatureGroup } from "leaflet";
+import { DivIcon, Marker } from "leaflet";
 import { TRACE_MARKER_TYPES } from "./types.js";
 import { escapeHtml } from "./helpers.js";
 import { hiddenModes } from "./url-mode.js";
-
-export const traceMarkers = {
-  départ:  new FeatureGroup(),
-  étape:   new FeatureGroup(),
-  arrivée: new FeatureGroup(),
-};
 
 function emojiIcon(type) {
   const cfg = TRACE_MARKER_TYPES[type];
@@ -50,10 +43,19 @@ async function safeFetch(url) {
   }
 }
 
-export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog) {
+/**
+ * Construit les markers de trace et les ajoute au FeatureGroup de leur trace parente.
+ * @param {object} groupsCatalog
+ * @param {object} tracesCatalog
+ * @param {Map<string, import("leaflet").FeatureGroup>} featureGroups — Map<groupId, FeatureGroup> issue de wireTraceCheckboxes
+ */
+export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog, featureGroups) {
   if (hiddenModes.rabbit) return;
 
   for (const group of (groupsCatalog.items ?? [])) {
+    const fg = featureGroups.get(group.id);
+    if (!fg) continue;
+
     const items = (tracesCatalog.items ?? [])
       .filter((it) => it.group === group.id)
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -67,12 +69,12 @@ export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog)
       if (start) {
         const m = new Marker([start[1], start[0]], { icon: emojiIcon("départ") });
         m.bindPopup(`<strong>Départ</strong><br/>${escapeHtml(group.label)}`);
-        traceMarkers.départ.addLayer(m);
+        fg.addLayer(m);
       }
       if (end) {
         const m = new Marker([end[1], end[0]], { icon: emojiIcon("arrivée") });
         m.bindPopup(`<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`);
-        traceMarkers.arrivée.addLayer(m);
+        fg.addLayer(m);
       }
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -87,7 +89,7 @@ export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog)
         m.bindPopup(
           `<strong>${TRACE_MARKER_TYPES[type].label}</strong><br/>${escapeHtml(item.label)}`,
         );
-        traceMarkers[type].addLayer(m);
+        fg.addLayer(m);
       }
       const lastItem = items[items.length - 1];
       const url = lastItem.paths.simplified ?? lastItem.paths.full;
@@ -97,7 +99,7 @@ export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog)
         if (end) {
           const m = new Marker([end[1], end[0]], { icon: emojiIcon("arrivée") });
           m.bindPopup(`<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`);
-          traceMarkers.arrivée.addLayer(m);
+          fg.addLayer(m);
         }
       }
     }
