@@ -54,6 +54,9 @@ except ImportError as e:
     print("Installer avec : pip install rich>=13 questionary>=2")
     sys.exit(1)
 
+# questionary stores the title as value when value=None — use this sentinel instead
+_CANCEL = "__cancel__"
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
@@ -735,10 +738,10 @@ def _select_poi_from_list(pois: list[dict], prompt: str = "Sélectionner un POI 
         coords = _coords_from_poi(poi) if _SUPABASE_AVAILABLE else None
         coords_str = f"({coords[1]:.3f}, {coords[0]:.3f})" if coords else ""
         choices.append(questionary.Choice(f"#{poi_id} {emoji} {name} {coords_str}", value=poi_id))
-    choices.append(questionary.Choice("← Annuler", value=None))
+    choices.append(questionary.Choice("← Annuler", value=_CANCEL))
 
     selected_id = questionary.select(prompt, choices=choices).ask()
-    if selected_id is None:
+    if selected_id is None or selected_id == _CANCEL:
         return None
     return next((p for p in pois if p.get("id") == selected_id), None)
 
