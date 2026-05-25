@@ -4,7 +4,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "21 parc de chambord",
+        "name": "Parc De Chambord",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/21-parc-de-chambord.jpeg",
         "thumb": "data/thumbs/21-parc-de-chambord.webp",
@@ -376,6 +376,24 @@
         "coordinates": [
           -0.456067,
           47.440792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "22 pont de bouchemaine",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/22-pont-de-bouchemaine.jpeg",
+        "thumb": "data/thumbs/22-pont-de-bouchemaine.webp",
+        "time": "2026:05:22 18:23:48",
+        "id": "22-pont-de-bouchemaine"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.6046,
+          47.426436
         ]
       }
     }

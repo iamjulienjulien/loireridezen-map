@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-22T12:02:42.731585+00:00",
+  "updated_at": "2026-05-25T20:40:41.590765+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -317,6 +317,21 @@
       "time": "2025:06:06 14:09:56",
       "lat": 47.629736,
       "lon": 1.499047
+    },
+    {
+      "id": "22-pont-de-bouchemaine",
+      "label": "Pont De Bouchemaine",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/22-pont-de-bouchemaine.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/22-pont-de-bouchemaine.jpeg"
+      },
+      "source": "sources/photos/22-pont-de-bouchemaine.jpeg",
+      "order": 22,
+      "time": "2026:05:22 18:23:48",
+      "lat": 47.426436,
+      "lon": -0.6046
     }
   ]
 }
