@@ -10,7 +10,7 @@
         "simplified": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte_simplified.geojson"
       },
       "source": "sources/gpx/acte-1_etape-1_chatillon_boissy-le-cutte.gpx",
-      "order": 22,
+      "order": 1,
       "distance_km": null,
       "elevation_gain_m": null
     },
@@ -23,7 +23,7 @@
         "simplified": "data/traces/acte-1_etape-2_boissy-le-culle_etampes_simplified.geojson"
       },
       "source": "sources/gpx/acte-1_etape-2_boissy-le-culle_etampes.gpx",
-      "order": 23,
+      "order": 2,
       "distance_km": null,
       "elevation_gain_m": null
     },
@@ -36,7 +36,7 @@
         "simplified": "data/traces/acte-1_etape-3_etampes_artenay_simplified.geojson"
       },
       "source": "sources/gpx/acte-1_etape-3_etampes_artenay.gpx",
-      "order": 2,
+      "order": 3,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "approximative",
@@ -53,7 +53,7 @@
         "simplified": "data/traces/acte-1_etape-4_artenay_orleans_simplified.geojson"
       },
       "source": "sources/gpx/acte-1_etape-4_artenay_orleans.gpx",
-      "order": 3,
+      "order": 4,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "approximative",
@@ -70,7 +70,7 @@
         "simplified": "data/traces/acte-1_etape-5_orleans_beaugency_simplified.geojson"
       },
       "source": "sources/gpx/acte-1_etape-5_orleans_beaugency.gpx",
-      "order": 4,
+      "order": 5,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "approximative",
@@ -87,7 +87,7 @@
         "simplified": "data/traces/acte-1_etape-6_beaugency_blois_simplified.geojson"
       },
       "source": "sources/gpx/acte-1_etape-6_beaugency_blois.gpx",
-      "order": 5,
+      "order": 6,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "approximative",
@@ -104,7 +104,7 @@
         "simplified": "data/traces/acte-2_etape-0_blois_chambord_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-0_blois_chambord.gpx",
-      "order": 6,
+      "order": 7,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -122,7 +122,7 @@
         "simplified": "data/traces/acte-2_etape-1_blois_amboise_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-1_blois_amboise.gpx",
-      "order": 7,
+      "order": 8,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -139,7 +139,7 @@
         "simplified": "data/traces/acte-2_etape-2_amboise_chenonceaux_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-2_amboise_chenonceaux.gpx",
-      "order": 8,
+      "order": 9,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -156,7 +156,7 @@
         "simplified": "data/traces/acte-2_etape-3_chenonceaux_tours_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-3_chenonceaux_tours.gpx",
-      "order": 9,
+      "order": 10,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -173,7 +173,7 @@
         "simplified": "data/traces/acte-2_etape-4_tours_villandry_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-4_tours_villandry.gpx",
-      "order": 10,
+      "order": 11,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -190,7 +190,7 @@
         "simplified": "data/traces/acte-2_etape-5_villandry_chinon_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-5_villandry_chinon.gpx",
-      "order": 11,
+      "order": 12,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -207,7 +207,7 @@
         "simplified": "data/traces/acte-2_etape-6_chinon_montsoreaux_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-6_chinon_montsoreaux.gpx",
-      "order": 12,
+      "order": 13,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -224,7 +224,7 @@
         "simplified": "data/traces/acte-2_etape-7_montsoreau_saumur_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-7_montsoreau_saumur.gpx",
-      "order": 13,
+      "order": 14,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "effective",
@@ -241,7 +241,7 @@
         "simplified": "data/traces/acte-2_etape-8_saumur_angers_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-8_saumur_angers.gpx",
-      "order": 14,
+      "order": 15,
       "distance_km": 64.77,
       "elevation_gain_m": 135.5,
       "date_status": "effective",
@@ -263,11 +263,11 @@
         "simplified": "data/traces/acte-3_etape-1_angers_behuard_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-1_angers_behuard.gpx",
-      "order": 15,
+      "order": 16,
       "distance_km": 15.82,
       "elevation_gain_m": 22.8,
-      "date_status": "planned",
-      "date": "2025-05-22",
+      "date_status": "effective",
+      "date": "2026-05-22",
       "duration_h": null,
       "weather": {
         "description": "Ensoleillé",
@@ -285,16 +285,16 @@
         "simplified": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-2_behuard_st-florent-le-vieil.gpx",
-      "order": 16,
+      "order": 17,
       "distance_km": 38.02,
       "elevation_gain_m": 97.3,
-      "date_status": "planned",
-      "date": "2025-05-23",
+      "date_status": "effective",
+      "date": "2026-05-23",
       "duration_h": null,
       "weather": {
         "description": "Ensoleillé",
-        "temp_min": 15,
-        "temp_max": 32,
+        "temp_min": 16,
+        "temp_max": 31,
         "icon": "☀️"
       }
     },
@@ -307,13 +307,18 @@
         "simplified": "data/traces/acte-3_etape-3_st-florent-le-vieil_ancenis_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-3_st-florent-le-vieil_ancenis.gpx",
-      "order": 17,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "prévue",
-      "date": null,
+      "order": 18,
+      "distance_km": 35,
+      "elevation_gain_m": 90,
+      "date_status": "effective",
+      "date": "2026-05-24",
       "duration_h": null,
-      "weather": null
+      "weather": {
+        "description": "Ensoleillé",
+        "temp_min": 17,
+        "temp_max": 32,
+        "icon": "☀️"
+      }
     },
     {
       "id": "acte-3_etape-4_ancenis_nantes",
@@ -324,13 +329,18 @@
         "simplified": "data/traces/acte-3_etape-4_ancenis_nantes_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-4_ancenis_nantes.gpx",
-      "order": 18,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "prévue",
-      "date": null,
+      "order": 19,
+      "distance_km": 45,
+      "elevation_gain_m": 60,
+      "date_status": "planned",
+      "date": "2026-05-26",
       "duration_h": null,
-      "weather": null
+      "weather": {
+        "description": "Ensoleillé — pic de chaleur",
+        "temp_min": 19,
+        "temp_max": 34,
+        "icon": "☀️"
+      }
     },
     {
       "id": "acte-3_etape-5_nantes_paimboeuf",
@@ -341,30 +351,40 @@
         "simplified": "data/traces/acte-3_etape-5_nantes_paimboeuf_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-5_nantes_paimboeuf.gpx",
-      "order": 19,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "prévue",
-      "date": null,
+      "order": 20,
+      "distance_km": 50,
+      "elevation_gain_m": 30,
+      "date_status": "planned",
+      "date": "2026-05-27",
       "duration_h": null,
-      "weather": null
+      "weather": {
+        "description": "Ensoleillé",
+        "temp_min": 20,
+        "temp_max": 33,
+        "icon": "☀️"
+      }
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
-      "label": "Étape 6 Paimboeuf ➡️ Saint-Brevin-Les-Pins",
+      "label": "Étape 6 Paimboeuf ➡️ 🐍 Serpent d'Océan → Tharon-Plage",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.geojson",
         "simplified": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.gpx",
-      "order": 20,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "prévue",
-      "date": null,
+      "order": 21,
+      "distance_km": 36,
+      "elevation_gain_m": 30,
+      "date_status": "planned",
+      "date": "2026-05-28",
       "duration_h": null,
-      "weather": null
+      "weather": {
+        "description": "Ensoleillé, brise de mer",
+        "temp_min": 19,
+        "temp_max": 32,
+        "icon": "☀️"
+      }
     },
     {
       "id": "micro-aventure_boucle-angevine",
@@ -375,7 +395,7 @@
         "simplified": "data/traces/micro-aventure_boucle-angevine_simplified.geojson"
       },
       "source": "sources/gpx/micro-aventure_boucle-angevine.gpx",
-      "order": 21,
+      "order": 22,
       "distance_km": null,
       "elevation_gain_m": null,
       "date_status": "prévue",
