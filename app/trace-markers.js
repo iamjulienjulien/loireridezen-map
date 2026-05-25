@@ -10,10 +10,33 @@ import { TRACE_MARKER_TYPES } from "./types.js";
 import { escapeHtml } from "./helpers.js";
 import { hiddenModes } from "./url-mode.js";
 
-function emojiIcon(type) {
+function hexToHueDeg(hex) {
+  if (!hex || hex[0] !== "#") return 0;
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  const d = max - min;
+  if (!d) return 0;
+  let h =
+    max === r
+      ? ((g - b) / d) % 6
+      : max === g
+        ? (b - r) / d + 2
+        : (r - g) / d + 4;
+  h = Math.round(h * 60);
+  return h < 0 ? h + 360 : h;
+}
+
+function emojiIcon(type, color) {
   const cfg = TRACE_MARKER_TYPES[type];
+  const filterStyle =
+    color && typeof color === "string" && color[0] === "#"
+      ? ` style="filter:sepia(1) saturate(2) hue-rotate(${(hexToHueDeg(color) - 38 + 360) % 360}deg)"`
+      : "";
   return new DivIcon({
-    html: `<span class="lrz-trace-emoji lrz-trace-emoji--${type}">${cfg.emoji}</span>`,
+    html: `<span class="lrz-trace-emoji lrz-trace-emoji--${type}"${filterStyle}>${cfg.emoji}</span>`,
     className: "",
     iconSize: [cfg.size, cfg.size],
     iconAnchor: [cfg.size / 2, cfg.size / 2],
@@ -49,10 +72,14 @@ async function safeFetch(url) {
  * @param {object} tracesCatalog
  * @param {Map<string, import("leaflet").FeatureGroup>} featureGroups — Map<groupId, FeatureGroup> issue de wireTraceCheckboxes
  */
-export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog, featureGroups) {
+export async function buildTraceMarkersFromCatalog(
+  groupsCatalog,
+  tracesCatalog,
+  featureGroups,
+) {
   if (hiddenModes.rabbit) return;
 
-  for (const group of (groupsCatalog.items ?? [])) {
+  for (const group of groupsCatalog.items ?? []) {
     const fg = featureGroups.get(group.id);
     if (!fg) continue;
 
@@ -67,12 +94,16 @@ export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog,
       const start = firstCoord(data);
       const end = lastCoord(data);
       if (start) {
-        const m = new Marker([start[1], start[0]], { icon: emojiIcon("départ") });
+        const m = new Marker([start[1], start[0]], {
+          icon: emojiIcon("départ", group.color),
+        });
         m.bindPopup(`<strong>Départ</strong><br/>${escapeHtml(group.label)}`);
         fg.addLayer(m);
       }
       if (end) {
-        const m = new Marker([end[1], end[0]], { icon: emojiIcon("arrivée") });
+        const m = new Marker([end[1], end[0]], {
+          icon: emojiIcon("arrivée", group.color),
+        });
         m.bindPopup(`<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`);
         fg.addLayer(m);
       }
@@ -85,7 +116,9 @@ export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog,
         const start = firstCoord(data);
         if (!start) continue;
         const type = i === 0 ? "départ" : "étape";
-        const m = new Marker([start[1], start[0]], { icon: emojiIcon(type) });
+        const m = new Marker([start[1], start[0]], {
+          icon: emojiIcon(type, group.color),
+        });
         m.bindPopup(
           `<strong>${TRACE_MARKER_TYPES[type].label}</strong><br/>${escapeHtml(item.label)}`,
         );
@@ -97,8 +130,12 @@ export async function buildTraceMarkersFromCatalog(groupsCatalog, tracesCatalog,
       if (data) {
         const end = lastCoord(data);
         if (end) {
-          const m = new Marker([end[1], end[0]], { icon: emojiIcon("arrivée") });
-          m.bindPopup(`<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`);
+          const m = new Marker([end[1], end[0]], {
+            icon: emojiIcon("arrivée", group.color),
+          });
+          m.bindPopup(
+            `<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`,
+          );
           fg.addLayer(m);
         }
       }

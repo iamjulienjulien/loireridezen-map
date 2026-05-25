@@ -36,10 +36,11 @@ async function _fetchGeoJson(primaryUrl, fallbackUrl = null) {
 }
 
 function _layerStyle(group, item, featureIndex) {
+  const isDashed = group.dashed && item?.date_status !== "effective";
   const base = {
     weight: 4,
     opacity: 0.9,
-    ...(group.dashed ? { dashArray: "6,4" } : {}),
+    ...(isDashed ? { dashArray: "8,10" } : {}),
   };
   return (feature) => ({
     ...base,
