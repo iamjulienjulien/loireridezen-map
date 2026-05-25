@@ -1,22 +1,31 @@
 {
-  "updated_at": "2026-05-21T04:17:22.761573+00:00",
+  "updated_at": "2026-05-22T04:34:04.972406+00:00",
   "items": [
     {
-      "id": "acte-1_etape-2_boissy-st-culle_etampes",
-      "label": "Étape 2 Boissy-St-Culle ➡️ Etampes",
+      "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
+      "label": "Étape 1 Chatillon ➡️ Boissy-Le-Cutte",
       "group": "acte-1",
       "paths": {
-        "full": "data/traces/acte-1_etape-2_boissy-st-culle_etampes.geojson",
-        "simplified": "data/traces/acte-1_etape-2_boissy-st-culle_etampes_simplified.geojson"
+        "full": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte.geojson",
+        "simplified": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte_simplified.geojson"
       },
-      "source": "sources/gpx/acte-1_etape-2_boissy-st-culle_etampes.gpx",
-      "order": 1,
+      "source": "sources/gpx/acte-1_etape-1_chatillon_boissy-le-cutte.gpx",
+      "order": 22,
       "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "approximative",
-      "date": null,
-      "duration_h": null,
-      "weather": null
+      "elevation_gain_m": null
+    },
+    {
+      "id": "acte-1_etape-2_boissy-le-culle_etampes",
+      "label": "Étape 2 Boissy-Le-Culle ➡️ Etampes",
+      "group": "acte-1",
+      "paths": {
+        "full": "data/traces/acte-1_etape-2_boissy-le-culle_etampes.geojson",
+        "simplified": "data/traces/acte-1_etape-2_boissy-le-culle_etampes_simplified.geojson"
+      },
+      "source": "sources/gpx/acte-1_etape-2_boissy-le-culle_etampes.gpx",
+      "order": 23,
+      "distance_km": null,
+      "elevation_gain_m": null
     },
     {
       "id": "acte-1_etape-3_etampes_artenay",

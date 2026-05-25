@@ -7,7 +7,7 @@
       "description": "Voyage initiatique de 2018, hors compte Instagram.",
       "year": 2018,
       "unified": false,
-      "color": "#a8c8d8",
+      "color": "#86a0ac",
       "dashed": false,
       "order": 1,
       "visible_by_default": true
@@ -25,7 +25,7 @@
     },
     {
       "id": "acte-3",
-      "label": "Acte 3 — Angers → Pornic",
+      "label": "Acte 3 — Angers → L'Océan",
       "description": "Bouclage symbolique au Serpent de Huang Yong Ping, mai 2026.",
       "year": 2026,
       "unified": false,
