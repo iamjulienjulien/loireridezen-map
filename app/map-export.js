@@ -561,9 +561,8 @@ function drawCityLabels(
       originWX,
       originWY,
     );
-    const bold = marker.bold ? "bold " : "";
     const cityText = marker.bold ? marker.city.toUpperCase() : marker.city;
-    ctx.font = `${bold}${fontSize}px '${fontFamily}', sans-serif`;
+    ctx.font = `${fontSize}px '${fontFamily}', sans-serif`;
 
     const tw = ctx.measureText(cityText).width;
     const bw = tw + pad * 2;
@@ -616,7 +615,7 @@ function drawCityLabels(
     ctx.shadowColor = "transparent";
 
     ctx.fillStyle = marker.color || "#2e6a8f";
-    ctx.font = `${bold}${fontSize}px '${fontFamily}', sans-serif`;
+    ctx.font = `${fontSize}px '${fontFamily}', sans-serif`;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillText(cityText, chosen.x + pad, centerY);
@@ -832,7 +831,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   const markers = [];
   const push = (coord, type, city = null) => {
     if (!coord) return;
-    const bold = false;
+    const bold = type === "départ" || type === "arrivée";
     markers.push({
       lng: coord[0],
       lat: coord[1],
