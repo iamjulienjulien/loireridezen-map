@@ -582,61 +582,87 @@ function drawCityLabels(
   fontSize,
   fontFamily = "Geist",
 ) {
+  const canvasW = ctx.canvas.width;
+  const canvasH = ctx.canvas.height;
   const pad = Math.round(fontSize * 0.4);
   const r = Math.round(fontSize * 0.3);
-  const offsetX = Math.round(fontSize * 1.15);
+  const ox = Math.round(fontSize * 1.15);
+  const edge = Math.round(fontSize * 0.3);
   const placed = [];
 
   for (const marker of markers) {
     if (!marker.city) continue;
-    const { x, y } = lngLatToPixel(
-      marker.lng,
-      marker.lat,
-      zFloat,
-      originWX,
-      originWY,
-    );
+    const { x, y } = lngLatToPixel(marker.lng, marker.lat, zFloat, originWX, originWY);
     const cityText = marker.bold ? marker.city.toUpperCase() : marker.city;
     ctx.font = `${fontSize}px '${fontFamily}', sans-serif`;
 
     const tw = ctx.measureText(cityText).width;
     const bw = tw + pad * 2;
     const bh = fontSize + pad;
-    const lx = x + offsetX;
 
-    const vertSteps = [0, -bh * 0.9, bh * 0.9, -bh * 1.8, bh * 1.8, -bh * 2.7];
+    // Candidate positions: right side → left side → above → below
+    const candidates = [
+      // Right, aligned to marker vertically (5 offsets)
+      { lx: x + ox,       ty: y - bh / 2 },
+      { lx: x + ox,       ty: y - bh * 1.4 },
+      { lx: x + ox,       ty: y + bh * 0.4 },
+      { lx: x + ox,       ty: y - bh * 2.3 },
+      { lx: x + ox,       ty: y + bh * 1.3 },
+      // Left, same offsets
+      { lx: x - ox - bw,  ty: y - bh / 2 },
+      { lx: x - ox - bw,  ty: y - bh * 1.4 },
+      { lx: x - ox - bw,  ty: y + bh * 0.4 },
+      { lx: x - ox - bw,  ty: y - bh * 2.3 },
+      { lx: x - ox - bw,  ty: y + bh * 1.3 },
+      // Above centered
+      { lx: x - bw / 2,   ty: y - bh * 1.5 - fontSize * 0.4 },
+      // Below centered
+      { lx: x - bw / 2,   ty: y + fontSize * 0.6 },
+    ];
+
     let chosen = null;
-    for (const dy of vertSteps) {
-      const candidate = { x: lx, y: y - bh / 2 + dy, w: bw, h: bh };
-      if (!placed.some((p) => _rectsOverlap(p, candidate))) {
-        chosen = candidate;
-        break;
+    for (const { lx, ty } of candidates) {
+      if (lx < edge || ty < edge || lx + bw > canvasW - edge || ty + bh > canvasH - edge) continue;
+      const c = { x: lx, y: ty, w: bw, h: bh };
+      if (!placed.some((p) => _rectsOverlap(p, c))) { chosen = c; break; }
+    }
+    if (!chosen) {
+      // Fallback: first in-bounds candidate regardless of overlap
+      for (const { lx, ty } of candidates) {
+        if (lx >= edge && ty >= edge && lx + bw <= canvasW - edge && ty + bh <= canvasH - edge) {
+          chosen = { x: lx, y: ty, w: bw, h: bh };
+          break;
+        }
       }
     }
-    if (!chosen)
+    if (!chosen) {
+      const { lx, ty } = candidates[0];
       chosen = {
-        x: lx,
-        y: y - bh / 2 + vertSteps[vertSteps.length - 1],
-        w: bw,
-        h: bh,
+        x: Math.min(Math.max(lx, 0), canvasW - bw),
+        y: Math.min(Math.max(ty, 0), canvasH - bh),
+        w: bw, h: bh,
       };
+    }
     placed.push(chosen);
 
-    const centerY = chosen.y + bh / 2;
-    const vertDist = Math.abs(centerY - y);
+    const cx = chosen.x + bw / 2;
+    const cy = chosen.y + bh / 2;
+    const hdist = Math.abs(cx - x);
+    const vdist = Math.abs(cy - y);
 
-    if (vertDist > bh * 0.35) {
+    if (hdist > bw * 0.55 || vdist > bh * 0.4) {
       ctx.save();
       ctx.strokeStyle = marker.color || "#2e6a8f";
       ctx.lineWidth = Math.max(1, Math.round(fontSize * 0.07));
-      ctx.setLineDash([
-        Math.round(fontSize * 0.2),
-        Math.round(fontSize * 0.15),
-      ]);
+      ctx.setLineDash([Math.round(fontSize * 0.2), Math.round(fontSize * 0.15)]);
       ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(x, y);
-      ctx.lineTo(chosen.x, centerY);
+      if (hdist >= vdist) {
+        ctx.lineTo(cx < x ? chosen.x + bw : chosen.x, cy);
+      } else {
+        ctx.lineTo(cx, cy < y ? chosen.y + bh : chosen.y);
+      }
       ctx.stroke();
       ctx.restore();
     }
@@ -653,7 +679,7 @@ function drawCityLabels(
     ctx.font = `${fontSize}px '${fontFamily}', sans-serif`;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(cityText, chosen.x + pad, centerY);
+    ctx.fillText(cityText, chosen.x + pad, cy);
   }
 }
 
@@ -900,7 +926,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     const cityNames = loaded.map(({ item }) =>
       item.is_loop ? extractLoopCityNames(item.label) : extractCityNames(item.label),
     );
-    push(_firstCoord(loaded[0].gj), "départ", cityNames[0]?.from ?? null);
+    push(_firstCoord(loaded[0].gj), "départ", loaded[0].item.is_loop ? null : (cityNames[0]?.from ?? null));
     if (loaded[0].item.is_loop) {
       const far = farthestPointFromStart(_flatCoords(loaded[0].gj));
       if (far) push([far.lng, far.lat], "étape", cityNames[0]?.to ?? null);
@@ -925,7 +951,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     const { from, to } = item0.is_loop
       ? extractLoopCityNames(item0.label)
       : extractCityNames(item0.label);
-    push(_firstCoord(loaded[0].gj), "départ", from);
+    push(_firstCoord(loaded[0].gj), "départ", item0.is_loop ? null : from);
     if (item0.is_loop) {
       const far = farthestPointFromStart(_flatCoords(loaded[0].gj));
       if (far) push([far.lng, far.lat], "étape", to);
