@@ -530,15 +530,26 @@ function _tintEmoji(ctx, emoji, x, y, fontSize, color) {
   const s   = fontSize + pad * 2;
   const tmp = document.createElement("canvas");
   tmp.width = s; tmp.height = s;
-  const tc = tmp.getContext("2d");
+  const tc = tmp.getContext("2d", { willReadFrequently: true });
   tc.font = `${fontSize}px sans-serif`;
   tc.textAlign = "center";
   tc.textBaseline = "middle";
   tc.fillText(emoji, s / 2, s / 2);
-  // multiply : blanc × couleur = couleur, noir reste noir, dégradés préservés
-  tc.globalCompositeOperation = "multiply";
-  tc.fillStyle = color;
-  tc.fillRect(0, 0, s, s);
+
+  // Multiply pixel à pixel : blanc × couleur = couleur, noir reste noir.
+  // getImageData évite le problème du carré coloré des composite operations.
+  const cr = parseInt(color.slice(1, 3), 16) / 255;
+  const cg = parseInt(color.slice(3, 5), 16) / 255;
+  const cb = parseInt(color.slice(5, 7), 16) / 255;
+  const img = tc.getImageData(0, 0, s, s);
+  const d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i + 3] === 0) continue;
+    d[i]     = Math.round(d[i]     * cr);
+    d[i + 1] = Math.round(d[i + 1] * cg);
+    d[i + 2] = Math.round(d[i + 2] * cb);
+  }
+  tc.putImageData(img, 0, 0);
   ctx.drawImage(tmp, Math.round(x - s / 2), Math.round(y - s / 2));
 }
 
