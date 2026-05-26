@@ -645,7 +645,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   if (mode === 'act') {
     const cityNames = loaded.map(({ item }) => extractCityNames(item.label));
     push(_firstCoord(loaded[0].gj), 'départ', cityNames[0]?.from ?? null);
-    for (let i = 1; i < loaded.length - 1; i++) {
+    for (let i = 1; i < loaded.length; i++) {
       push(_firstCoord(loaded[i].gj), 'étape', cityNames[i]?.from ?? null);
     }
     if (loaded.length > 1) {
