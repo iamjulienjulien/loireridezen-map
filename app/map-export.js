@@ -342,7 +342,8 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
     const bold      = marker.bold ? 'bold ' : '';
     ctx.font        = `${bold}${fontSize}px sans-serif`;
 
-    const tw  = ctx.measureText(marker.city).width;
+    const cityText = marker.bold ? marker.city.toUpperCase() : marker.city;
+    const tw  = ctx.measureText(cityText).width;
     const bw  = tw + pad * 2;
     const bh  = fontSize + pad;
     const lx  = x + offsetX;
@@ -387,7 +388,7 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
     ctx.font         = `${bold}${fontSize}px sans-serif`;
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(marker.city, chosen.x + pad, centerY);
+    ctx.fillText(cityText, chosen.x + pad, centerY);
   }
 }
 
