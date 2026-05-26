@@ -835,7 +835,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     markers.push({
       lng: coord[0],
       lat: coord[1],
-      emoji: TRACE_MARKER_TYPES[type].emoji,
+      emoji: "🚩",
       color,
       city,
       bold,
