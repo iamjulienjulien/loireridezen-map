@@ -397,7 +397,7 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
   if (!lines.length) return;
 
   const iconSize = Math.round(fontSize * 0.85);
-  const iconPad  = Math.round(iconSize * 0.25);
+  const iconPad  = Math.round(iconSize * 0.55);
   const titleFs  = (showTitle && title) ? Math.round(fontSize * 1.25) : 0;
   const divH     = (showTitle && title) ? Math.round(fontSize * 0.5) : 0;
   const lineH    = Math.round(fontSize * 1.65);
