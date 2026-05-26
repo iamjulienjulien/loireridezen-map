@@ -2471,3 +2471,13 @@ body {
   color: var(--lrz-foreground);
   user-select: none;
 }
+
+.lrz-export-opt--sub {
+  margin-left: 1.375rem;
+  padding-left: 0.1rem;
+}
+
+.lrz-export-opt--sub.is-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}

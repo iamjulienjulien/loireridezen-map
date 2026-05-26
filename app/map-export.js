@@ -93,16 +93,13 @@ function computeRenderParams(bbox, canvasW, canvasH, padding = 0.05) {
   const zFromW  = Math.log2(targetW / (bboxWx * TILE_SIZE));
   const zFromH  = Math.log2(targetH / (bboxWy * TILE_SIZE));
 
-  // Zoom fractionnaire exact → tuiles au floor, pixels/traces au float
   const zFloat    = Math.min(Math.min(zFromW, zFromH), 18);
   const zoom      = Math.floor(zFloat);
   const tileScale = Math.pow(2, zFloat - zoom);
 
   const scalePx = Math.pow(2, zFloat) * TILE_SIZE;
   return {
-    zoom,
-    tileScale,
-    zFloat,
+    zoom, tileScale, zFloat,
     originWX: centerWX - canvasW / (2 * scalePx),
     originWY: centerWY - canvasH / (2 * scalePx),
   };
@@ -158,28 +155,100 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+function _rectsOverlap(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+// ─── Icônes monochromes pour l'encadré stats ──────────────────────────────────
+
+function _iconCalendar(ctx, cx, cy, s) {
+  const x0 = cx - s * 0.44, y0 = cy - s * 0.36;
+  const w0 = s * 0.88,      h0 = s * 0.72;
+  ctx.beginPath(); ctx.rect(x0, y0, w0, h0); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x0, cy - s * 0.06); ctx.lineTo(x0 + w0, cy - s * 0.06);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.21, y0); ctx.lineTo(cx - s * 0.21, y0 - s * 0.18);
+  ctx.moveTo(cx + s * 0.21, y0); ctx.lineTo(cx + s * 0.21, y0 - s * 0.18);
+  ctx.stroke();
+}
+
+function _iconBike(ctx, cx, cy, s) {
+  const wr = s * 0.26;
+  const lx = cx - s * 0.29, rx = cx + s * 0.29;
+  const wy = cy + s * 0.13;
+  const pedX = cx, pedY = cy - s * 0.05;
+  const stY  = cy - s * 0.28;
+  ctx.beginPath(); ctx.arc(lx, wy, wr, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(rx, wy, wr, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(lx, wy);
+  ctx.lineTo(pedX, pedY);
+  ctx.lineTo(rx, wy);
+  ctx.moveTo(pedX, pedY);
+  ctx.lineTo(cx - s * 0.06, stY);
+  ctx.lineTo(cx - s * 0.19, stY);   // saddle
+  ctx.moveTo(cx - s * 0.06, stY);
+  ctx.lineTo(rx, wy);               // top tube
+  ctx.stroke();
+}
+
+function _iconRuler(ctx, cx, cy, s) {
+  const x0 = cx - s * 0.44, y0 = cy - s * 0.18;
+  const w0 = s * 0.88,      h0 = s * 0.36;
+  ctx.beginPath(); ctx.rect(x0, y0, w0, h0); ctx.stroke();
+  [- 0.24, -0.01, 0.22].forEach((tx) => {
+    ctx.beginPath();
+    ctx.moveTo(cx + s * tx, y0);
+    ctx.lineTo(cx + s * tx, cy);
+    ctx.stroke();
+  });
+}
+
+function _iconMountain(ctx, cx, cy, s) {
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.44, cy + s * 0.36);
+  ctx.lineTo(cx, cy - s * 0.36);
+  ctx.lineTo(cx + s * 0.44, cy + s * 0.36);
+  ctx.moveTo(cx + s * 0.08, cy + s * 0.36);
+  ctx.lineTo(cx + s * 0.31, cy - s * 0.02);
+  ctx.lineTo(cx + s * 0.44, cy + s * 0.36);
+  ctx.stroke();
+}
+
+function _iconClock(ctx, cx, cy, s) {
+  ctx.beginPath(); ctx.arc(cx, cy, s * 0.42, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - s * 0.3);  // minute hand
+  ctx.moveTo(cx, cy); ctx.lineTo(cx + s * 0.2, cy + s * 0.06); // hour hand
+  ctx.stroke();
+}
+
+function _drawStatIcon(ctx, icon, cx, cy, s) {
+  ctx.lineCap  = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = Math.max(1, Math.round(s * 0.1));
+  switch (icon) {
+    case 'calendar': _iconCalendar(ctx, cx, cy, s); break;
+    case 'bike':     _iconBike(ctx, cx, cy, s);     break;
+    case 'route':    _iconRuler(ctx, cx, cy, s);    break;
+    case 'mountain': _iconMountain(ctx, cx, cy, s); break;
+    case 'clock':    _iconClock(ctx, cx, cy, s);    break;
+  }
+}
+
 // ─── Helpers données ──────────────────────────────────────────────────────────
 
-/**
- * Extrait les noms de villes depuis un label de trace.
- * "Étape 3 Tours ➡️ Saumur" → { from: "Tours", to: "Saumur" }
- * "Étape 6 Paimboeuf ➡️ 🐍 Serpent d'Océan → Tharon-Plage" → { from: "Paimboeuf", to: "Tharon-Plage" }
- */
 function extractCityNames(label) {
   const arrowEmoji = '➡️';
   const idx = label.indexOf(arrowEmoji);
   if (idx < 0) return { from: label.trim(), to: null };
-
-  const fromPart = label.slice(0, idx)
-    .replace(/^[^\d]*\d+\s+/, '') // retire "Étape N "
-    .trim();
-
-  const toPart = label.slice(idx + arrowEmoji.length);
+  const fromPart = label.slice(0, idx).replace(/^[^\d]*\d+\s+/, '').trim();
+  const toPart   = label.slice(idx + arrowEmoji.length);
   const secArrow = toPart.lastIndexOf('→');
-  const toRaw = secArrow >= 0 ? toPart.slice(secArrow + 1) : toPart;
-  const to = toRaw.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim();
-
-  return { from: fromPart, to };
+  const toRaw    = secArrow >= 0 ? toPart.slice(secArrow + 1) : toPart;
+  return { from: fromPart, to: toRaw.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim() };
 }
 
 function _fmtNum(n) { return Math.round(n).toLocaleString('fr-FR'); }
@@ -213,29 +282,33 @@ function _formatDurationFR(hours) {
   return m > 0 ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`;
 }
 
-function _computeStatsData(mode, group, loaded) {
+// Retourne { title, lines: [{text, icon}], color }
+// Ordre — acte  : dates → étapes → distance → dénivelé
+// Ordre — étape : date  → distance → dénivelé → durée
+function _computeStatsData(mode, group, loaded, color) {
   if (mode === 'act') {
-    const n = loaded.length;
+    const n       = loaded.length;
     const hasDist = loaded.some(({ item }) => item.distance_km != null);
     const hasElev = loaded.some(({ item }) => item.elevation_gain_m != null);
     const totalDist = loaded.reduce((s, { item }) => s + (item.distance_km ?? 0), 0);
     const totalElev = loaded.reduce((s, { item }) => s + (item.elevation_gain_m ?? 0), 0);
     const allDates  = loaded.map(({ item }) => item.date).filter(Boolean);
 
-    const lines = [`🚴 ${n} étape${n > 1 ? 's' : ''}`];
-    if (hasDist) lines.push(`📏 ${_fmtNum(totalDist)} km`);
-    if (hasElev) lines.push(`⛰ ${_fmtNum(totalElev)} m de dénivelé`);
-    const period = _formatPeriodFR(allDates);
-    if (period) lines.push(`🗓 ${period}`);
-    return { title: group?.label ?? '', lines };
-  } else {
-    const item = loaded[0].item;
     const lines = [];
-    if (item.distance_km != null) lines.push(`📏 ${(+item.distance_km).toLocaleString('fr-FR')} km`);
-    if (item.elevation_gain_m != null) lines.push(`⛰ ${_fmtNum(item.elevation_gain_m)} m de dénivelé`);
-    if (item.duration_h != null) lines.push(`🕒 ${_formatDurationFR(item.duration_h)}`);
-    if (item.date) lines.push(`🗓 ${_formatDateFR(item.date)}`);
-    return { title: item.label ?? '', lines };
+    const period = _formatPeriodFR(allDates);
+    if (period) lines.push({ text: period, icon: 'calendar' });
+    lines.push({ text: `${n} étape${n > 1 ? 's' : ''}`, icon: 'bike' });
+    if (hasDist) lines.push({ text: `${_fmtNum(totalDist)} km`, icon: 'route' });
+    if (hasElev) lines.push({ text: `${_fmtNum(totalElev)} m de dénivelé`, icon: 'mountain' });
+    return { title: group?.label ?? '', lines, color };
+  } else {
+    const item  = loaded[0].item;
+    const lines = [];
+    if (item.date) lines.push({ text: _formatDateFR(item.date) ?? item.date, icon: 'calendar' });
+    if (item.distance_km != null) lines.push({ text: `${(+item.distance_km).toLocaleString('fr-FR')} km`, icon: 'route' });
+    if (item.elevation_gain_m != null) lines.push({ text: `${_fmtNum(item.elevation_gain_m)} m de dénivelé`, icon: 'mountain' });
+    if (item.duration_h != null) lines.push({ text: _formatDurationFR(item.duration_h), icon: 'clock' });
+    return { title: item.label ?? '', lines, color };
   }
 }
 
@@ -259,7 +332,6 @@ async function drawBasemap(ctx, canvasW, canvasH, zoom, tileScale, originWX, ori
 
   ctx.fillStyle = '#ddd';
   ctx.fillRect(0, 0, canvasW, canvasH);
-
   for (const { img, tx, ty } of tiles) {
     if (!img) continue;
     const px = (tx - originWX * scale) * tileDisplaySize;
@@ -276,10 +348,8 @@ function drawVeil(ctx, canvasW, canvasH) {
 function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
   ctx.lineCap  = 'round';
   ctx.lineJoin = 'round';
-
   const haloWidth = lineWidth + Math.round(lineWidth * 0.7);
 
-  // Passe 1 — halo blanc sous toutes les traces
   for (const { geojson, dashed } of traces) {
     ctx.strokeStyle = 'rgba(255,255,255,0.92)';
     ctx.lineWidth   = haloWidth;
@@ -295,8 +365,6 @@ function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
       ctx.stroke();
     }
   }
-
-  // Passe 2 — trait coloré par-dessus
   for (const { geojson, color, dashed } of traces) {
     ctx.strokeStyle = color;
     ctx.lineWidth   = lineWidth;
@@ -315,86 +383,111 @@ function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
   ctx.setLineDash([]);
 }
 
+// Marqueurs emoji — sans pastille de fond, juste le drapeau teinté
 function drawMarkers(ctx, markers, zFloat, originWX, originWY, fontSize) {
   ctx.textAlign    = 'center';
   ctx.textBaseline = 'middle';
-
   for (const { lng, lat, emoji, color } of markers) {
     const { x, y } = lngLatToPixel(lng, lat, zFloat, originWX, originWY);
-
-    // Pastille blanche de fond
-    ctx.fillStyle = 'rgba(255,255,255,0.88)';
-    ctx.shadowColor = 'rgba(0,0,0,0.18)';
-    ctx.shadowBlur  = Math.round(fontSize * 0.25);
-    ctx.beginPath();
-    ctx.arc(x, y, fontSize * 0.58, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.shadowColor = 'transparent';
-
     const rotate = ((hexToHueDeg(color) - 38) + 360) % 360;
     ctx.filter = `sepia(1) saturate(2) hue-rotate(${rotate}deg)`;
-    ctx.font = `${fontSize}px sans-serif`;
+    ctx.font   = `${fontSize}px sans-serif`;
     ctx.fillText(emoji, x, y);
   }
   ctx.filter = 'none';
 }
 
+// Labels de ville — pastille blanche conservée, anti-collision verticale
 function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
-  const pad  = Math.round(fontSize * 0.4);
-  const r    = Math.round(fontSize * 0.3);
+  const pad     = Math.round(fontSize * 0.4);
+  const r       = Math.round(fontSize * 0.3);
+  const offsetX = Math.round(fontSize * 1.15);
+  const placed  = []; // rectangles déjà placés {x,y,w,h}
 
-  ctx.font      = `${fontSize}px sans-serif`;
-  ctx.textAlign = 'left';
+  for (const marker of markers) {
+    if (!marker.city) continue;
 
-  for (const { lng, lat, city } of markers) {
-    if (!city) continue;
-    const { x, y } = lngLatToPixel(lng, lat, zFloat, originWX, originWY);
+    const { x, y } = lngLatToPixel(marker.lng, marker.lat, zFloat, originWX, originWY);
+    const bold      = marker.bold ? 'bold ' : '';
+    ctx.font        = `${bold}${fontSize}px sans-serif`;
 
-    const tw  = ctx.measureText(city).width;
+    const tw  = ctx.measureText(marker.city).width;
     const bw  = tw + pad * 2;
     const bh  = fontSize + pad;
-    const bx  = x + Math.round(fontSize * 0.7);
-    const by  = y - bh / 2;
+    const lx  = x + offsetX;
 
-    // Pastille fond blanc semi-opaque
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    // Cherche une position verticale sans chevauchement
+    const vertSteps = [0, -bh * 0.9, bh * 0.9, -bh * 1.8, bh * 1.8, -bh * 2.7];
+    let chosen = null;
+    for (const dy of vertSteps) {
+      const candidate = { x: lx, y: y - bh / 2 + dy, w: bw, h: bh };
+      if (!placed.some((p) => _rectsOverlap(p, candidate))) { chosen = candidate; break; }
+    }
+    if (!chosen) chosen = { x: lx, y: y - bh / 2 + vertSteps[vertSteps.length - 1], w: bw, h: bh };
+    placed.push(chosen);
+
+    const centerY  = chosen.y + bh / 2;
+    const vertDist = Math.abs(centerY - y);
+
+    // Trait de rappel si le label est significativement décalé
+    if (vertDist > bh * 0.35) {
+      ctx.save();
+      ctx.strokeStyle = marker.color || '#2e6a8f';
+      ctx.lineWidth   = Math.max(1, Math.round(fontSize * 0.07));
+      ctx.setLineDash([Math.round(fontSize * 0.2), Math.round(fontSize * 0.15)]);
+      ctx.lineCap     = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(chosen.x, centerY);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Pastille blanche
+    ctx.fillStyle   = 'rgba(255,255,255,0.9)';
     ctx.shadowColor = 'rgba(0,0,0,0.12)';
     ctx.shadowBlur  = Math.round(fontSize * 0.2);
-    roundRect(ctx, bx, by, bw, bh, r);
+    roundRect(ctx, chosen.x, chosen.y, chosen.w, chosen.h, r);
     ctx.fill();
-    ctx.shadowBlur  = 0;
-    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
 
-    ctx.fillStyle    = '#222';
+    // Texte dans la couleur de la trace
+    ctx.fillStyle    = marker.color || '#2e6a8f';
+    ctx.font         = `${bold}${fontSize}px sans-serif`;
+    ctx.textAlign    = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(city, bx + pad, y);
+    ctx.fillText(marker.city, chosen.x + pad, centerY);
   }
 }
 
-function drawStats(ctx, canvasW, canvasH, statsData, fontSize) {
-  const { title, lines } = statsData;
-  if (!title && !lines.length) return;
+// Encadré stats — icônes monochromes, margin configurable, titre optionnel
+function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle) {
+  const { title, lines, color } = statsData;
+  if (!lines.length) return;
 
-  const titleFs = Math.round(fontSize * 1.25);
-  const lineH   = Math.round(fontSize * 1.65);
-  const pad     = Math.round(fontSize * 0.85);
-  const r       = Math.round(fontSize * 0.4);
+  const iconSize = Math.round(fontSize * 0.85);
+  const iconPad  = Math.round(iconSize * 0.25);
+  const titleFs  = (showTitle && title) ? Math.round(fontSize * 1.25) : 0;
+  const divH     = (showTitle && title) ? Math.round(fontSize * 0.5) : 0;
+  const lineH    = Math.round(fontSize * 1.65);
+  const pad      = Math.round(fontSize * 0.85);
+  const r        = Math.round(fontSize * 0.4);
 
-  ctx.font = `bold ${titleFs}px sans-serif`;
-  const titleW = ctx.measureText(title).width;
+  // Calcul de la largeur max du contenu
+  let maxW = 0;
+  if (showTitle && title) {
+    ctx.font = `bold ${titleFs}px sans-serif`;
+    maxW = Math.max(maxW, ctx.measureText(title).width);
+  }
   ctx.font = `${fontSize}px sans-serif`;
-  const maxLineW = lines.length
-    ? Math.max(...lines.map((l) => ctx.measureText(l).width))
-    : 0;
+  for (const { text } of lines) {
+    maxW = Math.max(maxW, iconSize + iconPad + ctx.measureText(text).width);
+  }
 
-  const boxW = Math.max(titleW, maxLineW) + pad * 2;
-  const divH = Math.round(fontSize * 0.5);
-  const boxH = pad + titleFs + divH + lines.length * lineH + pad;
-
-  const margin = Math.round(fontSize * 0.6);
-  const bx = canvasW - boxW - margin;
-  const by = canvasH - boxH - margin;
+  const boxW = maxW + pad * 2;
+  const boxH = pad + (showTitle && title ? titleFs + divH : 0) + lines.length * lineH + pad;
+  const bx   = canvasW - boxW - margin;
+  const by   = canvasH - boxH - margin;
 
   // Fond
   ctx.shadowColor   = 'rgba(0,0,0,0.18)';
@@ -405,29 +498,45 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize) {
   ctx.fill();
   ctx.shadowBlur = 0; ctx.shadowOffsetY = 0; ctx.shadowColor = 'transparent';
 
-  // Titre
-  ctx.fillStyle    = '#2a2a2a';
-  ctx.font         = `bold ${titleFs}px sans-serif`;
-  ctx.textAlign    = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(title, bx + pad, by + pad);
+  let curY = by + pad;
 
-  // Séparateur
-  const divY = by + pad + titleFs + Math.round(divH * 0.3);
-  ctx.strokeStyle = '#d8d3c8';
-  ctx.lineWidth   = 1;
-  ctx.setLineDash([]);
-  ctx.beginPath();
-  ctx.moveTo(bx + pad, divY);
-  ctx.lineTo(bx + boxW - pad, divY);
-  ctx.stroke();
+  // Titre + séparateur
+  if (showTitle && title) {
+    ctx.fillStyle    = '#2a2a2a';
+    ctx.font         = `bold ${titleFs}px sans-serif`;
+    ctx.textAlign    = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(title, bx + pad, curY);
+    curY += titleFs;
 
-  // Lignes stats
-  ctx.font      = `${fontSize}px sans-serif`;
-  ctx.fillStyle = '#333';
-  let curY = divY + Math.round(divH * 0.7);
-  for (const line of lines) {
-    ctx.fillText(line, bx + pad, curY);
+    const divMidY = curY + divH / 2;
+    ctx.strokeStyle = '#d8d3c8';
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(bx + pad, divMidY);
+    ctx.lineTo(bx + boxW - pad, divMidY);
+    ctx.stroke();
+    curY += divH;
+  }
+
+  // Lignes : icône monochrome + texte
+  const iconColor = color || '#2e6a8f';
+  for (const { text, icon } of lines) {
+    const iconCX = bx + pad + iconSize / 2;
+    const iconCY = curY + lineH / 2;
+
+    ctx.save();
+    ctx.strokeStyle = iconColor;
+    _drawStatIcon(ctx, icon, iconCX, iconCY, iconSize);
+    ctx.restore();
+
+    ctx.fillStyle    = '#333';
+    ctx.font         = `${fontSize}px sans-serif`;
+    ctx.textAlign    = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, bx + pad + iconSize + iconPad, iconCY);
+
     curY += lineH;
   }
 }
@@ -441,15 +550,8 @@ async function drawCurrentPosition(ctx, zFloat, originWX, originWY, bbox, fontSi
     const [lng, lat] = data.coordinates;
     if (lng < bbox.west || lng > bbox.east || lat < bbox.south || lat > bbox.north) return;
     const { x, y } = lngLatToPixel(lng, lat, zFloat, originWX, originWY);
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.shadowColor = 'rgba(0,0,0,0.18)';
-    ctx.shadowBlur  = Math.round(fontSize * 0.25);
-    ctx.beginPath();
-    ctx.arc(x, y, fontSize * 0.58, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
     ctx.filter = 'none';
-    ctx.font = `${fontSize}px sans-serif`;
+    ctx.font   = `${fontSize}px sans-serif`;
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('🚲', x, y);
@@ -459,10 +561,10 @@ async function drawCurrentPosition(ctx, zFloat, originWX, originWY, bbox, fontSi
 function drawAttribution(ctx, canvasW, canvasH, text) {
   const fs  = Math.max(20, Math.round(canvasW / 90));
   const pad = Math.round(fs * 0.5);
-  ctx.font      = `${fs}px sans-serif`;
-  const textW   = ctx.measureText(text).width;
-  const boxW    = textW + pad * 2;
-  const boxH    = fs + pad * 2;
+  ctx.font  = `${fs}px sans-serif`;
+  const textW = ctx.measureText(text).width;
+  const boxW  = textW + pad * 2;
+  const boxH  = fs + pad * 2;
   ctx.fillStyle = 'rgba(255,255,255,0.82)';
   ctx.fillRect(6, canvasH - boxH - 6, boxW, boxH);
   ctx.fillStyle    = '#333';
@@ -511,10 +613,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
                     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   } else {
     const item = allItems.find((it) => it.id === selectedId);
-    if (item) {
-      items = [item];
-      group = allGroups.find((g) => g.id === item.group);
-    }
+    if (item) { items = [item]; group = allGroups.find((g) => g.id === item.group); }
   }
   if (!items.length) return null;
 
@@ -526,8 +625,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
 
   if (!loaded.length) return null;
 
-  const bbox = mergeBboxes(loaded.map(({ gj }) => bboxFromGeoJSON(gj)));
-
+  const bbox  = mergeBboxes(loaded.map(({ gj }) => bboxFromGeoJSON(gj)));
   const color = (typeof group?.color === 'string' && !group.color.startsWith('fn:'))
     ? group.color : '#2e6a8f';
 
@@ -540,7 +638,8 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   const markers = [];
   const push = (coord, type, city = null) => {
     if (!coord) return;
-    markers.push({ lng: coord[0], lat: coord[1], emoji: TRACE_MARKER_TYPES[type].emoji, color, city });
+    const bold = type === 'départ' || type === 'arrivée';
+    markers.push({ lng: coord[0], lat: coord[1], emoji: TRACE_MARKER_TYPES[type].emoji, color, city, bold });
   };
 
   if (mode === 'act') {
@@ -560,13 +659,14 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     push(_lastCoord(loaded[0].gj), 'arrivée', to);
   }
 
-  const statsData = _computeStatsData(mode, group, loaded);
-
+  const statsData = _computeStatsData(mode, group, loaded, color);
   return { traces, markers, bbox, statsData };
 }
 
 // ─── Render orchestration ─────────────────────────────────────────────────────
 
+// Ordre de dessin : fond → voile → traces → marqueurs → noms villes
+//   → stats → position → attribution → cadre
 async function renderToCanvas(canvas, { traces, markers, bbox, statsData, formatKey, basemapKey, options = {} }) {
   const fmt = FORMATS[formatKey];
   const bm  = BASEMAPS[basemapKey];
@@ -577,8 +677,6 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   const { zoom, tileScale, zFloat, originWX, originWY } = computeRenderParams(bbox, fmt.w, fmt.h);
   const ctx = canvas.getContext('2d');
 
-  // Ordre de dessin : fond → voile → traces (halo+couleur) → marqueurs →
-  //   noms villes → stats → position → attribution → cadre
   await drawBasemap(ctx, fmt.w, fmt.h, zoom, tileScale, originWX, originWY, bm.tileUrl);
 
   if (options.veil) drawVeil(ctx, fmt.w, fmt.h);
@@ -590,13 +688,15 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   drawMarkers(ctx, markers, zFloat, originWX, originWY, markerFs);
 
   if (options.cities) {
-    const cityFs = Math.max(28, Math.round(fmt.w / 78));
+    const cityFs = Math.max(36, Math.round(fmt.w / 58));
     drawCityLabels(ctx, markers, zFloat, originWX, originWY, cityFs);
   }
 
   if (options.stats && statsData) {
-    const statsFs = Math.max(32, Math.round(fmt.w / 58));
-    drawStats(ctx, fmt.w, fmt.h, statsData, statsFs);
+    const statsFs    = Math.max(32, Math.round(fmt.w / 58));
+    const frameThick = options.frame ? Math.round(fmt.w * 0.03) : 0;
+    const statsMarg  = Math.round(fmt.w / 30) + frameThick;
+    drawStats(ctx, fmt.w, fmt.h, statsData, statsFs, statsMarg, options.showTitle !== false);
   }
 
   if (options.position) {
@@ -629,7 +729,6 @@ function _buildHTML(groups, tracesData) {
   const tItems = tracesData.items ?? [];
 
   const actOpts = gItems.map((g) => `<option value="${g.id}">${g.label}</option>`).join('');
-
   const stepOpts = gItems.map((g) => {
     const its = tItems.filter((it) => it.group === g.id).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     if (!its.length) return '';
@@ -691,6 +790,10 @@ function _buildHTML(groups, tracesData) {
             <input type="checkbox" id="exp-opt-stats">
             <span class="lrz-export-opt__label">Statistiques du parcours</span>
           </label>
+          <label class="lrz-export-opt lrz-export-opt--sub" id="exp-opt-title-wrap">
+            <input type="checkbox" id="exp-opt-title" checked>
+            <span class="lrz-export-opt__label">Afficher le titre</span>
+          </label>
           <label class="lrz-export-opt">
             <input type="checkbox" id="exp-opt-veil">
             <span class="lrz-export-opt__label">Atténuer le fond</span>
@@ -727,14 +830,16 @@ function _sel() {
   const id = m === 'act'
     ? _overlay.querySelector('#exp-act')?.value
     : _overlay.querySelector('#exp-step')?.value;
-  const fmt      = _overlay.querySelector('.lrz-export-fmt.is-active')?.dataset.fmt ?? 'square';
-  const bm       = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
-  const cities   = _overlay.querySelector('#exp-opt-cities')?.checked   ?? false;
-  const stats    = _overlay.querySelector('#exp-opt-stats')?.checked    ?? false;
-  const veil     = _overlay.querySelector('#exp-opt-veil')?.checked     ?? false;
-  const position = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
-  const frame    = _overlay.querySelector('#exp-opt-frame')?.checked    ?? false;
-  return { mode: m, selectedId: id, formatKey: fmt, basemapKey: bm, options: { cities, stats, veil, position, frame } };
+  const fmt       = _overlay.querySelector('.lrz-export-fmt.is-active')?.dataset.fmt ?? 'square';
+  const bm        = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
+  const cities    = _overlay.querySelector('#exp-opt-cities')?.checked   ?? false;
+  const stats     = _overlay.querySelector('#exp-opt-stats')?.checked    ?? false;
+  const showTitle = stats && (_overlay.querySelector('#exp-opt-title')?.checked ?? true);
+  const veil      = _overlay.querySelector('#exp-opt-veil')?.checked     ?? false;
+  const position  = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
+  const frame     = _overlay.querySelector('#exp-opt-frame')?.checked    ?? false;
+  return { mode: m, selectedId: id, formatKey: fmt, basemapKey: bm,
+           options: { cities, stats, showTitle, veil, position, frame } };
 }
 
 async function _renderPreview() {
@@ -762,14 +867,18 @@ async function _renderPreview() {
   const bm  = BASEMAPS[basemapKey];
 
   await drawBasemap(ctx, previewW, previewH, zoom, tileScale, originWX, originWY, bm.tileUrl);
-  if (options.veil) drawVeil(ctx, previewW, previewH);
+  if (options.veil)  drawVeil(ctx, previewW, previewH);
   drawTraces(ctx, data.traces, zFloat, originWX, originWY, 2);
   drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
-  if (options.cities)  drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 11);
-  if (options.stats && data.statsData) drawStats(ctx, previewW, previewH, data.statsData, 11);
+  if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15);
+  if (options.stats && data.statsData) {
+    const frameThick = options.frame ? Math.round(previewW * 0.03) : 0;
+    const statsMarg  = Math.round(previewW / 30) + frameThick;
+    drawStats(ctx, previewW, previewH, data.statsData, 11, statsMarg, options.showTitle);
+  }
   if (options.position) await drawCurrentPosition(ctx, zFloat, originWX, originWY, data.bbox, 20);
   drawAttribution(ctx, previewW, previewH, bm.attribution);
-  if (options.frame) drawFrame(ctx, previewW, previewH);
+  if (options.frame)  drawFrame(ctx, previewW, previewH);
 
   if (!_overlay) return;
   if (cvs) {
@@ -799,8 +908,7 @@ async function _generate() {
 
     const fmt = FORMATS[formatKey];
     const cvs = document.createElement('canvas');
-    cvs.width  = fmt.w;
-    cvs.height = fmt.h;
+    cvs.width = fmt.w; cvs.height = fmt.h;
 
     await renderToCanvas(cvs, { ...data, formatKey, basemapKey, options });
 
@@ -868,6 +976,15 @@ export async function openExportModal() {
   _overlay.querySelectorAll('.lrz-export-opt input[type="checkbox"]').forEach((cb) => {
     cb.addEventListener('change', _schedulePreview);
   });
+
+  // "Afficher les statistiques" grise/dégrise la sous-option "Afficher le titre"
+  _overlay.querySelector('#exp-opt-stats')?.addEventListener('change', function () {
+    _overlay.querySelector('#exp-opt-title-wrap')?.classList.toggle('is-disabled', !this.checked);
+  });
+  // État initial : titre grisé si stats désactivé
+  if (!_overlay.querySelector('#exp-opt-stats')?.checked) {
+    _overlay.querySelector('#exp-opt-title-wrap')?.classList.add('is-disabled');
+  }
 
   document.getElementById('exp-generate').addEventListener('click', _generate);
 
