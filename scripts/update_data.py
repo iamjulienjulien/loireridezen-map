@@ -1506,6 +1506,7 @@ def _show_trace_panel(item: dict, title: str = "Trace") -> None:
         f"[dim]météo:[/]          {format_weather(item.get('weather'))}",
         f"[dim]instagram_url:[/]  {item.get('instagram_url') or '—'}",
         f"[dim]komoot_url:[/]     {item.get('komoot_url') or '—'}",
+        f"[dim]boucle:[/]         {'Oui ↔️' if item.get('is_loop') else '— Non'}",
     ]
     console.print(Panel("\n".join(lines), title=title, border_style="cyan"))
 
@@ -1769,6 +1770,7 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
                 questionary.Choice("🗺️  Régénérer le GeoJSON depuis le GPX", value="regen_geojson"),
                 questionary.Choice("📷 Lien Instagram", value="instagram_url"),
                 questionary.Choice("🌍 Lien Komoot", value="komoot_url"),
+                questionary.Choice("↔️  Boucle (is_loop)", value="is_loop"),
                 questionary.Separator(),
                 questionary.Choice("🗑️  Supprimer cette trace", value="delete"),
                 questionary.Choice("← Retour", value="back"),
@@ -1909,6 +1911,20 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
                               id=item["id"], field="komoot_url",
                               old=old, new=item["komoot_url"])
                     console.print("[green]✓ Lien Komoot mis à jour[/]")
+
+        elif action == "is_loop":
+            val = questionary.confirm(
+                "Trace en boucle (is_loop) ?", default=bool(item.get("is_loop"))
+            ).ask()
+            if val is not None:
+                if val:
+                    item["is_loop"] = True
+                else:
+                    item.pop("is_loop", None)
+                save_catalog(catalog_path, items)
+                log_event("INFO", "traces", "field_updated",
+                          id=item.get("id"), field="is_loop", value=val)
+                console.print("[green]✓ Boucle mise à jour[/]")
 
         elif action == "delete":
             label_display = item.get("label", item["id"])

@@ -9,6 +9,7 @@ import { DivIcon, Marker } from "leaflet";
 import { TRACE_MARKER_TYPES } from "./types.js";
 import { escapeHtml } from "./helpers.js";
 import { hiddenModes } from "./url-mode.js";
+import { farthestPointFromStart } from "./geo-utils.js";
 
 function hexToHueDeg(hex) {
   if (!hex || hex[0] !== "#") return 0;
@@ -54,6 +55,14 @@ function lastCoord(geojson) {
   if (!f) return null;
   const c = f.geometry.coordinates;
   return c[c.length - 1];
+}
+
+function _flatCoords(geojson) {
+  const out = [];
+  for (const f of geojson.features ?? [geojson]) {
+    for (const c of f.geometry?.coordinates ?? []) out.push(c);
+  }
+  return out;
 }
 
 async function safeFetch(url) {
@@ -113,30 +122,58 @@ export async function buildTraceMarkersFromCatalog(
         const url = item.paths.simplified ?? item.paths.full;
         const data = await safeFetch(url);
         if (!data) continue;
-        const start = firstCoord(data);
-        if (!start) continue;
-        const type = i === 0 ? "départ" : "étape";
-        const m = new Marker([start[1], start[0]], {
-          icon: emojiIcon(type, group.color),
-        });
-        m.bindPopup(
-          `<strong>${TRACE_MARKER_TYPES[type].label}</strong><br/>${escapeHtml(item.label)}`,
-        );
-        fg.addLayer(m);
-      }
-      const lastItem = items[items.length - 1];
-      const url = lastItem.paths.simplified ?? lastItem.paths.full;
-      const data = await safeFetch(url);
-      if (data) {
-        const end = lastCoord(data);
-        if (end) {
-          const m = new Marker([end[1], end[0]], {
-            icon: emojiIcon("arrivée", group.color),
+
+        if (item.is_loop) {
+          if (i === 0) {
+            const start = firstCoord(data);
+            if (start) {
+              const m = new Marker([start[1], start[0]], {
+                icon: emojiIcon("départ", group.color),
+              });
+              m.bindPopup(
+                `<strong>${TRACE_MARKER_TYPES["départ"].label}</strong><br/>${escapeHtml(item.label)}`,
+              );
+              fg.addLayer(m);
+            }
+          }
+          const far = farthestPointFromStart(_flatCoords(data));
+          if (far) {
+            const m = new Marker([far.lat, far.lng], {
+              icon: emojiIcon("étape", group.color),
+            });
+            m.bindPopup(
+              `<strong>${TRACE_MARKER_TYPES["étape"].label}</strong><br/>${escapeHtml(item.label)}`,
+            );
+            fg.addLayer(m);
+          }
+        } else {
+          const start = firstCoord(data);
+          if (!start) continue;
+          const type = i === 0 ? "départ" : "étape";
+          const m = new Marker([start[1], start[0]], {
+            icon: emojiIcon(type, group.color),
           });
           m.bindPopup(
-            `<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`,
+            `<strong>${TRACE_MARKER_TYPES[type].label}</strong><br/>${escapeHtml(item.label)}`,
           );
           fg.addLayer(m);
+        }
+      }
+      const lastItem = items[items.length - 1];
+      if (!lastItem.is_loop) {
+        const url = lastItem.paths.simplified ?? lastItem.paths.full;
+        const data = await safeFetch(url);
+        if (data) {
+          const end = lastCoord(data);
+          if (end) {
+            const m = new Marker([end[1], end[0]], {
+              icon: emojiIcon("arrivée", group.color),
+            });
+            m.bindPopup(
+              `<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`,
+            );
+            fg.addLayer(m);
+          }
         }
       }
     }

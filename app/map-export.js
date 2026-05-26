@@ -14,6 +14,7 @@
  */
 
 import { TRACE_MARKER_TYPES } from "./types.js";
+import { farthestPointFromStart } from "./geo-utils.js";
 
 // ─── Fonds de carte ───────────────────────────────────────────────────────────
 
@@ -817,6 +818,25 @@ function _lastCoord(gj) {
   const c = f?.geometry?.coordinates ?? [];
   return c[c.length - 1] ?? null;
 }
+function _flatCoords(gj) {
+  const out = [];
+  for (const f of gj.features ?? [gj]) {
+    for (const c of f.geometry?.coordinates ?? []) out.push(c);
+  }
+  return out;
+}
+
+function extractLoopCityNames(label) {
+  const arrowIdx = label.indexOf("↔");
+  if (arrowIdx < 0) return { from: label.trim(), to: null };
+  const skip = label[arrowIdx + 1] === "️" ? 2 : 1;
+  const fromPart = label
+    .slice(0, arrowIdx)
+    .replace(/^[^\d]*\d+\s+/, "")
+    .trim();
+  const toPart = label.slice(arrowIdx + skip).trim();
+  return { from: fromPart || label.trim(), to: toPart || null };
+}
 
 async function loadSelectionData(mode, selectedId, groups, tracesData) {
   const allGroups = groups.items ?? [];
@@ -877,20 +897,41 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   };
 
   if (mode === "act") {
-    const cityNames = loaded.map(({ item }) => extractCityNames(item.label));
-    push(_firstCoord(loaded[0].gj), "départ", cityNames[0]?.from ?? null);
-    for (let i = 1; i < loaded.length; i++) {
-      push(_firstCoord(loaded[i].gj), "étape", cityNames[i]?.from ?? null);
-    }
-    push(
-      _lastCoord(loaded[loaded.length - 1].gj),
-      "arrivée",
-      cityNames[loaded.length - 1]?.to ?? null,
+    const cityNames = loaded.map(({ item }) =>
+      item.is_loop ? extractLoopCityNames(item.label) : extractCityNames(item.label),
     );
+    push(_firstCoord(loaded[0].gj), "départ", cityNames[0]?.from ?? null);
+    if (loaded[0].item.is_loop) {
+      const far = farthestPointFromStart(_flatCoords(loaded[0].gj));
+      if (far) push([far.lng, far.lat], "étape", cityNames[0]?.to ?? null);
+    }
+    for (let i = 1; i < loaded.length; i++) {
+      if (loaded[i].item.is_loop) {
+        const far = farthestPointFromStart(_flatCoords(loaded[i].gj));
+        if (far) push([far.lng, far.lat], "étape", cityNames[i]?.to ?? null);
+      } else {
+        push(_firstCoord(loaded[i].gj), "étape", cityNames[i]?.from ?? null);
+      }
+    }
+    if (!loaded[loaded.length - 1].item.is_loop) {
+      push(
+        _lastCoord(loaded[loaded.length - 1].gj),
+        "arrivée",
+        cityNames[loaded.length - 1]?.to ?? null,
+      );
+    }
   } else {
-    const { from, to } = extractCityNames(loaded[0].item.label);
+    const item0 = loaded[0].item;
+    const { from, to } = item0.is_loop
+      ? extractLoopCityNames(item0.label)
+      : extractCityNames(item0.label);
     push(_firstCoord(loaded[0].gj), "départ", from);
-    push(_lastCoord(loaded[0].gj), "arrivée", to);
+    if (item0.is_loop) {
+      const far = farthestPointFromStart(_flatCoords(loaded[0].gj));
+      if (far) push([far.lng, far.lat], "étape", to);
+    } else {
+      push(_lastCoord(loaded[0].gj), "arrivée", to);
+    }
   }
 
   const statsData = _computeStatsData(mode, group, loaded, color);

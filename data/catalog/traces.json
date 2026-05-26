@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-05-22T04:34:04.972406+00:00",
+  "updated_at": "2026-05-26T23:50:19.250137+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
-      "label": "Étape 1 Chatillon ➡️ Boissy-Le-Cutte",
+      "label": "Étape 1 Châtillon ➡️ Boissy-Le-Cutté",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte.geojson",
@@ -11,12 +11,15 @@
       },
       "source": "sources/gpx/acte-1_etape-1_chatillon_boissy-le-cutte.gpx",
       "order": 1,
-      "distance_km": null,
-      "elevation_gain_m": null
+      "date_status": "effective",
+      "date": "2018-06-09",
+      "distance_km": 50.34,
+      "elevation_gain_m": 623.7,
+      "duration_h": 3.25
     },
     {
       "id": "acte-1_etape-2_boissy-le-culle_etampes",
-      "label": "Étape 2 Boissy-Le-Culle ➡️ Etampes",
+      "label": "Étape 2 Boissy-Le-Cutté ➡️ Étampes",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-2_boissy-le-culle_etampes.geojson",
@@ -24,12 +27,15 @@
       },
       "source": "sources/gpx/acte-1_etape-2_boissy-le-culle_etampes.gpx",
       "order": 2,
-      "distance_km": null,
-      "elevation_gain_m": null
+      "date_status": "effective",
+      "date": "2018-06-10",
+      "distance_km": 19.27,
+      "elevation_gain_m": 170.7,
+      "duration_h": 2.0
     },
     {
       "id": "acte-1_etape-3_etampes_artenay",
-      "label": "Étape 3 Etampes ➡️ Artenay",
+      "label": "Étape 3 Étampes ➡️ Artenay",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-3_etampes_artenay.geojson",
@@ -37,16 +43,16 @@
       },
       "source": "sources/gpx/acte-1_etape-3_etampes_artenay.gpx",
       "order": 3,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "approximative",
-      "date": null,
-      "duration_h": null,
+      "distance_km": 59.2,
+      "elevation_gain_m": 459.5,
+      "date_status": "effective",
+      "date": "2018-06-11",
+      "duration_h": 8.0,
       "weather": null
     },
     {
       "id": "acte-1_etape-4_artenay_orleans",
-      "label": "Étape 4 Artenay ➡️ Orleans",
+      "label": "Étape 4 Artenay ➡️ Orléans",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-4_artenay_orleans.geojson",
@@ -54,16 +60,16 @@
       },
       "source": "sources/gpx/acte-1_etape-4_artenay_orleans.gpx",
       "order": 4,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "approximative",
-      "date": null,
-      "duration_h": null,
+      "distance_km": 39.07,
+      "elevation_gain_m": 174.3,
+      "date_status": "effective",
+      "date": "2018-06-12",
+      "duration_h": 4.0,
       "weather": null
     },
     {
       "id": "acte-1_etape-5_orleans_beaugency",
-      "label": "Étape 5 Orleans ➡️ Beaugency",
+      "label": "Étape 5 Orléans ➡️ Beaugency",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-5_orleans_beaugency.geojson",
@@ -71,11 +77,11 @@
       },
       "source": "sources/gpx/acte-1_etape-5_orleans_beaugency.gpx",
       "order": 5,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "approximative",
-      "date": null,
-      "duration_h": null,
+      "distance_km": 27.68,
+      "elevation_gain_m": 128.0,
+      "date_status": "effective",
+      "date": "2018-06-15",
+      "duration_h": 2.0,
       "weather": null
     },
     {
@@ -88,16 +94,16 @@
       },
       "source": "sources/gpx/acte-1_etape-6_beaugency_blois.gpx",
       "order": 6,
-      "distance_km": null,
-      "elevation_gain_m": null,
-      "date_status": "approximative",
-      "date": null,
-      "duration_h": null,
+      "distance_km": 34.41,
+      "elevation_gain_m": 128.5,
+      "date_status": "effective",
+      "date": "2018-06-17",
+      "duration_h": 2.5,
       "weather": null
     },
     {
       "id": "acte-2_etape-0_blois_chambord",
-      "label": "Étape 0 Blois ➡️ Chambord",
+      "label": "Étape 0 Blois ↔️ Chambord",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-0_blois_chambord.geojson",
@@ -105,12 +111,15 @@
       },
       "source": "sources/gpx/acte-2_etape-0_blois_chambord.gpx",
       "order": 7,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 35.08,
+      "elevation_gain_m": 97.1,
       "date_status": "effective",
       "date": "2025-06-06",
-      "duration_h": null,
-      "weather": null,
+      "duration_h": 2.0,
+      "weather": {
+        "icon": "⛅",
+        "temp_max": 22
+      },
       "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy"
     },
     {
@@ -123,12 +132,15 @@
       },
       "source": "sources/gpx/acte-2_etape-1_blois_amboise.gpx",
       "order": 8,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 51.3,
+      "elevation_gain_m": 300.3,
       "date_status": "effective",
       "date": "2025-06-07",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 3.0,
+      "weather": {
+        "icon": "🌦️",
+        "temp_max": 23
+      }
     },
     {
       "id": "acte-2_etape-2_amboise_chenonceaux",
@@ -140,12 +152,15 @@
       },
       "source": "sources/gpx/acte-2_etape-2_amboise_chenonceaux.gpx",
       "order": 9,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 16.72,
+      "elevation_gain_m": 152.0,
       "date_status": "effective",
       "date": "2025-06-09",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 1.0,
+      "weather": {
+        "icon": "☀️",
+        "temp_max": 25
+      }
     },
     {
       "id": "acte-2_etape-3_chenonceaux_tours",
@@ -157,12 +172,15 @@
       },
       "source": "sources/gpx/acte-2_etape-3_chenonceaux_tours.gpx",
       "order": 10,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 37.43,
+      "elevation_gain_m": 76.6,
       "date_status": "effective",
       "date": "2025-06-10",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 2.0,
+      "weather": {
+        "icon": "☀️",
+        "temp_max": 27
+      }
     },
     {
       "id": "acte-2_etape-4_tours_villandry",
@@ -174,12 +192,15 @@
       },
       "source": "sources/gpx/acte-2_etape-4_tours_villandry.gpx",
       "order": 11,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 20.97,
+      "elevation_gain_m": 30.4,
       "date_status": "effective",
       "date": "2025-06-12",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 1.0,
+      "weather": {
+        "icon": "☀️",
+        "temp_max": 26
+      }
     },
     {
       "id": "acte-2_etape-5_villandry_chinon",
@@ -191,12 +212,15 @@
       },
       "source": "sources/gpx/acte-2_etape-5_villandry_chinon.gpx",
       "order": 12,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 39.19,
+      "elevation_gain_m": 169.6,
       "date_status": "effective",
       "date": "2025-06-13",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 2.0,
+      "weather": {
+        "icon": "☀️",
+        "temp_max": 27
+      }
     },
     {
       "id": "acte-2_etape-6_chinon_montsoreaux",
@@ -208,12 +232,15 @@
       },
       "source": "sources/gpx/acte-2_etape-6_chinon_montsoreaux.gpx",
       "order": 13,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 34.77,
+      "elevation_gain_m": 177.3,
       "date_status": "effective",
       "date": "2025-06-16",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 2.0,
+      "weather": {
+        "icon": "☀️",
+        "temp_max": 30
+      }
     },
     {
       "id": "acte-2_etape-7_montsoreau_saumur",
@@ -225,12 +252,15 @@
       },
       "source": "sources/gpx/acte-2_etape-7_montsoreau_saumur.gpx",
       "order": 14,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "distance_km": 13.46,
+      "elevation_gain_m": 34.9,
       "date_status": "effective",
       "date": "2025-06-17",
-      "duration_h": null,
-      "weather": null
+      "duration_h": 1.0,
+      "weather": {
+        "icon": "☀️",
+        "temp_max": 28
+      }
     },
     {
       "id": "acte-2_etape-8_saumur_angers",
@@ -332,7 +362,7 @@
       "order": 19,
       "distance_km": 45,
       "elevation_gain_m": 60,
-      "date_status": "planned",
+      "date_status": "effective",
       "date": "2026-05-26",
       "duration_h": null,
       "weather": {
@@ -390,6 +420,7 @@
       "id": "micro-aventure_boucle-angevine",
       "label": "Boucle Angevine",
       "group": "micro-aventure",
+      "is_loop": true,
       "paths": {
         "full": "data/traces/micro-aventure_boucle-angevine.geojson",
         "simplified": "data/traces/micro-aventure_boucle-angevine_simplified.geojson"
