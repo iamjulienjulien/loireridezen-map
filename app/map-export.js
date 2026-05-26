@@ -678,8 +678,9 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   await drawBasemap(ctx, fmt.w, fmt.h, zoom, tileScale, originWX, originWY, bm.tileUrl);
   await _ensureFontLoaded(fontFamily);
 
-  const lineWidth = Math.max(14, Math.round(fmt.w / 155));
-  drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth);
+  const lineWidth    = Math.max(14, Math.round(fmt.w / 155));
+  const tracesToDraw = options.showDashed === false ? traces.map((t) => ({ ...t, dashed: false })) : traces;
+  drawTraces(ctx, tracesToDraw, zFloat, originWX, originWY, lineWidth);
 
   const markerFs = Math.max(80, Math.round(fmt.w / 25));
   drawMarkers(ctx, markers, zFloat, originWX, originWY, markerFs);
@@ -811,6 +812,10 @@ function _buildHTML(groups, tracesData) {
       <div class="lrz-export-section">
         <div class="lrz-export-section__label">Options</div>
         <div class="lrz-export-options">
+          <label class="lrz-export-opt" id="exp-opt-upcoming-wrap">
+            <input type="checkbox" id="exp-opt-upcoming" checked>
+            <span class="lrz-export-opt__label">Montrer les étapes à venir</span>
+          </label>
           <label class="lrz-export-opt">
             <input type="checkbox" id="exp-opt-cities">
             <span class="lrz-export-opt__label">Noms des villes</span>
@@ -897,6 +902,15 @@ function _syncStatAvailability(statsData) {
   });
 }
 
+function _syncUpcomingDisabled(data) {
+  const wrap = _overlay?.querySelector('#exp-opt-upcoming-wrap');
+  const cb   = _overlay?.querySelector('#exp-opt-upcoming');
+  if (!wrap || !cb) return;
+  const hasPlanned = data?.traces.some((t) => t.dashed) ?? false;
+  wrap.classList.toggle('is-disabled', !hasPlanned);
+  cb.disabled = !hasPlanned;
+}
+
 function _sel() {
   const m  = _overlay.querySelector('[name="exp-mode"]:checked')?.value ?? 'act';
   const id = m === 'act'
@@ -906,6 +920,7 @@ function _sel() {
   const bm       = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
   const color    = _overlay.querySelector('.lrz-export-swatch.is-active')?.dataset.color ?? COLOR_PALETTE[0].hex;
   const font     = _overlay.querySelector('.lrz-export-font-btn.is-active')?.dataset.font ?? 'Geist';
+  const showDashed = _overlay.querySelector('#exp-opt-upcoming')?.checked ?? true;
   const cities    = _overlay.querySelector('#exp-opt-cities')?.checked ?? false;
   const stats     = _overlay.querySelector('#exp-opt-stats')?.checked  ?? false;
   const showTitle = stats && (_overlay.querySelector('#exp-opt-title')?.checked ?? true);
@@ -916,7 +931,7 @@ function _sel() {
       .map((d) => d.icon)
   );
   return { mode: m, selectedId: id, formatKey: fmt, basemapKey: bm,
-           options: { cities, stats, showTitle, position, color, font, visibleStats } };
+           options: { cities, stats, showTitle, position, color, font, visibleStats, showDashed } };
 }
 
 async function _renderPreview() {
@@ -934,6 +949,7 @@ async function _renderPreview() {
 
     _applyColor(data, options.color);
     _syncStatAvailability(data.statsData);
+    _syncUpcomingDisabled(data);
 
     const fmt        = FORMATS[formatKey];
     const bm         = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
@@ -951,7 +967,8 @@ async function _renderPreview() {
 
     await drawBasemap(ctx, previewW, previewH, zoom, tileScale, originWX, originWY, bm.tileUrl);
     await _ensureFontLoaded(fontFamily);
-    drawTraces(ctx, data.traces, zFloat, originWX, originWY, 2);
+    const previewTraces = options.showDashed === false ? data.traces.map((t) => ({ ...t, dashed: false })) : data.traces;
+    drawTraces(ctx, previewTraces, zFloat, originWX, originWY, 2);
     drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
     if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15, fontFamily);
     if (options.stats && data.statsData) {
@@ -1128,6 +1145,9 @@ export async function openExportModal() {
   _overlay.querySelectorAll('.lrz-export-opt input[type="checkbox"]').forEach((cb) => {
     cb.addEventListener('change', _schedulePreview);
   });
+
+  // Étapes à venir
+  _overlay.querySelector('#exp-opt-upcoming')?.addEventListener('change', _schedulePreview);
 
   // Stats — case maître : active/désactive titre + lignes
   _overlay.querySelector('#exp-opt-stats')?.addEventListener('change', () => {
