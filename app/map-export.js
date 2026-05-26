@@ -321,7 +321,7 @@ function drawMarkers(ctx, markers, zFloat, originWX, originWY, fontSize) {
   for (const { lng, lat, emoji, color } of markers) {
     const { x, y } = lngLatToPixel(lng, lat, zFloat, originWX, originWY);
     const rotate = ((hexToHueDeg(color) - 38) + 360) % 360;
-    ctx.filter = `sepia(1) saturate(2) hue-rotate(${rotate}deg)`;
+    ctx.filter = `sepia(1) saturate(4) hue-rotate(${rotate}deg)`;
     ctx.font   = `${fontSize}px sans-serif`;
     ctx.fillText(emoji, x, y);
   }
