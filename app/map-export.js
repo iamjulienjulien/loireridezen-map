@@ -525,17 +525,40 @@ function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
   ctx.setLineDash([]);
 }
 
+function _tintEmoji(ctx, emoji, x, y, fontSize, color) {
+  const pad = Math.ceil(fontSize * 0.4);
+  const s   = fontSize + pad * 2;
+  const tmp = document.createElement("canvas");
+  tmp.width = s; tmp.height = s;
+  const tc = tmp.getContext("2d");
+  tc.font = `${fontSize}px sans-serif`;
+  tc.textAlign = "center";
+  tc.textBaseline = "middle";
+  tc.fillText(emoji, s / 2, s / 2);
+  // multiply : blanc × couleur = couleur, noir reste noir, dégradés préservés
+  tc.globalCompositeOperation = "multiply";
+  tc.fillStyle = color;
+  tc.fillRect(0, 0, s, s);
+  ctx.drawImage(tmp, Math.round(x - s / 2), Math.round(y - s / 2));
+}
+
 function drawMarkers(ctx, markers, zFloat, originWX, originWY, fontSize) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   for (const { lng, lat, emoji, color } of markers) {
     const { x, y } = lngLatToPixel(lng, lat, zFloat, originWX, originWY);
-    const rotate = (hexToHueDeg(color) - 38 + 360) % 360;
-    ctx.filter = `sepia(1) saturate(4) hue-rotate(${rotate}deg)`;
-    ctx.font = `${fontSize}px sans-serif`;
-    ctx.fillText(emoji, x, y);
+    if (emoji === "🚩") {
+      // 🚩 a une base colorée, sepia+hue-rotate fonctionne bien
+      const rotate = (hexToHueDeg(color) - 38 + 360) % 360;
+      ctx.filter = `sepia(1) saturate(4) hue-rotate(${rotate}deg)`;
+      ctx.font = `${fontSize}px sans-serif`;
+      ctx.fillText(emoji, x, y);
+      ctx.filter = "none";
+    } else {
+      // 🏳️ et 🏁 ont des pixels blancs/noirs : colorisation par multiply offscreen
+      _tintEmoji(ctx, emoji, x, y, fontSize, color);
+    }
   }
-  ctx.filter = "none";
 }
 
 function drawCityLabels(
@@ -835,7 +858,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     markers.push({
       lng: coord[0],
       lat: coord[1],
-      emoji: "🚩",
+      emoji: TRACE_MARKER_TYPES[type].emoji,
       color,
       city,
       bold,
