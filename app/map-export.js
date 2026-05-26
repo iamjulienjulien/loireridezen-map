@@ -159,84 +159,15 @@ function _rectsOverlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-// ─── Icônes monochromes pour l'encadré stats ──────────────────────────────────
+// ─── Emojis pour l'encadré stats ─────────────────────────────────────────────
 
-function _iconCalendar(ctx, cx, cy, s) {
-  const x0 = cx - s * 0.44, y0 = cy - s * 0.36;
-  const w0 = s * 0.88,      h0 = s * 0.72;
-  ctx.beginPath(); ctx.rect(x0, y0, w0, h0); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x0, cy - s * 0.06); ctx.lineTo(x0 + w0, cy - s * 0.06);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx - s * 0.21, y0); ctx.lineTo(cx - s * 0.21, y0 - s * 0.18);
-  ctx.moveTo(cx + s * 0.21, y0); ctx.lineTo(cx + s * 0.21, y0 - s * 0.18);
-  ctx.stroke();
-}
-
-function _iconBike(ctx, cx, cy, s) {
-  const wr = s * 0.26;
-  const lx = cx - s * 0.29, rx = cx + s * 0.29;
-  const wy = cy + s * 0.13;
-  const pedX = cx, pedY = cy - s * 0.05;
-  const stY  = cy - s * 0.28;
-  ctx.beginPath(); ctx.arc(lx, wy, wr, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath(); ctx.arc(rx, wy, wr, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(lx, wy);
-  ctx.lineTo(pedX, pedY);
-  ctx.lineTo(rx, wy);
-  ctx.moveTo(pedX, pedY);
-  ctx.lineTo(cx - s * 0.06, stY);
-  ctx.lineTo(cx - s * 0.19, stY);   // saddle
-  ctx.moveTo(cx - s * 0.06, stY);
-  ctx.lineTo(rx, wy);               // top tube
-  ctx.stroke();
-}
-
-function _iconRuler(ctx, cx, cy, s) {
-  const x0 = cx - s * 0.44, y0 = cy - s * 0.18;
-  const w0 = s * 0.88,      h0 = s * 0.36;
-  ctx.beginPath(); ctx.rect(x0, y0, w0, h0); ctx.stroke();
-  [- 0.24, -0.01, 0.22].forEach((tx) => {
-    ctx.beginPath();
-    ctx.moveTo(cx + s * tx, y0);
-    ctx.lineTo(cx + s * tx, cy);
-    ctx.stroke();
-  });
-}
-
-function _iconMountain(ctx, cx, cy, s) {
-  ctx.beginPath();
-  ctx.moveTo(cx - s * 0.44, cy + s * 0.36);
-  ctx.lineTo(cx, cy - s * 0.36);
-  ctx.lineTo(cx + s * 0.44, cy + s * 0.36);
-  ctx.moveTo(cx + s * 0.08, cy + s * 0.36);
-  ctx.lineTo(cx + s * 0.31, cy - s * 0.02);
-  ctx.lineTo(cx + s * 0.44, cy + s * 0.36);
-  ctx.stroke();
-}
-
-function _iconClock(ctx, cx, cy, s) {
-  ctx.beginPath(); ctx.arc(cx, cy, s * 0.42, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - s * 0.3);  // minute hand
-  ctx.moveTo(cx, cy); ctx.lineTo(cx + s * 0.2, cy + s * 0.06); // hour hand
-  ctx.stroke();
-}
-
-function _drawStatIcon(ctx, icon, cx, cy, s) {
-  ctx.lineCap  = 'round';
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = Math.max(1, Math.round(s * 0.1));
-  switch (icon) {
-    case 'calendar': _iconCalendar(ctx, cx, cy, s); break;
-    case 'bike':     _iconBike(ctx, cx, cy, s);     break;
-    case 'route':    _iconRuler(ctx, cx, cy, s);    break;
-    case 'mountain': _iconMountain(ctx, cx, cy, s); break;
-    case 'clock':    _iconClock(ctx, cx, cy, s);    break;
-  }
-}
+const STAT_ICONS = {
+  calendar: '📅',
+  bike:     '🚴',
+  route:    '📏',
+  mountain: '🏔️',
+  clock:    '🕒',
+};
 
 // ─── Helpers données ──────────────────────────────────────────────────────────
 
@@ -520,16 +451,16 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
     curY += divH;
   }
 
-  // Lignes : icône monochrome + texte
-  const iconColor = color || '#2e6a8f';
+  // Lignes : emoji + texte
   for (const { text, icon } of lines) {
     const iconCX = bx + pad + iconSize / 2;
     const iconCY = curY + lineH / 2;
 
-    ctx.save();
-    ctx.strokeStyle = iconColor;
-    _drawStatIcon(ctx, icon, iconCX, iconCY, iconSize);
-    ctx.restore();
+    ctx.filter = 'none';
+    ctx.font   = `${iconSize}px sans-serif`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(STAT_ICONS[icon] ?? '', iconCX, iconCY);
 
     ctx.fillStyle    = '#333';
     ctx.font         = `${fontSize}px sans-serif`;
