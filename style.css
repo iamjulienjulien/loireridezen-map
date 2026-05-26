@@ -2582,3 +2582,36 @@ body {
   background: var(--lrz-foreground);
   color: #fff;
 }
+
+/* ── EVO-44 : sélecteur de police ── */
+
+.lrz-export-fonts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.lrz-export-font-btn {
+  display: block;
+  width: 100%;
+  padding: 0.38rem 0.75rem;
+  font-size: 1rem;
+  text-align: left;
+  border: 1.5px solid var(--lrz-tuffeau-line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--lrz-foreground);
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.lrz-export-font-btn:hover {
+  border-color: var(--lrz-or);
+  background: var(--lrz-card-hover);
+}
+
+.lrz-export-font-btn.is-active {
+  border-color: var(--lrz-foreground);
+  background: var(--lrz-foreground);
+  color: #fff;
+}

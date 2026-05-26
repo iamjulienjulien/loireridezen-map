@@ -79,11 +79,22 @@ const COLOR_PALETTE = [
 // ─── Thèmes prédéfinis ────────────────────────────────────────────────────────
 
 const THEMES = [
-  { key: 'etat-major',  label: 'État-major',   basemap: 'ign_topo', color: '#722f37' },
-  { key: 'loire-velo',  label: 'Loire à vélo', basemap: 'cyclosm',  color: '#3a6f8f' },
-  { key: 'or-tuffeau',  label: 'Or et tuffeau',basemap: 'sat',      color: '#c8893a' },
-  { key: 'grand-air',   label: 'Grand air',    basemap: 'topo',     color: '#b5562f' },
-  { key: 'ardoise',     label: 'Ardoise',      basemap: 'ign',      color: '#3f4a54' },
+  { key: 'etat-major',  label: 'État-major',    basemap: 'ign_topo', color: '#722f37', font: 'Spectral' },
+  { key: 'loire-velo',  label: 'Loire à vélo',  basemap: 'cyclosm',  color: '#3a6f8f', font: 'Oswald' },
+  { key: 'or-tuffeau',  label: 'Or et tuffeau', basemap: 'sat',      color: '#c8893a', font: 'Fraunces' },
+  { key: 'grand-air',   label: 'Grand air',     basemap: 'topo',     color: '#b5562f', font: 'Cabin' },
+  { key: 'ardoise',     label: 'Ardoise',       basemap: 'ign',      color: '#3f4a54', font: 'Geist' },
+];
+
+// ─── Menu de polices ──────────────────────────────────────────────────────────
+
+const FONT_MENU = [
+  { key: 'spectral',       family: 'Spectral',       label: 'Spectral' },
+  { key: 'fraunces',       family: 'Fraunces',        label: 'Fraunces' },
+  { key: 'oswald',         family: 'Oswald',          label: 'Oswald' },
+  { key: 'cabin',          family: 'Cabin',           label: 'Cabin' },
+  { key: 'geist',          family: 'Geist',           label: 'Geist' },
+  { key: 'jetbrains-mono', family: 'JetBrains Mono',  label: 'Editor' },
 ];
 
 // ─── Formats ──────────────────────────────────────────────────────────────────
@@ -227,6 +238,13 @@ function roundRect(ctx, x, y, w, h, r) {
 
 function _rectsOverlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+async function _ensureFontLoaded(family) {
+  await Promise.all([
+    document.fonts.load(`400 32px '${family}'`),
+    document.fonts.load(`700 32px '${family}'`),
+  ]);
 }
 
 // ─── Helpers données ──────────────────────────────────────────────────────────
@@ -382,7 +400,7 @@ function drawMarkers(ctx, markers, zFloat, originWX, originWY, fontSize) {
   ctx.filter = 'none';
 }
 
-function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
+function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize, fontFamily = 'Geist') {
   const pad     = Math.round(fontSize * 0.4);
   const r       = Math.round(fontSize * 0.3);
   const offsetX = Math.round(fontSize * 1.15);
@@ -393,7 +411,7 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
     const { x, y } = lngLatToPixel(marker.lng, marker.lat, zFloat, originWX, originWY);
     const bold      = marker.bold ? 'bold ' : '';
     const cityText  = marker.bold ? marker.city.toUpperCase() : marker.city;
-    ctx.font        = `${bold}${fontSize}px sans-serif`;
+    ctx.font        = `${bold}${fontSize}px '${fontFamily}', sans-serif`;
 
     const tw  = ctx.measureText(cityText).width;
     const bw  = tw + pad * 2;
@@ -433,14 +451,14 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
     ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
 
     ctx.fillStyle    = marker.color || '#2e6a8f';
-    ctx.font         = `${bold}${fontSize}px sans-serif`;
+    ctx.font         = `${bold}${fontSize}px '${fontFamily}', sans-serif`;
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText(cityText, chosen.x + pad, centerY);
   }
 }
 
-function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle) {
+function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle, fontFamily = 'Geist') {
   const { title, lines } = statsData;
   if (!lines.length) return;
 
@@ -454,10 +472,10 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
 
   let maxW = 0;
   if (showTitle && title) {
-    ctx.font = `bold ${titleFs}px sans-serif`;
+    ctx.font = `bold ${titleFs}px '${fontFamily}', sans-serif`;
     maxW = Math.max(maxW, ctx.measureText(title).width);
   }
-  ctx.font = `${fontSize}px sans-serif`;
+  ctx.font = `${fontSize}px '${fontFamily}', sans-serif`;
   for (const { text } of lines) {
     maxW = Math.max(maxW, iconSize + iconPad + ctx.measureText(text).width);
   }
@@ -479,7 +497,7 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
 
   if (showTitle && title) {
     ctx.fillStyle    = '#2a2a2a';
-    ctx.font         = `bold ${titleFs}px sans-serif`;
+    ctx.font         = `bold ${titleFs}px '${fontFamily}', sans-serif`;
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'top';
     ctx.fillText(title, bx + pad, curY);
@@ -507,7 +525,7 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
     ctx.fillText(STAT_ICONS[icon] ?? '', iconCX, iconCY);
 
     ctx.fillStyle    = '#333';
-    ctx.font         = `${fontSize}px sans-serif`;
+    ctx.font         = `${fontSize}px '${fontFamily}', sans-serif`;
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, bx + pad + iconSize + iconPad, iconCY);
@@ -636,8 +654,9 @@ function _applyColor(data, color) {
 // ─── Render orchestration ─────────────────────────────────────────────────────
 
 async function renderToCanvas(canvas, { traces, markers, bbox, statsData, formatKey, basemapKey, options = {} }) {
-  const fmt = FORMATS[formatKey];
-  const bm  = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
+  const fmt        = FORMATS[formatKey];
+  const bm         = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
+  const fontFamily = options.font ?? 'Geist';
 
   canvas.width  = fmt.w;
   canvas.height = fmt.h;
@@ -647,6 +666,7 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   const ctx = canvas.getContext('2d');
 
   await drawBasemap(ctx, fmt.w, fmt.h, zoom, tileScale, originWX, originWY, bm.tileUrl);
+  await _ensureFontLoaded(fontFamily);
 
   const lineWidth = Math.max(14, Math.round(fmt.w / 155));
   drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth);
@@ -656,13 +676,13 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
 
   if (options.cities) {
     const cityFs = Math.max(36, Math.round(fmt.w / 58));
-    drawCityLabels(ctx, markers, zFloat, originWX, originWY, cityFs);
+    drawCityLabels(ctx, markers, zFloat, originWX, originWY, cityFs, fontFamily);
   }
 
   if (options.stats && statsData) {
     const statsFs   = Math.max(32, Math.round(fmt.w / 58));
     const statsMarg = Math.round(fmt.w / 30);
-    drawStats(ctx, fmt.w, fmt.h, statsData, statsFs, statsMarg, options.showTitle !== false);
+    drawStats(ctx, fmt.w, fmt.h, statsData, statsFs, statsMarg, options.showTitle !== false, fontFamily);
   }
 
   if (options.position) {
@@ -707,6 +727,10 @@ function _buildHTML(groups, tracesData) {
     `<button class="lrz-export-theme" data-theme="${t.key}">${t.label}</button>`
   ).join('');
 
+  const fontBtns = FONT_MENU.map((f) =>
+    `<button class="lrz-export-font-btn${f.family === 'Geist' ? ' is-active' : ''}" data-font="${f.family}" style="font-family:'${f.family}',sans-serif">${f.label}</button>`
+  ).join('');
+
   const basemapBtns = Object.entries(BASEMAPS).map(([key, bm]) =>
     `<label class="lrz-export-bm-btn"><input type="radio" name="exp-bm" value="${key}"${key === 'osm' ? ' checked' : ''}><span>${bm.label}</span></label>`
   ).join('');
@@ -737,6 +761,11 @@ function _buildHTML(groups, tracesData) {
       <div class="lrz-export-section">
         <div class="lrz-export-section__label">Couleur</div>
         <div class="lrz-export-colors">${swatches}</div>
+      </div>
+
+      <div class="lrz-export-section">
+        <div class="lrz-export-section__label">Police</div>
+        <div class="lrz-export-fonts">${fontBtns}</div>
       </div>
 
       <div class="lrz-export-section">
@@ -808,12 +837,13 @@ function _sel() {
   const fmt      = _overlay.querySelector('.lrz-export-fmt.is-active')?.dataset.fmt ?? 'square';
   const bm       = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
   const color    = _overlay.querySelector('.lrz-export-swatch.is-active')?.dataset.color ?? COLOR_PALETTE[0].hex;
+  const font     = _overlay.querySelector('.lrz-export-font-btn.is-active')?.dataset.font ?? 'Geist';
   const cities   = _overlay.querySelector('#exp-opt-cities')?.checked   ?? false;
   const stats    = _overlay.querySelector('#exp-opt-stats')?.checked    ?? false;
   const showTitle = stats && (_overlay.querySelector('#exp-opt-title')?.checked ?? true);
   const position = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
   return { mode: m, selectedId: id, formatKey: fmt, basemapKey: bm,
-           options: { cities, stats, showTitle, position, color } };
+           options: { cities, stats, showTitle, position, color, font } };
 }
 
 async function _renderPreview() {
@@ -831,10 +861,11 @@ async function _renderPreview() {
 
     _applyColor(data, options.color);
 
-    const fmt      = FORMATS[formatKey];
-    const bm       = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
-    const previewW = 280;
-    const previewH = Math.round(previewW * fmt.h / fmt.w);
+    const fmt        = FORMATS[formatKey];
+    const bm         = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
+    const fontFamily = options.font ?? 'Geist';
+    const previewW   = 280;
+    const previewH   = Math.round(previewW * fmt.h / fmt.w);
 
     const tmp = document.createElement('canvas');
     tmp.width  = previewW;
@@ -845,11 +876,12 @@ async function _renderPreview() {
     const ctx = tmp.getContext('2d');
 
     await drawBasemap(ctx, previewW, previewH, zoom, tileScale, originWX, originWY, bm.tileUrl);
+    await _ensureFontLoaded(fontFamily);
     drawTraces(ctx, data.traces, zFloat, originWX, originWY, 2);
     drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
-    if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15);
+    if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15, fontFamily);
     if (options.stats && data.statsData) {
-      drawStats(ctx, previewW, previewH, data.statsData, 11, Math.round(previewW / 30), options.showTitle);
+      drawStats(ctx, previewW, previewH, data.statsData, 11, Math.round(previewW / 30), options.showTitle, fontFamily);
     }
     if (options.position) await drawCurrentPosition(ctx, zFloat, originWX, originWY, data.bbox, 20);
     drawAttribution(ctx, previewW, previewH, bm.attribution);
@@ -976,7 +1008,7 @@ export async function openExportModal() {
     });
   });
 
-  // Thèmes — applique fond + couleur d'un clic
+  // Thèmes — applique fond + couleur + police d'un clic
   _overlay.querySelectorAll('.lrz-export-theme').forEach((btn) => {
     btn.addEventListener('click', () => {
       const theme = THEMES.find((t) => t.key === btn.dataset.theme);
@@ -987,9 +1019,25 @@ export async function openExportModal() {
       // Couleur
       _overlay.querySelectorAll('.lrz-export-swatch').forEach((s) => s.classList.remove('is-active'));
       _overlay.querySelector(`.lrz-export-swatch[data-color="${theme.color}"]`)?.classList.add('is-active');
+      // Police
+      _overlay.querySelectorAll('.lrz-export-font-btn').forEach((b) => b.classList.remove('is-active'));
+      _overlay.querySelector(`.lrz-export-font-btn[data-font="${theme.font}"]`)?.classList.add('is-active');
       // Thème actif
       _overlay.querySelectorAll('.lrz-export-theme').forEach((b) => b.classList.remove('is-active'));
       btn.classList.add('is-active');
+      _schedulePreview();
+    });
+  });
+
+  // Polices — override thème si changement manuel
+  _overlay.querySelectorAll('.lrz-export-font-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      _overlay.querySelectorAll('.lrz-export-font-btn').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      _overlay.querySelectorAll('.lrz-export-theme').forEach((b) => {
+        const t = THEMES.find((x) => x.key === b.dataset.theme);
+        if (t && t.font !== btn.dataset.font) b.classList.remove('is-active');
+      });
       _schedulePreview();
     });
   });
