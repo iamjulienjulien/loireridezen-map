@@ -22,6 +22,7 @@ import {
   currentPositionLayer,
 } from "./app/current-position.js";
 import { initActionsPanel } from "./app/actions-panel.js";
+import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
 import {
   renderTracesSection,
@@ -79,6 +80,7 @@ async function init() {
   renderPoiSection(prefs);
 
   initActionsPanel();
+  initExportButton();
   initInfoPanel();
   initMobileDrawer();
   initAccordion(prefs);
