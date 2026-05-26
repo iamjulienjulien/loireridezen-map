@@ -115,6 +115,16 @@ const STAT_ICONS = {
   clock:    '🕒',
 };
 
+// ─── Définitions des lignes de stats (pour les cases à cocher) ───────────────
+
+const STAT_DEFS = [
+  { id: 'dates',  label: 'Dates',           icon: 'calendar', mode: 'both' },
+  { id: 'stages', label: "Nombre d'étapes", icon: 'bike',     mode: 'act'  },
+  { id: 'dist',   label: 'Distance',        icon: 'route',    mode: 'both' },
+  { id: 'elev',   label: 'Dénivelé',        icon: 'mountain', mode: 'both' },
+  { id: 'dur',    label: 'Durée',           icon: 'clock',    mode: 'step' },
+];
+
 // ─── Projection Web Mercator ──────────────────────────────────────────────────
 
 function worldFromLngLat(lng, lat) {
@@ -680,9 +690,16 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   }
 
   if (options.stats && statsData) {
-    const statsFs   = Math.max(32, Math.round(fmt.w / 58));
-    const statsMarg = Math.round(fmt.w / 30);
-    drawStats(ctx, fmt.w, fmt.h, statsData, statsFs, statsMarg, options.showTitle !== false, fontFamily);
+    const filteredLines = statsData.lines.filter(
+      (l) => !options.visibleStats?.size || options.visibleStats.has(l.icon)
+    );
+    const filteredStats = { ...statsData, lines: filteredLines };
+    const hasContent    = filteredLines.length > 0 || (options.showTitle !== false && filteredStats.title);
+    if (hasContent) {
+      const statsFs   = Math.max(32, Math.round(fmt.w / 58));
+      const statsMarg = Math.round(fmt.w / 30);
+      drawStats(ctx, fmt.w, fmt.h, filteredStats, statsFs, statsMarg, options.showTitle !== false, fontFamily);
+    }
   }
 
   if (options.position) {
@@ -806,6 +823,7 @@ function _buildHTML(groups, tracesData) {
             <input type="checkbox" id="exp-opt-title" checked>
             <span class="lrz-export-opt__label">Afficher le titre</span>
           </label>
+          <div id="exp-stat-lines"></div>
           <label class="lrz-export-opt">
             <input type="checkbox" id="exp-opt-position">
             <span class="lrz-export-opt__label">Ma position actuelle 🚲</span>
@@ -829,6 +847,56 @@ function _buildHTML(groups, tracesData) {
 </div>`;
 }
 
+function _rebuildStatCheckboxes(mode) {
+  const container = _overlay?.querySelector('#exp-stat-lines');
+  if (!container) return;
+  const defs = STAT_DEFS.filter((d) => d.mode === 'both' || d.mode === mode);
+  container.innerHTML = defs.map((d) =>
+    `<label class="lrz-export-opt lrz-export-opt--sub" id="exp-stat-${d.id}-wrap">
+      <input type="checkbox" id="exp-stat-${d.id}" checked>
+      <span class="lrz-export-opt__label">${d.label}</span>
+    </label>`
+  ).join('');
+  container.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.addEventListener('change', _schedulePreview);
+  });
+  _syncStatDisabled();
+}
+
+function _syncStatDisabled() {
+  const statsOn = _overlay?.querySelector('#exp-opt-stats')?.checked ?? false;
+  const titleWrap = _overlay?.querySelector('#exp-opt-title-wrap');
+  if (titleWrap) {
+    titleWrap.classList.toggle('is-disabled', !statsOn);
+    const cb = titleWrap.querySelector('input');
+    if (cb) cb.disabled = !statsOn;
+  }
+  const container = _overlay?.querySelector('#exp-stat-lines');
+  if (!container) return;
+  container.querySelectorAll('.lrz-export-opt--sub').forEach((el) => {
+    el.classList.toggle('is-disabled', !statsOn);
+    const cb = el.querySelector('input');
+    if (cb) cb.disabled = !statsOn;
+  });
+}
+
+function _syncStatAvailability(statsData) {
+  const container = _overlay?.querySelector('#exp-stat-lines');
+  if (!container || !statsData) return;
+  const statsOn = _overlay?.querySelector('#exp-opt-stats')?.checked ?? true;
+  if (!statsOn) return;
+  const availableIcons = new Set(statsData.lines.map((l) => l.icon));
+  STAT_DEFS.forEach((d) => {
+    const wrap = container.querySelector(`#exp-stat-${d.id}-wrap`);
+    const cb   = container.querySelector(`#exp-stat-${d.id}`);
+    if (!wrap || !cb) return;
+    const unavailable = !availableIcons.has(d.icon);
+    wrap.classList.toggle('is-disabled', unavailable);
+    if (unavailable) { cb.disabled = true; cb.checked = false; }
+    else if (!cb.disabled) { cb.disabled = false; }
+  });
+}
+
 function _sel() {
   const m  = _overlay.querySelector('[name="exp-mode"]:checked')?.value ?? 'act';
   const id = m === 'act'
@@ -838,12 +906,17 @@ function _sel() {
   const bm       = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
   const color    = _overlay.querySelector('.lrz-export-swatch.is-active')?.dataset.color ?? COLOR_PALETTE[0].hex;
   const font     = _overlay.querySelector('.lrz-export-font-btn.is-active')?.dataset.font ?? 'Geist';
-  const cities   = _overlay.querySelector('#exp-opt-cities')?.checked   ?? false;
-  const stats    = _overlay.querySelector('#exp-opt-stats')?.checked    ?? false;
+  const cities    = _overlay.querySelector('#exp-opt-cities')?.checked ?? false;
+  const stats     = _overlay.querySelector('#exp-opt-stats')?.checked  ?? false;
   const showTitle = stats && (_overlay.querySelector('#exp-opt-title')?.checked ?? true);
-  const position = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
+  const position  = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
+  const visibleStats = new Set(
+    STAT_DEFS
+      .filter((d) => { const cb = _overlay.querySelector(`#exp-stat-${d.id}`); return cb && !cb.disabled && cb.checked; })
+      .map((d) => d.icon)
+  );
   return { mode: m, selectedId: id, formatKey: fmt, basemapKey: bm,
-           options: { cities, stats, showTitle, position, color, font } };
+           options: { cities, stats, showTitle, position, color, font, visibleStats } };
 }
 
 async function _renderPreview() {
@@ -860,6 +933,7 @@ async function _renderPreview() {
     if (!data || !_overlay) return;
 
     _applyColor(data, options.color);
+    _syncStatAvailability(data.statsData);
 
     const fmt        = FORMATS[formatKey];
     const bm         = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
@@ -881,7 +955,14 @@ async function _renderPreview() {
     drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
     if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15, fontFamily);
     if (options.stats && data.statsData) {
-      drawStats(ctx, previewW, previewH, data.statsData, 11, Math.round(previewW / 30), options.showTitle, fontFamily);
+      const filteredLines = data.statsData.lines.filter(
+        (l) => !options.visibleStats?.size || options.visibleStats.has(l.icon)
+      );
+      const filteredStats = { ...data.statsData, lines: filteredLines };
+      const hasContent    = filteredLines.length > 0 || (options.showTitle && filteredStats.title);
+      if (hasContent) {
+        drawStats(ctx, previewW, previewH, filteredStats, 11, Math.round(previewW / 30), options.showTitle, fontFamily);
+      }
     }
     if (options.position) await drawCurrentPosition(ctx, zFloat, originWX, originWY, data.bbox, 20);
     drawAttribution(ctx, previewW, previewH, bm.attribution);
@@ -967,6 +1048,7 @@ export async function openExportModal() {
       const isStep = r.value === 'step';
       _overlay.querySelector('#exp-act').hidden  = isStep;
       _overlay.querySelector('#exp-step').hidden = !isStep;
+      _rebuildStatCheckboxes(r.value);
       _schedulePreview();
     });
   });
@@ -1047,10 +1129,14 @@ export async function openExportModal() {
     cb.addEventListener('change', _schedulePreview);
   });
 
-  // Stats → titre (sous-option)
-  _overlay.querySelector('#exp-opt-stats')?.addEventListener('change', function () {
-    _overlay.querySelector('#exp-opt-title-wrap')?.classList.toggle('is-disabled', !this.checked);
+  // Stats — case maître : active/désactive titre + lignes
+  _overlay.querySelector('#exp-opt-stats')?.addEventListener('change', () => {
+    _syncStatDisabled();
+    _schedulePreview();
   });
+
+  // Init des cases par stat (mode acte par défaut)
+  _rebuildStatCheckboxes('act');
 
   document.getElementById('exp-generate').addEventListener('click', _generate);
 
