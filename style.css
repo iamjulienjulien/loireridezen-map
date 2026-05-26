@@ -2481,3 +2481,104 @@ body {
   opacity: 0.38;
   pointer-events: none;
 }
+
+/* ── EVO-43 : thèmes, couleurs, fond de carte ── */
+
+.lrz-export-themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.lrz-export-theme {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-family: var(--lrz-font-sans);
+  border: 1.5px solid var(--lrz-tuffeau-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--lrz-ink-soft);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+}
+
+.lrz-export-theme:hover {
+  border-color: var(--lrz-or);
+  color: var(--lrz-foreground);
+}
+
+.lrz-export-theme.is-active {
+  border-color: var(--lrz-or);
+  background: var(--lrz-or);
+  color: #fff;
+}
+
+.lrz-export-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.lrz-export-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  outline: 2px solid transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: outline-color 0.12s, outline-offset 0.12s;
+}
+
+.lrz-export-swatch:hover {
+  outline-color: var(--lrz-ink-soft);
+  outline-offset: 2px;
+}
+
+.lrz-export-swatch.is-active {
+  outline-color: var(--lrz-foreground);
+  outline-offset: 2px;
+}
+
+.lrz-export-bm-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.lrz-export-bm-btn {
+  cursor: pointer;
+}
+
+.lrz-export-bm-btn input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.lrz-export-bm-btn span {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-family: var(--lrz-font-sans);
+  border: 1.5px solid var(--lrz-tuffeau-line);
+  border-radius: 999px;
+  color: var(--lrz-ink-soft);
+  background: transparent;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lrz-export-bm-btn:hover span {
+  border-color: var(--lrz-or);
+  color: var(--lrz-foreground);
+}
+
+.lrz-export-bm-btn input[type="radio"]:checked + span {
+  border-color: var(--lrz-foreground);
+  background: var(--lrz-foreground);
+  color: #fff;
+}

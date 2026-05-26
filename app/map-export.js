@@ -1,22 +1,92 @@
 /**
- * app/map-export.js — Export de carte en image (LRZ-EVO-41 / LRZ-EVO-42)
+ * app/map-export.js — Export de carte en image (LRZ-EVO-41 / 42 / 43)
  *
  * Approche canvas slippy-map :
- *   1. Tuiles XYZ (OSM ou Esri) crossOrigin='anonymous'
- *   2. Polylignes GeoJSON → pixels, avec halo blanc sous le trait coloré
+ *   1. Tuiles XYZ depuis BASEMAPS (OSM, Esri, IGN, CyclOSM, OpenTopoMap)
+ *   2. Polylignes GeoJSON → pixels, halo blanc sous le trait coloré
  *   3. Marqueurs drapeau Départ/Étape/Arrivée (emoji + ctx.filter hue-rotate)
- *   4. Options : noms de villes, encadré stats, voile fond, position actuelle, cadre carnet
- *   5. Attribution cartographique (bas-gauche, obligatoire)
- *   6. canvas.toBlob() → JPEG 0.92 → téléchargement
+ *   4. Options : noms de villes, encadré stats, position actuelle
+ *   5. Sélecteur de couleur principale (8 swatches) + thèmes prédéfinis (5)
+ *   6. Attribution cartographique (bas-gauche, obligatoire)
+ *   7. canvas.toBlob() → JPEG 0.92 → téléchargement
  *
  * Visible uniquement avec ?admin dans l'URL.
  */
 
 import { TRACE_MARKER_TYPES } from './types.js';
 
-// ─── Constantes ───────────────────────────────────────────────────────────────
+// ─── Fonds de carte ───────────────────────────────────────────────────────────
 
-const TILE_SIZE = 256;
+const BASEMAPS = {
+  osm: {
+    label: 'Plan OSM',
+    tileUrl: (z, x, y) => `https://${'abc'[(x + y + z) % 3]}.tile.openstreetmap.org/${z}/${x}/${y}.png`,
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19,
+  },
+  sat: {
+    label: 'Satellite',
+    tileUrl: (z, x, y) =>
+      `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`,
+    attribution: '© Esri',
+    maxZoom: 19,
+  },
+  ign: {
+    label: 'IGN Plan',
+    tileUrl: (z, x, y) =>
+      `https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile` +
+      `&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM` +
+      `&TILEMATRIX=${z}&TILECOL=${x}&TILEROW=${y}&FORMAT=image/png`,
+    attribution: '© IGN-F / Géoplateforme',
+    maxZoom: 18,
+  },
+  ign_topo: {
+    label: 'IGN Topo',
+    tileUrl: (z, x, y) =>
+      `https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile` +
+      `&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&STYLE=normal&TILEMATRIXSET=PM` +
+      `&TILEMATRIX=${z}&TILECOL=${x}&TILEROW=${y}&FORMAT=image/jpeg`,
+    attribution: '© IGN-F / Géoplateforme',
+    maxZoom: 18,
+  },
+  cyclosm: {
+    label: 'CyclOSM',
+    tileUrl: (z, x, y) => `https://${'abc'[(x + y + z) % 3]}.tile-cyclosm.openstreetmap.fr/cyclosm/${z}/${x}/${y}.png`,
+    attribution: '© OpenStreetMap contributors · tuiles CyclOSM / OSM-FR',
+    maxZoom: 20,
+  },
+  topo: {
+    label: 'OpenTopo',
+    tileUrl: (z, x, y) => `https://${'abc'[(x + y + z) % 3]}.tile.opentopomap.org/${z}/${x}/${y}.png`,
+    attribution: '© OpenTopoMap (CC-BY-SA) · © OpenStreetMap contributors',
+    maxZoom: 17,
+  },
+};
+
+// ─── Palette de couleurs ──────────────────────────────────────────────────────
+
+const COLOR_PALETTE = [
+  { key: 'loire',      hex: '#3a6f8f', label: 'Bleu Loire' },
+  { key: 'bordeaux',   hex: '#722f37', label: 'Bordeaux' },
+  { key: 'vigne',      hex: '#6b8e4e', label: 'Vert vigne' },
+  { key: 'ambre',      hex: '#c8893a', label: 'Ambré' },
+  { key: 'terracotta', hex: '#b5562f', label: 'Terracotta' },
+  { key: 'ardoise',    hex: '#3f4a54', label: 'Ardoise' },
+  { key: 'indigo',     hex: '#38445f', label: 'Indigo' },
+  { key: 'tuffeau',    hex: '#2b2620', label: 'Tuffeau foncé' },
+];
+
+// ─── Thèmes prédéfinis ────────────────────────────────────────────────────────
+
+const THEMES = [
+  { key: 'etat-major',  label: 'État-major',   basemap: 'ign_topo', color: '#722f37' },
+  { key: 'loire-velo',  label: 'Loire à vélo', basemap: 'cyclosm',  color: '#3a6f8f' },
+  { key: 'or-tuffeau',  label: 'Or et tuffeau',basemap: 'sat',      color: '#c8893a' },
+  { key: 'grand-air',   label: 'Grand air',    basemap: 'topo',     color: '#b5562f' },
+  { key: 'ardoise',     label: 'Ardoise',      basemap: 'ign',      color: '#3f4a54' },
+];
+
+// ─── Formats ──────────────────────────────────────────────────────────────────
 
 const FORMATS = {
   square:  { label: 'Carré',       ratio: '1:1',  w: 2160, h: 2160 },
@@ -24,18 +94,14 @@ const FORMATS = {
   publish: { label: 'Publication', ratio: '4:5',  w: 2160, h: 2700 },
 };
 
-const BASEMAPS = {
-  osm: {
-    label: 'Plan',
-    tileUrl: (z, x, y) => `https://${'abc'[(x + y + z) % 3]}.tile.openstreetmap.org/${z}/${x}/${y}.png`,
-    attribution: '© OpenStreetMap contributors',
-  },
-  sat: {
-    label: 'Satellite',
-    tileUrl: (z, x, y) =>
-      `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`,
-    attribution: '© Esri & sources',
-  },
+// ─── Emojis pour l'encadré stats ─────────────────────────────────────────────
+
+const STAT_ICONS = {
+  calendar: '📅',
+  bike:     '🚴',
+  route:    '📏',
+  mountain: '🏔️',
+  clock:    '🕒',
 };
 
 // ─── Projection Web Mercator ──────────────────────────────────────────────────
@@ -79,7 +145,8 @@ function mergeBboxes(bboxes) {
 
 // ─── Render params ────────────────────────────────────────────────────────────
 
-function computeRenderParams(bbox, canvasW, canvasH, padding = 0.05) {
+function computeRenderParams(bbox, canvasW, canvasH, padding = 0.05, maxTileZoom = 18) {
+  const TILE_SIZE = 256;
   const nw = worldFromLngLat(bbox.west, bbox.north);
   const se = worldFromLngLat(bbox.east, bbox.south);
 
@@ -93,7 +160,7 @@ function computeRenderParams(bbox, canvasW, canvasH, padding = 0.05) {
   const zFromW  = Math.log2(targetW / (bboxWx * TILE_SIZE));
   const zFromH  = Math.log2(targetH / (bboxWy * TILE_SIZE));
 
-  const zFloat    = Math.min(Math.min(zFromW, zFromH), 18);
+  const zFloat    = Math.min(Math.min(zFromW, zFromH), maxTileZoom);
   const zoom      = Math.floor(zFloat);
   const tileScale = Math.pow(2, zFloat - zoom);
 
@@ -105,8 +172,9 @@ function computeRenderParams(bbox, canvasW, canvasH, padding = 0.05) {
   };
 }
 
-// ─── Tile loading ─────────────────────────────────────────────────────────────
+// ─── Tile loading (avec timeout + allSettled) ─────────────────────────────────
 
+const TILE_SIZE = 256;
 const _tileCache = new Map();
 
 function loadTile(url) {
@@ -117,6 +185,8 @@ function loadTile(url) {
     img.onload  = () => resolve(img);
     img.onerror = () => resolve(null);
     img.src = url;
+    // Résoudre avec null après 8 s pour ne pas bloquer le rendu
+    setTimeout(() => resolve(null), 8000);
   });
   _tileCache.set(url, p);
   return p;
@@ -158,16 +228,6 @@ function roundRect(ctx, x, y, w, h, r) {
 function _rectsOverlap(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
-
-// ─── Emojis pour l'encadré stats ─────────────────────────────────────────────
-
-const STAT_ICONS = {
-  calendar: '📅',
-  bike:     '🚴',
-  route:    '📏',
-  mountain: '🏔️',
-  clock:    '🕒',
-};
 
 // ─── Helpers données ──────────────────────────────────────────────────────────
 
@@ -213,7 +273,6 @@ function _formatDurationFR(hours) {
   return m > 0 ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`;
 }
 
-// Retourne { title, lines: [{text, icon}], color }
 // Ordre — acte  : dates → étapes → distance → dénivelé
 // Ordre — étape : date  → distance → dénivelé → durée
 function _computeStatsData(mode, group, loaded, color) {
@@ -224,10 +283,9 @@ function _computeStatsData(mode, group, loaded, color) {
     const totalDist = loaded.reduce((s, { item }) => s + (item.distance_km ?? 0), 0);
     const totalElev = loaded.reduce((s, { item }) => s + (item.elevation_gain_m ?? 0), 0);
     const allDates  = loaded.map(({ item }) => item.date).filter(Boolean);
-
     const lines = [];
     const period = _formatPeriodFR(allDates);
-    if (period) lines.push({ text: period, icon: 'calendar' });
+    if (period)  lines.push({ text: period, icon: 'calendar' });
     lines.push({ text: `${n} étape${n > 1 ? 's' : ''}`, icon: 'bike' });
     if (hasDist) lines.push({ text: `${_fmtNum(totalDist)} km`, icon: 'route' });
     if (hasElev) lines.push({ text: `${_fmtNum(totalElev)} m de dénivelé`, icon: 'mountain' });
@@ -235,10 +293,10 @@ function _computeStatsData(mode, group, loaded, color) {
   } else {
     const item  = loaded[0].item;
     const lines = [];
-    if (item.date) lines.push({ text: _formatDateFR(item.date) ?? item.date, icon: 'calendar' });
-    if (item.distance_km != null) lines.push({ text: `${(+item.distance_km).toLocaleString('fr-FR')} km`, icon: 'route' });
+    if (item.date)              lines.push({ text: _formatDateFR(item.date) ?? item.date, icon: 'calendar' });
+    if (item.distance_km != null)     lines.push({ text: `${(+item.distance_km).toLocaleString('fr-FR')} km`, icon: 'route' });
     if (item.elevation_gain_m != null) lines.push({ text: `${_fmtNum(item.elevation_gain_m)} m de dénivelé`, icon: 'mountain' });
-    if (item.duration_h != null) lines.push({ text: _formatDurationFR(item.duration_h), icon: 'clock' });
+    if (item.duration_h != null)       lines.push({ text: _formatDurationFR(item.duration_h), icon: 'clock' });
     return { title: item.label ?? '', lines, color };
   }
 }
@@ -259,21 +317,18 @@ async function drawBasemap(ctx, canvasW, canvasH, zoom, tileScale, originWX, ori
       jobs.push(loadTile(tileUrlFn(zoom, tx, ty)).then((img) => ({ img, tx, ty })));
     }
   }
-  const tiles = await Promise.all(jobs);
+  const results = await Promise.allSettled(jobs);
 
   ctx.fillStyle = '#ddd';
   ctx.fillRect(0, 0, canvasW, canvasH);
-  for (const { img, tx, ty } of tiles) {
+  for (const r of results) {
+    if (r.status !== 'fulfilled') continue;
+    const { img, tx, ty } = r.value;
     if (!img) continue;
     const px = (tx - originWX * scale) * tileDisplaySize;
     const py = (ty - originWY * scale) * tileDisplaySize;
     ctx.drawImage(img, Math.round(px), Math.round(py), Math.ceil(tileDisplaySize), Math.ceil(tileDisplaySize));
   }
-}
-
-function drawVeil(ctx, canvasW, canvasH) {
-  ctx.fillStyle = 'rgba(255,255,255,0.28)';
-  ctx.fillRect(0, 0, canvasW, canvasH);
 }
 
 function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
@@ -314,7 +369,6 @@ function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
   ctx.setLineDash([]);
 }
 
-// Marqueurs emoji — sans pastille de fond, juste le drapeau teinté
 function drawMarkers(ctx, markers, zFloat, originWX, originWY, fontSize) {
   ctx.textAlign    = 'center';
   ctx.textBaseline = 'middle';
@@ -328,27 +382,24 @@ function drawMarkers(ctx, markers, zFloat, originWX, originWY, fontSize) {
   ctx.filter = 'none';
 }
 
-// Labels de ville — pastille blanche conservée, anti-collision verticale
 function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
   const pad     = Math.round(fontSize * 0.4);
   const r       = Math.round(fontSize * 0.3);
   const offsetX = Math.round(fontSize * 1.15);
-  const placed  = []; // rectangles déjà placés {x,y,w,h}
+  const placed  = [];
 
   for (const marker of markers) {
     if (!marker.city) continue;
-
     const { x, y } = lngLatToPixel(marker.lng, marker.lat, zFloat, originWX, originWY);
     const bold      = marker.bold ? 'bold ' : '';
+    const cityText  = marker.bold ? marker.city.toUpperCase() : marker.city;
     ctx.font        = `${bold}${fontSize}px sans-serif`;
 
-    const cityText = marker.bold ? marker.city.toUpperCase() : marker.city;
     const tw  = ctx.measureText(cityText).width;
     const bw  = tw + pad * 2;
     const bh  = fontSize + pad;
     const lx  = x + offsetX;
 
-    // Cherche une position verticale sans chevauchement
     const vertSteps = [0, -bh * 0.9, bh * 0.9, -bh * 1.8, bh * 1.8, -bh * 2.7];
     let chosen = null;
     for (const dy of vertSteps) {
@@ -361,7 +412,6 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
     const centerY  = chosen.y + bh / 2;
     const vertDist = Math.abs(centerY - y);
 
-    // Trait de rappel si le label est significativement décalé
     if (vertDist > bh * 0.35) {
       ctx.save();
       ctx.strokeStyle = marker.color || '#2e6a8f';
@@ -375,7 +425,6 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
       ctx.restore();
     }
 
-    // Pastille blanche
     ctx.fillStyle   = 'rgba(255,255,255,0.9)';
     ctx.shadowColor = 'rgba(0,0,0,0.12)';
     ctx.shadowBlur  = Math.round(fontSize * 0.2);
@@ -383,7 +432,6 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
     ctx.fill();
     ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
 
-    // Texte dans la couleur de la trace
     ctx.fillStyle    = marker.color || '#2e6a8f';
     ctx.font         = `${bold}${fontSize}px sans-serif`;
     ctx.textAlign    = 'left';
@@ -392,20 +440,18 @@ function drawCityLabels(ctx, markers, zFloat, originWX, originWY, fontSize) {
   }
 }
 
-// Encadré stats — icônes monochromes, margin configurable, titre optionnel
 function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle) {
-  const { title, lines, color } = statsData;
+  const { title, lines } = statsData;
   if (!lines.length) return;
 
   const iconSize = Math.round(fontSize * 0.85);
   const iconPad  = Math.round(iconSize * 0.55);
   const titleFs  = (showTitle && title) ? Math.round(fontSize * 1.25) : 0;
-  const divH     = (showTitle && title) ? Math.round(fontSize * 0.5) : 0;
+  const divH     = (showTitle && title) ? Math.round(fontSize * 0.5)  : 0;
   const lineH    = Math.round(fontSize * 1.65);
   const pad      = Math.round(fontSize * 0.85);
   const r        = Math.round(fontSize * 0.4);
 
-  // Calcul de la largeur max du contenu
   let maxW = 0;
   if (showTitle && title) {
     ctx.font = `bold ${titleFs}px sans-serif`;
@@ -421,7 +467,6 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
   const bx   = canvasW - boxW - margin;
   const by   = canvasH - boxH - margin;
 
-  // Fond
   ctx.shadowColor   = 'rgba(0,0,0,0.18)';
   ctx.shadowBlur    = Math.round(fontSize * 0.6);
   ctx.shadowOffsetY = Math.round(fontSize * 0.15);
@@ -432,7 +477,6 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
 
   let curY = by + pad;
 
-  // Titre + séparateur
   if (showTitle && title) {
     ctx.fillStyle    = '#2a2a2a';
     ctx.font         = `bold ${titleFs}px sans-serif`;
@@ -452,7 +496,6 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
     curY += divH;
   }
 
-  // Lignes : emoji + texte
   for (const { text, icon } of lines) {
     const iconCX = bx + pad + iconSize / 2;
     const iconCY = curY + lineH / 2;
@@ -468,7 +511,6 @@ function drawStats(ctx, canvasW, canvasH, statsData, fontSize, margin, showTitle
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, bx + pad + iconSize + iconPad, iconCY);
-
     curY += lineH;
   }
 }
@@ -505,15 +547,6 @@ function drawAttribution(ctx, canvasW, canvasH, text) {
   ctx.fillText(text, 6 + pad, canvasH - pad - 6);
 }
 
-function drawFrame(ctx, canvasW, canvasH) {
-  const m = Math.round(canvasW * 0.03);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvasW, m);
-  ctx.fillRect(0, canvasH - m, canvasW, m);
-  ctx.fillRect(0, m, m, canvasH - 2 * m);
-  ctx.fillRect(canvasW - m, m, m, canvasH - 2 * m);
-}
-
 // ─── Data loading ─────────────────────────────────────────────────────────────
 
 const _geojsonCache = new Map();
@@ -538,7 +571,6 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   const allItems  = tracesData.items ?? [];
 
   let items = [], group = null;
-
   if (mode === 'act') {
     group = allGroups.find((g) => g.id === selectedId);
     items = allItems.filter((it) => it.group === selectedId)
@@ -559,7 +591,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
 
   const bbox  = mergeBboxes(loaded.map(({ gj }) => bboxFromGeoJSON(gj)));
   const color = (typeof group?.color === 'string' && !group.color.startsWith('fn:'))
-    ? group.color : '#2e6a8f';
+    ? group.color : '#3a6f8f';
 
   const traces = loaded.map(({ item, gj }) => ({
     geojson: gj,
@@ -580,11 +612,8 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     for (let i = 1; i < loaded.length; i++) {
       push(_firstCoord(loaded[i].gj), 'étape', cityNames[i]?.from ?? null);
     }
-    if (loaded.length > 1) {
-      push(_lastCoord(loaded[loaded.length - 1].gj), 'arrivée', cityNames[loaded.length - 1]?.to ?? null);
-    } else {
-      push(_lastCoord(loaded[0].gj), 'arrivée', cityNames[0]?.to ?? null);
-    }
+    push(_lastCoord(loaded[loaded.length - 1].gj), 'arrivée',
+         cityNames[loaded.length - 1]?.to ?? null);
   } else {
     const { from, to } = extractCityNames(loaded[0].item.label);
     push(_firstCoord(loaded[0].gj), 'départ', from);
@@ -595,23 +624,29 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   return { traces, markers, bbox, statsData };
 }
 
+// ─── Application de la couleur principale ────────────────────────────────────
+
+function _applyColor(data, color) {
+  if (!color) return;
+  for (const t of data.traces)  t.color = color;
+  for (const m of data.markers) m.color = color;
+  if (data.statsData) data.statsData.color = color;
+}
+
 // ─── Render orchestration ─────────────────────────────────────────────────────
 
-// Ordre de dessin : fond → voile → traces → marqueurs → noms villes
-//   → stats → position → attribution → cadre
 async function renderToCanvas(canvas, { traces, markers, bbox, statsData, formatKey, basemapKey, options = {} }) {
   const fmt = FORMATS[formatKey];
-  const bm  = BASEMAPS[basemapKey];
+  const bm  = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
 
   canvas.width  = fmt.w;
   canvas.height = fmt.h;
 
-  const { zoom, tileScale, zFloat, originWX, originWY } = computeRenderParams(bbox, fmt.w, fmt.h);
+  const { zoom, tileScale, zFloat, originWX, originWY } =
+    computeRenderParams(bbox, fmt.w, fmt.h, 0.05, bm.maxZoom);
   const ctx = canvas.getContext('2d');
 
   await drawBasemap(ctx, fmt.w, fmt.h, zoom, tileScale, originWX, originWY, bm.tileUrl);
-
-  if (options.veil) drawVeil(ctx, fmt.w, fmt.h);
 
   const lineWidth = Math.max(14, Math.round(fmt.w / 155));
   drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth);
@@ -625,9 +660,8 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   }
 
   if (options.stats && statsData) {
-    const statsFs    = Math.max(32, Math.round(fmt.w / 58));
-    const frameThick = options.frame ? Math.round(fmt.w * 0.03) : 0;
-    const statsMarg  = Math.round(fmt.w / 30) + frameThick;
+    const statsFs   = Math.max(32, Math.round(fmt.w / 58));
+    const statsMarg = Math.round(fmt.w / 30);
     drawStats(ctx, fmt.w, fmt.h, statsData, statsFs, statsMarg, options.showTitle !== false);
   }
 
@@ -636,8 +670,6 @@ async function renderToCanvas(canvas, { traces, markers, bbox, statsData, format
   }
 
   drawAttribution(ctx, fmt.w, fmt.h, bm.attribution);
-
-  if (options.frame) drawFrame(ctx, fmt.w, fmt.h);
 }
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
@@ -667,6 +699,18 @@ function _buildHTML(groups, tracesData) {
     return `<optgroup label="${g.label}">${its.map((it) => `<option value="${it.id}">${it.label}</option>`).join('')}</optgroup>`;
   }).join('');
 
+  const swatches = COLOR_PALETTE.map((c, i) =>
+    `<button class="lrz-export-swatch${i === 0 ? ' is-active' : ''}" data-color="${c.hex}" title="${c.label}" style="background:${c.hex}"></button>`
+  ).join('');
+
+  const themes = THEMES.map((t) =>
+    `<button class="lrz-export-theme" data-theme="${t.key}">${t.label}</button>`
+  ).join('');
+
+  const basemapBtns = Object.entries(BASEMAPS).map(([key, bm]) =>
+    `<label class="lrz-export-bm-btn"><input type="radio" name="exp-bm" value="${key}"${key === 'osm' ? ' checked' : ''}><span>${bm.label}</span></label>`
+  ).join('');
+
   return `<div class="lrz-export-overlay">
   <div class="lrz-export-modal" role="dialog" aria-modal="true" aria-label="Export de carte en image">
     <div class="lrz-export-modal__header">
@@ -683,6 +727,16 @@ function _buildHTML(groups, tracesData) {
         </div>
         <select class="lrz-export-select" id="exp-act">${actOpts}</select>
         <select class="lrz-export-select" id="exp-step" hidden>${stepOpts}</select>
+      </div>
+
+      <div class="lrz-export-section">
+        <div class="lrz-export-section__label">Thème</div>
+        <div class="lrz-export-themes">${themes}</div>
+      </div>
+
+      <div class="lrz-export-section">
+        <div class="lrz-export-section__label">Couleur</div>
+        <div class="lrz-export-colors">${swatches}</div>
       </div>
 
       <div class="lrz-export-section">
@@ -705,10 +759,7 @@ function _buildHTML(groups, tracesData) {
 
       <div class="lrz-export-section">
         <div class="lrz-export-section__label">Fond de carte</div>
-        <div class="lrz-export-basemap-row">
-          <label class="lrz-export-mode-opt"><input type="radio" name="exp-bm" value="osm" checked> Plan</label>
-          <label class="lrz-export-mode-opt"><input type="radio" name="exp-bm" value="sat"> Satellite</label>
-        </div>
+        <div class="lrz-export-bm-grid">${basemapBtns}</div>
       </div>
 
       <div class="lrz-export-section">
@@ -722,21 +773,13 @@ function _buildHTML(groups, tracesData) {
             <input type="checkbox" id="exp-opt-stats">
             <span class="lrz-export-opt__label">Statistiques du parcours</span>
           </label>
-          <label class="lrz-export-opt lrz-export-opt--sub" id="exp-opt-title-wrap">
+          <label class="lrz-export-opt lrz-export-opt--sub is-disabled" id="exp-opt-title-wrap">
             <input type="checkbox" id="exp-opt-title" checked>
             <span class="lrz-export-opt__label">Afficher le titre</span>
           </label>
           <label class="lrz-export-opt">
-            <input type="checkbox" id="exp-opt-veil">
-            <span class="lrz-export-opt__label">Atténuer le fond</span>
-          </label>
-          <label class="lrz-export-opt">
             <input type="checkbox" id="exp-opt-position">
             <span class="lrz-export-opt__label">Ma position actuelle 🚲</span>
-          </label>
-          <label class="lrz-export-opt">
-            <input type="checkbox" id="exp-opt-frame">
-            <span class="lrz-export-opt__label">Cadre carnet</span>
           </label>
         </div>
       </div>
@@ -762,16 +805,15 @@ function _sel() {
   const id = m === 'act'
     ? _overlay.querySelector('#exp-act')?.value
     : _overlay.querySelector('#exp-step')?.value;
-  const fmt       = _overlay.querySelector('.lrz-export-fmt.is-active')?.dataset.fmt ?? 'square';
-  const bm        = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
-  const cities    = _overlay.querySelector('#exp-opt-cities')?.checked   ?? false;
-  const stats     = _overlay.querySelector('#exp-opt-stats')?.checked    ?? false;
+  const fmt      = _overlay.querySelector('.lrz-export-fmt.is-active')?.dataset.fmt ?? 'square';
+  const bm       = _overlay.querySelector('[name="exp-bm"]:checked')?.value ?? 'osm';
+  const color    = _overlay.querySelector('.lrz-export-swatch.is-active')?.dataset.color ?? COLOR_PALETTE[0].hex;
+  const cities   = _overlay.querySelector('#exp-opt-cities')?.checked   ?? false;
+  const stats    = _overlay.querySelector('#exp-opt-stats')?.checked    ?? false;
   const showTitle = stats && (_overlay.querySelector('#exp-opt-title')?.checked ?? true);
-  const veil      = _overlay.querySelector('#exp-opt-veil')?.checked     ?? false;
-  const position  = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
-  const frame     = _overlay.querySelector('#exp-opt-frame')?.checked    ?? false;
+  const position = _overlay.querySelector('#exp-opt-position')?.checked ?? false;
   return { mode: m, selectedId: id, formatKey: fmt, basemapKey: bm,
-           options: { cities, stats, showTitle, veil, position, frame } };
+           options: { cities, stats, showTitle, position, color } };
 }
 
 async function _renderPreview() {
@@ -783,43 +825,48 @@ async function _renderPreview() {
   if (loadingEl) loadingEl.hidden = false;
   if (cvs) cvs.style.opacity = '0.3';
 
-  const data = await loadSelectionData(mode, selectedId, _groups, _tracesData);
-  if (!data || !_overlay) return;
+  try {
+    const data = await loadSelectionData(mode, selectedId, _groups, _tracesData);
+    if (!data || !_overlay) return;
 
-  const fmt      = FORMATS[formatKey];
-  const previewW = 280;
-  const previewH = Math.round(previewW * fmt.h / fmt.w);
+    _applyColor(data, options.color);
 
-  const tmp = document.createElement('canvas');
-  tmp.width  = previewW;
-  tmp.height = previewH;
+    const fmt      = FORMATS[formatKey];
+    const bm       = BASEMAPS[basemapKey] ?? BASEMAPS.osm;
+    const previewW = 280;
+    const previewH = Math.round(previewW * fmt.h / fmt.w);
 
-  const { zoom, tileScale, zFloat, originWX, originWY } = computeRenderParams(data.bbox, previewW, previewH);
-  const ctx = tmp.getContext('2d');
-  const bm  = BASEMAPS[basemapKey];
+    const tmp = document.createElement('canvas');
+    tmp.width  = previewW;
+    tmp.height = previewH;
 
-  await drawBasemap(ctx, previewW, previewH, zoom, tileScale, originWX, originWY, bm.tileUrl);
-  if (options.veil)  drawVeil(ctx, previewW, previewH);
-  drawTraces(ctx, data.traces, zFloat, originWX, originWY, 2);
-  drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
-  if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15);
-  if (options.stats && data.statsData) {
-    const frameThick = options.frame ? Math.round(previewW * 0.03) : 0;
-    const statsMarg  = Math.round(previewW / 30) + frameThick;
-    drawStats(ctx, previewW, previewH, data.statsData, 11, statsMarg, options.showTitle);
+    const { zoom, tileScale, zFloat, originWX, originWY } =
+      computeRenderParams(data.bbox, previewW, previewH, 0.05, bm.maxZoom);
+    const ctx = tmp.getContext('2d');
+
+    await drawBasemap(ctx, previewW, previewH, zoom, tileScale, originWX, originWY, bm.tileUrl);
+    drawTraces(ctx, data.traces, zFloat, originWX, originWY, 2);
+    drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
+    if (options.cities) drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15);
+    if (options.stats && data.statsData) {
+      drawStats(ctx, previewW, previewH, data.statsData, 11, Math.round(previewW / 30), options.showTitle);
+    }
+    if (options.position) await drawCurrentPosition(ctx, zFloat, originWX, originWY, data.bbox, 20);
+    drawAttribution(ctx, previewW, previewH, bm.attribution);
+
+    if (!_overlay) return;
+    if (cvs) {
+      cvs.width  = previewW;
+      cvs.height = previewH;
+      cvs.getContext('2d').drawImage(tmp, 0, 0);
+      cvs.style.opacity = '1';
+    }
+  } catch (err) {
+    console.error('[map-export] preview', err);
+    if (cvs) cvs.style.opacity = '0.5';
+  } finally {
+    if (loadingEl) loadingEl.hidden = true;
   }
-  if (options.position) await drawCurrentPosition(ctx, zFloat, originWX, originWY, data.bbox, 20);
-  drawAttribution(ctx, previewW, previewH, bm.attribution);
-  if (options.frame)  drawFrame(ctx, previewW, previewH);
-
-  if (!_overlay) return;
-  if (cvs) {
-    cvs.width  = previewW;
-    cvs.height = previewH;
-    cvs.getContext('2d').drawImage(tmp, 0, 0);
-    cvs.style.opacity = '1';
-  }
-  if (loadingEl) loadingEl.hidden = true;
 }
 
 function _schedulePreview() {
@@ -838,6 +885,8 @@ async function _generate() {
     const data = await loadSelectionData(mode, selectedId, _groups, _tracesData);
     if (!data) throw new Error('no data');
 
+    _applyColor(data, options.color);
+
     const fmt = FORMATS[formatKey];
     const cvs = document.createElement('canvas');
     cvs.width = fmt.w; cvs.height = fmt.h;
@@ -849,8 +898,7 @@ async function _generate() {
     );
     const slug = (selectedId ?? 'export').replace(/[^a-z0-9_-]/gi, '-').toLowerCase();
     const url  = URL.createObjectURL(blob);
-    const a    = Object.assign(document.createElement('a'), { href: url, download: `loire-ride-zen_${slug}_${formatKey}.jpg` });
-    a.click();
+    Object.assign(document.createElement('a'), { href: url, download: `loire-ride-zen_${slug}_${formatKey}.jpg` }).click();
     setTimeout(() => URL.revokeObjectURL(url), 8000);
     btn.textContent = 'Téléchargé ✓';
     setTimeout(() => { if (btn) btn.textContent = 'Générer et télécharger'; }, 3000);
@@ -881,6 +929,7 @@ export async function openExportModal() {
   _overlay.addEventListener('click', (e) => { if (e.target === _overlay) _close(); });
   _overlay.querySelector('.lrz-export-modal__close').addEventListener('click', _close);
 
+  // Mode acte / étape
   _overlay.querySelectorAll('[name="exp-mode"]').forEach((r) => {
     r.addEventListener('change', () => {
       const isStep = r.value === 'step';
@@ -889,10 +938,10 @@ export async function openExportModal() {
       _schedulePreview();
     });
   });
-
   _overlay.querySelector('#exp-act').addEventListener('change', _schedulePreview);
   _overlay.querySelector('#exp-step').addEventListener('change', _schedulePreview);
 
+  // Format
   _overlay.querySelectorAll('.lrz-export-fmt').forEach((btn) => {
     btn.addEventListener('click', () => {
       _overlay.querySelectorAll('.lrz-export-fmt').forEach((b) => b.classList.remove('is-active'));
@@ -901,22 +950,59 @@ export async function openExportModal() {
     });
   });
 
+  // Fond de carte
   _overlay.querySelectorAll('[name="exp-bm"]').forEach((r) => {
-    r.addEventListener('change', _schedulePreview);
+    r.addEventListener('change', () => {
+      // Désactiver le thème si fond modifié manuellement
+      _overlay.querySelectorAll('.lrz-export-theme').forEach((b) => {
+        const t = THEMES.find((x) => x.key === b.dataset.theme);
+        if (t && t.basemap !== r.value) b.classList.remove('is-active');
+      });
+      _schedulePreview();
+    });
   });
 
+  // Swatches couleur
+  _overlay.querySelectorAll('.lrz-export-swatch').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      _overlay.querySelectorAll('.lrz-export-swatch').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      // Désactiver thème si couleur modifiée manuellement
+      _overlay.querySelectorAll('.lrz-export-theme').forEach((b) => {
+        const t = THEMES.find((x) => x.key === b.dataset.theme);
+        if (t && t.color !== btn.dataset.color) b.classList.remove('is-active');
+      });
+      _schedulePreview();
+    });
+  });
+
+  // Thèmes — applique fond + couleur d'un clic
+  _overlay.querySelectorAll('.lrz-export-theme').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const theme = THEMES.find((t) => t.key === btn.dataset.theme);
+      if (!theme) return;
+      // Fond
+      const bmRadio = _overlay.querySelector(`[name="exp-bm"][value="${theme.basemap}"]`);
+      if (bmRadio) bmRadio.checked = true;
+      // Couleur
+      _overlay.querySelectorAll('.lrz-export-swatch').forEach((s) => s.classList.remove('is-active'));
+      _overlay.querySelector(`.lrz-export-swatch[data-color="${theme.color}"]`)?.classList.add('is-active');
+      // Thème actif
+      _overlay.querySelectorAll('.lrz-export-theme').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      _schedulePreview();
+    });
+  });
+
+  // Options checkboxes
   _overlay.querySelectorAll('.lrz-export-opt input[type="checkbox"]').forEach((cb) => {
     cb.addEventListener('change', _schedulePreview);
   });
 
-  // "Afficher les statistiques" grise/dégrise la sous-option "Afficher le titre"
+  // Stats → titre (sous-option)
   _overlay.querySelector('#exp-opt-stats')?.addEventListener('change', function () {
     _overlay.querySelector('#exp-opt-title-wrap')?.classList.toggle('is-disabled', !this.checked);
   });
-  // État initial : titre grisé si stats désactivé
-  if (!_overlay.querySelector('#exp-opt-stats')?.checked) {
-    _overlay.querySelector('#exp-opt-title-wrap')?.classList.add('is-disabled');
-  }
 
   document.getElementById('exp-generate').addEventListener('click', _generate);
 
