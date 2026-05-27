@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-05-26T23:50:19.250137+00:00",
+  "updated_at": "2026-05-26T23:53:17.948749+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
-      "label": "Étape 1 Châtillon ➡️ Boissy-Le-Cutté",
+      "label": "Étape 1 Paris ➡️ Boissy-Le-Cutté",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte.geojson",
@@ -120,7 +120,8 @@
         "icon": "⛅",
         "temp_max": 22
       },
-      "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy"
+      "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy",
+      "is_loop": true
     },
     {
       "id": "acte-2_etape-1_blois_amboise",
@@ -224,7 +225,7 @@
     },
     {
       "id": "acte-2_etape-6_chinon_montsoreaux",
-      "label": "Étape 6 Chinon ➡️ Montsoreaux",
+      "label": "Étape 6 Chinon ➡️ Montsoreau",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-6_chinon_montsoreaux.geojson",
@@ -286,7 +287,7 @@
     },
     {
       "id": "acte-3_etape-1_angers_behuard",
-      "label": "Étape 1 Angers ➡️ Behuard",
+      "label": "Étape 1 Angers ➡️ Béhuard",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-1_angers_behuard.geojson",
@@ -308,7 +309,7 @@
     },
     {
       "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
-      "label": "Étape 2 Behuard ➡️ St-Florent-Le-Vieil",
+      "label": "Étape 2 Béhuard ➡️ St-Florent-Le-Vieil",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil.geojson",
@@ -384,7 +385,7 @@
       "order": 20,
       "distance_km": 50,
       "elevation_gain_m": 30,
-      "date_status": "planned",
+      "date_status": "effective",
       "date": "2026-05-27",
       "duration_h": null,
       "weather": {
@@ -396,7 +397,7 @@
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
-      "label": "Étape 6 Paimboeuf ➡️ 🐍 Serpent d'Océan → Tharon-Plage",
+      "label": "Étape 6 Paimboeuf ➡️ L'Océan",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.geojson",
