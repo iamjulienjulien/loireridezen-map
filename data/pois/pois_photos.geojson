@@ -400,7 +400,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "23 lapin soleil",
+        "name": "Lapin Soleil",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/23-lapin-soleil.jpeg",
         "thumb": "data/thumbs/23-lapin-soleil.webp",
@@ -412,6 +412,24 @@
         "coordinates": [
           -1.12475,
           47.366203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "24 paimboeuf",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/24-paimboeuf.jpeg",
+        "thumb": "data/thumbs/24-paimboeuf.webp",
+        "time": "2026:05:27 19:08:17",
+        "id": "24-paimboeuf"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.030153,
+          47.289897
         ]
       }
     }
