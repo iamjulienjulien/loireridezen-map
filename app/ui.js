@@ -70,6 +70,30 @@ export function renderTracesSection(groups, prefs) {
     legendRows;
 }
 
+export function addEuroVeloToggle(eurovelo, prefs) {
+  const list = document.getElementById("traces-list");
+  if (!list) return;
+
+  const isChecked = prefs.eurovelo6 ?? true;
+  const legend = list.querySelector(".lrz-legend__title");
+
+  const row = document.createElement("div");
+  row.id = "eurovelo-row";
+  row.className = "lrz-row";
+  row.innerHTML =
+    `<div class="lrz-row__visual" style="background:#6b7280;opacity:0.5"></div>` +
+    `<label class="lrz-row__label" for="eurovelo-toggle">EuroVelo 6</label>` +
+    `<input type="checkbox" class="lrz-checkbox" id="eurovelo-toggle"${isChecked ? " checked" : ""} />`;
+
+  if (legend) list.insertBefore(row, legend);
+  else list.appendChild(row);
+
+  document.getElementById("eurovelo-toggle")?.addEventListener("change", (e) => {
+    if (e.target.checked) eurovelo.show();
+    else eurovelo.hide();
+  });
+}
+
 export async function wireTraceCheckboxes() {
   await loadAllRoutes();
 

@@ -24,12 +24,14 @@ import {
 import { initActionsPanel } from "./app/actions-panel.js";
 import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
+import { initEuroVelo } from "./app/eurovelo.js";
 import {
   renderTracesSection,
   renderPoiSection,
   renderPhotosSection,
   wireTraceCheckboxes,
   traceFeatureGroups,
+  addEuroVeloToggle,
   initMobileDrawer,
   initAccordion,
   initPoiBadge,
@@ -88,6 +90,9 @@ async function init() {
   initResetButton();
   initKeyboardShortcuts(map);
   initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
+  initEuroVelo(map).then((eurovelo) => {
+    if (eurovelo) addEuroVeloToggle(eurovelo, prefs);
+  });
 
   if (!hiddenModes.rabbit) {
     initVisitCounter().catch((err) =>

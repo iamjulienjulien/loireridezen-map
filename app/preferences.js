@@ -14,6 +14,7 @@ const DEFAULTS = {
   photos: true,
   currentPosition: true,
   sections: {},
+  eurovelo6: true,
 };
 
 export function loadPreferences() {

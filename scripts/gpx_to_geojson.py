@@ -29,9 +29,11 @@ Properties générées par feature :
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import logging
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -138,6 +140,58 @@ def _track_to_feature(
     return {"type": "Feature", "geometry": geometry, "properties": properties}
 
 
+def concat_convert(
+    gpx_paths: list[Path],
+    tolerance_m: float = 20.0,
+    name: str | None = None,
+) -> dict[str, Any]:
+    """Concatène tous les tracks/segments en une seule LineString (2D).
+
+    Usage EuroVelo : python scripts/gpx_to_geojson.py eurovelo-6.gpx \\
+        -o data/eurovelo/eurovelo-6.geojson --concat --tolerance-m 20
+    """
+    all_coords: list[list[float]] = []
+    points_in = 0
+
+    for path in gpx_paths:
+        logger.info("Lecture %s", path)
+        with path.open("r", encoding="utf-8") as f:
+            gpx = gpxpy.parse(f)
+        for track in gpx.tracks:
+            for segment in track.segments:
+                points_in += len(segment.points)
+                if tolerance_m > 0:
+                    seg = copy.deepcopy(segment)
+                    seg.simplify(max_distance=tolerance_m)
+                    pts = seg.points
+                else:
+                    pts = segment.points
+                for p in pts:
+                    all_coords.append([_round_coord(p.longitude), _round_coord(p.latitude)])
+
+    points_out = len(all_coords)
+    feature_name = name or gpx_paths[0].stem.replace("_", " ")
+    feature: dict[str, Any] = {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": all_coords},
+        "properties": {
+            "name": feature_name,
+            "source": ", ".join(p.name for p in gpx_paths),
+            "points_in": points_in,
+            "points_out": points_out,
+            "generated_at": datetime.now().isoformat(timespec="seconds"),
+            "tolerance_m": tolerance_m,
+        },
+    }
+    logger.info(
+        "Concaténation : %d points → %d après simplification (tolérance %g m)",
+        points_in,
+        points_out,
+        tolerance_m,
+    )
+    return {"type": "FeatureCollection", "features": [feature]}
+
+
 def convert(
     gpx_paths: list[Path],
     include_z: bool = True,
@@ -207,6 +261,20 @@ def main(argv: list[str] | None = None) -> int:
         "Nécessite shapely. Note : perd l'altitude.",
     )
     parser.add_argument(
+        "--concat",
+        action="store_true",
+        help="Concatène tous les tracks/segments en une seule LineString 2D. "
+        "Utilise --tolerance-m pour la simplification (défaut 20 m).",
+    )
+    parser.add_argument(
+        "--tolerance-m",
+        type=float,
+        default=20.0,
+        dest="tolerance_m",
+        metavar="METERS",
+        help="Tolérance Douglas-Peucker en mètres pour le mode --concat (défaut : 20).",
+    )
+    parser.add_argument(
         "--indent",
         type=int,
         default=None,
@@ -254,12 +322,18 @@ def main(argv: list[str] | None = None) -> int:
         }))
         return 0
 
-    geojson = convert(
-        gpx_paths=args.inputs,
-        include_z=args.include_z,
-        multilinestring=args.multilinestring,
-        simplify_tolerance=args.simplify,
-    )
+    if args.concat:
+        geojson = concat_convert(
+            gpx_paths=args.inputs,
+            tolerance_m=args.tolerance_m,
+        )
+    else:
+        geojson = convert(
+            gpx_paths=args.inputs,
+            include_z=args.include_z,
+            multilinestring=args.multilinestring,
+            simplify_tolerance=args.simplify,
+        )
 
     n_features = len(geojson["features"])
     if n_features == 0:
