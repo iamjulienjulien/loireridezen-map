@@ -937,7 +937,12 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
     const cityNames = loaded.map(({ item }) =>
       item.is_loop ? extractLoopCityNames(item.label) : extractCityNames(item.label),
     );
-    push(_firstCoord(loaded[0].gj), "départ", loaded[0].item.is_loop ? null : (cityNames[0]?.from ?? null));
+    // Loop at i=0 in a multi-item group: show its departure city (e.g. "Blois")
+    // Standalone loop: no city (from is a non-city name like "Boucle Angevine")
+    const dep0city = loaded[0].item.is_loop
+      ? (loaded.length > 1 ? (cityNames[0]?.from ?? null) : null)
+      : (cityNames[0]?.from ?? null);
+    push(_firstCoord(loaded[0].gj), "départ", dep0city);
     if (loaded[0].item.is_loop) {
       const far = farthestPointFromStart(_flatCoords(loaded[0].gj));
       if (far) push([far.lng, far.lat], "étape", cityNames[0]?.to ?? null);
