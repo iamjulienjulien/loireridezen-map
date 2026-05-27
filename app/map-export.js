@@ -909,9 +909,9 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   }));
 
   const markers = [];
-  const push = (coord, type, city = null) => {
+  const push = (coord, type, city = null, forceBold = false) => {
     if (!coord) return;
-    const bold = type === "départ" || type === "arrivée";
+    const bold = forceBold || type === "départ" || type === "arrivée";
     markers.push({
       lng: coord[0],
       lat: coord[1],
@@ -936,7 +936,9 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
         const far = farthestPointFromStart(_flatCoords(loaded[i].gj));
         if (far) push([far.lng, far.lat], "étape", cityNames[i]?.to ?? null);
       } else {
-        push(_firstCoord(loaded[i].gj), "étape", cityNames[i]?.from ?? null);
+        // Uppercase if this is the first non-loop étape and i=0 was a loop (effective departure)
+        const effectiveDep = i === 1 && loaded[0].item.is_loop;
+        push(_firstCoord(loaded[i].gj), "étape", cityNames[i]?.from ?? null, effectiveDep);
       }
     }
     if (!loaded[loaded.length - 1].item.is_loop) {
