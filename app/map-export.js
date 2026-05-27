@@ -947,9 +947,9 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
         const far = farthestPointFromStart(_flatCoords(loaded[i].gj));
         if (far) push([far.lng, far.lat], "étape", cityNames[i]?.to ?? null);
       } else {
-        // Uppercase if this is the first non-loop étape and i=0 was a loop (effective departure)
-        const effectiveDep = i === 1 && loaded[0].item.is_loop;
-        push(_firstCoord(loaded[i].gj), "étape", cityNames[i]?.from ?? null, effectiveDep);
+        // Skip: first non-loop étape right after a loop at i=0 — same start location
+        if (i === 1 && loaded[0].item.is_loop) continue;
+        push(_firstCoord(loaded[i].gj), "étape", cityNames[i]?.from ?? null);
       }
     }
     if (!loaded[loaded.length - 1].item.is_loop) {

@@ -147,6 +147,8 @@ export async function buildTraceMarkersFromCatalog(
             fg.addLayer(m);
           }
         } else {
+          // Skip: first non-loop étape right after a loop at i=0 — same start location
+          if (i === 1 && items[0].is_loop) continue;
           const start = firstCoord(data);
           if (!start) continue;
           const type = i === 0 ? "départ" : "étape";
