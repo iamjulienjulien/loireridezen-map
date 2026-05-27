@@ -6,7 +6,7 @@
  * le panneau. Non initialisé en mode for=elle.
  */
 
-import { polyline } from "leaflet";
+import { Polyline } from "leaflet";
 import { isForElle } from "./url-mode.js";
 import { loadPreferences, updatePreference } from "./preferences.js";
 
@@ -37,7 +37,7 @@ export async function initEuroVelo(map) {
     if (!coords || coords.length < 2) return null;
 
     const latlngs = coords.map(([lng, lat]) => [lat, lng]);
-    layer = polyline(latlngs, {
+    layer = new Polyline(latlngs, {
       color: "#6b7280",
       weight: 1.5,
       opacity: 0.5,
