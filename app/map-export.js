@@ -581,6 +581,7 @@ function drawCityLabels(
   originWY,
   fontSize,
   fontFamily = "Geist",
+  markerSize = 0,
 ) {
   const canvasW = ctx.canvas.width;
   const canvasH = ctx.canvas.height;
@@ -588,9 +589,19 @@ function drawCityLabels(
   const r = Math.round(fontSize * 0.3);
   const ox = Math.round(fontSize * 1.15);
   const edge = Math.round(fontSize * 0.3);
-  const placed = [];
 
-  for (const marker of markers) {
+  // Bounding box of each emoji marker (to avoid city labels covering them)
+  const markerBoxes = markers.map((m) => {
+    if (!markerSize) return null;
+    const { x, y } = lngLatToPixel(m.lng, m.lat, zFloat, originWX, originWY);
+    const half = Math.round(markerSize * 0.45);
+    return { x: x - half, y: y - half, w: half * 2, h: half * 2 };
+  });
+
+  const placed = []; // placed city-label boxes
+
+  for (let i = 0; i < markers.length; i++) {
+    const marker = markers[i];
     if (!marker.city) continue;
     const { x, y } = lngLatToPixel(marker.lng, marker.lat, zFloat, originWX, originWY);
     const cityText = marker.bold ? marker.city.toUpperCase() : marker.city;
@@ -600,23 +611,24 @@ function drawCityLabels(
     const bw = tw + pad * 2;
     const bh = fontSize + pad;
 
-    // Candidate positions: right side → left side → above → below
+    // Other markers' emoji boxes + already-placed city labels
+    const obstacles = [
+      ...markerBoxes.filter((b, j) => b !== null && j !== i),
+      ...placed,
+    ];
+
     const candidates = [
-      // Right, aligned to marker vertically (5 offsets)
       { lx: x + ox,       ty: y - bh / 2 },
       { lx: x + ox,       ty: y - bh * 1.4 },
       { lx: x + ox,       ty: y + bh * 0.4 },
       { lx: x + ox,       ty: y - bh * 2.3 },
       { lx: x + ox,       ty: y + bh * 1.3 },
-      // Left, same offsets
       { lx: x - ox - bw,  ty: y - bh / 2 },
       { lx: x - ox - bw,  ty: y - bh * 1.4 },
       { lx: x - ox - bw,  ty: y + bh * 0.4 },
       { lx: x - ox - bw,  ty: y - bh * 2.3 },
       { lx: x - ox - bw,  ty: y + bh * 1.3 },
-      // Above centered
       { lx: x - bw / 2,   ty: y - bh * 1.5 - fontSize * 0.4 },
-      // Below centered
       { lx: x - bw / 2,   ty: y + fontSize * 0.6 },
     ];
 
@@ -624,10 +636,9 @@ function drawCityLabels(
     for (const { lx, ty } of candidates) {
       if (lx < edge || ty < edge || lx + bw > canvasW - edge || ty + bh > canvasH - edge) continue;
       const c = { x: lx, y: ty, w: bw, h: bh };
-      if (!placed.some((p) => _rectsOverlap(p, c))) { chosen = c; break; }
+      if (!obstacles.some((p) => _rectsOverlap(p, c))) { chosen = c; break; }
     }
     if (!chosen) {
-      // Fallback: first in-bounds candidate regardless of overlap
       for (const { lx, ty } of candidates) {
         if (lx >= edge && ty >= edge && lx + bw <= canvasW - edge && ty + bh <= canvasH - edge) {
           chosen = { x: lx, y: ty, w: bw, h: bh };
@@ -1021,15 +1032,7 @@ async function renderToCanvas(
 
   if (options.cities) {
     const cityFs = Math.max(36, Math.round(fmt.w / 58));
-    drawCityLabels(
-      ctx,
-      markers,
-      zFloat,
-      originWX,
-      originWY,
-      cityFs,
-      fontFamily,
-    );
+    drawCityLabels(ctx, markers, zFloat, originWX, originWY, cityFs, fontFamily, markerFs);
   }
 
   if (options.stats && statsData) {
@@ -1394,15 +1397,7 @@ async function _renderPreview() {
     drawTraces(ctx, previewTraces, zFloat, originWX, originWY, 2);
     drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
     if (options.cities)
-      drawCityLabels(
-        ctx,
-        data.markers,
-        zFloat,
-        originWX,
-        originWY,
-        15,
-        fontFamily,
-      );
+      drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15, fontFamily, 20);
     if (options.stats && data.statsData) {
       const filteredLines = data.statsData.lines.filter(
         (l) => !options.visibleStats?.size || options.visibleStats.has(l.icon),
