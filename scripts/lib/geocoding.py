@@ -11,6 +11,7 @@ import time
 import requests
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+NOMINATIM_REVERSE_URL = "https://nominatim.openstreetmap.org/reverse"
 USER_AGENT = "loireridezen-tools/1.0 (contact: contact@julienjulien.fr)"
 DEFAULT_COUNTRY = "fr"
 DEFAULT_LIMIT = 5
@@ -54,6 +55,56 @@ def geocode_address(
     _last_call_ts = time.monotonic()
     r.raise_for_status()
     return r.json()
+
+
+def reverse_geocode(
+    lat: float,
+    lon: float,
+    timeout: int = 10,
+) -> str | None:
+    """
+    Géocodage inverse via Nominatim. Retourne le display_name ou None.
+    Respecte le rate limit Nominatim (1 req/s).
+    """
+    global _last_call_ts
+    elapsed = time.monotonic() - _last_call_ts
+    if elapsed < 1.0:
+        time.sleep(1.0 - elapsed)
+
+    params: dict = {
+        "lat": lat,
+        "lon": lon,
+        "format": "json",
+        "addressdetails": 1,
+        "zoom": 14,
+    }
+
+    r = requests.get(
+        NOMINATIM_REVERSE_URL,
+        params=params,
+        headers={"User-Agent": USER_AGENT},
+        timeout=timeout,
+    )
+    _last_call_ts = time.monotonic()
+    r.raise_for_status()
+    result = r.json()
+    if not result or "error" in result:
+        return None
+
+    addr = result.get("address", {})
+    locality = (
+        addr.get("tourism")
+        or addr.get("amenity")
+        or addr.get("village")
+        or addr.get("town")
+        or addr.get("city")
+        or addr.get("municipality")
+        or addr.get("county")
+    )
+    if locality:
+        commune = addr.get("village") or addr.get("town") or addr.get("city") or ""
+        return f"{locality}, {commune}".strip(", ") if commune and commune != locality else locality
+    return result.get("display_name", "").split(",")[0].strip() or None
 
 
 def format_result_label(result: dict, *, max_length: int = 80) -> str:

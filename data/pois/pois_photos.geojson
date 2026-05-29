@@ -423,7 +423,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/23-lapin-soleil.jpeg",
         "thumb": "data/thumbs/23-lapin-soleil.webp",
         "time": "2026:05:25 09:36:29",
-        "id": "23-lapin-soleil"
+        "id": "23-lapin-soleil",
+        "poi_id": "fb653661-dfad-4b8e-888d-70e7e940b6d4"
       },
       "geometry": {
         "type": "Point",

@@ -110,7 +110,7 @@ _POI_TYPE_EMOJIS: dict[str, str] = {
 }
 _POI_VALID_TYPES: tuple[str, ...] = (
     "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement",
-    "vigneron", "nature",
+    "vigneron", "nature", "lapin",
 )
 _INSTA_RE = re.compile(r"^https?://(www\.)?instagram\.com/.+")
 _KOMOOT_RE = re.compile(r"^https?://(www\.)?komoot\.(com|de)/tour/\d+")
@@ -208,7 +208,15 @@ try:
     import requests as _requests
     from lib.geocoding import geocode_address as _geocode_address  # type: ignore[import]
     from lib.geocoding import format_result_label as _format_result_label  # type: ignore[import]
+    from lib.geocoding import reverse_geocode as _reverse_geocode  # type: ignore[import]
     _GEOCODING_AVAILABLE = True
+except ImportError:
+    pass
+
+_EXIF_AVAILABLE = False
+try:
+    from photos_to_poi import extract_gps as _extract_gps  # type: ignore[import]
+    _EXIF_AVAILABLE = True
 except ImportError:
     pass
 
@@ -645,6 +653,7 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
 
     # --- Groupe 3 : POI ---
     choices.append(questionary.Choice("🌐 Synchroniser les POI (Supabase)", value="pois"))
+    choices.append(questionary.Choice("📍 Créer un POI à partir d'une photo (EXIF)", value="poi_from_photo"))
     choices.append(questionary.Separator())
 
     # --- Groupe 4 : Sortie ---
@@ -667,6 +676,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "photos", "both"
     if choice == "pois":
         return "pois", "both"
+    if choice == "poi_from_photo":
+        return "poi_from_photo", "both"
     if choice == "list_edit":
         return "list_edit", "both"
     if choice == "delete_all":
@@ -952,6 +963,190 @@ def prompt_new_poi() -> None:
         console.print(f"[green]✓ POI ajouté : ID {new_id}[/]")
     except Exception as e:
         console.print(f"[red]Erreur lors de la création : {e}[/]")
+
+
+def prompt_poi_from_photo() -> None:
+    if not _SUPABASE_AVAILABLE:
+        console.print("[red]Module supabase non disponible. Installer avec : pip install supabase>=2.5.0[/]")
+        return
+    if not _check_supa_env():
+        return
+    if not _EXIF_AVAILABLE:
+        console.print("[red]PIL non disponible. Installer : pip install Pillow[/]")
+        return
+
+    # 1. Sélection de la photo
+    inbox_dir = PHOTOS_DIR / "inbox"
+    inbox_photos = sorted(
+        p for p in inbox_dir.iterdir()
+        if p.is_file() and p.suffix.lower() in PHOTO_EXTS
+    ) if inbox_dir.exists() else []
+
+    photo_path: Path | None = None
+    if inbox_photos:
+        choices = [questionary.Choice(p.name, value=p) for p in inbox_photos] + [
+            questionary.Choice("📂 Saisir un chemin manuellement", value="manual"),
+            questionary.Choice("← Annuler", value=_CANCEL),
+        ]
+        sel = questionary.select("Photo à utiliser :", choices=choices).ask()
+        if sel is None or sel == _CANCEL:
+            console.print("[dim]Annulé.[/]")
+            return
+        if sel == "manual":
+            raw = questionary.text("Chemin de la photo :").ask()
+            if not raw:
+                return
+            photo_path = Path(raw.strip()).expanduser()
+        else:
+            photo_path = sel
+    else:
+        raw = questionary.text("Chemin de la photo :").ask()
+        if not raw:
+            return
+        photo_path = Path(raw.strip()).expanduser()
+
+    if not photo_path.exists():
+        console.print(f"[red]Fichier introuvable : {photo_path}[/]")
+        return
+
+    # 2. Extraction EXIF
+    console.print("[dim]Extraction des données EXIF…[/]")
+    gps_info = _extract_gps(photo_path.read_bytes())
+    lat, lon = gps_info.get("lat"), gps_info.get("lon")
+
+    if lat is None or lon is None:
+        console.print("[yellow]⚠ Aucune coordonnée GPS trouvée dans l'EXIF.[/]")
+        if not questionary.confirm("Saisir les coordonnées manuellement ?", default=True).ask():
+            return
+        coords = _prompt_coords_direct()
+        if coords is None:
+            return
+        lat, lon = coords
+    else:
+        exif_time = gps_info.get("time")
+        console.print(f"  GPS EXIF : {lat:.6f}, {lon:.6f}" + (f"  ({exif_time})" if exif_time else ""))
+        if not questionary.confirm(f"Utiliser ces coordonnées ({lat:.5f}, {lon:.5f}) ?", default=True).ask():
+            result = _prompt_coords_with_method(default_direct=f"{lat:.6f}, {lon:.6f}")
+            if result is None:
+                return
+            (lat, lon), _, _ = result
+
+    # 3. Géocodage inverse
+    suggested_name = ""
+    if _GEOCODING_AVAILABLE:
+        console.print("[dim]Géocodage inverse…[/]")
+        try:
+            suggested_name = _reverse_geocode(lat, lon) or ""
+            if suggested_name:
+                console.print(f"  Suggestion : {suggested_name}")
+        except Exception as err:
+            console.print(f"[dim]Géocodage inverse échoué : {err}[/]")
+
+    # 4. Type de POI
+    type_choices = [
+        questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
+        for t in _POI_VALID_TYPES
+    ]
+    poi_type = questionary.select("Type de POI :", choices=type_choices).ask()
+    if poi_type is None:
+        return
+
+    # 5. Nom / description
+    name = questionary.text("Nom du POI :", default=suggested_name).ask()
+    if not name or not name.strip():
+        console.print("[dim]Annulé.[/]")
+        return
+
+    description = questionary.text("Description (optionnelle) :", default="").ask() or ""
+
+    url_insta_raw = questionary.text("URL Instagram (optionnel) :", default="").ask() or ""
+    url_insta = url_insta_raw.strip() if _INSTA_RE.match(url_insta_raw.strip()) else None
+    if url_insta_raw.strip() and not url_insta:
+        console.print("[yellow]⚠ URL Instagram invalide — ignorée.[/]")
+
+    construction_date = poi_photo_path = None
+    visited = False
+    if poi_type == "chateau":
+        construction_date = questionary.text("Date de construction :", default="").ask() or None
+        poi_photo_path = questionary.text("Chemin photo (ex. data/thumbs/nom.webp) :", default="").ask() or None
+        if poi_photo_path and not (REPO_ROOT / poi_photo_path).exists():
+            console.print(f"[yellow]⚠ Fichier non trouvé localement : {poi_photo_path}[/]")
+        visited = questionary.confirm("Visité ?", default=False).ask() or False
+
+    data: dict = {
+        "name": name.strip(),
+        "type": poi_type,
+        "geom": _ewkt_point(lon, lat),
+    }
+    if description:
+        data["description"] = description.strip()
+    if url_insta:
+        data["url_insta"] = url_insta
+    if poi_type == "chateau":
+        data["construction_date"] = construction_date
+        data["photo_path"] = poi_photo_path
+        data["visited"] = visited
+
+    # 6. Récapitulatif
+    emoji = _POI_TYPE_EMOJIS.get(poi_type, "📍")
+    console.print(Panel(
+        "\n".join([
+            f"[dim]photo :[/]   {photo_path.name}",
+            f"[dim]type :[/]    {emoji} {poi_type}",
+            f"[dim]nom :[/]     {data['name']}",
+            f"[dim]coords :[/]  {lat:.6f}, {lon:.6f}",
+            f"[dim]descr. :[/]  {data.get('description', '') or '—'}",
+        ]),
+        title="Récapitulatif du nouveau POI",
+        border_style="cyan",
+    ))
+
+    if not questionary.confirm("Créer ce POI et lier la photo ?", default=True).ask():
+        console.print("[dim]Annulé.[/]")
+        return
+
+    # 7. Création du POI
+    try:
+        result = _create_poi(data)
+        new_id = str(result.get("id", "?"))
+        log_event("INFO", "poi", "create", id=new_id, name=data["name"], type=poi_type,
+                  source="photo_exif", photo=photo_path.name)
+        console.print(f"[green]✓ POI créé : ID {new_id}[/]")
+    except Exception as e:
+        console.print(f"[red]Erreur lors de la création du POI : {e}[/]")
+        return
+
+    # 8. Liaison photo → POI
+    photo_stem = photo_path.stem
+    linked = False
+
+    photo_items, _ = load_catalog(CATALOG_PHOTOS)
+    existing = next((p for p in photo_items if p.get("id") == photo_stem), None)
+    if existing:
+        existing["poi_id"] = new_id
+        save_catalog(CATALOG_PHOTOS, photo_items)
+        console.print(f"[green]✓ photos.json : '{photo_stem}' → POI {new_id}[/]")
+        linked = True
+
+    _update_photo_poi_in_geojson(photo_stem, new_id)
+    if PHOTOS_GEOJSON.exists():
+        # Vérifier si la mise à jour a eu un effet
+        with PHOTOS_GEOJSON.open(encoding="utf-8") as f:
+            fc = json.load(f)
+        matched = any(
+            (feat.get("properties", {}).get("id") or Path(feat.get("properties", {}).get("thumb", "")).stem) == photo_stem
+            for feat in fc.get("features", [])
+        )
+        if matched:
+            console.print(f"[green]✓ pois_photos.geojson : '{photo_stem}' → POI {new_id}[/]")
+            linked = True
+
+    if not linked:
+        console.print(
+            f"[yellow]⚠ Photo '{photo_stem}' non trouvée dans le catalog ni dans pois_photos.geojson.[/]\n"
+            f"  Ajouter manuellement : poi_id = {new_id} dans data/catalog/photos.json\n"
+            f"  puis relancer la synchronisation des photos."
+        )
 
 
 def prompt_edit_poi() -> None:
@@ -2589,6 +2784,14 @@ def main() -> None:
         if action == "delete_all":
             try:
                 delete_all_data(args)
+            except KeyboardInterrupt:
+                console.print("\n[dim]Interrompu.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "poi_from_photo":
+            try:
+                prompt_poi_from_photo()
             except KeyboardInterrupt:
                 console.print("\n[dim]Interrompu.[/]")
             log_event("INFO", "system", "done", exit_code=0,

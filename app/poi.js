@@ -274,7 +274,7 @@ export async function loadPoisForViewport() {
   try {
     const [fcDB, fcLocal] = await Promise.all([
       fetchPoisFromSupabase(bounds, activeType, controller.signal),
-      hiddenModes.rabbit ? Promise.resolve({ features: [] }) : fetchLocalPhotos(),
+      fetchLocalPhotos(),
     ]);
     const localFeatures = fcLocal.features || [];
     buildPhotosByPoi(localFeatures);
