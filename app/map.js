@@ -2,7 +2,8 @@
  * app/map.js — Création et configuration de la carte Leaflet
  *
  * Initialise la carte sur l'élément #map, prépare les fonds (OSM, Esri
- * Satellite avec labels, CyclOSM) et restaure le fond précédent depuis localStorage.
+ * Satellite avec labels, CyclOSM, IGN Plan, OpenTopoMap) et restaure le fond
+ * précédent depuis localStorage (lrz-preferences ou lrz_theme par défaut).
  *
  * Exporte les objets Leaflet partagés par les autres modules :
  *   - map           : l'instance Map principale
@@ -10,10 +11,13 @@
  *   - baseEsriSat   : fond satellite Esri
  *   - esriLabels    : couche de labels superposée au satellite
  *   - baseCyclOSM   : fond CyclOSM (véloroutes)
+ *   - baseIgnPlan   : fond IGN Plan (Géoplateforme)
+ *   - baseOpenTopo  : fond OpenTopoMap
  */
 
-import { Map, TileLayer, Control, DomUtil } from "leaflet";
+import { Map, TileLayer } from "leaflet";
 import { DEFAULT_VIEW } from "./config.js";
+import { THEME_MAP, DEFAULT_THEME } from "./themes.js";
 
 export const map = new Map("map", {
   zoomControl: false,
@@ -51,13 +55,40 @@ export const baseCyclOSM = new TileLayer(
   },
 );
 
-// Restaurer le fond persisté
-const savedBase = localStorage.getItem("baseLayer");
-if (savedBase === "sat") {
+export const baseIgnPlan = new TileLayer(
+  "https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILECOL={x}&TILEROW={y}&FORMAT=image%2Fpng",
+  { maxZoom: 18, attribution: "&copy; IGN-F / G&eacute;oplateforme" },
+);
+
+export const baseOpenTopo = new TileLayer(
+  "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+  {
+    subdomains: "abc",
+    maxZoom: 17,
+    attribution: "&copy; <a href='https://opentopomap.org'>OpenTopoMap</a> (CC-BY-SA) · &copy; OpenStreetMap contributors",
+  },
+);
+
+// Restaurer le fond persisté (lrz-preferences, sinon basemap du thème par défaut)
+let _savedBase;
+try {
+  const raw = localStorage.getItem("lrz-preferences");
+  if (raw) _savedBase = JSON.parse(raw)?.baseLayer;
+} catch {}
+if (!_savedBase) {
+  const themeKey = localStorage.getItem("lrz_theme") || DEFAULT_THEME;
+  _savedBase = THEME_MAP.get(themeKey)?.basemap || "sat";
+}
+
+if (_savedBase === "sat") {
   baseEsriSat.addTo(map);
   esriLabels.addTo(map);
-} else if (savedBase === "cyclo") {
+} else if (_savedBase === "cyclosm") {
   baseCyclOSM.addTo(map);
+} else if (_savedBase === "ign") {
+  baseIgnPlan.addTo(map);
+} else if (_savedBase === "topo") {
+  baseOpenTopo.addTo(map);
 } else {
   baseOSM.addTo(map);
 }

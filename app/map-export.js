@@ -15,6 +15,7 @@
 
 import { TRACE_MARKER_TYPES } from "./types.js";
 import { farthestPointFromStart } from "./geo-utils.js";
+import { THEMES, DEFAULT_THEME } from "./themes.js";
 
 // ─── Fonds de carte ───────────────────────────────────────────────────────────
 
@@ -69,46 +70,6 @@ const COLOR_PALETTE = [
   { key: "ardoise", hex: "#3f4a54", label: "Ardoise" },
   { key: "indigo", hex: "#38445f", label: "Indigo" },
   { key: "tuffeau", hex: "#2b2620", label: "Tuffeau foncé" },
-];
-
-// ─── Thèmes prédéfinis ────────────────────────────────────────────────────────
-
-const THEMES = [
-  {
-    key: "etat-major",
-    label: "État-major",
-    basemap: "ign",
-    color: "#722f37",
-    font: "Spectral",
-  },
-  {
-    key: "loire-velo",
-    label: "Loire à vélo",
-    basemap: "cyclosm",
-    color: "#3a6f8f",
-    font: "Oswald",
-  },
-  {
-    key: "or-tuffeau",
-    label: "Or et tuffeau",
-    basemap: "sat",
-    color: "#c8893a",
-    font: "Fraunces",
-  },
-  {
-    key: "grand-air",
-    label: "Grand air",
-    basemap: "topo",
-    color: "#b5562f",
-    font: "Cabin",
-  },
-  {
-    key: "ardoise",
-    label: "Ardoise",
-    basemap: "ign",
-    color: "#3f4a54",
-    font: "Geist",
-  },
 ];
 
 // ─── Menu de polices ──────────────────────────────────────────────────────────
@@ -1685,6 +1646,10 @@ export async function openExportModal() {
   _rebuildStatCheckboxes("act");
 
   document.getElementById("exp-generate").addEventListener("click", _generate);
+
+  // Pré-sélectionner le thème actif de la carte dans la modale
+  const currentTheme = localStorage.getItem('lrz_theme') || DEFAULT_THEME;
+  _overlay.querySelector(`.lrz-export-theme[data-theme="${currentTheme}"]`)?.click();
 
   _renderPreview();
 }

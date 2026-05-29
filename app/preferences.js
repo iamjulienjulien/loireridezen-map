@@ -54,4 +54,5 @@ export function resetPreferences() {
     if (key.startsWith("lrz-section-")) localStorage.removeItem(key);
   }
   localStorage.removeItem("baseLayer");
+  localStorage.removeItem("lrz_theme");
 }

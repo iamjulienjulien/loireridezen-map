@@ -21,7 +21,8 @@ import {
   loadCurrentPosition,
   currentPositionLayer,
 } from "./app/current-position.js";
-import { initActionsPanel } from "./app/actions-panel.js";
+import { initActionsPanel, applyTheme, applyThemeColors } from "./app/actions-panel.js";
+import { THEME_MAP } from "./app/themes.js";
 import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
 import { initEuroVelo } from "./app/eurovelo.js";
@@ -83,6 +84,13 @@ async function init() {
   renderPoiSection(prefs);
 
   initActionsPanel();
+
+  // Param URL ?theme= : override session (sans écriture dans localStorage)
+  if (!hiddenModes.rabbit) {
+    const urlTheme = new URL(location.href).searchParams.get('theme');
+    if (urlTheme && THEME_MAP.has(urlTheme)) applyTheme(urlTheme, { persist: false });
+  }
+
   initExportButton();
   initInfoPanel();
   initMobileDrawer();
@@ -144,6 +152,7 @@ async function init() {
     ["traces", "poi", "photos", "options"].forEach((s) => {
       document.querySelector(`[data-section="${s}"]`)?.remove();
     });
+    document.querySelector('.lrz-actions-panel__group--themes')?.remove();
     // Charger la position directement (le toggle #position-toggle a été supprimé)
     loadCurrentPosition();
     initVisitCounterForElle().catch((err) =>
@@ -163,6 +172,7 @@ async function init() {
 
   // Phase 3 : traces chargées → filtre URL + markers + mini skeleton "lieux"
   wireTraceCheckboxes().then(() => {
+    applyThemeColors();
     const urlFilter = parseUrlFilter(traces.items ?? [], groups.items ?? []);
     if (urlFilter) {
       applyUrlFilter(urlFilter, traceFeatureGroups);
