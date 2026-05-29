@@ -400,6 +400,24 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "25 o bord de loire",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/25-o-bord-de-loire.jpeg",
+        "thumb": "data/thumbs/25-o-bord-de-loire.webp",
+        "time": "2026:05:23 08:19:35",
+        "id": "25-o-bord-de-loire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.640464,
+          47.376142
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Lapin Soleil",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/23-lapin-soleil.jpeg",
@@ -418,7 +436,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "24 paimboeuf",
+        "name": "Paimboeuf",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/24-paimboeuf.jpeg",
         "thumb": "data/thumbs/24-paimboeuf.webp",

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-27T20:53:35.869454+00:00",
+  "updated_at": "2026-05-29T22:05:50.926344+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -362,6 +362,21 @@
       "time": "2026:05:27 19:08:17",
       "lat": 47.289897,
       "lon": -2.030153
+    },
+    {
+      "id": "25-o-bord-de-loire",
+      "label": "O Bord De Loire",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/25-o-bord-de-loire.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/25-o-bord-de-loire.jpeg"
+      },
+      "source": "sources/photos/25-o-bord-de-loire.jpeg",
+      "order": 25,
+      "time": "2026:05:23 08:19:35",
+      "lat": 47.376142,
+      "lon": -0.640464
     }
   ]
 }
