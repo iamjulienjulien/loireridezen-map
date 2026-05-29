@@ -42,15 +42,6 @@ const BASEMAPS = {
     attribution: "© IGN-F / Géoplateforme",
     maxZoom: 18,
   },
-  ign_topo: {
-    label: "IGN Topo",
-    tileUrl: (z, x, y) =>
-      `https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile` +
-      `&LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&STYLE=normal&TILEMATRIXSET=PM` +
-      `&TILEMATRIX=${z}&TILECOL=${x}&TILEROW=${y}&FORMAT=image/jpeg`,
-    attribution: "© IGN-F / Géoplateforme",
-    maxZoom: 18,
-  },
   cyclosm: {
     label: "CyclOSM",
     tileUrl: (z, x, y) =>
@@ -86,7 +77,7 @@ const THEMES = [
   {
     key: "etat-major",
     label: "État-major",
-    basemap: "ign_topo",
+    basemap: "ign",
     color: "#722f37",
     font: "Spectral",
   },

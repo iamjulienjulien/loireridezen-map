@@ -2,13 +2,14 @@
  * app/map.js — Création et configuration de la carte Leaflet
  *
  * Initialise la carte sur l'élément #map, prépare les fonds (OSM, Esri
- * Satellite avec labels) et restaure le fond précédent depuis localStorage.
+ * Satellite avec labels, CyclOSM) et restaure le fond précédent depuis localStorage.
  *
  * Exporte les objets Leaflet partagés par les autres modules :
  *   - map           : l'instance Map principale
  *   - baseOSM       : fond OpenStreetMap
  *   - baseEsriSat   : fond satellite Esri
  *   - esriLabels    : couche de labels superposée au satellite
+ *   - baseCyclOSM   : fond CyclOSM (véloroutes)
  */
 
 import { Map, TileLayer, Control, DomUtil } from "leaflet";
@@ -41,11 +42,22 @@ export const esriLabels = new TileLayer(
   { pane: "labelsPane", attribution: "Labels © Esri" },
 );
 
-// Restaurer le fond persisté (cf. handler "baselayerchange" dans ui.js)
+export const baseCyclOSM = new TileLayer(
+  "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+  {
+    subdomains: "abc",
+    maxZoom: 20,
+    attribution: "&copy; OpenStreetMap contributors · tuiles CyclOSM / OSM-FR",
+  },
+);
+
+// Restaurer le fond persisté
 const savedBase = localStorage.getItem("baseLayer");
 if (savedBase === "sat") {
   baseEsriSat.addTo(map);
   esriLabels.addTo(map);
+} else if (savedBase === "cyclo") {
+  baseCyclOSM.addTo(map);
 } else {
   baseOSM.addTo(map);
 }

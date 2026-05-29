@@ -7,7 +7,7 @@
  */
 
 import { FeatureGroup } from "leaflet";
-import { map, baseOSM, baseEsriSat, esriLabels } from "./map.js";
+import { map, baseOSM, baseEsriSat, esriLabels, baseCyclOSM } from "./map.js";
 import { traceGroups } from "./routes.js";
 import { FIT_OPTIONS } from "./config.js";
 import { triggerLocate } from "./locate.js";
@@ -19,13 +19,16 @@ let _currentBase = "osm";
 function _setBase(base) {
   track('Map Style Changed', { style: base });
   _currentBase = base;
+  map.removeLayer(baseOSM);
+  map.removeLayer(baseEsriSat);
+  map.removeLayer(esriLabels);
+  map.removeLayer(baseCyclOSM);
   if (base === "sat") {
-    map.removeLayer(baseOSM);
     baseEsriSat.addTo(map);
     esriLabels.addTo(map);
+  } else if (base === "cyclo") {
+    baseCyclOSM.addTo(map);
   } else {
-    map.removeLayer(baseEsriSat);
-    map.removeLayer(esriLabels);
     baseOSM.addTo(map);
   }
   updatePreference("baseLayer", base);
@@ -41,12 +44,6 @@ function _syncActive() {
 export function initActionsPanel() {
   const prefs = loadPreferences();
   _currentBase = prefs.baseLayer || "osm";
-
-  if (_currentBase === "sat") {
-    map.removeLayer(baseOSM);
-    baseEsriSat.addTo(map);
-    esriLabels.addTo(map);
-  }
   _syncActive();
 
   document.querySelectorAll("[data-action]").forEach((btn) => {
@@ -65,6 +62,9 @@ export function initActionsPanel() {
           break;
         case "set-sat":
           _setBase("sat");
+          break;
+        case "set-cyclo":
+          _setBase("cyclo");
           break;
         case "reset-view": {
           track('Reset View');
