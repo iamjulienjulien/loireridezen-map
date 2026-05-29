@@ -25,6 +25,7 @@ import { initActionsPanel } from "./app/actions-panel.js";
 import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
 import { initEuroVelo } from "./app/eurovelo.js";
+import { parseUrlFilter, applyUrlFilter, initFocusBanner } from "./app/url-filter.js";
 import {
   renderTracesSection,
   renderPoiSection,
@@ -160,8 +161,13 @@ async function init() {
     createMiniSkeleton("Chargement des traces…");
   });
 
-  // Phase 3 : traces chargées → markers calculés + mini skeleton "lieux"
+  // Phase 3 : traces chargées → filtre URL + markers + mini skeleton "lieux"
   wireTraceCheckboxes().then(() => {
+    const urlFilter = parseUrlFilter(traces.items ?? [], groups.items ?? []);
+    if (urlFilter) {
+      applyUrlFilter(urlFilter, traceFeatureGroups);
+      initFocusBanner(urlFilter, groups.items ?? [], traces.items ?? [], traceFeatureGroups);
+    }
     createMiniSkeleton("Chargement des lieux…");
     buildTraceMarkersFromCatalog(groups, traces, traceFeatureGroups);
   });

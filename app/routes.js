@@ -198,3 +198,8 @@ export function openStepPopup(stepId) {
   const sub = layer.getLayers();
   if (sub.length) sub[0].openPopup();
 }
+
+/** Retourne la couche GeoJSON d'une étape (null si inconnue). */
+export function getStepLayer(stepId) {
+  return _stepLayersById.get(stepId) ?? null;
+}

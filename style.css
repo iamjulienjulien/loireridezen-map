@@ -2615,3 +2615,49 @@ body {
   background: var(--lrz-foreground);
   color: #fff;
 }
+
+/* ═══════════════════════════════ LRZ-EVO-51 — Bandeau focus URL ════════════ */
+
+.lrz-focus-banner {
+  display: none;
+}
+
+.lrz-focus-banner--active {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 12px;
+  padding: 7px 10px;
+  background: var(--lrz-card-hover);
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-left: 3px solid var(--lrz-or);
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.lrz-focus-banner__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--lrz-foreground);
+  font-weight: 500;
+}
+
+.lrz-focus-banner__clear {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--lrz-tuffeau-line);
+  border-radius: 4px;
+  color: var(--lrz-ink-soft);
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  transition: background 0.1s, color 0.1s;
+}
+
+.lrz-focus-banner__clear:hover {
+  background: var(--lrz-tuffeau-line);
+  color: var(--lrz-foreground);
+}
