@@ -299,7 +299,7 @@
       "elevation_gain_m": 22.8,
       "date_status": "effective",
       "date": "2026-05-22",
-      "duration_h": null,
+      "duration_h": 1.75,
       "weather": {
         "description": "Ensoleillé",
         "temp_min": 13,
@@ -321,7 +321,7 @@
       "elevation_gain_m": 97.3,
       "date_status": "effective",
       "date": "2026-05-23",
-      "duration_h": null,
+      "duration_h": 2.0,
       "weather": {
         "description": "Ensoleillé",
         "temp_min": 16,
@@ -343,7 +343,7 @@
       "elevation_gain_m": 90,
       "date_status": "effective",
       "date": "2026-05-24",
-      "duration_h": null,
+      "duration_h": 1.0,
       "weather": {
         "description": "Ensoleillé",
         "temp_min": 17,
@@ -365,7 +365,7 @@
       "elevation_gain_m": 60,
       "date_status": "effective",
       "date": "2026-05-26",
-      "duration_h": null,
+      "duration_h": 2.0,
       "weather": {
         "description": "Ensoleillé — pic de chaleur",
         "temp_min": 19,
@@ -387,7 +387,7 @@
       "elevation_gain_m": 30,
       "date_status": "effective",
       "date": "2026-05-27",
-      "duration_h": null,
+      "duration_h": 2.0,
       "weather": {
         "description": "Ensoleillé",
         "temp_min": 20,
@@ -397,7 +397,7 @@
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
-      "label": "Étape 6 Paimboeuf ➡️ L'Océan",
+      "label": "Étape 6 Paimboeuf ➡️ L'océan",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.geojson",
