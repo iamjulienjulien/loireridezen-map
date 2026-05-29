@@ -1882,7 +1882,7 @@ body {
 }
 
 .lrz-info-block__title {
-  font-family: var(--lrz-font-serif);
+  font-family: var(--lrz-font-theme);
   font-size: 0.875rem;
   color: var(--lrz-foreground);
   white-space: nowrap;
@@ -2070,7 +2070,7 @@ body {
   gap: 0.4rem;
   font-family: "ZCOOL QingKe HuangYou", "Courier New", monospace;
   font-size: 14px;
-  color: #cc6600;
+  color: var(--lrz-or);
   letter-spacing: 0.1em;
   user-select: none;
   pointer-events: none;
@@ -2111,11 +2111,11 @@ body {
   width: 10px;
   height: 16px;
   line-height: 16px;
-  color: #ff9933;
+  color: var(--lrz-or);
   font-size: 16px;
   text-shadow:
-    0 0 6px #ff9933,
-    0 0 3px #ff6600;
+    0 0 6px var(--lrz-or),
+    0 0 3px var(--lrz-or);
   font-variant-numeric: tabular-nums;
 }
 
