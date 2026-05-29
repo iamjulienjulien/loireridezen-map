@@ -58,8 +58,16 @@ function _syncThemeActive(key) {
 }
 
 function _applyColorToTraces(color) {
-  traceGroups.forEach(({ layers }) => {
+  traceGroups.forEach(({ group, layers }) => {
     layers.forEach((layer) => layer.setStyle({ color }));
+    // Update the legend swatch for this group in the panel
+    const cb = document.querySelector(`[data-group-id="${group.id}"]`);
+    const visual = cb?.closest('.lrz-row')?.querySelector('.lrz-row__visual');
+    if (visual) {
+      visual.style.background = group.dashed
+        ? `repeating-linear-gradient(to right,${color} 0 5px,transparent 5px 9px)`
+        : color;
+    }
   });
 }
 
@@ -76,6 +84,7 @@ export function applyTheme(key, { changeBasemap = true, persist = true } = {}) {
   }
 
   document.documentElement.style.setProperty('--lrz-font-theme', theme.fontStack);
+  document.documentElement.style.setProperty('--lrz-or', theme.color);
   _applyColorToTraces(theme.color);
   _syncThemeActive(key);
 
@@ -103,6 +112,7 @@ export function initActionsPanel() {
     const theme = THEME_MAP.get(storedTheme);
     if (theme) {
       document.documentElement.style.setProperty('--lrz-font-theme', theme.fontStack);
+      document.documentElement.style.setProperty('--lrz-or', theme.color);
       _syncThemeActive(storedTheme);
     }
   }
@@ -126,6 +136,9 @@ export function initActionsPanel() {
           break;
         case "set-cyclo":
           _setBase("cyclosm");
+          break;
+        case "set-basemap":
+          _setBase(btn.dataset.basemap);
           break;
         case "theme":
           applyTheme(btn.dataset.theme);
