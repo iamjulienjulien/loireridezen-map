@@ -48,6 +48,7 @@ function renderPositionBlock(detail) {
         ${detail.description ? `<span class="lrz-info-block__sub">${escapeHtml(detail.description)}</span>` : ""}
         ${time ? `<span class="lrz-info-block__meta">${time}</span>` : ""}
       </div>
+      <input type="checkbox" class="lrz-checkbox" id="position-toggle" title="Afficher le marqueur sur la carte" checked />
     </div>`;
 }
 
@@ -93,7 +94,10 @@ function _render() {
       map.flyTo([lat, lon], 14, { duration: 1.2 });
     };
     const posBlock = container.querySelector("#lrz-position-block");
-    posBlock?.addEventListener("click", flyTo);
+    posBlock?.addEventListener("click", (e) => {
+      if (e.target.id === "position-toggle") return;
+      flyTo();
+    });
     posBlock?.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") flyTo();
     });

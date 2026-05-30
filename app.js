@@ -36,7 +36,6 @@ import {
   addEuroVeloToggle,
   initMobileDrawer,
   initAccordion,
-  initPoiBadge,
   initResetButton,
   initKeyboardShortcuts,
   initCurrentPositionToggle,
@@ -95,7 +94,6 @@ async function init() {
   initInfoPanel();
   initMobileDrawer();
   initAccordion(prefs);
-  initPoiBadge();
   initResetButton();
   initKeyboardShortcuts(map);
   initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
@@ -109,13 +107,11 @@ async function init() {
     );
     document.querySelector(".lrz-bottom-right")?.remove();
   }
-  setInterval(
-    () => {
-      const toggle = document.getElementById("position-toggle");
-      if (!toggle || toggle.checked) loadCurrentPosition();
-    },
-    5 * 60 * 1000,
-  );
+  setInterval(async () => {
+    await loadCurrentPosition();
+    const cb = document.getElementById("position-toggle");
+    if (cb && !cb.checked) map.removeLayer(currentPositionLayer);
+  }, 5 * 60 * 1000);
 
   // Sauvegarder la préférence POI à chaque changement de type-filter
   document.querySelectorAll(".type-filter").forEach((cb) => {
@@ -149,11 +145,10 @@ async function init() {
     document.querySelector(".lrz-panel-header")?.remove();
     document.querySelectorAll(".lrz-panel-credit").forEach((el) => el.remove());
     // Masquer sections non pertinentes
-    ["traces", "poi", "photos", "options"].forEach((s) => {
+    ["traces", "poi", "photos"].forEach((s) => {
       document.querySelector(`[data-section="${s}"]`)?.remove();
     });
     document.querySelector('.lrz-actions-panel__group--themes')?.remove();
-    // Charger la position directement (le toggle #position-toggle a été supprimé)
     loadCurrentPosition();
     initVisitCounterForElle().catch((err) =>
       console.warn("[visit-counter-for-elle] init failed", err),

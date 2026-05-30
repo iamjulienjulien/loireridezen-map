@@ -13,7 +13,6 @@ import { traceGroups, loadAllRoutes } from "./routes.js";
 import { POI_TYPES, SHAPES, TRACE_MARKER_TYPES, getGroupColorPreview } from "./types.js";
 
 const { Icon: ExtraIcon, TackCircleBorder } = leafletExtraMarkers;
-import { getVisiblePoiCount } from "./poi.js";
 import { triggerLocate } from "./locate.js";
 import { loadPreferences, updatePreference, resetPreferences } from "./preferences.js";
 import { escapeHtml, lightenHex } from "./helpers.js";
@@ -40,12 +39,12 @@ export function renderTracesSection(groups, prefs) {
   const items = [...(groups.items ?? [])].sort(
     (a, b) => (a.order ?? 0) - (b.order ?? 0),
   );
-  const countEl = document.getElementById("traces-count");
-  if (countEl) countEl.textContent = `(${items.length})`;
 
   const rows = items.map((group) => {
     const preview = getGroupColorPreview(group);
-    const style = colorPreviewStyle(preview);
+    // Always display as solid in the legend swatch (dashed is hard to read at small size)
+    const displayPreview = preview.type === 'dashed' ? { ...preview, type: 'solid' } : preview;
+    const style = colorPreviewStyle(displayPreview);
     const isChecked =
       prefs.traces?.[group.id] ?? (group.visible_by_default ?? true);
     return `
@@ -56,42 +55,31 @@ export function renderTracesSection(groups, prefs) {
       </div>`;
   });
 
-  const legendRows = Object.entries(TRACE_MARKER_TYPES)
-    .map(([, cfg]) => `
-      <div class="lrz-legend-row">
-        <span class="lrz-legend-row__emoji">${cfg.emoji}</span>
-        <span>${escapeHtml(cfg.label)}</span>
-      </div>`)
+  const legendItems = Object.entries(TRACE_MARKER_TYPES)
+    .map(([, cfg]) =>
+      `<span class="lrz-legend-row__item"><span class="lrz-legend-row__emoji">${cfg.emoji}</span><span>${escapeHtml(cfg.label)}</span></span>`)
     .join("");
 
   list.innerHTML =
     rows.join("") +
     `<div class="lrz-legend__title">Légende</div>` +
-    legendRows;
+    `<div class="lrz-legend-row lrz-legend-row--inline">${legendItems}</div>`;
 }
 
 export function addEuroVeloToggle(eurovelo, prefs) {
   const list = document.getElementById("traces-list");
   if (!list) return;
 
-  const isChecked = prefs.eurovelo6 ?? true;
   const legend = list.querySelector(".lrz-legend__title");
-
   const row = document.createElement("div");
   row.id = "eurovelo-row";
   row.className = "lrz-row";
   row.innerHTML =
-    `<div class="lrz-row__visual" style="background:#6b7280;opacity:0.5"></div>` +
-    `<label class="lrz-row__label" for="eurovelo-toggle">EuroVelo 6</label>` +
-    `<input type="checkbox" class="lrz-checkbox" id="eurovelo-toggle"${isChecked ? " checked" : ""} />`;
+    `<div class="lrz-row__visual" style="background:repeating-linear-gradient(to right,#6b7280 0 5px,transparent 5px 9px);opacity:0.6"></div>` +
+    `<span class="lrz-row__label" style="cursor:default">EuroVelo 6</span>`;
 
   if (legend) list.insertBefore(row, legend);
   else list.appendChild(row);
-
-  document.getElementById("eurovelo-toggle")?.addEventListener("change", (e) => {
-    if (e.target.checked) eurovelo.show();
-    else eurovelo.hide();
-  });
 }
 
 export async function wireTraceCheckboxes() {
@@ -145,9 +133,6 @@ export function renderPoiSection(prefs) {
     ([k, cfg]) => k !== "photo" && (!cfg.hidden || (k === "lapin" && hiddenModes.rabbit)),
   );
 
-  const countEl = document.getElementById("poi-count");
-  if (countEl) countEl.textContent = `(${types.length})`;
-
   list.innerHTML = types
     .map(([key, cfg]) => {
       const isChecked = prefs.poi?.[key] ?? (cfg.defaultChecked ?? true);
@@ -181,7 +166,7 @@ export function renderPhotosSection(prefs) {
     .catch(() => ({ features: [] }))
     .then((fc) => {
       const label = document.getElementById("photos-count-label");
-      if (label) label.textContent = `${(fc.features ?? []).length} photos géolocalisées`;
+      if (label) label.innerHTML = `Photos géolocalisées <span style="color:var(--lrz-or)">(${(fc.features ?? []).length})</span>`;
     });
 }
 
@@ -255,15 +240,23 @@ export function initAccordion(prefs) {
 // ─────────────────────────────────────── Toggle "Où je suis"
 
 export function initCurrentPositionToggle(layer, loadFn, prefs) {
-  const cb = document.getElementById("position-toggle");
-  if (!cb) return;
-  cb.checked = prefs.currentPosition ?? true;
-  if (cb.checked) loadFn();
-  cb.addEventListener("change", () => {
-    if (cb.checked) loadFn();
-    else map.removeLayer(layer);
-    updatePreference("currentPosition", cb.checked);
-  });
+  const showMarker = prefs.currentPosition ?? true;
+  // Always load position so the info block can populate, regardless of toggle state
+  loadFn();
+  // Checkbox is rendered lazily inside the position block after lrz:position-loaded
+  document.addEventListener("lrz:position-loaded", ({ detail }) => {
+    if (!detail?.active) return;
+    const cb = document.getElementById("position-toggle");
+    if (!cb) return;
+    cb.checked = showMarker;
+    if (!showMarker) map.removeLayer(layer);
+    cb.addEventListener("click", (e) => e.stopPropagation());
+    cb.addEventListener("change", () => {
+      if (cb.checked) layer.addTo(map);
+      else map.removeLayer(layer);
+      updatePreference("currentPosition", cb.checked);
+    });
+  }, { once: true });
 }
 
 // ─────────────────────────────────────── Reset preferences
@@ -274,17 +267,6 @@ export function initResetButton() {
     resetPreferences();
     location.reload();
   });
-}
-
-// ─────────────────────────────────────── Badge "X visibles"
-
-export function initPoiBadge() {
-  const badge = document.getElementById("poi-visible");
-  if (!badge) return;
-  const update = () => {
-    badge.textContent = `· ${getVisiblePoiCount()} visibles`;
-  };
-  document.addEventListener("lrz:poi-loaded", update);
 }
 
 // ─────────────────────────────────────── Raccourcis clavier
