@@ -298,6 +298,9 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
   color: var(--lrz-foreground) !important;
 }
+.leaflet-popup-content-wrapper > .leaflet-popup-content {
+  margin: 13px;
+}
 
 .leaflet-popup-tip {
   background: var(--lrz-card) !important;
@@ -1653,7 +1656,8 @@ body {
   padding: 0.45rem 0.625rem;
   background: color-mix(in srgb, var(--poi-type-color, #888) 8%, transparent);
   border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--poi-type-color, #888) 20%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--poi-type-color, #888) 20%, transparent);
 }
 
 .lrz-popup-type-label {
@@ -1689,7 +1693,9 @@ body {
   justify-content: center;
   border-radius: 4px;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .lrz-popup__close:hover {
@@ -1727,8 +1733,19 @@ body {
 .lrz-popup__desc {
   font-size: 0.8125rem;
   color: var(--lrz-ink-soft);
-  margin: 0;
+  margin: 0 !important;
   line-height: 1.5;
+}
+
+.lrz-popup__visited {
+  display: inline-block;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  margin-bottom: 0.3rem;
 }
 
 /* ═══════════════════════════════ LRZ-EVO-27 — Vague UI 5 ═══════════════════ */
@@ -2620,7 +2637,10 @@ body {
   background: transparent;
   color: var(--lrz-ink-soft);
   cursor: pointer;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  transition:
+    border-color 0.12s,
+    color 0.12s,
+    background 0.12s;
 }
 
 .lrz-export-theme:hover {
@@ -2649,7 +2669,9 @@ body {
   outline: 2px solid transparent;
   cursor: pointer;
   flex-shrink: 0;
-  transition: outline-color 0.12s, outline-offset 0.12s;
+  transition:
+    outline-color 0.12s,
+    outline-offset 0.12s;
 }
 
 .lrz-export-swatch:hover {
@@ -2688,7 +2710,10 @@ body {
   border-radius: 999px;
   color: var(--lrz-ink-soft);
   background: transparent;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  transition:
+    border-color 0.12s,
+    color 0.12s,
+    background 0.12s;
   cursor: pointer;
   user-select: none;
 }
@@ -2723,7 +2748,9 @@ body {
   background: transparent;
   color: var(--lrz-foreground);
   cursor: pointer;
-  transition: border-color 0.12s, background 0.12s;
+  transition:
+    border-color 0.12s,
+    background 0.12s;
 }
 
 .lrz-export-font-btn:hover {
@@ -2775,7 +2802,9 @@ body {
   cursor: pointer;
   font-size: 0.7rem;
   padding: 2px 7px;
-  transition: background 0.1s, color 0.1s;
+  transition:
+    background 0.1s,
+    color 0.1s;
 }
 
 .lrz-focus-banner__clear:hover {

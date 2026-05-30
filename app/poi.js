@@ -123,6 +123,7 @@ function renderEditorialPoiPopup(p) {
       ${photo ? `<div class="lrz-popup__photo"><img src="${escapeHtml(photo)}" alt="${escapeHtml(p.name || "")}"/></div>` : ""}
       <div class="lrz-popup__body">
         <h3 class="lrz-popup__title">${escapeHtml(p.name || "")}</h3>
+        ${p.type === "chateau" && p.visited === true ? `<span class="lrz-popup__visited">✅ Visité</span>` : ""}
         ${p.description ? `<p class="lrz-popup__desc">${escapeHtml(p.description)}</p>` : ""}
       </div>
     </div>
