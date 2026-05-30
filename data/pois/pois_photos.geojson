@@ -27,7 +27,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/01-chambord.jpeg",
         "thumb": "data/thumbs/01-chambord.webp",
         "time": "2025:06:06 14:22:09",
-        "id": "01-chambord"
+        "id": "01-chambord",
+        "poi_id": "018f715c-c430-4748-94d5-91a10cd2088a"
       },
       "geometry": {
         "type": "Point",
@@ -63,7 +64,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/03-amboise.jpeg",
         "thumb": "data/thumbs/03-amboise.webp",
         "time": "2025:06:08 13:31:29",
-        "id": "03-amboise"
+        "id": "03-amboise",
+        "poi_id": "232b4bc9-83b5-428f-ba47-7dc7235bb22d"
       },
       "geometry": {
         "type": "Point",
@@ -119,7 +121,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg",
         "thumb": "data/thumbs/06-tours.webp",
         "time": "2025:06:12 13:21:35",
-        "id": "06-tours"
+        "id": "06-tours",
+        "poi_id": "6c332522-64bb-43ab-9949-36aea877a7cf"
       },
       "geometry": {
         "type": "Point",
@@ -303,7 +306,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/20-ackerman.jpeg",
         "thumb": "data/thumbs/20-ackerman.webp",
         "time": "2025:06:18 12:29:52",
-        "id": "20-ackerman"
+        "id": "20-ackerman",
+        "poi_id": "2de45550-1c70-4d14-85da-8e824258cbc6"
       },
       "geometry": {
         "type": "Point",
@@ -377,7 +381,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/17-la-chevalerie.jpeg",
         "thumb": "data/thumbs/17-la-chevalerie.webp",
         "time": "2025:09:30 16:28:17",
-        "id": "17-la-chevalerie"
+        "id": "17-la-chevalerie",
+        "poi_id": "945ab16f-a29c-4af8-9362-9ac3d25bcd4d"
       },
       "geometry": {
         "type": "Point",
