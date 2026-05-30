@@ -116,6 +116,24 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "29 simoneau",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/29-simoneau.jpeg",
+        "thumb": "data/thumbs/29-simoneau.webp",
+        "time": "2025:06:11 11:21:44",
+        "id": "29-simoneau"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.12605,
+          47.310858
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Tours",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/06-tours.jpeg",
@@ -470,7 +488,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "28 voyage a ballon",
+        "name": "Voyage A Ballon",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/28-voyage-a-ballon.jpeg",
         "thumb": "data/thumbs/28-voyage-a-ballon.webp",

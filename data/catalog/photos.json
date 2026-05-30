@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-30T18:16:37.768058+00:00",
+  "updated_at": "2026-05-30T22:46:57.318047+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -437,6 +437,21 @@
       "time": "2026:05:27 12:38:16",
       "lat": 47.218206,
       "lon": -1.545806
+    },
+    {
+      "id": "29-simoneau",
+      "label": "Simoneau",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/29-simoneau.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/29-simoneau.jpeg"
+      },
+      "source": "sources/photos/29-simoneau.jpeg",
+      "order": 29,
+      "time": "2025:06:11 11:21:44",
+      "lat": 47.310858,
+      "lon": 1.12605
     }
   ]
 }
