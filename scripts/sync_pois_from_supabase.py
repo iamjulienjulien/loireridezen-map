@@ -57,6 +57,13 @@ WORLD_BBOX = {
     "maxlat": 90.0,
 }
 
+# Tous les types POI connus — transmis via p_allowed_types (nouvelle signature RPC).
+# Inclut lapin (type caché) pour un export complet.
+ALL_POI_TYPES = [
+    "chateau", "coupdecoeur", "patrimoine", "guinguette",
+    "hébergement", "vigneron", "nature", "photo", "lapin",
+]
+
 logger = logging.getLogger("sync_pois")
 
 
@@ -105,7 +112,7 @@ def fetch_pois(supa_url: str, supa_key: str, timeout: int = 30) -> dict:
     Exit code 3 en cas d'erreur HTTP, réseau ou réponse malformée.
     """
     rpc_url = f"{supa_url.rstrip('/')}/rest/v1/rpc/pois_bbox_geojson"
-    payload = {**WORLD_BBOX, "p_type": None, "p_stage": None}
+    payload = {**WORLD_BBOX, "p_allowed_types": ALL_POI_TYPES}
     body = json.dumps(payload).encode("utf-8")
 
     request = urllib.request.Request(

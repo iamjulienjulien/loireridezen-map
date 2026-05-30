@@ -6,20 +6,23 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.376347,
-          47.606041
+          0.0516,
+          47.1811
         ]
       },
       "properties": {
-        "id": "a819386b-2895-425a-a690-4a1a2d99484a",
+        "id": "1caef394-5438-4fdd-8a9f-b21fa5d4c716",
         "url": null,
-        "name": "Arrivée — Étape 0 - Blois ↔️ Chambord",
-        "type": "arrivée",
+        "name": "Abbaye de Fontevraud",
+        "type": "chateau",
         "image": null,
-        "stage": 0,
+        "stage": null,
         "thumb": null,
+        "visited": true,
         "url_insta": null,
-        "description": "Point d’arrivée de Étape 0 - Blois ↔️ Chambord"
+        "photo_path": "data/thumbs/12-fontevraud.webp",
+        "description": "La plus grande abbaye médiévale d'Europe, nécropole des Plantagenêts.",
+        "construction_date": "XIIe siècle"
       }
     },
     {
@@ -39,8 +42,11 @@
         "image": null,
         "stage": 0,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Hébergement de l'étape 1"
+        "photo_path": null,
+        "description": "Hébergement de l'étape 1",
+        "construction_date": null
       }
     },
     {
@@ -60,8 +66,11 @@
         "image": null,
         "stage": 0,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Hébergement de l'étape 0"
+        "photo_path": null,
+        "description": "Hébergement de l'étape 0",
+        "construction_date": null
       }
     },
     {
@@ -69,20 +78,23 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.333,
-          47.586
+          0.9847,
+          47.4133
         ]
       },
       "properties": {
-        "id": "396581f0-e5e5-4553-a7ee-6fd05b6aaee6",
+        "id": "78d42008-6bd6-4b57-902c-c4ae546b0995",
         "url": null,
-        "name": "Château de Blois",
-        "type": "patrimoine",
+        "name": "Château d'Amboise",
+        "type": "chateau",
         "image": null,
-        "stage": 0,
+        "stage": null,
         "thumb": null,
+        "visited": true,
         "url_insta": null,
-        "description": "Résidence de plusieurs rois de France"
+        "photo_path": null,
+        "description": "Demeure royale qui domine la Loire et le bourg d'Amboise.",
+        "construction_date": "XVe siècle"
       }
     },
     {
@@ -90,20 +102,71 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.516,
+          -0.5600731,
+          47.4700706
+        ]
+      },
+      "properties": {
+        "id": "7ed5bb3f-1c0d-420a-9b53-63fcc6be19e1",
+        "url": null,
+        "name": "Château d'Angers",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": "data/thumbs/16-angers.webp",
+        "description": "Forteresse du XIIIe siècle abritant la tenture de l'Apocalypse.",
+        "construction_date": "1230–1240"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.6341,
+          47.7773
+        ]
+      },
+      "properties": {
+        "id": "c7617f4d-2381-446f-a6b0-74dc2a5c0d70",
+        "url": null,
+        "name": "Château de Beaugency",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Tour médiévale dominant la Loire au cœur du bourg.",
+        "construction_date": "XIe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.5171,
           47.616
         ]
       },
       "properties": {
-        "id": "a4e076fd-a97b-469f-8897-5b16d4a836cb",
+        "id": "018f715c-c430-4748-94d5-91a10cd2088a",
         "url": null,
         "name": "Château de Chambord",
-        "type": "patrimoine",
+        "type": "chateau",
         "image": null,
-        "stage": 0,
+        "stage": null,
         "thumb": null,
+        "visited": true,
         "url_insta": null,
-        "description": "Chef-d’œuvre de la Renaissance française"
+        "photo_path": "data/thumbs/01-chambord.webp",
+        "description": "Le plus emblématique des châteaux de la Loire, chef-d'œuvre de la Renaissance française.",
+        "construction_date": "1519–1547"
       }
     },
     {
@@ -111,20 +174,311 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          1.374521,
-          47.605676
+          1.1833,
+          47.4793
         ]
       },
       "properties": {
-        "id": "c107d5df-6dcf-4e3d-a228-38b52df500f5",
+        "id": "9fe059b6-ec4d-4157-86c1-59013890bb8d",
         "url": null,
-        "name": "Départ — Étape 0 - Blois ↔️ Chambord",
-        "type": "départ",
+        "name": "Château de Chaumont",
+        "type": "chateau",
         "image": null,
-        "stage": 0,
+        "stage": null,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Point de départ de Étape 0 - Blois ↔️ Chambord"
+        "photo_path": null,
+        "description": "Château Renaissance perché sur un éperon rocheux dominant la Loire.",
+        "construction_date": "1465–1510"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.0702,
+          47.324
+        ]
+      },
+      "properties": {
+        "id": "a9570bc3-0204-45ad-b05a-2aceb8fc7d8c",
+        "url": null,
+        "name": "Château de Chenonceau",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": "data/thumbs/05-chenonceau.webp",
+        "description": "Le château des dames, suspendu au-dessus du Cher.",
+        "construction_date": "1514–1522"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.4582,
+          47.5003
+        ]
+      },
+      "properties": {
+        "id": "907bb213-365b-4640-99f1-c57fff5c78e6",
+        "url": null,
+        "name": "Château de Cheverny",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Chef-d'œuvre du classicisme français, inspiration de Moulinsart.",
+        "construction_date": "1624–1634"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.2379,
+          47.164
+        ]
+      },
+      "properties": {
+        "id": "9dc7ca9e-c373-4cbc-8150-a0bb1733faf5",
+        "url": null,
+        "name": "Château de Chinon",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": "data/thumbs/11-chinon.webp",
+        "description": "Forteresse royale où Jeanne d'Arc rencontra le roi Charles VII.",
+        "construction_date": "XIIe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.0004,
+          47.1284
+        ]
+      },
+      "properties": {
+        "id": "56311aaa-7b0f-48bc-bf91-1ec4b4f039a9",
+        "url": null,
+        "name": "Château de Loches",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Cité royale médiévale remarquablement préservée en Touraine.",
+        "construction_date": "XIe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.6956,
+          47.8265
+        ]
+      },
+      "properties": {
+        "id": "186e7add-559e-43b0-b282-4a6a3c7d7224",
+        "url": null,
+        "name": "Château de Meung-sur-Loire",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Résidence des évêques d'Orléans pendant sept siècles.",
+        "construction_date": "XIIe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0628,
+          47.2157
+        ]
+      },
+      "properties": {
+        "id": "6d42c141-96a2-4835-8700-da182e207220",
+        "url": null,
+        "name": "Château de Montsoreau",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Château gothique à la confluence de la Loire et de la Vienne.",
+        "construction_date": "1443–1453"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0727,
+          47.2601
+        ]
+      },
+      "properties": {
+        "id": "2ced86d0-4ff6-4db0-98db-dd67e130318e",
+        "url": null,
+        "name": "Château de Saumur",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": "data/thumbs/13-saumur.webp",
+        "description": "Forteresse médiévale dominant la Loire, symbole de l'Anjou.",
+        "construction_date": "XIVe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3742,
+          47.7744
+        ]
+      },
+      "properties": {
+        "id": "3581c679-7def-4a0b-b985-fb6f9a3858e9",
+        "url": null,
+        "name": "Château de Sully-sur-Loire",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Château médiéval ceint de douves, ancienne résidence de Sully.",
+        "construction_date": "XIVe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          1.562,
+          47.1572
+        ]
+      },
+      "properties": {
+        "id": "ca0b4ca1-0657-46a1-8a9d-3bb695ec9f1c",
+        "url": null,
+        "name": "Château de Valençay",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "Château Renaissance appartenu à Talleyrand, entouré d'un vaste parc.",
+        "construction_date": "1540"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.5143,
+          47.3403
+        ]
+      },
+      "properties": {
+        "id": "ba4ce733-95b5-48c6-abc6-100fea49ebf4",
+        "url": null,
+        "name": "Château de Villandry",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": "data/thumbs/08-villandry.webp",
+        "description": "Célèbre pour ses jardins Renaissance extraordinaires.",
+        "construction_date": "1532"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.5493127,
+          47.2161171
+        ]
+      },
+      "properties": {
+        "id": "e63ef762-8db2-4c2b-a5e5-98b0ea7873c6",
+        "url": null,
+        "name": "Château des Ducs de Bretagne",
+        "type": "chateau",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": true,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "",
+        "construction_date": "XIIIe siècle - XVIIIe siècle"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.12475,
+          47.366202778
+        ]
+      },
+      "properties": {
+        "id": "fb653661-dfad-4b8e-888d-70e7e940b6d4",
+        "url": null,
+        "name": "Lapin au soleil",
+        "type": "lapin",
+        "image": null,
+        "stage": null,
+        "thumb": null,
+        "visited": false,
+        "url_insta": null,
+        "photo_path": null,
+        "description": "",
+        "construction_date": null
       }
     },
     {
@@ -139,13 +493,16 @@
       "properties": {
         "id": "0bb6cc35-c0f9-4af1-8737-ea824a2bfc16",
         "url": null,
-        "name": "Héron Carré",
+        "name": "Le Nid du Héron",
         "type": "guinguette",
         "image": null,
         "stage": 0,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "La guingette de Angers"
+        "photo_path": null,
+        "description": "La (nouvelle) guinguette de Angers",
+        "construction_date": null
       }
     },
     {
@@ -165,8 +522,11 @@
         "image": null,
         "stage": 0,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "La guingette de Saumur"
+        "photo_path": null,
+        "description": "La guingette de Saumur",
+        "construction_date": null
       }
     },
     {
@@ -174,20 +534,23 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.978207,
-          47.405639
+          -1.5459569,
+          47.2181629
         ]
       },
       "properties": {
-        "id": "7d816235-cc5f-4960-8809-c582eac6573d",
+        "id": "bef134fb-75c0-4f64-962d-3f0d33653cfa",
         "url": null,
-        "name": "Arrivée — Étape 1 - Blois ➡️ Amboise",
-        "type": "arrivée",
+        "name": "Le Voyage à Ballon",
+        "type": "hébergement",
         "image": null,
-        "stage": 1,
+        "stage": null,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Point d’arrivée de Étape 1 - Blois ➡️ Amboise"
+        "photo_path": null,
+        "description": "Chambre sur le thème Jules Verne",
+        "construction_date": null
       }
     },
     {
@@ -195,83 +558,23 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.986,
-          47.413
+          -0.6405546,
+          47.3760965
         ]
       },
       "properties": {
-        "id": "70451e62-aa17-4bb2-9924-a495f8a0ebf0",
+        "id": "4c1ddcae-70bc-4865-b36f-cd3d80ca30d4",
         "url": null,
-        "name": "Château d’Amboise",
-        "type": "patrimoine",
+        "name": "Ô Bord de Loire",
+        "type": "hébergement",
         "image": null,
-        "stage": 1,
+        "stage": null,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Château royal surplombant la Loire"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          1.376383,
-          47.60626
-        ]
-      },
-      "properties": {
-        "id": "daedd886-e4a1-454f-8f31-5ce1cb171628",
-        "url": null,
-        "name": "Départ — Étape 1 - Blois ➡️ Amboise",
-        "type": "départ",
-        "image": null,
-        "stage": 1,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 1 - Blois ➡️ Amboise"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          1.06653,
-          47.329851
-        ]
-      },
-      "properties": {
-        "id": "0872736c-52bc-4989-87f9-f694a30b5d0f",
-        "url": null,
-        "name": "Arrivée — Étape 2 - Amboise ➡️ Chenonceaux",
-        "type": "arrivée",
-        "image": null,
-        "stage": 2,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 2 - Amboise ➡️ Chenonceaux"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          1.07,
-          47.324
-        ]
-      },
-      "properties": {
-        "id": "b67cc22d-5b57-45e2-97a7-15b667502f57",
-        "url": null,
-        "name": "Château de Chenonceau",
-        "type": "patrimoine",
-        "image": null,
-        "stage": 2,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Le château des Dames enjambant le Cher"
+        "photo_path": null,
+        "description": "Chambre d'hôtes & espace bien-être",
+        "construction_date": null
       }
     },
     {
@@ -286,13 +589,16 @@
       "properties": {
         "id": "5df846a9-e6b3-4af3-b05a-30748625513d",
         "url": null,
-        "name": "Confluence Loire-Chre",
-        "type": "coupdecoeur",
+        "name": "Confluence Loire-Cher",
+        "type": "nature",
         "image": null,
         "stage": 2,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Rencontre entre le Cher et la Loire"
+        "photo_path": null,
+        "description": "Rencontre entre le Cher et la Loire",
+        "construction_date": null
       }
     },
     {
@@ -308,12 +614,15 @@
         "id": "5a3aad3a-5532-4edb-bb15-7193916aa6ef",
         "url": null,
         "name": "Confluence Loire-Maine",
-        "type": "coupdecoeur",
+        "type": "nature",
         "image": null,
         "stage": 2,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Rencontre entre la Maine et la Loire"
+        "photo_path": null,
+        "description": "Rencontre entre la Maine et la Loire",
+        "construction_date": null
       }
     },
     {
@@ -329,96 +638,15 @@
         "id": "19997887-ae72-4a3d-a885-6d1d68a332e1",
         "url": null,
         "name": "Confluence Loire-Vienne",
-        "type": "coupdecoeur",
+        "type": "nature",
         "image": null,
         "stage": 2,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Rencontre entre la Vienne et la Loire"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.988798,
-          47.417164
-        ]
-      },
-      "properties": {
-        "id": "709e06f3-8a63-49e4-be9a-d701f25e7777",
-        "url": null,
-        "name": "Départ — Étape 2 - Amboise ➡️ Chenonceaux",
-        "type": "départ",
-        "image": null,
-        "stage": 2,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 2 - Amboise ➡️ Chenonceaux"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.693727,
-          47.390055
-        ]
-      },
-      "properties": {
-        "id": "19320643-3863-480c-af38-402293b4c18f",
-        "url": null,
-        "name": "Arrivée — Étape 3 - Chenonceaux ➡️ Tours",
-        "type": "arrivée",
-        "image": null,
-        "stage": 3,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 3 - Chenonceaux ➡️ Tours"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          1.089365,
-          47.327402
-        ]
-      },
-      "properties": {
-        "id": "3c5ef63b-c12c-49f7-a7a8-3eef75e30b58",
-        "url": null,
-        "name": "Départ — Étape 3 - Chenonceaux ➡️ Tours",
-        "type": "départ",
-        "image": null,
-        "stage": 3,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 3 - Chenonceaux ➡️ Tours"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.511382,
-          47.340919
-        ]
-      },
-      "properties": {
-        "id": "d5d833a5-a126-49db-abcc-d32024c018f0",
-        "url": null,
-        "name": "Arrivée — Étape 4 - Tours ➡️ Villandry",
-        "type": "arrivée",
-        "image": null,
-        "stage": 4,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 4 - Tours ➡️ Villandry"
+        "photo_path": null,
+        "description": "Rencontre entre la Vienne et la Loire",
+        "construction_date": null
       }
     },
     {
@@ -434,159 +662,15 @@
         "id": "d4743087-31e3-4159-b82b-3fe0822e9826",
         "url": null,
         "name": "Château de Langeais",
-        "type": "patrimoine",
+        "type": "chateau",
         "image": null,
         "stage": 4,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Château médiéval et Renaissance"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.509,
-          47.34
-        ]
-      },
-      "properties": {
-        "id": "00d98e7b-35f9-43c8-8bbb-fd30a28b0192",
-        "url": null,
-        "name": "Château de Villandry",
-        "type": "patrimoine",
-        "image": null,
-        "stage": 4,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Célèbre pour ses jardins remarquables"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.692776,
-          47.389491
-        ]
-      },
-      "properties": {
-        "id": "8f51b68a-d95c-4620-b8bf-d64ca58b9951",
-        "url": null,
-        "name": "Départ — Étape 4 - Tours ➡️ Villandry",
-        "type": "départ",
-        "image": null,
-        "stage": 4,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 4 - Tours ➡️ Villandry"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.238043,
-          47.168313
-        ]
-      },
-      "properties": {
-        "id": "535c989f-c60e-4992-858c-7a0de5b96eda",
-        "url": null,
-        "name": "Arrivée — Étape 5 - Villandry ➡️ Chinon",
-        "type": "arrivée",
-        "image": null,
-        "stage": 5,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 5 - Villandry ➡️ Chinon"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.245,
-          47.166
-        ]
-      },
-      "properties": {
-        "id": "990de9c3-48e3-4636-8de0-ff0b7e987958",
-        "url": null,
-        "name": "Château de Chinon",
-        "type": "patrimoine",
-        "image": null,
-        "stage": 5,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Forteresse médiévale au bord de la Vienne"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.51001,
-          47.344143
-        ]
-      },
-      "properties": {
-        "id": "0ae92821-b648-4de2-a613-b533122386ce",
-        "url": null,
-        "name": "Départ — Étape 5 - Villandry ➡️ Chinon",
-        "type": "départ",
-        "image": null,
-        "stage": 5,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 5 - Villandry ➡️ Chinon"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.048,
-          47.18
-        ]
-      },
-      "properties": {
-        "id": "784dd550-a917-49f0-b1d7-430bfd36ddc6",
-        "url": null,
-        "name": "Abbaye de Fontevraud",
-        "type": "patrimoine",
-        "image": null,
-        "stage": 6,
-        "thumb": null,
-        "url_insta": null,
-        "description": "L’une des plus vastes cités monastiques d’Europe"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.056982,
-          47.216735
-        ]
-      },
-      "properties": {
-        "id": "10f5674c-eec4-434e-8c73-8bda6ff5055d",
-        "url": null,
-        "name": "Arrivée — Étape 6 - Chinon ➡️ Montsoreau",
-        "type": "arrivée",
-        "image": null,
-        "stage": 6,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 6 - Chinon ➡️ Montsoreau"
+        "photo_path": null,
+        "description": "Château médiéval et Renaissance",
+        "construction_date": null
       }
     },
     {
@@ -602,159 +686,15 @@
         "id": "7d36a628-7179-452d-a831-550ac608b7eb",
         "url": null,
         "name": "Château de Montsoreau",
-        "type": "patrimoine",
+        "type": "chateau",
         "image": null,
         "stage": 6,
         "thumb": null,
+        "visited": false,
         "url_insta": null,
-        "description": "Château de tuffeau au bord de la Loire"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.237961,
-          47.163875
-        ]
-      },
-      "properties": {
-        "id": "05e33c25-cf30-461f-a8c4-9aea7d42dda4",
-        "url": null,
-        "name": "Départ — Étape 6 - Chinon ➡️ Montsoreau",
-        "type": "départ",
-        "image": null,
-        "stage": 6,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 6 - Chinon ➡️ Montsoreau"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.073965,
-          47.263508
-        ]
-      },
-      "properties": {
-        "id": "06e4173b-1bf4-483e-9d58-7ed162aee9d8",
-        "url": null,
-        "name": "Arrivée — Étape 7 - Montsoreau ➡️ Saumur",
-        "type": "arrivée",
-        "image": null,
-        "stage": 7,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 7 - Montsoreau ➡️ Saumur"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.072,
-          47.26
-        ]
-      },
-      "properties": {
-        "id": "50acda21-1e4c-45a9-8993-a0a054359149",
-        "url": null,
-        "name": "Château de Saumur",
-        "type": "patrimoine",
-        "image": null,
-        "stage": 7,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Surplombant la Loire, symbole de Saumur"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          0.056785,
-          47.216523
-        ]
-      },
-      "properties": {
-        "id": "60bc18ee-8e04-4c7a-b375-e69c8948011d",
-        "url": null,
-        "name": "Départ — Étape 7 - Montsoreau ➡️ Saumur",
-        "type": "départ",
-        "image": null,
-        "stage": 7,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 7 - Montsoreau ➡️ Saumur"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.57099,
-          47.468643
-        ]
-      },
-      "properties": {
-        "id": "fc5d68aa-e819-4507-99e1-4b596f80d503",
-        "url": null,
-        "name": "Arrivée — Étape 8 - Saumur ➡️ Angers",
-        "type": "arrivée",
-        "image": null,
-        "stage": 8,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point d’arrivée de Étape 8 - Saumur ➡️ Angers"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.5569,
-          47.4716
-        ]
-      },
-      "properties": {
-        "id": "b1a16d8e-49d9-49d9-9dca-d01fdee93a10",
-        "url": null,
-        "name": "Château d’Angers",
-        "type": "patrimoine",
-        "image": null,
-        "stage": 8,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Forteresse et tenture de l’Apocalypse"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.073464,
-          47.263767
-        ]
-      },
-      "properties": {
-        "id": "074d2dd0-e737-4f67-b55f-c161efa2ea10",
-        "url": null,
-        "name": "Départ — Étape 8 - Saumur ➡️ Angers",
-        "type": "départ",
-        "image": null,
-        "stage": 8,
-        "thumb": null,
-        "url_insta": null,
-        "description": "Point de départ de Étape 8 - Saumur ➡️ Angers"
+        "photo_path": null,
+        "description": "Château de tuffeau au bord de la Loire",
+        "construction_date": null
       }
     }
   ]
