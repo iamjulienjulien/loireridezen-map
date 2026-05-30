@@ -46,7 +46,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/02-blois.jpeg",
         "thumb": "data/thumbs/02-blois.webp",
         "time": "2025:06:07 12:43:09",
-        "id": "02-blois"
+        "id": "02-blois",
+        "poi_id": "05e10419-cf3b-4ac1-88dd-aa253ce07bc5"
       },
       "geometry": {
         "type": "Point",
