@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-30T16:35:06.036355+00:00",
+  "updated_at": "2026-05-30T18:16:37.768058+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -422,6 +422,21 @@
       "lat": 47.216581,
       "lon": -1.550342,
       "poi_id": "e63ef762-8db2-4c2b-a5e5-98b0ea7873c6"
+    },
+    {
+      "id": "28-voyage-a-ballon",
+      "label": "Voyage A Ballon",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/28-voyage-a-ballon.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/28-voyage-a-ballon.jpeg"
+      },
+      "source": "sources/photos/28-voyage-a-ballon.jpeg",
+      "order": 28,
+      "time": "2026:05:27 12:38:16",
+      "lat": 47.218206,
+      "lon": -1.545806
     }
   ]
 }

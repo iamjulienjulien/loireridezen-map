@@ -432,7 +432,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "26 princesse de loire",
+        "name": "Princesse De Loire",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/26-princesse-de-loire.jpeg",
         "thumb": "data/thumbs/26-princesse-de-loire.webp",
@@ -470,7 +470,25 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "27 chateau nantes",
+        "name": "28 voyage a ballon",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/28-voyage-a-ballon.jpeg",
+        "thumb": "data/thumbs/28-voyage-a-ballon.webp",
+        "time": "2026:05:27 12:38:16",
+        "id": "28-voyage-a-ballon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.545806,
+          47.218206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chateau Nantes",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/27-chateau-nantes.jpeg",
         "thumb": "data/thumbs/27-chateau-nantes.webp",
