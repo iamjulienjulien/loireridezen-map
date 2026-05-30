@@ -81,7 +81,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/04-amboise.jpeg",
         "thumb": "data/thumbs/04-amboise.webp",
         "time": "2025:06:09 20:18:52",
-        "id": "04-amboise"
+        "id": "04-amboise",
+        "poi_id": "78d42008-6bd6-4b57-902c-c4ae546b0995"
       },
       "geometry": {
         "type": "Point",
@@ -99,7 +100,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/05-chenonceau.jpeg",
         "thumb": "data/thumbs/05-chenonceau.webp",
         "time": "2025:06:10 16:02:27",
-        "id": "05-chenonceau"
+        "id": "05-chenonceau",
+        "poi_id": "a9570bc3-0204-45ad-b05a-2aceb8fc7d8c"
       },
       "geometry": {
         "type": "Point",
@@ -153,7 +155,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/08-villandry.jpeg",
         "thumb": "data/thumbs/08-villandry.webp",
         "time": "2025:06:12 17:45:05",
-        "id": "08-villandry"
+        "id": "08-villandry",
+        "poi_id": "ba4ce733-95b5-48c6-abc6-100fea49ebf4"
       },
       "geometry": {
         "type": "Point",
@@ -189,7 +192,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/10-langeais.jpeg",
         "thumb": "data/thumbs/10-langeais.webp",
         "time": "2025:06:13 14:29:26",
-        "id": "10-langeais"
+        "id": "10-langeais",
+        "poi_id": "d4743087-31e3-4159-b82b-3fe0822e9826"
       },
       "geometry": {
         "type": "Point",
@@ -207,7 +211,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/11-chinon.jpeg",
         "thumb": "data/thumbs/11-chinon.webp",
         "time": "2025:06:16 13:12:24",
-        "id": "11-chinon"
+        "id": "11-chinon",
+        "poi_id": "9dc7ca9e-c373-4cbc-8150-a0bb1733faf5"
       },
       "geometry": {
         "type": "Point",
@@ -243,7 +248,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/13-saumur.jpeg",
         "thumb": "data/thumbs/13-saumur.webp",
         "time": "2025:06:17 19:47:01",
-        "id": "13-saumur"
+        "id": "13-saumur",
+        "poi_id": "2ced86d0-4ff6-4db0-98db-dd67e130318e"
       },
       "geometry": {
         "type": "Point",
@@ -333,7 +339,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/15-loire-maine.jpeg",
         "thumb": "data/thumbs/15-loire-maine.webp",
         "time": "2025:06:18 17:26:15",
-        "id": "15-loire-maine"
+        "id": "15-loire-maine",
+        "poi_id": "5a3aad3a-5532-4edb-bb15-7193916aa6ef"
       },
       "geometry": {
         "type": "Point",
@@ -351,7 +358,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/16-angers.jpeg",
         "thumb": "data/thumbs/16-angers.webp",
         "time": "2025:06:18 19:58:52",
-        "id": "16-angers"
+        "id": "16-angers",
+        "poi_id": "7ed5bb3f-1c0d-420a-9b53-63fcc6be19e1"
       },
       "geometry": {
         "type": "Point",
@@ -405,7 +413,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/25-o-bord-de-loire.jpeg",
         "thumb": "data/thumbs/25-o-bord-de-loire.webp",
         "time": "2026:05:23 08:19:35",
-        "id": "25-o-bord-de-loire"
+        "id": "25-o-bord-de-loire",
+        "poi_id": "4c1ddcae-70bc-4865-b36f-cd3d80ca30d4"
       },
       "geometry": {
         "type": "Point",
