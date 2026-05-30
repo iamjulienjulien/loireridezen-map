@@ -13,6 +13,7 @@
   --lrz-font-sans:
     "Geist", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --lrz-font-theme: var(--lrz-font-serif);
+  --lrz-trace-hue: 355deg; /* hue-rotate offset for tuffeau default — updated by applyTheme() */
 }
 
 /* ───────────────────────────────────────────── Base */
@@ -849,6 +850,7 @@ body {
   width: 1.5rem;
   text-align: center;
   flex-shrink: 0;
+  filter: sepia(1) saturate(2) hue-rotate(var(--lrz-trace-hue));
 }
 
 /* ─────────────────────────────────────── Checkbox unifiée */
@@ -1382,6 +1384,7 @@ body {
   cursor: pointer;
   transition: transform 0.15s ease;
   user-select: none;
+  filter: sepia(1) saturate(2) hue-rotate(var(--lrz-trace-hue));
 }
 .lrz-trace-emoji--départ,
 .lrz-trace-emoji--arrivée {
@@ -1822,7 +1825,7 @@ body {
 }
 
 .lrz-apanel-btn:hover {
-  background: var(--lrz-card-hover);
+  background: color-mix(in srgb, var(--lrz-or) 20%, white);
 }
 
 .lrz-apanel-btn--active {
@@ -1831,7 +1834,7 @@ body {
 }
 
 .lrz-apanel-btn--active:hover {
-  background: #b07d3c;
+  background: color-mix(in srgb, var(--lrz-or) 85%, black);
   color: #fff;
 }
 

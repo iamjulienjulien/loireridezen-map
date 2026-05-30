@@ -16,9 +16,23 @@ import { loadPreferences, updatePreference } from "./preferences.js";
 import { track } from "./analytics.js";
 import { THEME_MAP, DEFAULT_THEME } from "./themes.js";
 import { hiddenModes } from "./url-mode.js";
+import { lightenHex } from "./helpers.js";
 
 let _currentBase = "sat";
 let _currentTheme = DEFAULT_THEME;
+
+function _hexToHue(hex) {
+  if (!hex || hex[0] !== '#') return 0;
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const d = max - min;
+  if (!d) return 0;
+  let h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  h = Math.round(h * 60);
+  return h < 0 ? h + 360 : h;
+}
 
 function _setBase(base, { skipTrack = false } = {}) {
   if (!skipTrack) track('Map Style Changed', { style: base });
@@ -58,15 +72,34 @@ function _syncThemeActive(key) {
 }
 
 function _applyColorToTraces(color) {
+  // Sort act groups by order for the light→dark progression
+  const actGroups = [...traceGroups.values()]
+    .filter(({ group }) => group.id.startsWith('acte-'))
+    .sort((a, b) => (a.group.order ?? 0) - (b.group.order ?? 0));
+
   traceGroups.forEach(({ group, layers }) => {
-    layers.forEach((layer) => layer.setStyle({ color }));
+    let groupColor;
+    if (group.id === 'micro-aventure') {
+      groupColor = '#111111';
+    } else if (group.id.startsWith('acte-')) {
+      const idx = actGroups.findIndex((g) => g.group.id === group.id);
+      const total = actGroups.length;
+      // Light (first act) → dark (last act = full theme color)
+      const factor = total > 1 ? ((total - 1 - idx) / (total - 1)) * 0.5 : 0;
+      groupColor = factor > 0 ? lightenHex(color, factor) : color;
+    } else {
+      groupColor = color;
+    }
+
+    layers.forEach((layer) => layer.setStyle({ color: groupColor }));
+
     // Update the legend swatch for this group in the panel
     const cb = document.querySelector(`[data-group-id="${group.id}"]`);
     const visual = cb?.closest('.lrz-row')?.querySelector('.lrz-row__visual');
     if (visual) {
       visual.style.background = group.dashed
-        ? `repeating-linear-gradient(to right,${color} 0 5px,transparent 5px 9px)`
-        : color;
+        ? `repeating-linear-gradient(to right,${groupColor} 0 5px,transparent 5px 9px)`
+        : groupColor;
     }
   });
 }
@@ -83,8 +116,10 @@ export function applyTheme(key, { changeBasemap = true, persist = true } = {}) {
     _setBase(theme.basemap, { skipTrack: true });
   }
 
+  const traceHue = (_hexToHue(theme.color) - 38 + 360) % 360;
   document.documentElement.style.setProperty('--lrz-font-theme', theme.fontStack);
   document.documentElement.style.setProperty('--lrz-or', theme.color);
+  document.documentElement.style.setProperty('--lrz-trace-hue', `${traceHue}deg`);
   _applyColorToTraces(theme.color);
   _syncThemeActive(key);
 
@@ -111,8 +146,10 @@ export function initActionsPanel() {
     _currentTheme = storedTheme;
     const theme = THEME_MAP.get(storedTheme);
     if (theme) {
+      const traceHue = (_hexToHue(theme.color) - 38 + 360) % 360;
       document.documentElement.style.setProperty('--lrz-font-theme', theme.fontStack);
       document.documentElement.style.setProperty('--lrz-or', theme.color);
+      document.documentElement.style.setProperty('--lrz-trace-hue', `${traceHue}deg`);
       _syncThemeActive(storedTheme);
     }
   }
