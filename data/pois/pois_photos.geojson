@@ -400,7 +400,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "25 o bord de loire",
+        "name": "O Bord De Loire",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/25-o-bord-de-loire.jpeg",
         "thumb": "data/thumbs/25-o-bord-de-loire.webp",
@@ -412,6 +412,24 @@
         "coordinates": [
           -0.640464,
           47.376142
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "26 princesse de loire",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/26-princesse-de-loire.jpeg",
+        "thumb": "data/thumbs/26-princesse-de-loire.webp",
+        "time": "2026:05:24 15:55:48",
+        "id": "26-princesse-de-loire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.124692,
+          47.366031
         ]
       }
     },
@@ -431,6 +449,24 @@
         "coordinates": [
           -1.12475,
           47.366203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "27 chateau nantes",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/27-chateau-nantes.jpeg",
+        "thumb": "data/thumbs/27-chateau-nantes.webp",
+        "time": "2026:05:27 12:47:44",
+        "id": "27-chateau-nantes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.550342,
+          47.216581
         ]
       }
     },

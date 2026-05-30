@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-29T22:05:50.926344+00:00",
+  "updated_at": "2026-05-30T01:30:39.892484+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -378,6 +378,36 @@
       "time": "2026:05:23 08:19:35",
       "lat": 47.376142,
       "lon": -0.640464
+    },
+    {
+      "id": "26-princesse-de-loire",
+      "label": "Princesse De Loire",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/26-princesse-de-loire.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/26-princesse-de-loire.jpeg"
+      },
+      "source": "sources/photos/26-princesse-de-loire.jpeg",
+      "order": 26,
+      "time": "2026:05:24 15:55:48",
+      "lat": 47.366031,
+      "lon": -1.124692
+    },
+    {
+      "id": "27-chateau-nantes",
+      "label": "Chateau Nantes",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/27-chateau-nantes.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/27-chateau-nantes.jpeg"
+      },
+      "source": "sources/photos/27-chateau-nantes.jpeg",
+      "order": 27,
+      "time": "2026:05:27 12:47:44",
+      "lat": 47.216581,
+      "lon": -1.550342
     }
   ]
 }
