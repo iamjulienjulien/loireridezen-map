@@ -1634,6 +1634,103 @@ body {
   margin-top: 0.25rem;
 }
 
+/* ─────────────────────────── LRZ-EVO-54 : Popups POI refondus ──────────── */
+
+.lrz-popup--poi {
+  min-width: 220px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-family: var(--lrz-font-sans);
+  color: var(--lrz-foreground);
+}
+
+.lrz-popup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: -12px -12px 0;
+  padding: 0.45rem 0.625rem;
+  background: color-mix(in srgb, var(--poi-type-color, #888) 8%, transparent);
+  border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--poi-type-color, #888) 20%, transparent);
+}
+
+.lrz-popup-type-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.2em 0.55em;
+  border: 1px solid var(--poi-type-color, #888);
+  background: color-mix(in srgb, var(--poi-type-color, #888) 15%, transparent);
+  color: var(--lrz-foreground);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lrz-popup-type-label__emoji {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.lrz-popup__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--lrz-ink-soft);
+  font-size: 0.9rem;
+  padding: 0.25rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lrz-popup__close:hover {
+  background: color-mix(in srgb, var(--poi-type-color, #888) 15%, transparent);
+  color: var(--lrz-foreground);
+}
+
+.lrz-popup__photo {
+  margin: 0 -12px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.lrz-popup__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.lrz-popup__body {
+  padding: 0.5rem 0.125rem 0.125rem;
+}
+
+.lrz-popup__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--lrz-foreground);
+  margin: 0 0 0.25rem;
+  line-height: 1.3;
+}
+
+.lrz-popup__desc {
+  font-size: 0.8125rem;
+  color: var(--lrz-ink-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* ═══════════════════════════════ LRZ-EVO-27 — Vague UI 5 ═══════════════════ */
 
 /* ─── Variables supplémentaires ─── */

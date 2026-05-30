@@ -98,42 +98,39 @@ function renderAttachedPhotos(poiId) {
   return `<div class="lrz-poi-popup__attached"><h4>Mes clichés</h4><div class="lrz-poi-popup__grid">${thumbs}</div></div>`;
 }
 
-function renderChateauPopup(p) {
-  const visited = p.visited === true;
-  const clichés = renderAttachedPhotos(p.id);
+function renderEditorialPoiPopup(p) {
+  const t = POI_TYPES[p.type] || {};
+  const color = t.color || "#888888";
+  const photo = p.photo_path
+    || safeHttpUrl(p.thumb) || safeHttpUrl(p.image)
+    || p.thumb || p.image
+    || null;
   return `
-    <div class="lrz-poi-popup lrz-poi-popup--chateau">
-      ${p.photo_path ? `<div class="lrz-poi-popup__photo"><img src="${escapeHtml(p.photo_path)}" alt="${escapeHtml(p.name || "Château")}"/></div>` : ""}
-      <div class="lrz-poi-popup__body">
-        <strong class="lrz-poi-popup__title">${escapeHtml(p.name || "Château")}</strong>
-        <div class="lrz-poi-popup__meta">
-          <span class="lrz-poi-popup__badge lrz-poi-popup__badge--${visited ? "visited" : "planned"}">${visited ? "✓ Visité" : "À visiter"}</span>
-          ${p.construction_date ? `<span class="lrz-poi-popup__meta-date">🏗 ${escapeHtml(p.construction_date)}</span>` : ""}
-        </div>
-        ${p.description ? `<p class="lrz-poi-popup__description">${escapeHtml(p.description)}</p>` : ""}
-        ${clichés}
+    <div class="lrz-popup lrz-popup--poi">
+      <header class="lrz-popup__header" style="--poi-type-color:${escapeHtml(color)}">
+        <span class="lrz-popup-type-label">
+          <span class="lrz-popup-type-label__emoji">${t.emoji || "📍"}</span>
+          <span class="lrz-popup-type-label__text">${escapeHtml(t.label || p.type || "")}</span>
+        </span>
+        <button class="lrz-popup__close" aria-label="Fermer">✕</button>
+      </header>
+      ${photo ? `<div class="lrz-popup__photo"><img src="${escapeHtml(photo)}" alt="${escapeHtml(p.name || "")}"/></div>` : ""}
+      <div class="lrz-popup__body">
+        <h3 class="lrz-popup__title">${escapeHtml(p.name || "")}</h3>
+        ${p.description ? `<p class="lrz-popup__desc">${escapeHtml(p.description)}</p>` : ""}
       </div>
     </div>
   `;
 }
 
-function renderGenericPoiPopup(p) {
-  const img =
-    safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
-  const insta = safeHttpUrl(p.url_insta);
+function renderPhotoPopup(p) {
+  const img = safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
   const safeImg = img ? escapeHtml(img) : null;
-  const attached = photosByPoi.get(p.id) || [];
-  const heroSection = attached.length === 1 ? renderAttachedPhotos(p.id) : "";
-  const gridSection = attached.length > 1 ? renderAttachedPhotos(p.id) : "";
   return `
     <div class="poi-popup">
-      ${heroSection}
-      ${safeImg ? `<img src="${safeImg}" alt="${escapeHtml(p.name || "POI")}"/>` : ""}
-      <strong>${escapeHtml(p.name || "Point")}</strong><br/>
-      <small>${escapeHtml(p.type || "")}${p.stage ? ` · Étape ${escapeHtml(String(p.stage))}` : ""}</small>
+      ${safeImg ? `<img src="${safeImg}" alt="${escapeHtml(p.name || "Photo")}"/>` : ""}
+      <strong>${escapeHtml(p.name || "Photo")}</strong>
       ${p.description ? `<p>${escapeHtml(p.description)}</p>` : ""}
-      ${insta ? `<p><a href="${escapeHtml(insta)}" target="_blank" rel="noopener noreferrer">Voir sur Instagram 📲</a></p>` : ""}
-      ${gridSection}
     </div>
   `;
 }
@@ -156,14 +153,19 @@ function renderLapinPopup(p) {
   `;
 }
 
-function renderPoiPopup(p) {
-  if (p.type === "chateau") return renderChateauPopup(p);
-  if (p.type === "lapin") return renderLapinPopup(p);
-  return renderGenericPoiPopup(p);
-}
-
 function bindPopupFromProps(p, layer) {
-  layer.bindPopup(renderPoiPopup(p));
+  if (p.type === "lapin") {
+    layer.bindPopup(renderLapinPopup(p));
+  } else if (p.type === "photo") {
+    layer.bindPopup(renderPhotoPopup(p));
+  } else {
+    layer.bindPopup(renderEditorialPoiPopup(p), { closeButton: false });
+    layer.once("popupopen", () => {
+      layer.getPopup()?.getElement()
+        ?.querySelector(".lrz-popup__close")
+        ?.addEventListener("click", () => layer.closePopup());
+    });
+  }
 }
 
 // ──────────────────────────────────────────────── Bannière d'erreur
