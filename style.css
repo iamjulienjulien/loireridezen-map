@@ -1504,6 +1504,14 @@ body {
   color: var(--lrz-ink-soft);
   font-size: 0.8rem;
 }
+.lrz-step-popup__moon {
+  font-size: 0.8rem;
+  color: var(--lrz-ink-soft);
+}
+.lrz-step-popup__weather {
+  font-size: 0.8125rem;
+  color: var(--lrz-foreground);
+}
 .lrz-step-popup__stats {
   list-style: none;
   padding: 0;
@@ -2170,31 +2178,6 @@ body {
   font-size: 0.7rem;
 }
 
-/* ─── Météo dans le popup d'étape ─── */
-
-.lrz-step-popup__weather {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.8125rem;
-  color: var(--lrz-foreground);
-  margin: 0.25rem 0;
-}
-
-.lrz-step-popup__weather-icon {
-  font-size: 1.1rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.lrz-step-popup__weather-desc {
-  flex: 1;
-}
-
-.lrz-step-popup__weather-temp {
-  color: var(--lrz-ink-soft);
-  font-variant-numeric: tabular-nums;
-}
 
 /* ─── Actions popup d'étape (Instagram / Komoot) ─── */
 

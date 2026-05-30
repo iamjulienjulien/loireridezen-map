@@ -365,7 +365,7 @@ function _computeStatsData(mode, group, loaded, color) {
       });
     if (item.distance_km != null)
       lines.push({
-        text: `${(+item.distance_km).toLocaleString("fr-FR")} km`,
+        text: `${Math.round(item.distance_km)} km`,
         icon: "route",
       });
     if (item.elevation_gain_m != null)

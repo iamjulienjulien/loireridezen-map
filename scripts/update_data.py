@@ -80,6 +80,27 @@ PHOTOS_GEOJSON = POIS_DIR / "pois_photos.geojson"
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
 PYTHON = sys.executable
+
+# Lib météo (EVO-57) — import optionnel pour ne pas bloquer si absente
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.weather import (
+        ICON_TO_DESCRIPTION as _ICON_TO_DESC,
+        description_for_icon,
+        compute_moon,
+        compute_moon_from_phase,
+        compute_day,
+        fetch_weather_for,
+    )
+    _WEATHER_LIB = True
+except ImportError:
+    _WEATHER_LIB = False
+    def description_for_icon(icon): return ""  # type: ignore[misc]
+    def compute_moon(d): return {}  # type: ignore[misc]
+    def compute_moon_from_phase(p): return {}  # type: ignore[misc]
+    def compute_day(lat, lon, d): return {}  # type: ignore[misc]
+    def fetch_weather_for(lat, lon, d): return None  # type: ignore[misc]
 LOG_DIR_DEFAULT = REPO_ROOT / "logs" / "update_data"
 
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
@@ -147,13 +168,9 @@ def format_weather(w: dict | None) -> str:
         parts.append(w["icon"])
     if w.get("description"):
         parts.append(w["description"])
-    temps = []
-    if w.get("temp_min") is not None:
-        temps.append(f"{w['temp_min']}°")
-    if w.get("temp_max") is not None:
-        temps.append(f"{w['temp_max']}°")
-    if temps:
-        parts.append(f"({' / '.join(temps)})")
+    temp = w.get("temp")
+    if temp is not None:
+        parts.append(f"{temp}°C")
     return " ".join(parts) if parts else "—"
 
 
@@ -197,6 +214,93 @@ def _update_photo_poi_in_geojson(photo_id: str, poi_id: str | None) -> None:
     if changed:
         with PHOTOS_GEOJSON.open("w", encoding="utf-8") as f:
             json.dump(fc, f, ensure_ascii=False, indent=2)
+
+
+def _get_trace_midpoint(item: dict) -> tuple[float, float] | None:
+    """Retourne (lat, lon) du point médian de la trace, ou None si indisponible."""
+    paths = item.get("paths", {})
+    path_key = paths.get("simplified") or paths.get("full")
+    if not path_key:
+        return None
+    geojson_path = REPO_ROOT / path_key
+    if not geojson_path.exists():
+        return None
+    try:
+        data = json.loads(geojson_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    coords: list = []
+    for feature in data.get("features", []):
+        geom = feature.get("geometry", {})
+        t = geom.get("type", "")
+        if t == "LineString":
+            coords.extend(geom.get("coordinates", []))
+        elif t == "MultiLineString":
+            for line in geom.get("coordinates", []):
+                coords.extend(line)
+    if not coords:
+        return None
+    mid = coords[len(coords) // 2]
+    return mid[1], mid[0]  # lat, lon
+
+
+def _migrate_weather_data(items: list[dict]) -> tuple[int, int]:
+    """Migre les items vers la structure weather/day/moon. Idempotent.
+
+    Retourne (n_migrated, n_skipped).
+    """
+    migrated = 0
+    skipped = 0
+    for item in items:
+        already = (
+            "day" in item and
+            "moon" in item and
+            "weather_code" not in item and
+            "temp_c" not in item
+        )
+        if already:
+            skipped += 1
+            continue
+
+        w = dict(item.get("weather") or {})
+
+        # weather.icon/description : priorité au champ manuel, sinon EVO-55
+        new_icon = w.get("icon") or item.get("weather_emoji")
+        new_desc = w.get("description") or item.get("weather_desc")
+        # weather.temp : temp_max > temp_min > round(temp_c)
+        temp_max = w.get("temp_max")
+        temp_min = w.get("temp_min")
+        temp_c = item.get("temp_c")
+        new_temp = (
+            temp_max if temp_max is not None else
+            temp_min if temp_min is not None else
+            (round(temp_c) if temp_c is not None else None)
+        )
+
+        new_w: dict = {}
+        if new_icon:
+            new_w["icon"] = new_icon
+        if new_desc:
+            new_w["description"] = new_desc
+        if new_temp is not None:
+            new_w["temp"] = new_temp
+        item["weather"] = new_w or None
+
+        # day
+        sr = item.pop("sunrise", None)
+        ss = item.pop("sunset", None)
+        item["day"] = {"sunrise": sr, "sunset": ss} if (sr or ss) else None
+
+        # moon
+        mp = item.pop("moon_phase", None)
+        item["moon"] = compute_moon_from_phase(mp) if mp is not None else None
+
+        # Supprimer les champs dépréciés
+        for f in ("weather_code", "weather_desc", "weather_emoji", "temp_c"):
+            item.pop(f, None)
+
+        migrated += 1
+    return migrated, skipped
 
 
 # Lib Supabase — import optionnel (dispo si supabase>=2.5.0 installé)
@@ -655,6 +759,10 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
     choices.append(questionary.Choice("🌐 Synchroniser les POI (Supabase)", value="pois"))
     choices.append(questionary.Separator())
 
+    # --- Groupe 4 : Maintenance ---
+    choices.append(questionary.Choice("🔧 Migrer structure météo / astres", value="migrate_weather"))
+    choices.append(questionary.Separator())
+
     # --- Groupe 4 : Sortie ---
     choices.append(questionary.Choice("🚪 Quitter", value="quit"))
 
@@ -677,6 +785,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "pois", "both"
     if choice == "list_edit":
         return "list_edit", "both"
+    if choice == "migrate_weather":
+        return "migrate_weather", "both"
     if choice == "delete_all":
         return "delete_all", "both"
     return "quit", "both"
@@ -1734,21 +1844,21 @@ def _show_trace_panel(item: dict, title: str = "Trace") -> None:
 
 
 def _edit_weather_submenu(item: dict, items: list[dict], catalog_path: Path) -> None:
-    """Sous-menu d'édition de la météo d'une trace, avec sauvegarde par champ."""
+    """Sous-menu d'édition de la météo d'une trace (EVO-57)."""
     while True:
         w = dict(item.get("weather") or {})
-        desc_cur = w.get("description") or ""
-        tmin_cur = str(w.get("temp_min")) if w.get("temp_min") is not None else ""
-        tmax_cur = str(w.get("temp_max")) if w.get("temp_max") is not None else ""
         icon_cur = w.get("icon") or ""
+        desc_cur = w.get("description") or ""
+        temp_cur = str(w.get("temp")) if w.get("temp") is not None else ""
 
         action = questionary.select(
             "Météo — champ à modifier :",
             choices=[
-                questionary.Choice(f"📝 Description  ({desc_cur or '—'})", value="description"),
-                questionary.Choice(f"🌡  Temp. min    ({tmin_cur + '°' if tmin_cur else '—'})", value="temp_min"),
-                questionary.Choice(f"🌡  Temp. max    ({tmax_cur + '°' if tmax_cur else '—'})", value="temp_max"),
                 questionary.Choice(f"🎨 Icône        ({icon_cur or '—'})", value="icon"),
+                questionary.Choice(f"📝 Description  ({desc_cur or '—'})", value="description"),
+                questionary.Choice(f"🌡  Température  ({temp_cur + '°C' if temp_cur else '—'})", value="temp"),
+                questionary.Separator(),
+                questionary.Choice("🌐 Récupérer depuis Open-Meteo", value="fetch_openmeteo"),
                 questionary.Separator(),
                 questionary.Choice("🗑️  Effacer toute la météo", value="clear"),
                 questionary.Choice("← Retour", value="back"),
@@ -1767,43 +1877,46 @@ def _edit_weather_submenu(item: dict, items: list[dict], catalog_path: Path) -> 
                 console.print("[green]✓ Météo effacée[/]")
             return
 
+        if action == "fetch_openmeteo":
+            date = item.get("date")
+            if not date:
+                console.print("[yellow]⚠ Cette trace n'a pas de date — impossible de récupérer la météo.[/]")
+                continue
+            midpoint = _get_trace_midpoint(item)
+            if midpoint is None:
+                console.print("[yellow]⚠ Coordonnées introuvables pour cette trace.[/]")
+                continue
+            lat, lon = midpoint
+            console.print(f"[dim]Open-Meteo : {date} @ {lat:.4f},{lon:.4f}…[/]")
+            result = fetch_weather_for(lat, lon, date)
+            if result is None:
+                console.print("[red]Erreur lors de la récupération Open-Meteo.[/]")
+                continue
+            icon_new = result.get("icon") or ""
+            desc_new = result.get("description") or ""
+            temp_new = result.get("temp")
+            console.print(Panel(
+                f"  [dim]icône :[/]       {icon_new or '—'}\n"
+                f"  [dim]description :[/] {desc_new or '—'}\n"
+                f"  [dim]temp. :[/]       {f'{temp_new}°C' if temp_new is not None else '—'}",
+                title="Open-Meteo — résultat",
+                border_style="cyan",
+            ))
+            if questionary.confirm("Appliquer ces valeurs météo ?", default=True).ask():
+                item["weather"] = {
+                    "icon": icon_new or None,
+                    "description": desc_new or None,
+                    "temp": temp_new,
+                }
+                save_catalog(catalog_path, items)
+                log_event("INFO", "traces", "field_updated",
+                          id=item.get("id"), field="weather", value="openmeteo_fetch")
+                console.print("[green]✓ Météo mise à jour depuis Open-Meteo[/]")
+            continue
+
         changed = False
 
-        if action == "description":
-            val = questionary.text("Description météo (vide pour null) :", default=desc_cur).ask()
-            if val is not None:
-                w["description"] = val.strip() or None
-                changed = True
-
-        elif action == "temp_min":
-            val = questionary.text("Température min (ex. 12 ou vide pour null) :", default=tmin_cur).ask()
-            if val is not None:
-                stripped = val.strip()
-                if stripped:
-                    t = parse_temp(stripped)
-                    if t is None:
-                        console.print("[yellow]Format invalide — entier attendu.[/]")
-                        continue
-                    w["temp_min"] = t
-                else:
-                    w["temp_min"] = None
-                changed = True
-
-        elif action == "temp_max":
-            val = questionary.text("Température max (ex. 28 ou vide pour null) :", default=tmax_cur).ask()
-            if val is not None:
-                stripped = val.strip()
-                if stripped:
-                    t = parse_temp(stripped)
-                    if t is None:
-                        console.print("[yellow]Format invalide — entier attendu.[/]")
-                        continue
-                    w["temp_max"] = t
-                else:
-                    w["temp_max"] = None
-                changed = True
-
-        elif action == "icon":
+        if action == "icon":
             icon_choices = [questionary.Choice(ic, value=ic) for ic in WEATHER_ICONS]
             icon_choices.append(questionary.Choice("← Aucune icône", value=""))
             val = questionary.select("Choisir une icône :", choices=icon_choices).ask()
@@ -1811,6 +1924,34 @@ def _edit_weather_submenu(item: dict, items: list[dict], catalog_path: Path) -> 
                 continue
             w["icon"] = val or None
             changed = True
+            if val:
+                default_desc = description_for_icon(val)
+                if default_desc:
+                    if questionary.confirm(
+                        f"Mettre à jour la description en « {default_desc} » ?",
+                        default=True,
+                    ).ask():
+                        w["description"] = default_desc
+
+        elif action == "description":
+            val = questionary.text("Description météo (vide pour null) :", default=desc_cur).ask()
+            if val is not None:
+                w["description"] = val.strip() or None
+                changed = True
+
+        elif action == "temp":
+            val = questionary.text("Température (entier °C, vide pour null) :", default=temp_cur).ask()
+            if val is not None:
+                stripped = val.strip()
+                if stripped:
+                    t = parse_temp(stripped)
+                    if t is None:
+                        console.print("[yellow]Format invalide — entier attendu.[/]")
+                        continue
+                    w["temp"] = t
+                else:
+                    w["temp"] = None
+                changed = True
 
         if changed:
             item["weather"] = w if any(v is not None for v in w.values()) else None
@@ -2057,6 +2198,26 @@ def _edit_trace_item(item: dict, items: list[dict], catalog_path: Path) -> bool:
                     console.print("[yellow]Format invalide — utiliser YYYY-MM-DD.[/]")
                 else:
                     item["date"] = stripped or None
+                    if stripped:
+                        # Recalcul automatique day + moon
+                        midpoint = _get_trace_midpoint(item)
+                        if midpoint:
+                            console.print("[dim]Calcul lever/coucher du soleil…[/]")
+                            day_data = compute_day(midpoint[0], midpoint[1], stripped)
+                            if day_data:
+                                item["day"] = day_data
+                                console.print(f"  🌅 {day_data.get('sunrise')} – {day_data.get('sunset')}")
+                            else:
+                                console.print("[yellow]⚠ Lever/coucher non récupérables (réseau ?).[/]")
+                        else:
+                            console.print("[dim]Coordonnées indisponibles — day non mis à jour.[/]")
+                        moon_data = compute_moon(stripped)
+                        if moon_data:
+                            item["moon"] = moon_data
+                            console.print(f"  {moon_data['icon']} {moon_data['description']}")
+                    else:
+                        item["day"] = None
+                        item["moon"] = None
                     save_catalog(catalog_path, items)
                     log_event("INFO", "traces", "field_updated",
                               id=item.get("id"), field="date", value=item["date"])
@@ -2813,6 +2974,23 @@ def main() -> None:
                 delete_all_data(args)
             except KeyboardInterrupt:
                 console.print("\n[dim]Interrompu.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "migrate_weather":
+            items, _ = load_catalog(CATALOG_TRACES)
+            n_mig, n_skip = _migrate_weather_data(items)
+            if n_mig:
+                from datetime import datetime, timezone as _tz
+                catalog_raw = json.loads(CATALOG_TRACES.read_text(encoding="utf-8"))
+                catalog_raw["items"] = items
+                catalog_raw["updated_at"] = datetime.now(_tz.utc).isoformat()
+                CATALOG_TRACES.write_text(
+                    json.dumps(catalog_raw, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                log_event("INFO", "traces", "weather_migrated", migrated=n_mig, skipped=n_skip)
+            console.print(f"[green]✓ Migration météo : {n_mig} trace(s) migrée(s), {n_skip} déjà à jour.[/]")
             log_event("INFO", "system", "done", exit_code=0,
                       duration_s=round(time.monotonic() - t_start, 2), totals={})
             sys.exit(0)
