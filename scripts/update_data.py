@@ -1564,7 +1564,7 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 action_choices.append(questionary.Choice("🔗 Détacher du POI", value="detach_poi"))
             else:
                 action_choices.append(questionary.Choice("🌐 Rattacher à un POI", value="attach_poi"))
-            action_choices.append(questionary.Choice("📍 Créer un POI à partir de cette photo", value="create_poi"))
+                action_choices.append(questionary.Choice("📍 Créer un POI à partir de cette photo", value="create_poi"))
             action_choices.append(questionary.Separator())
         action_choices += [
             questionary.Choice("🗑️  Supprimer cet item", value="delete"),
