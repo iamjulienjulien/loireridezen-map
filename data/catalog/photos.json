@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-30T22:46:57.318047+00:00",
+  "updated_at": "2026-05-30T22:48:44.459141+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -452,6 +452,21 @@
       "time": "2025:06:11 11:21:44",
       "lat": 47.310858,
       "lon": 1.12605
+    },
+    {
+      "id": "30-guinguette-saumur",
+      "label": "Guinguette Saumur",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/30-guinguette-saumur.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/30-guinguette-saumur.jpeg"
+      },
+      "source": "sources/photos/30-guinguette-saumur.jpeg",
+      "order": 30,
+      "time": "2025:06:17 22:04:04",
+      "lat": 47.259347,
+      "lon": -0.066508
     }
   ]
 }

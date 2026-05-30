@@ -116,7 +116,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "29 simoneau",
+        "name": "Simoneau",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/29-simoneau.jpeg",
         "thumb": "data/thumbs/29-simoneau.webp",
@@ -313,6 +313,24 @@
         "coordinates": [
           -0.071119,
           47.261167
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "30 guinguette saumur",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/30-guinguette-saumur.jpeg",
+        "thumb": "data/thumbs/30-guinguette-saumur.webp",
+        "time": "2025:06:17 22:04:04",
+        "id": "30-guinguette-saumur"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.066508,
+          47.259347
         ]
       }
     },
