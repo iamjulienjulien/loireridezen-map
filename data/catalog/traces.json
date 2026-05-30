@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-29T22:36:29.817002+00:00",
+  "updated_at": "2026-05-30T15:52:43.891362+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -15,7 +15,14 @@
       "date": "2018-06-09",
       "distance_km": 50.34,
       "elevation_gain_m": 623.7,
-      "duration_h": 3.25
+      "duration_h": 3.25,
+      "weather_code": 63,
+      "weather_desc": "Pluie modérée",
+      "weather_emoji": "🌧",
+      "temp_c": 20.1,
+      "sunrise": "05:48",
+      "sunset": "21:51",
+      "moon_phase": 0.865
     },
     {
       "id": "acte-1_etape-2_boissy-le-culle_etampes",
@@ -31,7 +38,14 @@
       "date": "2018-06-10",
       "distance_km": 19.27,
       "elevation_gain_m": 170.7,
-      "duration_h": 2.0
+      "duration_h": 2.0,
+      "weather_code": 61,
+      "weather_desc": "Pluie légère",
+      "weather_emoji": "🌧",
+      "temp_c": 19.9,
+      "sunrise": "05:49",
+      "sunset": "21:51",
+      "moon_phase": 0.899
     },
     {
       "id": "acte-1_etape-3_etampes_artenay",
@@ -48,7 +62,14 @@
       "date_status": "effective",
       "date": "2018-06-11",
       "duration_h": 8.0,
-      "weather": null
+      "weather": null,
+      "weather_code": 63,
+      "weather_desc": "Pluie modérée",
+      "weather_emoji": "🌧",
+      "temp_c": 19.4,
+      "sunrise": "05:51",
+      "sunset": "21:52",
+      "moon_phase": 0.933
     },
     {
       "id": "acte-1_etape-4_artenay_orleans",
@@ -65,7 +86,14 @@
       "date_status": "effective",
       "date": "2018-06-12",
       "duration_h": 4.0,
-      "weather": null
+      "weather": null,
+      "weather_code": 51,
+      "weather_desc": "Bruine légère",
+      "weather_emoji": "🌦",
+      "temp_c": 16.9,
+      "sunrise": "05:53",
+      "sunset": "21:52",
+      "moon_phase": 0.967
     },
     {
       "id": "acte-1_etape-5_orleans_beaugency",
@@ -82,7 +110,14 @@
       "date_status": "effective",
       "date": "2018-06-15",
       "duration_h": 2.0,
-      "weather": null
+      "weather": null,
+      "weather_code": 51,
+      "weather_desc": "Bruine légère",
+      "weather_emoji": "🌦",
+      "temp_c": 18.2,
+      "sunrise": "05:54",
+      "sunset": "21:53",
+      "moon_phase": 0.069
     },
     {
       "id": "acte-1_etape-6_beaugency_blois",
@@ -99,7 +134,14 @@
       "date_status": "effective",
       "date": "2018-06-17",
       "duration_h": 2.5,
-      "weather": null
+      "weather": null,
+      "weather_code": 51,
+      "weather_desc": "Bruine légère",
+      "weather_emoji": "🌦",
+      "temp_c": 16.7,
+      "sunrise": "05:54",
+      "sunset": "21:53",
+      "moon_phase": 0.136
     },
     {
       "id": "acte-2_etape-0_blois_chambord",
@@ -121,7 +163,14 @@
         "temp_max": 22
       },
       "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy",
-      "is_loop": true
+      "is_loop": true,
+      "weather_code": 53,
+      "weather_desc": "Bruine modérée",
+      "weather_emoji": "🌦",
+      "temp_c": 17.8,
+      "sunrise": "05:57",
+      "sunset": "21:48",
+      "moon_phase": 0.352
     },
     {
       "id": "acte-2_etape-1_blois_amboise",
@@ -141,7 +190,14 @@
       "weather": {
         "icon": "🌦️",
         "temp_max": 23
-      }
+      },
+      "weather_code": 53,
+      "weather_desc": "Bruine modérée",
+      "weather_emoji": "🌦",
+      "temp_c": 16.6,
+      "sunrise": "05:59",
+      "sunset": "21:49",
+      "moon_phase": 0.386
     },
     {
       "id": "acte-2_etape-2_amboise_chenonceaux",
@@ -161,7 +217,14 @@
       "weather": {
         "icon": "☀️",
         "temp_max": 25
-      }
+      },
+      "weather_code": 1,
+      "weather_desc": "Peu nuageux",
+      "weather_emoji": "🌤",
+      "temp_c": 16.4,
+      "sunrise": "05:59",
+      "sunset": "21:50",
+      "moon_phase": 0.454
     },
     {
       "id": "acte-2_etape-3_chenonceaux_tours",
@@ -181,7 +244,14 @@
       "weather": {
         "icon": "☀️",
         "temp_max": 27
-      }
+      },
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 19.2,
+      "sunrise": "05:59",
+      "sunset": "21:52",
+      "moon_phase": 0.487
     },
     {
       "id": "acte-2_etape-4_tours_villandry",
@@ -201,7 +271,14 @@
       "weather": {
         "icon": "☀️",
         "temp_max": 26
-      }
+      },
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 23.9,
+      "sunrise": "06:00",
+      "sunset": "21:54",
+      "moon_phase": 0.555
     },
     {
       "id": "acte-2_etape-5_villandry_chinon",
@@ -221,7 +298,14 @@
       "weather": {
         "icon": "☀️",
         "temp_max": 27
-      }
+      },
+      "weather_code": 63,
+      "weather_desc": "Pluie modérée",
+      "weather_emoji": "🌧",
+      "temp_c": 24.4,
+      "sunrise": "06:02",
+      "sunset": "21:55",
+      "moon_phase": 0.589
     },
     {
       "id": "acte-2_etape-6_chinon_montsoreaux",
@@ -241,7 +325,14 @@
       "weather": {
         "icon": "☀️",
         "temp_max": 30
-      }
+      },
+      "weather_code": 2,
+      "weather_desc": "Partiellement nuageux",
+      "weather_emoji": "⛅",
+      "temp_c": 18.6,
+      "sunrise": "06:02",
+      "sunset": "21:57",
+      "moon_phase": 0.691
     },
     {
       "id": "acte-2_etape-7_montsoreau_saumur",
@@ -261,7 +352,14 @@
       "weather": {
         "icon": "☀️",
         "temp_max": 28
-      }
+      },
+      "weather_code": 0,
+      "weather_desc": "Ciel dégagé",
+      "weather_emoji": "☀️",
+      "temp_c": 20.1,
+      "sunrise": "06:03",
+      "sunset": "21:58",
+      "moon_phase": 0.725
     },
     {
       "id": "acte-2_etape-8_saumur_angers",
@@ -283,7 +381,14 @@
         "temp_max": 28
       },
       "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy/?img_index=1",
-      "komoot_url": "https://www.komoot.com/tour/2336053643"
+      "komoot_url": "https://www.komoot.com/tour/2336053643",
+      "weather_code": 0,
+      "weather_desc": "Ciel dégagé",
+      "weather_emoji": "☀️",
+      "temp_c": 22.8,
+      "sunrise": "06:03",
+      "sunset": "22:00",
+      "moon_phase": 0.758
     },
     {
       "id": "acte-3_etape-1_angers_behuard",
@@ -305,7 +410,14 @@
         "temp_min": 13,
         "temp_max": 31,
         "icon": "☀️"
-      }
+      },
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 22.2,
+      "sunrise": "06:17",
+      "sunset": "21:40",
+      "moon_phase": 0.204
     },
     {
       "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
@@ -327,7 +439,14 @@
         "temp_min": 16,
         "temp_max": 31,
         "icon": "☀️"
-      }
+      },
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 24.6,
+      "sunrise": "06:17",
+      "sunset": "21:41",
+      "moon_phase": 0.238
     },
     {
       "id": "acte-3_etape-3_st-florent-le-vieil_ancenis",
@@ -349,7 +468,14 @@
         "temp_min": 17,
         "temp_max": 32,
         "icon": "☀️"
-      }
+      },
+      "weather_code": 0,
+      "weather_desc": "Ciel dégagé",
+      "weather_emoji": "☀️",
+      "temp_c": 23.8,
+      "sunrise": "06:18",
+      "sunset": "21:44",
+      "moon_phase": 0.272
     },
     {
       "id": "acte-3_etape-4_ancenis_nantes",
@@ -371,7 +497,14 @@
         "temp_min": 19,
         "temp_max": 34,
         "icon": "☀️"
-      }
+      },
+      "weather_code": 2,
+      "weather_desc": "Partiellement nuageux",
+      "weather_emoji": "⛅",
+      "temp_c": 26.6,
+      "sunrise": "06:17",
+      "sunset": "21:47",
+      "moon_phase": 0.34
     },
     {
       "id": "acte-3_etape-5_nantes_paimboeuf",
@@ -393,7 +526,14 @@
         "temp_min": 20,
         "temp_max": 33,
         "icon": "☀️"
-      }
+      },
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 27.1,
+      "sunrise": "06:18",
+      "sunset": "21:49",
+      "moon_phase": 0.373
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
@@ -415,7 +555,14 @@
         "temp_min": 19,
         "temp_max": 32,
         "icon": "☀️"
-      }
+      },
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 25.2,
+      "sunrise": "06:19",
+      "sunset": "21:52",
+      "moon_phase": 0.407
     },
     {
       "id": "micro-aventure_boucle-angevine",
@@ -433,7 +580,14 @@
       "date_status": "effective",
       "date": "2025-09-30",
       "duration_h": null,
-      "weather": null
+      "weather": null,
+      "weather_code": 3,
+      "weather_desc": "Couvert",
+      "weather_emoji": "☁️",
+      "temp_c": 14.6,
+      "sunrise": "07:59",
+      "sunset": "19:43",
+      "moon_phase": 0.28
     }
   ]
 }

@@ -133,7 +133,12 @@ async function _doLoad() {
         onEachFeature(feature, layer) {
           const stage = feature.properties?.stage ?? 0;
           const matched = itemsByStage.get(stage) ?? items[0];
-          layer.bindPopup(renderStepPopup(matched), { maxWidth: 280 });
+          layer.bindPopup(renderStepPopup(matched, group), { maxWidth: 300, closeButton: false });
+          layer.once('popupopen', () => {
+            layer.getPopup()?.getElement()
+              ?.querySelector('.lrz-step-popup__close')
+              ?.addEventListener('click', () => layer.closePopup());
+          });
           layer.on('click', () => track('Step Opened', { step_id: matched.id, act: group.id }));
         },
       }));
@@ -153,8 +158,15 @@ async function _doLoad() {
             const bounds = geoLayer.getBounds();
             item._photo_count = _photosInBounds(photoFeatures, bounds);
           } catch { item._photo_count = 0; }
-          const popup = renderStepPopup(item);
-          geoLayer.eachLayer((l) => l.bindPopup(popup, { maxWidth: 280 }));
+          const popup = renderStepPopup(item, group);
+          geoLayer.eachLayer((l) => {
+            l.bindPopup(popup, { maxWidth: 300, closeButton: false });
+            l.once('popupopen', () => {
+              l.getPopup()?.getElement()
+                ?.querySelector('.lrz-step-popup__close')
+                ?.addEventListener('click', () => l.closePopup());
+            });
+          });
           geoLayer.on('click', () => track('Step Opened', { step_id: item.id, act: group.id }));
           _stepLayersById.set(item.id, geoLayer);
           return geoLayer;
