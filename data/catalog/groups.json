@@ -30,7 +30,7 @@
       "year": 2026,
       "unified": false,
       "color": "#2e6a8f",
-      "dashed": true,
+      "dashed": false,
       "order": 3,
       "visible_by_default": true
     },
