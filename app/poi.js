@@ -114,16 +114,18 @@ function renderEditorialPoiPopup(p) {
   return `
     <div class="lrz-popup lrz-popup--poi">
       <header class="lrz-popup__header" style="--poi-type-color:${escapeHtml(color)}">
-        <span class="lrz-popup-type-label">
-          <span class="lrz-popup-type-label__emoji">${t.emoji || "📍"}</span>
-          <span class="lrz-popup-type-label__text">${escapeHtml(t.label || p.type || "")}</span>
+        <span class="lrz-popup__header-left">
+          <span class="lrz-popup-type-label">
+            <span class="lrz-popup-type-label__emoji">${t.emoji || "📍"}</span>
+            <span class="lrz-popup-type-label__text">${escapeHtml(t.label || p.type || "")}</span>
+          </span>
+          ${p.type === "chateau" && p.visited === true ? `<span class="lrz-popup__visited">✅ Visité</span>` : ""}
         </span>
         <button class="lrz-popup__close" aria-label="Fermer">✕</button>
       </header>
       ${photo ? `<div class="lrz-popup__photo"><img src="${escapeHtml(photo)}" alt="${escapeHtml(p.name || "")}"/></div>` : ""}
       <div class="lrz-popup__body">
         <h3 class="lrz-popup__title">${escapeHtml(p.name || "")}</h3>
-        ${p.type === "chateau" && p.visited === true ? `<span class="lrz-popup__visited">✅ Visité</span>` : ""}
         ${p.description ? `<p class="lrz-popup__desc">${escapeHtml(p.description)}</p>` : ""}
       </div>
     </div>

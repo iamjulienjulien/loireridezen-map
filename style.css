@@ -1660,6 +1660,14 @@ body {
     color-mix(in srgb, var(--poi-type-color, #888) 20%, transparent);
 }
 
+.lrz-popup__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
 .lrz-popup-type-label {
   display: inline-flex;
   align-items: center;
