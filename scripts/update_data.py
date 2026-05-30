@@ -653,7 +653,6 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
 
     # --- Groupe 3 : POI ---
     choices.append(questionary.Choice("🌐 Synchroniser les POI (Supabase)", value="pois"))
-    choices.append(questionary.Choice("📍 Créer un POI à partir d'une photo (EXIF)", value="poi_from_photo"))
     choices.append(questionary.Separator())
 
     # --- Groupe 4 : Sortie ---
@@ -676,8 +675,6 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "photos", "both"
     if choice == "pois":
         return "pois", "both"
-    if choice == "poi_from_photo":
-        return "poi_from_photo", "both"
     if choice == "list_edit":
         return "list_edit", "both"
     if choice == "delete_all":
@@ -965,7 +962,7 @@ def prompt_new_poi() -> None:
         console.print(f"[red]Erreur lors de la création : {e}[/]")
 
 
-def prompt_poi_from_photo() -> None:
+def prompt_poi_from_photo(photo_path: "Path | None" = None) -> None:
     if not _SUPABASE_AVAILABLE:
         console.print("[red]Module supabase non disponible. Installer avec : pip install supabase>=2.5.0[/]")
         return
@@ -975,39 +972,57 @@ def prompt_poi_from_photo() -> None:
         console.print("[red]PIL non disponible. Installer : pip install Pillow[/]")
         return
 
-    # 1. Sélection de la photo
-    inbox_dir = PHOTOS_DIR / "inbox"
-    inbox_photos = sorted(
-        p for p in inbox_dir.iterdir()
-        if p.is_file() and p.suffix.lower() in PHOTO_EXTS
-    ) if inbox_dir.exists() else []
+    # 1. Sélection de la photo (sautée si photo_path fourni)
+    if photo_path is None:
+        inbox_dir = PHOTOS_DIR / "inbox"
+        inbox_photos = sorted(
+            p for p in inbox_dir.iterdir()
+            if p.is_file() and p.suffix.lower() in PHOTO_EXTS
+        ) if inbox_dir.exists() else []
 
-    photo_path: Path | None = None
-    if inbox_photos:
-        choices = [questionary.Choice(p.name, value=p) for p in inbox_photos] + [
-            questionary.Choice("📂 Saisir un chemin manuellement", value="manual"),
-            questionary.Choice("← Annuler", value=_CANCEL),
-        ]
-        sel = questionary.select("Photo à utiliser :", choices=choices).ask()
-        if sel is None or sel == _CANCEL:
-            console.print("[dim]Annulé.[/]")
-            return
-        if sel == "manual":
+        if inbox_photos:
+            choices = [questionary.Choice(p.name, value=p) for p in inbox_photos] + [
+                questionary.Choice("📂 Saisir un chemin manuellement", value="manual"),
+                questionary.Choice("← Annuler", value=_CANCEL),
+            ]
+            sel = questionary.select("Photo à utiliser :", choices=choices).ask()
+            if sel is None or sel == _CANCEL:
+                console.print("[dim]Annulé.[/]")
+                return
+            if sel == "manual":
+                raw = questionary.text("Chemin de la photo :").ask()
+                if not raw:
+                    return
+                photo_path = Path(raw.strip()).expanduser()
+            else:
+                photo_path = sel
+        else:
             raw = questionary.text("Chemin de la photo :").ask()
             if not raw:
                 return
             photo_path = Path(raw.strip()).expanduser()
-        else:
-            photo_path = sel
-    else:
-        raw = questionary.text("Chemin de la photo :").ask()
-        if not raw:
-            return
-        photo_path = Path(raw.strip()).expanduser()
 
     if not photo_path.exists():
         console.print(f"[red]Fichier introuvable : {photo_path}[/]")
         return
+
+    # 1b. Vérifier si la photo est déjà liée à un POI
+    _pcheck, _ = load_catalog(CATALOG_PHOTOS)
+    _existing_photo = next((p for p in _pcheck if p.get("id") == photo_path.stem), None)
+    _existing_poi_id = _existing_photo.get("poi_id") if _existing_photo else None
+    if _existing_poi_id:
+        poi_label = _resolve_poi_name(_existing_poi_id)
+        console.print(f"[yellow]⚠ Cette photo est déjà liée au POI : {poi_label}[/]")
+        _continue = questionary.select(
+            "Que souhaitez-vous faire ?",
+            choices=[
+                questionary.Choice("📍 Créer un autre POI à partir de cette photo", value="create"),
+                questionary.Choice("← Annuler", value=_CANCEL),
+            ],
+        ).ask()
+        if _continue is None or _continue == _CANCEL:
+            console.print("[dim]Annulé.[/]")
+            return
 
     # 2. Extraction EXIF
     console.print("[dim]Extraction des données EXIF…[/]")
@@ -1549,6 +1564,7 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 action_choices.append(questionary.Choice("🔗 Détacher du POI", value="detach_poi"))
             else:
                 action_choices.append(questionary.Choice("🌐 Rattacher à un POI", value="attach_poi"))
+            action_choices.append(questionary.Choice("📍 Créer un POI à partir de cette photo", value="create_poi"))
             action_choices.append(questionary.Separator())
         action_choices += [
             questionary.Choice("🗑️  Supprimer cet item", value="delete"),
@@ -1639,6 +1655,17 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 _update_photo_poi_in_geojson(item["id"], None)
                 log_event("INFO", "photos", "photo_poi_detached", id=item["id"])
                 console.print("[green]✓ Photo détachée — redeviendra un marker sur la carte.[/]")
+
+        elif action == "create_poi":
+            source = item.get("source", "")
+            p = (REPO_ROOT / source) if source else None
+            prompt_poi_from_photo(photo_path=p)
+            # Refresh item and items list from catalog after potential poi_id update
+            fresh, _ = load_catalog(catalog_path)
+            updated = next((it for it in fresh if it["id"] == item["id"]), None)
+            if updated:
+                item.update(updated)
+            items[:] = fresh
 
         elif action == "delete":
             label_display = item.get("label", item["id"])
@@ -2784,14 +2811,6 @@ def main() -> None:
         if action == "delete_all":
             try:
                 delete_all_data(args)
-            except KeyboardInterrupt:
-                console.print("\n[dim]Interrompu.[/]")
-            log_event("INFO", "system", "done", exit_code=0,
-                      duration_s=round(time.monotonic() - t_start, 2), totals={})
-            sys.exit(0)
-        if action == "poi_from_photo":
-            try:
-                prompt_poi_from_photo()
             except KeyboardInterrupt:
                 console.print("\n[dim]Interrompu.[/]")
             log_event("INFO", "system", "done", exit_code=0,
