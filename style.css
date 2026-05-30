@@ -1746,14 +1746,14 @@ body {
 }
 
 .lrz-popup__visited {
-  display: inline-block;
-  font-size: 0.725rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.1rem 0.45rem;
-  border-radius: 4px;
-  background: #e8f5e9;
+  padding: 0.2em 0.55em;
+  border-radius: 9999px;
+  background: transparent;
   color: #2e7d32;
-  margin-bottom: 0.3rem;
 }
 
 /* ═══════════════════════════════ LRZ-EVO-27 — Vague UI 5 ═══════════════════ */
