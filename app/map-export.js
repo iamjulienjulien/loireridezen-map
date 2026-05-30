@@ -94,11 +94,11 @@ const FORMATS = {
 // ─── Emojis pour l'encadré stats ─────────────────────────────────────────────
 
 const STAT_ICONS = {
-  calendar: "📅",
+  calendar: "🗓️",
   bike: "🚴",
-  route: "📏",
+  route: "📊",
   mountain: "🏔️",
-  clock: "🕒",
+  clock: "⌚️",
 };
 
 // ─── Définitions des lignes de stats (pour les cases à cocher) ───────────────
@@ -368,13 +368,17 @@ function _computeStatsData(mode, group, loaded, color) {
         text: `${Math.round(item.distance_km)} km`,
         icon: "route",
       });
+    if (item.duration_h != null)
+      lines.push({
+        text: _formatDurationFR(item.duration_h) + " de vélo",
+        icon: "clock",
+      });
     if (item.elevation_gain_m != null)
       lines.push({
-        text: `${_fmtNum(item.elevation_gain_m)} m de dénivelé`,
+        text: `${_fmtNum(item.elevation_gain_m)} m D+`,
         icon: "mountain",
       });
-    if (item.duration_h != null)
-      lines.push({ text: _formatDurationFR(item.duration_h), icon: "clock" });
+
     return { title: item.label ?? "", lines, color };
   }
 }
@@ -439,7 +443,13 @@ function drawEuroVelo(ctx, geojson, zFloat, originWX, originWY, lineWidth) {
   ctx.setLineDash([]);
   ctx.beginPath();
   for (let i = 0; i < coords.length; i++) {
-    const { x, y } = lngLatToPixel(coords[i][0], coords[i][1], zFloat, originWX, originWY);
+    const { x, y } = lngLatToPixel(
+      coords[i][0],
+      coords[i][1],
+      zFloat,
+      originWX,
+      originWY,
+    );
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
@@ -501,9 +511,10 @@ function drawTraces(ctx, traces, zFloat, originWX, originWY, lineWidth) {
 
 function _tintEmoji(ctx, emoji, x, y, fontSize, color) {
   const pad = Math.ceil(fontSize * 0.4);
-  const s   = fontSize + pad * 2;
+  const s = fontSize + pad * 2;
   const tmp = document.createElement("canvas");
-  tmp.width = s; tmp.height = s;
+  tmp.width = s;
+  tmp.height = s;
   const tc = tmp.getContext("2d", { willReadFrequently: true });
   tc.font = `${fontSize}px sans-serif`;
   tc.textAlign = "center";
@@ -519,7 +530,7 @@ function _tintEmoji(ctx, emoji, x, y, fontSize, color) {
   const d = img.data;
   for (let i = 0; i < d.length; i += 4) {
     if (d[i + 3] === 0) continue;
-    d[i]     = Math.round(d[i]     * cr);
+    d[i] = Math.round(d[i] * cr);
     d[i + 1] = Math.round(d[i + 1] * cg);
     d[i + 2] = Math.round(d[i + 2] * cb);
   }
@@ -576,7 +587,13 @@ function drawCityLabels(
   for (let i = 0; i < markers.length; i++) {
     const marker = markers[i];
     if (!marker.city) continue;
-    const { x, y } = lngLatToPixel(marker.lng, marker.lat, zFloat, originWX, originWY);
+    const { x, y } = lngLatToPixel(
+      marker.lng,
+      marker.lat,
+      zFloat,
+      originWX,
+      originWY,
+    );
     const cityText = marker.bold ? marker.city.toUpperCase() : marker.city;
     ctx.font = `${fontSize}px '${fontFamily}', sans-serif`;
 
@@ -591,29 +608,43 @@ function drawCityLabels(
     ];
 
     const candidates = [
-      { lx: x + ox,       ty: y - bh / 2 },
-      { lx: x + ox,       ty: y - bh * 1.4 },
-      { lx: x + ox,       ty: y + bh * 0.4 },
-      { lx: x + ox,       ty: y - bh * 2.3 },
-      { lx: x + ox,       ty: y + bh * 1.3 },
-      { lx: x - ox - bw,  ty: y - bh / 2 },
-      { lx: x - ox - bw,  ty: y - bh * 1.4 },
-      { lx: x - ox - bw,  ty: y + bh * 0.4 },
-      { lx: x - ox - bw,  ty: y - bh * 2.3 },
-      { lx: x - ox - bw,  ty: y + bh * 1.3 },
-      { lx: x - bw / 2,   ty: y - bh * 1.5 - fontSize * 0.4 },
-      { lx: x - bw / 2,   ty: y + fontSize * 0.6 },
+      { lx: x + ox, ty: y - bh / 2 },
+      { lx: x + ox, ty: y - bh * 1.4 },
+      { lx: x + ox, ty: y + bh * 0.4 },
+      { lx: x + ox, ty: y - bh * 2.3 },
+      { lx: x + ox, ty: y + bh * 1.3 },
+      { lx: x - ox - bw, ty: y - bh / 2 },
+      { lx: x - ox - bw, ty: y - bh * 1.4 },
+      { lx: x - ox - bw, ty: y + bh * 0.4 },
+      { lx: x - ox - bw, ty: y - bh * 2.3 },
+      { lx: x - ox - bw, ty: y + bh * 1.3 },
+      { lx: x - bw / 2, ty: y - bh * 1.5 - fontSize * 0.4 },
+      { lx: x - bw / 2, ty: y + fontSize * 0.6 },
     ];
 
     let chosen = null;
     for (const { lx, ty } of candidates) {
-      if (lx < edge || ty < edge || lx + bw > canvasW - edge || ty + bh > canvasH - edge) continue;
+      if (
+        lx < edge ||
+        ty < edge ||
+        lx + bw > canvasW - edge ||
+        ty + bh > canvasH - edge
+      )
+        continue;
       const c = { x: lx, y: ty, w: bw, h: bh };
-      if (!obstacles.some((p) => _rectsOverlap(p, c))) { chosen = c; break; }
+      if (!obstacles.some((p) => _rectsOverlap(p, c))) {
+        chosen = c;
+        break;
+      }
     }
     if (!chosen) {
       for (const { lx, ty } of candidates) {
-        if (lx >= edge && ty >= edge && lx + bw <= canvasW - edge && ty + bh <= canvasH - edge) {
+        if (
+          lx >= edge &&
+          ty >= edge &&
+          lx + bw <= canvasW - edge &&
+          ty + bh <= canvasH - edge
+        ) {
           chosen = { x: lx, y: ty, w: bw, h: bh };
           break;
         }
@@ -624,7 +655,8 @@ function drawCityLabels(
       chosen = {
         x: Math.min(Math.max(lx, 0), canvasW - bw),
         y: Math.min(Math.max(ty, 0), canvasH - bh),
-        w: bw, h: bh,
+        w: bw,
+        h: bh,
       };
     }
     placed.push(chosen);
@@ -638,7 +670,10 @@ function drawCityLabels(
       ctx.save();
       ctx.strokeStyle = marker.color || "#2e6a8f";
       ctx.lineWidth = Math.max(1, Math.round(fontSize * 0.07));
-      ctx.setLineDash([Math.round(fontSize * 0.2), Math.round(fontSize * 0.15)]);
+      ctx.setLineDash([
+        Math.round(fontSize * 0.2),
+        Math.round(fontSize * 0.15),
+      ]);
       ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(x, y);
@@ -908,12 +943,16 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
 
   if (mode === "act") {
     const cityNames = loaded.map(({ item }) =>
-      item.is_loop ? extractLoopCityNames(item.label) : extractCityNames(item.label),
+      item.is_loop
+        ? extractLoopCityNames(item.label)
+        : extractCityNames(item.label),
     );
     // Loop at i=0 in a multi-item group: show its departure city (e.g. "Blois")
     // Standalone loop: no city (from is a non-city name like "Boucle Angevine")
     const dep0city = loaded[0].item.is_loop
-      ? (loaded.length > 1 ? (cityNames[0]?.from ?? null) : null)
+      ? loaded.length > 1
+        ? (cityNames[0]?.from ?? null)
+        : null
       : (cityNames[0]?.from ?? null);
     push(_firstCoord(loaded[0].gj), "départ", dep0city);
     if (loaded[0].item.is_loop) {
@@ -1016,7 +1055,16 @@ async function renderToCanvas(
 
   if (options.cities) {
     const cityFs = Math.max(36, Math.round(fmt.w / 58));
-    drawCityLabels(ctx, markers, zFloat, originWX, originWY, cityFs, fontFamily, markerFs);
+    drawCityLabels(
+      ctx,
+      markers,
+      zFloat,
+      originWX,
+      originWY,
+      cityFs,
+      fontFamily,
+      markerFs,
+    );
   }
 
   if (options.stats && statsData) {
@@ -1394,7 +1442,16 @@ async function _renderPreview() {
     drawTraces(ctx, previewTraces, zFloat, originWX, originWY, 2);
     drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);
     if (options.cities)
-      drawCityLabels(ctx, data.markers, zFloat, originWX, originWY, 15, fontFamily, 20);
+      drawCityLabels(
+        ctx,
+        data.markers,
+        zFloat,
+        originWX,
+        originWY,
+        15,
+        fontFamily,
+        20,
+      );
     if (options.stats && data.statsData) {
       const filteredLines = data.statsData.lines.filter(
         (l) => !options.visibleStats?.size || options.visibleStats.has(l.icon),
@@ -1648,8 +1705,10 @@ export async function openExportModal() {
   document.getElementById("exp-generate").addEventListener("click", _generate);
 
   // Pré-sélectionner le thème actif de la carte dans la modale
-  const currentTheme = localStorage.getItem('lrz_theme') || DEFAULT_THEME;
-  _overlay.querySelector(`.lrz-export-theme[data-theme="${currentTheme}"]`)?.click();
+  const currentTheme = localStorage.getItem("lrz_theme") || DEFAULT_THEME;
+  _overlay
+    .querySelector(`.lrz-export-theme[data-theme="${currentTheme}"]`)
+    ?.click();
 
   _renderPreview();
 }
