@@ -432,7 +432,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/26-princesse-de-loire.jpeg",
         "thumb": "data/thumbs/26-princesse-de-loire.webp",
         "time": "2026:05:24 15:55:48",
-        "id": "26-princesse-de-loire"
+        "id": "26-princesse-de-loire",
+        "poi_id": "e77077cc-7712-4c4c-9026-c7fa74fae9d5"
       },
       "geometry": {
         "type": "Point",
@@ -469,7 +470,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/27-chateau-nantes.jpeg",
         "thumb": "data/thumbs/27-chateau-nantes.webp",
         "time": "2026:05:27 12:47:44",
-        "id": "27-chateau-nantes"
+        "id": "27-chateau-nantes",
+        "poi_id": "e63ef762-8db2-4c2b-a5e5-98b0ea7873c6"
       },
       "geometry": {
         "type": "Point",
