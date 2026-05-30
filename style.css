@@ -1756,6 +1756,13 @@ body {
   color: #2e7d32;
 }
 
+.lrz-popup__meta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--lrz-ink-soft);
+  margin-bottom: 0.25rem;
+}
+
 /* ═══════════════════════════════ LRZ-EVO-27 — Vague UI 5 ═══════════════════ */
 
 /* ─── Variables supplémentaires ─── */
