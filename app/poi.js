@@ -101,9 +101,15 @@ function renderAttachedPhotos(poiId) {
 function renderEditorialPoiPopup(p) {
   const t = POI_TYPES[p.type] || {};
   const color = t.color || "#888888";
+  // Fallback: first attached photo from pois_photos.geojson linked by poi_id
+  const attached = photosByPoi.get(p.id) || [];
+  const attachedSrc = attached.length > 0
+    ? (safeHttpUrl(attached[0].thumb) || safeHttpUrl(attached[0].image) || attached[0].thumb || attached[0].image)
+    : null;
   const photo = p.photo_path
     || safeHttpUrl(p.thumb) || safeHttpUrl(p.image)
     || p.thumb || p.image
+    || attachedSrc
     || null;
   return `
     <div class="lrz-popup lrz-popup--poi">
