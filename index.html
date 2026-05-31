@@ -28,7 +28,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;700&family=Spectral:wght@400;700&family=ZCOOL+QingKe+HuangYou&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;700&family=Spectral:wght@400;700&family=ZCOOL+QingKe+HuangYou&display=swap"
+    />
     <link rel="stylesheet" href="style.css" />
 
     <!-- Privacy-friendly analytics by Plausible -->
@@ -82,13 +85,14 @@
           aria-label="Replier le panneau"
           aria-expanded="true"
           aria-controls="filtersPanelBody"
-        >▼</button>
+        >
+          ▼
+        </button>
       </header>
 
       <!-- Corps du panneau (animé pour le collapse) -->
       <div class="lrz-panel__body-wrap" id="filtersPanelBody">
         <div class="lrz-panel__body">
-
           <!-- Blocs éditoriaux : position + étape (rempli par info-panel.js) -->
           <div id="lrz-info-panel"></div>
 
@@ -96,11 +100,18 @@
           <div id="lrz-focus-banner" class="lrz-focus-banner"></div>
 
           <!-- Section Traces -->
-          <section class="lrz-section lrz-panel-section--actes" data-section="traces">
+          <section
+            class="lrz-section lrz-panel-section--actes"
+            data-section="traces"
+          >
             <header class="lrz-section__header">
               <h3>Traces</h3>
-              <button class="lrz-section__all" data-target="traces">Tout</button>
-              <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+              <button class="lrz-section__all" data-target="traces">
+                Tout
+              </button>
+              <button class="lrz-section__toggle" aria-expanded="true">
+                ▾
+              </button>
             </header>
             <div class="lrz-section__body" id="traces-list">
               <!-- rempli par app.js depuis groups.json -->
@@ -108,11 +119,16 @@
           </section>
 
           <!-- Section Points d'intérêt -->
-          <section class="lrz-section lrz-panel-section--poi" data-section="poi">
+          <section
+            class="lrz-section lrz-panel-section--poi"
+            data-section="poi"
+          >
             <header class="lrz-section__header">
               <h3>Points d'intérêt</h3>
               <button class="lrz-section__all" data-target="poi">Tout</button>
-              <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+              <button class="lrz-section__toggle" aria-expanded="true">
+                ▾
+              </button>
             </header>
             <div class="lrz-section__body" id="poi-list">
               <!-- rempli par app.js depuis POI_TYPES -->
@@ -120,10 +136,15 @@
           </section>
 
           <!-- Section Photos -->
-          <section class="lrz-section lrz-panel-section--photos" data-section="photos">
+          <section
+            class="lrz-section lrz-panel-section--photos"
+            data-section="photos"
+          >
             <header class="lrz-section__header">
               <h3>Photos</h3>
-              <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+              <button class="lrz-section__toggle" aria-expanded="true">
+                ▾
+              </button>
             </header>
             <div class="lrz-section__body" id="photos-list">
               <!-- rempli par app.js -->
@@ -132,27 +153,62 @@
 
           <!-- Liens externes (bas du panel) -->
           <div class="lrz-panel__actions">
-            <button class="lrz-reset-btn" id="reset-prefs">Réinitialiser les filtres</button>
+            <button class="lrz-reset-btn" id="reset-prefs">
+              Réinitialiser les filtres
+            </button>
           </div>
           <footer class="lrz-panel-header">
-            <a href="https://loireridezen.link" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Site Loire Ride Zen">
+            <a
+              href="https://loireridezen.link"
+              target="_blank"
+              rel="noopener"
+              class="lrz-panel-header__link"
+              title="Site Loire Ride Zen"
+            >
               <span class="lrz-panel-header__icon">🌐</span>
               <span class="lrz-panel-header__label">Site</span>
             </a>
-            <a href="https://www.instagram.com/loireridezen/" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Compte Instagram">
+            <a
+              href="https://www.instagram.com/loireridezen/"
+              target="_blank"
+              rel="noopener"
+              class="lrz-panel-header__link"
+              title="Compte Instagram"
+            >
               <span class="lrz-panel-header__icon">📷</span>
               <span class="lrz-panel-header__label">Instagram</span>
             </a>
-            <a href="https://www.komoot.com/fr-fr/user/1484664526803" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Profil Komoot">
+            <a
+              href="https://www.komoot.com/fr-fr/user/1484664526803"
+              target="_blank"
+              rel="noopener"
+              class="lrz-panel-header__link"
+              title="Profil Komoot"
+            >
               <span class="lrz-panel-header__icon">🗺️</span>
               <span class="lrz-panel-header__label">Komoot</span>
             </a>
           </footer>
-          <p class="lrz-panel-credit">Une création de <a href="https://julienjulien.fr" target="_blank" rel="noopener">Julien Julien</a></p>
-          <p class="lrz-panel-credit lrz-panel-credit--attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · <span>Loire Ride Zen</span></p>
-
-        </div><!-- /.lrz-panel__body -->
-      </div><!-- /.lrz-panel__body-wrap -->
+          <p class="lrz-panel-credit">
+            Une création de
+            <a href="https://julienjulien.fr" target="_blank" rel="noopener"
+              >Julien Julien</a
+            >
+          </p>
+          <p class="lrz-panel-credit lrz-panel-credit--attr">
+            ©
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noopener"
+              >OpenStreetMap</a
+            >
+            · <span>Loire Ride Zen</span>
+          </p>
+        </div>
+        <!-- /.lrz-panel__body -->
+      </div>
+      <!-- /.lrz-panel__body-wrap -->
     </aside>
 
     <!-- Bouton d'ouverture du drawer mobile -->
@@ -175,21 +231,93 @@
     <div id="map"></div>
 
     <!-- Panel flottant d'actions (top-right) -->
-    <aside id="lrz-actions-panel" class="lrz-actions-panel" aria-label="Actions carte">
+    <aside
+      id="lrz-actions-panel"
+      class="lrz-actions-panel"
+      aria-label="Actions carte"
+    >
       <div class="lrz-actions-panel__group">
-        <button class="lrz-apanel-btn" data-action="zoom-in" title="Zoom avant" aria-label="Zoom avant">+</button>
-        <button class="lrz-apanel-btn" data-action="zoom-out" title="Zoom arrière" aria-label="Zoom arrière">−</button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="zoom-in"
+          title="Zoom avant"
+          aria-label="Zoom avant"
+        >
+          +
+        </button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="zoom-out"
+          title="Zoom arrière"
+          aria-label="Zoom arrière"
+        >
+          −
+        </button>
       </div>
       <div class="lrz-actions-panel__group lrz-actions-panel__group--themes">
-        <button class="lrz-apanel-btn" data-action="theme" data-theme="tuffeau" title="Thème Or et tuffeau" aria-label="Or et tuffeau">🛰️</button>
-        <button class="lrz-apanel-btn" data-action="theme" data-theme="ardoise" title="Thème Ardoise" aria-label="Ardoise">🗺️</button>
-        <button class="lrz-apanel-btn lrz-apanel-btn--text" data-action="theme" data-theme="etat-major" title="Thème État-major" aria-label="État-major">IGN</button>
-        <button class="lrz-apanel-btn" data-action="theme" data-theme="loire-velo" title="Thème Loire à vélo" aria-label="Loire à vélo">🚲</button>
-        <button class="lrz-apanel-btn" data-action="theme" data-theme="grand-air" title="Thème Grand air" aria-label="Grand air">⛰️</button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="theme"
+          data-theme="tuffeau"
+          title="Thème Or et tuffeau"
+          aria-label="Or et tuffeau"
+        >
+          🛰️
+        </button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="theme"
+          data-theme="ardoise"
+          title="Thème Ardoise"
+          aria-label="Ardoise"
+        >
+          🗺️
+        </button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="theme"
+          data-theme="loire-velo"
+          title="Thème Loire à vélo"
+          aria-label="Loire à vélo"
+        >
+          🚲
+        </button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="theme"
+          data-theme="grand-air"
+          title="Thème Grand air"
+          aria-label="Grand air"
+        >
+          ⛰️
+        </button>
+        <button
+          class="lrz-apanel-btn lrz-apanel-btn--text"
+          data-action="theme"
+          data-theme="etat-major"
+          title="Thème État-major"
+          aria-label="État-major"
+        >
+          IGN
+        </button>
       </div>
       <div class="lrz-actions-panel__group">
-        <button class="lrz-apanel-btn" data-action="reset-view" title="Recentrer sur les traces" aria-label="Recentrer">🧭</button>
-        <button class="lrz-apanel-btn" data-action="locate-me" title="Ma position" aria-label="Ma position">📍</button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="reset-view"
+          title="Recentrer sur les traces"
+          aria-label="Recentrer"
+        >
+          🧭
+        </button>
+        <button
+          class="lrz-apanel-btn"
+          data-action="locate-me"
+          title="Ma position"
+          aria-label="Ma position"
+        >
+          📍
+        </button>
       </div>
     </aside>
 
