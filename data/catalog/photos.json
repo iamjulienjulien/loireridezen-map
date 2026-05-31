@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T23:09:43.238302+00:00",
+  "updated_at": "2026-05-31T23:17:24.072590+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -514,6 +514,21 @@
       "time": "2026:05:27 20:22:56",
       "lat": 47.289044,
       "lon": -2.040803
+    },
+    {
+      "id": "34-la-guinchette",
+      "label": "La Guinchette",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/34-la-guinchette.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/34-la-guinchette.jpeg"
+      },
+      "source": "sources/photos/34-la-guinchette.jpeg",
+      "order": 34,
+      "time": "2026:05:23 17:01:34",
+      "lat": 47.379781,
+      "lon": -0.963075
     }
   ]
 }

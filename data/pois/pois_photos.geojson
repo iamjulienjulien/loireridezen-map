@@ -469,6 +469,24 @@
     {
       "type": "Feature",
       "properties": {
+        "name": "34 la guinchette",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/34-la-guinchette.jpeg",
+        "thumb": "data/thumbs/34-la-guinchette.webp",
+        "time": "2026:05:23 17:01:34",
+        "id": "34-la-guinchette"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.963075,
+          47.379781
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "name": "Ecoloire",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/31-ecoloire.jpeg",
@@ -599,7 +617,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "33 caballon",
+        "name": "Caballon",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/33-caballon.jpeg",
         "thumb": "data/thumbs/33-caballon.webp",
