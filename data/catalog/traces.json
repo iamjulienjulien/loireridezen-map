@@ -665,6 +665,19 @@
         "icon": "🌓",
         "description": "Premier quartier"
       }
+    },
+    {
+      "id": "micro-aventure_boucle_mayenne",
+      "label": "Boucle de la Mayenne",
+      "group": "micro-aventure",
+      "paths": {
+        "full": "data/traces/micro-aventure_boucle_mayenne.geojson",
+        "simplified": "data/traces/micro-aventure_boucle_mayenne_simplified.geojson"
+      },
+      "source": "sources/gpx/micro-aventure_boucle_mayenne.gpx",
+      "order": 23,
+      "distance_km": null,
+      "elevation_gain_m": null
     }
   ]
 }
