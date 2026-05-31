@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-30T22:41:47.609067+00:00",
+  "updated_at": "2026-05-31T18:58:00.148239+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -525,11 +525,11 @@
       },
       "source": "sources/gpx/acte-3_etape-3_st-florent-le-vieil_ancenis.gpx",
       "order": 18,
-      "distance_km": 35,
-      "elevation_gain_m": 90,
+      "distance_km": 13.84,
+      "elevation_gain_m": 26.7,
       "date_status": "effective",
       "date": "2026-05-24",
-      "duration_h": 1.0,
+      "duration_h": 0.6667,
       "weather": {
         "icon": "☀️",
         "description": "Ensoleillé",
