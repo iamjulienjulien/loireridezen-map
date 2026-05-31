@@ -111,7 +111,7 @@ async function init() {
     fetch("data/catalog/traces.json").then((r) => r.json()),
   ]);
 
-  renderTracesSection(groups, prefs);
+  renderTracesSection(groups, prefs, traces);
   renderPhotosSection(prefs);
   renderPoiSection(prefs);
 

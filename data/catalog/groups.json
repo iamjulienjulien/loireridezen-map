@@ -43,6 +43,16 @@
       "dashed": false,
       "order": 4,
       "visible_by_default": true
+    },
+    {
+      "id": "velodyssee",
+      "label": "Vélodyssée",
+      "description": "Voyages le long de la façade atlantique",
+      "unified": false,
+      "color": "#2a7aad",
+      "dashed": false,
+      "order": 5,
+      "visible_by_default": true
     }
   ]
 }

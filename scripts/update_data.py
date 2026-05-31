@@ -105,7 +105,7 @@ LOG_DIR_DEFAULT = REPO_ROOT / "logs" / "update_data"
 
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
 PHOTO_FILENAME_RE = re.compile(r"^(\d+)-(.+)$")
-KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure"]
+KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure", "velodyssee"]
 DEFAULT_GROUP_ID = "acte-3"
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")

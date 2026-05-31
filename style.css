@@ -2922,3 +2922,37 @@ body {
 .no-transition * {
   transition: none !important;
 }
+
+/* ═══════════════════════════════ LRZ-EVO-62 — Sous-sections traces ═════════ */
+
+.lrz-trace-subsection {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.lrz-trace-subsection__title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lrz-ink-soft);
+  margin: 0 0 0.3rem;
+  padding: 0 0.875rem;
+}
+
+.lrz-trace-subsection__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lrz-trace-row--empty {
+  opacity: 0.5;
+}
+
+.lrz-trace-row__suffix {
+  font-style: italic;
+  font-size: 0.7rem;
+  margin-left: 0.3em;
+  color: var(--lrz-ink-soft);
+}

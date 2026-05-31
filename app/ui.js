@@ -24,6 +24,15 @@ export const traceFeatureGroups = new Map();
 
 // ─────────────────────────────────────── Section 1 : Traces
 
+const LOIRE_GROUPS = ['acte-1', 'acte-2', 'acte-3'];
+const OTHER_GROUPS = ['micro-aventure', 'velodyssee'];
+
+function groupSubsection(groupId) {
+  if (LOIRE_GROUPS.includes(groupId)) return 'loire';
+  if (OTHER_GROUPS.includes(groupId)) return 'other';
+  return 'other';
+}
+
 function colorPreviewStyle(preview) {
   if (preview.type === "solid") return `background:${preview.colors[0]}`;
   if (preview.type === "dashed") {
@@ -32,28 +41,45 @@ function colorPreviewStyle(preview) {
   return `background:linear-gradient(to right,${preview.colors.join(",")})`;
 }
 
-export function renderTracesSection(groups, prefs) {
+function buildTraceRow(group, prefs, isEmpty) {
+  const preview = getGroupColorPreview(group);
+  const displayPreview = preview.type === 'dashed' ? { ...preview, type: 'solid' } : preview;
+  const style = colorPreviewStyle(displayPreview);
+  const isChecked = prefs.traces?.[group.id] ?? (group.visible_by_default ?? true);
+  const emptyClass = isEmpty ? ' lrz-trace-row--empty' : '';
+  const suffix = isEmpty
+    ? ` <span class="lrz-trace-row__suffix">(à venir)</span>`
+    : '';
+  return `
+    <div class="lrz-row${emptyClass}">
+      <div class="lrz-row__visual" style="${style}"></div>
+      <label class="lrz-row__label">${escapeHtml(group.label)}${suffix}</label>
+      <input type="checkbox" class="lrz-checkbox" data-group-id="${escapeHtml(group.id)}" ${isChecked ? "checked" : ""} />
+    </div>`;
+}
+
+function buildSubsection(title, groupItems, prefs, tracesItems) {
+  if (groupItems.length === 0) return '';
+  const groupIds = new Set(tracesItems.map((t) => t.group));
+  const rows = groupItems.map((g) => buildTraceRow(g, prefs, !groupIds.has(g.id)));
+  return `
+    <div class="lrz-trace-subsection">
+      <h3 class="lrz-trace-subsection__title">${escapeHtml(title)}</h3>
+      <div class="lrz-trace-subsection__list">${rows.join('')}</div>
+    </div>`;
+}
+
+export function renderTracesSection(groups, prefs, traces) {
   const list = document.getElementById("traces-list");
   if (!list) return;
 
   const items = [...(groups.items ?? [])].sort(
     (a, b) => (a.order ?? 0) - (b.order ?? 0),
   );
+  const tracesItems = traces?.items ?? [];
 
-  const rows = items.map((group) => {
-    const preview = getGroupColorPreview(group);
-    // Always display as solid in the legend swatch (dashed is hard to read at small size)
-    const displayPreview = preview.type === 'dashed' ? { ...preview, type: 'solid' } : preview;
-    const style = colorPreviewStyle(displayPreview);
-    const isChecked =
-      prefs.traces?.[group.id] ?? (group.visible_by_default ?? true);
-    return `
-      <div class="lrz-row">
-        <div class="lrz-row__visual" style="${style}"></div>
-        <label class="lrz-row__label">${escapeHtml(group.label)}</label>
-        <input type="checkbox" class="lrz-checkbox" data-group-id="${escapeHtml(group.id)}" ${isChecked ? "checked" : ""} />
-      </div>`;
-  });
+  const loireGroups = items.filter((g) => groupSubsection(g.id) === 'loire');
+  const otherGroups = items.filter((g) => groupSubsection(g.id) === 'other');
 
   const legendItems = Object.entries(TRACE_MARKER_TYPES)
     .map(([, cfg]) =>
@@ -61,7 +87,8 @@ export function renderTracesSection(groups, prefs) {
     .join("");
 
   list.innerHTML =
-    rows.join("") +
+    buildSubsection('Loire à Vélo', loireGroups, prefs, tracesItems) +
+    buildSubsection('Autres voyages', otherGroups, prefs, tracesItems) +
     `<div class="lrz-legend__title">Légende</div>` +
     `<div class="lrz-legend-row lrz-legend-row--inline">${legendItems}</div>`;
 }
