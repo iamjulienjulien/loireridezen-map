@@ -2044,6 +2044,13 @@ body {
   color: #fff;
 }
 
+.lrz-apanel-btn--text {
+  font-family: var(--lrz-font-mono, ui-monospace, SFMono-Regular, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
 /* ─── Blocs éditoriaux dans le panel ─── */
 
 .lrz-info-blocks {

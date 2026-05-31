@@ -8,7 +8,6 @@
 const KEY = "lrz-preferences";
 
 const DEFAULTS = {
-  baseLayer: "osm",
   traces: {},
   poi: {},
   photos: true,

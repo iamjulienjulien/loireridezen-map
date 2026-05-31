@@ -2,16 +2,25 @@ export const THEMES = [
   {
     key: 'tuffeau',
     label: 'Or et tuffeau',
-    emoji: '✨',
+    emoji: '🛰️',
     basemap: 'sat',
     color: '#c8893a',
     font: 'Fraunces',
     fontStack: '"Fraunces", "Iowan Old Style", Georgia, serif',
   },
   {
+    key: 'ardoise',
+    label: 'Ardoise',
+    emoji: '🗺️',
+    basemap: 'osm',
+    color: '#3f4a54',
+    font: 'Geist',
+    fontStack: '"Geist", system-ui, sans-serif',
+  },
+  {
     key: 'etat-major',
     label: 'État-major',
-    emoji: '🗺️',
+    iconText: 'IGN',
     basemap: 'ign',
     color: '#722f37',
     font: 'Spectral',
@@ -34,15 +43,6 @@ export const THEMES = [
     color: '#b5562f',
     font: 'Cabin',
     fontStack: '"Cabin", system-ui, sans-serif',
-  },
-  {
-    key: 'ardoise',
-    label: 'Ardoise',
-    emoji: '🌺',
-    basemap: 'ign',
-    color: '#3f4a54',
-    font: 'Geist',
-    fontStack: '"Geist", system-ui, sans-serif',
   },
 ];
 

@@ -2,9 +2,8 @@
  * app/actions-panel.js — Panel flottant d'actions (top-right)
  *
  * Groupe 1 : zoom+ / zoom−
- * Groupe 2 : Plan / Satellite / CyclOSM (boutons fond avec état actif)
- * Groupe 3 : Thèmes (5 thèmes — fond + couleur + police)
- * Groupe 4 : Recentrer / Ma position
+ * Groupe 2 : Thèmes (5 thèmes — fond + couleur + police)
+ * Groupe 3 : Recentrer / Ma position
  */
 
 import { FeatureGroup } from "leaflet";
@@ -12,13 +11,11 @@ import { map, baseOSM, baseEsriSat, esriLabels, baseCyclOSM, baseIgnPlan, baseOp
 import { traceGroups } from "./routes.js";
 import { FIT_OPTIONS } from "./config.js";
 import { triggerLocate } from "./locate.js";
-import { loadPreferences, updatePreference } from "./preferences.js";
 import { track } from "./analytics.js";
 import { THEME_MAP, DEFAULT_THEME } from "./themes.js";
 import { hiddenModes } from "./url-mode.js";
 import { lightenHex } from "./helpers.js";
 
-let _currentBase = "sat";
 let _currentTheme = DEFAULT_THEME;
 
 function _hexToHue(hex) {
@@ -34,9 +31,7 @@ function _hexToHue(hex) {
   return h < 0 ? h + 360 : h;
 }
 
-function _setBase(base, { skipTrack = false } = {}) {
-  if (!skipTrack) track('Map Style Changed', { style: base });
-  _currentBase = base;
+function _setBase(base) {
   map.removeLayer(baseOSM);
   map.removeLayer(baseEsriSat);
   map.removeLayer(esriLabels);
@@ -55,14 +50,6 @@ function _setBase(base, { skipTrack = false } = {}) {
   } else {
     baseOSM.addTo(map);
   }
-  updatePreference("baseLayer", base);
-  _syncBaseActive();
-}
-
-function _syncBaseActive() {
-  document.querySelectorAll("[data-basemap]").forEach((btn) => {
-    btn.classList.toggle("lrz-apanel-btn--active", btn.dataset.basemap === _currentBase);
-  });
 }
 
 function _syncThemeActive(key) {
@@ -113,7 +100,7 @@ export function applyTheme(key, { changeBasemap = true, persist = true } = {}) {
   _currentTheme = key;
 
   if (changeBasemap) {
-    _setBase(theme.basemap, { skipTrack: true });
+    _setBase(theme.basemap);
   }
 
   const traceHue = (_hexToHue(theme.color) - 38 + 360) % 360;
@@ -134,9 +121,6 @@ export function applyThemeColors() {
 }
 
 export function initActionsPanel() {
-  const prefs = loadPreferences();
-  _currentBase = prefs.baseLayer || "sat";
-  _syncBaseActive();
 
   // Restaurer l'état visuel du thème (police + bouton actif) — les traces
   // seront recolorisées après wireTraceCheckboxes via applyThemeColors()
@@ -164,18 +148,6 @@ export function initActionsPanel() {
         case "zoom-out":
           track('Zoom Out', { from_zoom: map.getZoom() });
           map.zoomOut();
-          break;
-        case "set-plan":
-          _setBase("osm");
-          break;
-        case "set-sat":
-          _setBase("sat");
-          break;
-        case "set-cyclo":
-          _setBase("cyclosm");
-          break;
-        case "set-basemap":
-          _setBase(btn.dataset.basemap);
           break;
         case "theme":
           applyTheme(btn.dataset.theme);
