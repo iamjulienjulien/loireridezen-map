@@ -474,7 +474,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/31-ecoloire.jpeg",
         "thumb": "data/thumbs/31-ecoloire.webp",
         "time": "2026:05:24 11:44:41",
-        "id": "31-ecoloire"
+        "id": "31-ecoloire",
+        "poi_id": "8d54645f-0865-46cc-82f4-899d75fbc673"
       },
       "geometry": {
         "type": "Point",
