@@ -339,6 +339,13 @@ try:
 except ImportError:
     pass
 
+_PHOTOS_PULL_AVAILABLE = False
+try:
+    from sync_photos_from_supabase import pull_photos_from_storage as _pull_photos_from_storage  # type: ignore[import]
+    _PHOTOS_PULL_AVAILABLE = True
+except ImportError:
+    pass
+
 # ---------------------------------------------------------------------------
 # Logging JSONL
 # ---------------------------------------------------------------------------
@@ -755,6 +762,13 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         choices.append(questionary.Choice("🔥 Supprimer toutes les données", value="delete_all"))
         choices.append(questionary.Separator())
 
+    # --- Groupe : Storage ---
+    choices.append(questionary.Separator("── Storage ──"))
+    choices.append(questionary.Choice(
+        "📥 Récupérer les photos depuis Supabase Storage",
+        value="pull_photos",
+    ))
+
     # --- Groupe 3 : POI ---
     choices.append(questionary.Choice("🌐 Synchroniser les POI (Supabase)", value="pois"))
     choices.append(questionary.Separator())
@@ -787,6 +801,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "list_edit", "both"
     if choice == "migrate_weather":
         return "migrate_weather", "both"
+    if choice == "pull_photos":
+        return "pull_photos", "both"
     if choice == "delete_all":
         return "delete_all", "both"
     return "quit", "both"
@@ -2991,6 +3007,30 @@ def main() -> None:
                 )
                 log_event("INFO", "traces", "weather_migrated", migrated=n_mig, skipped=n_skip)
             console.print(f"[green]✓ Migration météo : {n_mig} trace(s) migrée(s), {n_skip} déjà à jour.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "pull_photos":
+            try:
+                if not _PHOTOS_PULL_AVAILABLE:
+                    console.print(
+                        "[red]Module sync_photos_from_supabase non disponible.[/]\n"
+                        "  Vérifier que scripts/sync_photos_from_supabase.py est présent."
+                    )
+                else:
+                    result = _pull_photos_from_storage(dest_dir=PHOTOS_DIR, dry_run=False)
+                    if result["downloaded"] > 0:
+                        if questionary.confirm(
+                            f"{result['downloaded']} nouvelle(s) photo(s) récupérée(s). "
+                            "Lancer la synchro photos maintenant ?",
+                            default=True,
+                        ).ask():
+                            fresh_scan = scan_sources(verbose=args.verbose)
+                            sync_photos(fresh_scan, args, mode="add")
+                    else:
+                        console.print("[green]✓ Tout est déjà à jour.[/]")
+            except KeyboardInterrupt:
+                console.print("\n[dim]Interrompu.[/]")
             log_event("INFO", "system", "done", exit_code=0,
                       duration_s=round(time.monotonic() - t_start, 2), totals={})
             sys.exit(0)
