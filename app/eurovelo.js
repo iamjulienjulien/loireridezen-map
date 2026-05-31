@@ -5,7 +5,7 @@
  * sous overlayPane à 400). Non-interactives, toujours affichées sauf mode for=elle.
  */
 
-import { geoJSON } from "leaflet";
+import { GeoJSON } from "leaflet";
 import { isForElle } from "./url-mode.js";
 
 export const EUROVELOS = [
@@ -36,7 +36,7 @@ export async function initEuroVelos(map) {
           r.ok ? r.json() : null,
         );
         if (!data) return;
-        layers[ev.id] = geoJSON(data, {
+        layers[ev.id] = new GeoJSON(data, {
           pane: "eurovelo",
           interactive: false,
           style: EV_STYLE,
