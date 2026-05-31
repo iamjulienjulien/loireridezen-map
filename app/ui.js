@@ -71,15 +71,30 @@ export function addEuroVeloToggle(eurovelo, prefs) {
   if (!list) return;
 
   const legend = list.querySelector(".lrz-legend__title");
-  const row = document.createElement("div");
-  row.id = "eurovelo-row";
-  row.className = "lrz-legend-row";
-  row.innerHTML =
-    `<span class="lrz-legend-row__visual" style="display:inline-block;width:1.5rem;height:3px;background:#6b7280;opacity:0.6;border-radius:2px;flex-shrink:0"></span>` +
+  const strokeStyle =
+    "display:inline-block;width:1.5rem;height:3px;background:#6b7280;opacity:0.6;border-radius:2px;flex-shrink:0";
+
+  const ev6Row = document.createElement("div");
+  ev6Row.id = "eurovelo-row";
+  ev6Row.className = "lrz-legend-row";
+  ev6Row.innerHTML =
+    `<span class="lrz-legend-row__visual" style="${strokeStyle}"></span>` +
     `<span>EuroVelo 6</span>`;
 
-  if (legend) legend.after(row);
-  else list.appendChild(row);
+  const ev1Row = document.createElement("div");
+  ev1Row.id = "eurovelo-1-row";
+  ev1Row.className = "lrz-legend-row";
+  ev1Row.innerHTML =
+    `<span class="lrz-legend-row__visual" style="${strokeStyle}"></span>` +
+    `<span>EuroVelo 1</span>`;
+
+  if (legend) {
+    legend.after(ev1Row);
+    legend.after(ev6Row);
+  } else {
+    list.appendChild(ev6Row);
+    list.appendChild(ev1Row);
+  }
 }
 
 export async function wireTraceCheckboxes() {

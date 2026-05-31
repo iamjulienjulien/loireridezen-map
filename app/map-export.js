@@ -431,29 +431,33 @@ async function drawBasemap(
 }
 
 function drawEuroVelo(ctx, geojson, zFloat, originWX, originWY, lineWidth) {
-  const coords = geojson.features?.[0]?.geometry?.coordinates;
-  if (!coords || coords.length < 2) return;
-  const ev6Width = Math.max(2, Math.round(lineWidth * 0.35));
+  const features = geojson.features ?? [];
+  if (!features.length) return;
+  const evWidth = Math.max(2, Math.round(lineWidth * 0.35));
   ctx.save();
   ctx.globalAlpha = 0.5;
   ctx.strokeStyle = "#6b7280";
-  ctx.lineWidth = ev6Width;
+  ctx.lineWidth = evWidth;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.setLineDash([]);
-  ctx.beginPath();
-  for (let i = 0; i < coords.length; i++) {
-    const { x, y } = lngLatToPixel(
-      coords[i][0],
-      coords[i][1],
-      zFloat,
-      originWX,
-      originWY,
-    );
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  for (const feature of features) {
+    const coords = feature?.geometry?.coordinates;
+    if (!coords || coords.length < 2) continue;
+    ctx.beginPath();
+    for (let i = 0; i < coords.length; i++) {
+      const { x, y } = lngLatToPixel(
+        coords[i][0],
+        coords[i][1],
+        zFloat,
+        originWX,
+        originWY,
+      );
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
   }
-  ctx.stroke();
   ctx.restore();
 }
 
@@ -1040,8 +1044,12 @@ async function renderToCanvas(
   const lineWidth = Math.max(14, Math.round(fmt.w / 155));
 
   if (options.eurovelo6) {
-    const ev6 = await fetchGeoJSON("data/eurovelo/eurovelo-6.geojson");
+    const [ev6, ev1] = await Promise.all([
+      fetchGeoJSON("data/eurovelo/eurovelo-6.geojson"),
+      fetchGeoJSON("data/eurovelo/eurovelo-1.geojson"),
+    ]);
     if (ev6) drawEuroVelo(ctx, ev6, zFloat, originWX, originWY, lineWidth);
+    if (ev1) drawEuroVelo(ctx, ev1, zFloat, originWX, originWY, lineWidth);
   }
 
   const tracesToDraw =
@@ -1234,8 +1242,8 @@ function _buildHTML(groups, tracesData) {
           </label>
           <div id="exp-stat-lines"></div>
           <label class="lrz-export-opt">
-            <input type="checkbox" id="exp-opt-eurovelo6">
-            <span class="lrz-export-opt__label">Afficher l'EuroVelo 6</span>
+            <input type="checkbox" id="exp-opt-eurovelo">
+            <span class="lrz-export-opt__label">Afficher les EuroVelos (1 &amp; 6)</span>
           </label>
           <label class="lrz-export-opt">
             <input type="checkbox" id="exp-opt-position">
@@ -1350,8 +1358,8 @@ function _sel() {
     stats && (_overlay.querySelector("#exp-opt-title")?.checked ?? true);
   const position =
     _overlay.querySelector("#exp-opt-position")?.checked ?? false;
-  const eurovelo6 =
-    _overlay.querySelector("#exp-opt-eurovelo6")?.checked ?? false;
+  const eurovelo =
+    _overlay.querySelector("#exp-opt-eurovelo")?.checked ?? false;
   const visibleStats = new Set(
     STAT_DEFS.filter((d) => {
       const cb = _overlay.querySelector(`#exp-stat-${d.id}`);
@@ -1372,7 +1380,7 @@ function _sel() {
       font,
       visibleStats,
       showDashed,
-      eurovelo6,
+      eurovelo6: eurovelo,
     },
   };
 }
@@ -1431,8 +1439,12 @@ async function _renderPreview() {
     await _ensureFontLoaded(fontFamily);
 
     if (options.eurovelo6) {
-      const ev6 = await fetchGeoJSON("data/eurovelo/eurovelo-6.geojson");
+      const [ev6, ev1] = await Promise.all([
+        fetchGeoJSON("data/eurovelo/eurovelo-6.geojson"),
+        fetchGeoJSON("data/eurovelo/eurovelo-1.geojson"),
+      ]);
       if (ev6) drawEuroVelo(ctx, ev6, zFloat, originWX, originWY, 2);
+      if (ev1) drawEuroVelo(ctx, ev1, zFloat, originWX, originWY, 2);
     }
 
     const previewTraces =

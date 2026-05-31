@@ -25,7 +25,7 @@ import { initActionsPanel, applyTheme, applyThemeColors } from "./app/actions-pa
 import { THEME_MAP } from "./app/themes.js";
 import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
-import { initEuroVelo } from "./app/eurovelo.js";
+import { initEuroVelos } from "./app/eurovelo.js";
 import { parseUrlFilter, applyUrlFilter, initFocusBanner } from "./app/url-filter.js";
 import {
   renderTracesSection,
@@ -97,7 +97,7 @@ async function init() {
   initResetButton();
   initKeyboardShortcuts(map);
   initCurrentPositionToggle(currentPositionLayer, loadCurrentPosition, prefs);
-  initEuroVelo(map).then((eurovelo) => {
+  initEuroVelos(map).then((eurovelo) => {
     if (eurovelo) addEuroVeloToggle(eurovelo, prefs);
   });
 
