@@ -26,3 +26,5 @@ gpx/
 logs/
 .env
 .DS_Store
+scripts/non_followers.py
+non_followers.csv
