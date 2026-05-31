@@ -563,7 +563,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "32 cascade nantes",
+        "name": "Cascade Nantes",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/32-cascade-nantes.jpeg",
         "thumb": "data/thumbs/32-cascade-nantes.webp",
@@ -593,6 +593,24 @@
         "coordinates": [
           -2.030153,
           47.289897
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "33 caballon",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/33-caballon.jpeg",
+        "thumb": "data/thumbs/33-caballon.webp",
+        "time": "2026:05:27 20:22:56",
+        "id": "33-caballon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.040803,
+          47.289044
         ]
       }
     }

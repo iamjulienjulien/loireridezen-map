@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T23:08:04.225594+00:00",
+  "updated_at": "2026-05-31T23:09:43.238302+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -499,6 +499,21 @@
       "time": "2026:05:27 14:06:34",
       "lat": 47.200153,
       "lon": -1.581378
+    },
+    {
+      "id": "33-caballon",
+      "label": "Caballon",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/33-caballon.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/33-caballon.jpeg"
+      },
+      "source": "sources/photos/33-caballon.jpeg",
+      "order": 33,
+      "time": "2026:05:27 20:22:56",
+      "lat": 47.289044,
+      "lon": -2.040803
     }
   ]
 }
