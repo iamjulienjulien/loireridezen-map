@@ -469,7 +469,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "31 ecoloire",
+        "name": "Ecoloire",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/31-ecoloire.jpeg",
         "thumb": "data/thumbs/31-ecoloire.webp",
@@ -557,6 +557,24 @@
         "coordinates": [
           -1.550342,
           47.216581
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "32 cascade nantes",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/32-cascade-nantes.jpeg",
+        "thumb": "data/thumbs/32-cascade-nantes.webp",
+        "time": "2026:05:27 14:06:34",
+        "id": "32-cascade-nantes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.581378,
+          47.200153
         ]
       }
     },

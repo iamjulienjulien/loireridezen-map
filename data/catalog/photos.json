@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T02:28:09.717944+00:00",
+  "updated_at": "2026-05-31T23:08:04.225594+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -484,6 +484,21 @@
       "lat": 47.366494,
       "lon": -1.011575,
       "poi_id": "8d54645f-0865-46cc-82f4-899d75fbc673"
+    },
+    {
+      "id": "32-cascade-nantes",
+      "label": "Cascade Nantes",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/32-cascade-nantes.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/32-cascade-nantes.jpeg"
+      },
+      "source": "sources/photos/32-cascade-nantes.jpeg",
+      "order": 32,
+      "time": "2026:05:27 14:06:34",
+      "lat": 47.200153,
+      "lon": -1.581378
     }
   ]
 }
