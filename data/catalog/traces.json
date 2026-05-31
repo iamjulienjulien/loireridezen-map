@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T21:37:22.846813+00:00",
+  "updated_at": "2026-05-31T21:55:06.437839+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -615,11 +615,11 @@
       },
       "source": "sources/gpx/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.gpx",
       "order": 21,
-      "distance_km": 36,
-      "elevation_gain_m": 30,
+      "distance_km": 12.22,
+      "elevation_gain_m": 25.8,
       "date_status": "effective",
       "date": "2026-05-28",
-      "duration_h": null,
+      "duration_h": 1.0,
       "weather": {
         "icon": "☀️",
         "description": "Ensoleillé, brise de mer",
