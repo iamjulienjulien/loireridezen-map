@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T21:55:06.437839+00:00",
+  "updated_at": "2026-05-31T22:02:08.071216+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -677,7 +677,23 @@
       "source": "sources/gpx/micro-aventure_boucle_mayenne.gpx",
       "order": 23,
       "distance_km": null,
-      "elevation_gain_m": null
+      "elevation_gain_m": null,
+      "date": "2025-10-16",
+      "day": {
+        "sunrise": "08:23",
+        "sunset": "19:12"
+      },
+      "moon": {
+        "phase": 0.822,
+        "icon": "🌘",
+        "description": "Dernier croissant"
+      },
+      "date_status": "effective",
+      "weather": {
+        "icon": "🌤️",
+        "description": "Plutôt ensoleillé",
+        "temp": 14
+      }
     }
   ]
 }
