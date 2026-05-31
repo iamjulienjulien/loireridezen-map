@@ -58,7 +58,8 @@ function _syncThemeActive(key) {
   });
 }
 
-function _applyColorToTraces(color) {
+function _applyColorToTraces(theme) {
+  const color = theme.color;
   // Sort act groups by order for the light→dark progression
   const actGroups = [...traceGroups.values()]
     .filter(({ group }) => group.id.startsWith('acte-'))
@@ -68,6 +69,8 @@ function _applyColorToTraces(color) {
     let groupColor;
     if (group.id === 'micro-aventure') {
       groupColor = '#111111';
+    } else if (group.id === 'velodyssee') {
+      groupColor = theme.velodysseeColor ?? color;
     } else if (group.id.startsWith('acte-')) {
       const idx = actGroups.findIndex((g) => g.group.id === group.id);
       const total = actGroups.length;
@@ -107,7 +110,7 @@ export function applyTheme(key, { changeBasemap = true, persist = true } = {}) {
   document.documentElement.style.setProperty('--lrz-font-theme', theme.fontStack);
   document.documentElement.style.setProperty('--lrz-or', theme.color);
   document.documentElement.style.setProperty('--lrz-trace-hue', `${traceHue}deg`);
-  _applyColorToTraces(theme.color);
+  _applyColorToTraces(theme);
   _syncThemeActive(key);
 
   if (persist) localStorage.setItem('lrz_theme', key);
@@ -117,7 +120,7 @@ export function applyTheme(key, { changeBasemap = true, persist = true } = {}) {
 /** Recolorise les traces avec le thème courant (à appeler après wireTraceCheckboxes). */
 export function applyThemeColors() {
   const theme = THEME_MAP.get(_currentTheme);
-  if (theme) _applyColorToTraces(theme.color);
+  if (theme) _applyColorToTraces(theme);
 }
 
 export function initActionsPanel() {

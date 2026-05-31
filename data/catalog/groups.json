@@ -49,7 +49,7 @@
       "label": "Vélodyssée",
       "description": "Voyages le long de la façade atlantique",
       "unified": false,
-      "color": "#2a7aad",
+      "color": "#1a7abf",
       "dashed": false,
       "order": 5,
       "visible_by_default": true
