@@ -77,69 +77,82 @@
           <h1>Loire Ride Zen</h1>
           <p>Carte interactive</p>
         </div>
+        <button
+          class="lrz-panel__toggle"
+          aria-label="Replier le panneau"
+          aria-expanded="true"
+          aria-controls="filtersPanelBody"
+        >▼</button>
       </header>
 
-      <!-- Blocs éditoriaux : position + étape (rempli par info-panel.js) -->
-      <div id="lrz-info-panel"></div>
+      <!-- Corps du panneau (animé pour le collapse) -->
+      <div class="lrz-panel__body-wrap" id="filtersPanelBody">
+        <div class="lrz-panel__body">
 
-      <!-- Bandeau focus URL (rempli par url-filter.js si ?acte= ou ?etape=) -->
-      <div id="lrz-focus-banner" class="lrz-focus-banner"></div>
+          <!-- Blocs éditoriaux : position + étape (rempli par info-panel.js) -->
+          <div id="lrz-info-panel"></div>
 
-      <!-- Section Traces -->
-      <section class="lrz-section lrz-panel-section--actes" data-section="traces">
-        <header class="lrz-section__header">
-          <h3>Traces</h3>
-          <button class="lrz-section__all" data-target="traces">Tout</button>
-          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
-        </header>
-        <div class="lrz-section__body" id="traces-list">
-          <!-- rempli par app.js depuis groups.json -->
-        </div>
-      </section>
+          <!-- Bandeau focus URL (rempli par url-filter.js si ?acte= ou ?etape=) -->
+          <div id="lrz-focus-banner" class="lrz-focus-banner"></div>
 
-      <!-- Section Points d'intérêt -->
-      <section class="lrz-section lrz-panel-section--poi" data-section="poi">
-        <header class="lrz-section__header">
-          <h3>Points d'intérêt</h3>
-          <button class="lrz-section__all" data-target="poi">Tout</button>
-          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
-        </header>
-        <div class="lrz-section__body" id="poi-list">
-          <!-- rempli par app.js depuis POI_TYPES -->
-        </div>
-      </section>
+          <!-- Section Traces -->
+          <section class="lrz-section lrz-panel-section--actes" data-section="traces">
+            <header class="lrz-section__header">
+              <h3>Traces</h3>
+              <button class="lrz-section__all" data-target="traces">Tout</button>
+              <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+            </header>
+            <div class="lrz-section__body" id="traces-list">
+              <!-- rempli par app.js depuis groups.json -->
+            </div>
+          </section>
 
-      <!-- Section Photos -->
-      <section class="lrz-section lrz-panel-section--photos" data-section="photos">
-        <header class="lrz-section__header">
-          <h3>Photos</h3>
-          <button class="lrz-section__toggle" aria-expanded="true">▾</button>
-        </header>
-        <div class="lrz-section__body" id="photos-list">
-          <!-- rempli par app.js -->
-        </div>
-      </section>
+          <!-- Section Points d'intérêt -->
+          <section class="lrz-section lrz-panel-section--poi" data-section="poi">
+            <header class="lrz-section__header">
+              <h3>Points d'intérêt</h3>
+              <button class="lrz-section__all" data-target="poi">Tout</button>
+              <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+            </header>
+            <div class="lrz-section__body" id="poi-list">
+              <!-- rempli par app.js depuis POI_TYPES -->
+            </div>
+          </section>
 
-      <!-- Liens externes (bas du panel) -->
-      <div class="lrz-panel__actions">
-        <button class="lrz-reset-btn" id="reset-prefs">Réinitialiser les filtres</button>
-      </div>
-      <footer class="lrz-panel-header">
-        <a href="https://loireridezen.link" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Site Loire Ride Zen">
-          <span class="lrz-panel-header__icon">🌐</span>
-          <span class="lrz-panel-header__label">Site</span>
-        </a>
-        <a href="https://www.instagram.com/loireridezen/" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Compte Instagram">
-          <span class="lrz-panel-header__icon">📷</span>
-          <span class="lrz-panel-header__label">Instagram</span>
-        </a>
-        <a href="https://www.komoot.com/fr-fr/user/1484664526803" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Profil Komoot">
-          <span class="lrz-panel-header__icon">🗺️</span>
-          <span class="lrz-panel-header__label">Komoot</span>
-        </a>
-      </footer>
-      <p class="lrz-panel-credit">Une création de <a href="https://julienjulien.fr" target="_blank" rel="noopener">Julien Julien</a></p>
-      <p class="lrz-panel-credit lrz-panel-credit--attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · <span>Loire Ride Zen</span></p>
+          <!-- Section Photos -->
+          <section class="lrz-section lrz-panel-section--photos" data-section="photos">
+            <header class="lrz-section__header">
+              <h3>Photos</h3>
+              <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+            </header>
+            <div class="lrz-section__body" id="photos-list">
+              <!-- rempli par app.js -->
+            </div>
+          </section>
+
+          <!-- Liens externes (bas du panel) -->
+          <div class="lrz-panel__actions">
+            <button class="lrz-reset-btn" id="reset-prefs">Réinitialiser les filtres</button>
+          </div>
+          <footer class="lrz-panel-header">
+            <a href="https://loireridezen.link" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Site Loire Ride Zen">
+              <span class="lrz-panel-header__icon">🌐</span>
+              <span class="lrz-panel-header__label">Site</span>
+            </a>
+            <a href="https://www.instagram.com/loireridezen/" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Compte Instagram">
+              <span class="lrz-panel-header__icon">📷</span>
+              <span class="lrz-panel-header__label">Instagram</span>
+            </a>
+            <a href="https://www.komoot.com/fr-fr/user/1484664526803" target="_blank" rel="noopener" class="lrz-panel-header__link" title="Profil Komoot">
+              <span class="lrz-panel-header__icon">🗺️</span>
+              <span class="lrz-panel-header__label">Komoot</span>
+            </a>
+          </footer>
+          <p class="lrz-panel-credit">Une création de <a href="https://julienjulien.fr" target="_blank" rel="noopener">Julien Julien</a></p>
+          <p class="lrz-panel-credit lrz-panel-credit--attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · <span>Loire Ride Zen</span></p>
+
+        </div><!-- /.lrz-panel__body -->
+      </div><!-- /.lrz-panel__body-wrap -->
     </aside>
 
     <!-- Bouton d'ouverture du drawer mobile -->

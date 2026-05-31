@@ -1142,6 +1142,7 @@ body {
   gap: 0.75rem;
   padding: 0.75rem 0.875rem;
   border-bottom: 1px solid var(--lrz-tuffeau-line);
+  justify-content: space-between;
 }
 
 .lrz-panel__logo {
@@ -2860,4 +2861,57 @@ body {
 .lrz-focus-banner__clear:hover {
   background: var(--lrz-tuffeau-line);
   color: var(--lrz-foreground);
+}
+
+/* ═══════════════════════════════ LRZ-EVO-60 — Panel collapsable ════════════ */
+
+.lrz-panel__toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--lrz-ink-soft);
+  flex-shrink: 0;
+  transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 150ms ease;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.lrz-panel__toggle:hover {
+  color: var(--lrz-foreground);
+  background: var(--lrz-card-hover);
+}
+
+.lrz-panel--collapsed .lrz-panel__toggle {
+  transform: rotate(-90deg);
+}
+
+.lrz-panel__body-wrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lrz-panel--collapsed .lrz-panel__body-wrap {
+  grid-template-rows: 0fr;
+}
+
+.lrz-panel__body-wrap > .lrz-panel__body {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.lrz-panel--collapsed .lrz-panel__header {
+  border-bottom-color: transparent;
+}
+
+.no-transition * {
+  transition: none !important;
 }

@@ -68,6 +68,39 @@ function removeMiniSkeleton() {
 // Phase 4 : premier POI chargé → retirer le mini skeleton
 document.addEventListener("lrz:poi-loaded", removeMiniSkeleton, { once: true });
 
+// ─────────────────────────────────── Panel collapsable (LRZ-EVO-60)
+
+function initPanelToggle() {
+  const panel = document.getElementById('filtersPanel');
+  const toggle = panel?.querySelector('.lrz-panel__toggle');
+  if (!panel || !toggle) return;
+
+  const STORAGE_KEY = 'lrz_filters_panel_collapsed';
+
+  function getDefaultCollapsed() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  function setCollapsed(collapsed, persist = true) {
+    panel.classList.toggle('lrz-panel--collapsed', collapsed);
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+    toggle.setAttribute('aria-label', collapsed ? 'Déplier le panneau' : 'Replier le panneau');
+    if (persist) localStorage.setItem(STORAGE_KEY, String(collapsed));
+    track('Filters Panel Toggled', { state: collapsed ? 'collapsed' : 'opened' });
+  }
+
+  // Restauration sans animation au boot
+  panel.classList.add('no-transition');
+  const stored = localStorage.getItem(STORAGE_KEY);
+  const initial = stored === null ? getDefaultCollapsed() : stored === 'true';
+  setCollapsed(initial, false);
+  requestAnimationFrame(() => panel.classList.remove('no-transition'));
+
+  toggle.addEventListener('click', () => {
+    setCollapsed(!panel.classList.contains('lrz-panel--collapsed'));
+  });
+}
+
 // ─────────────────────────────────── Init principal
 
 async function init() {
@@ -100,6 +133,12 @@ async function init() {
   initEuroVelos(map).then((eurovelo) => {
     if (eurovelo) addEuroVeloToggle(eurovelo, prefs);
   });
+
+  if (!hiddenModes.rabbit) {
+    initPanelToggle();
+  } else {
+    document.querySelector('.lrz-panel__toggle')?.remove();
+  }
 
   if (!hiddenModes.rabbit) {
     initVisitCounter().catch((err) =>
