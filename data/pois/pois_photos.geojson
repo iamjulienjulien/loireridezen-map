@@ -320,7 +320,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "30 guinguette saumur",
+        "name": "Guinguette Saumur",
         "type": "photo",
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/30-guinguette-saumur.jpeg",
         "thumb": "data/thumbs/30-guinguette-saumur.webp",
@@ -463,6 +463,24 @@
         "coordinates": [
           -0.640464,
           47.376142
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "31 ecoloire",
+        "type": "photo",
+        "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/31-ecoloire.jpeg",
+        "thumb": "data/thumbs/31-ecoloire.webp",
+        "time": "2026:05:24 11:44:41",
+        "id": "31-ecoloire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.011575,
+          47.366494
         ]
       }
     },

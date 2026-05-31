@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-30T22:48:44.459141+00:00",
+  "updated_at": "2026-05-31T01:21:21.410269+00:00",
   "items": [
     {
       "id": "01-chambord",
@@ -468,6 +468,21 @@
       "time": "2025:06:17 22:04:04",
       "lat": 47.259347,
       "lon": -0.066508
+    },
+    {
+      "id": "31-ecoloire",
+      "label": "Ecoloire",
+      "description": "",
+      "group": "acte-2",
+      "paths": {
+        "thumb": "data/thumbs/31-ecoloire.webp",
+        "remote": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/31-ecoloire.jpeg"
+      },
+      "source": "sources/photos/31-ecoloire.jpeg",
+      "order": 31,
+      "time": "2026:05:24 11:44:41",
+      "lat": 47.366494,
+      "lon": -1.011575
     }
   ]
 }
