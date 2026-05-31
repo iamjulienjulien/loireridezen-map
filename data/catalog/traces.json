@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T22:02:08.071216+00:00",
+  "updated_at": "2026-05-31T22:12:13.082431+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -483,7 +483,9 @@
         "phase": 0.204,
         "icon": "🌓",
         "description": "Premier quartier"
-      }
+      },
+      "instagram_url": "https://www.instagram.com/p/DY-iRkaDlpw/",
+      "komoot_url": "https://www.komoot.com/tour/2973444055?share_token=am2Kx556ONSYJE8pKJRnzzcfyNXvXP7IrRJnSudXOxJNPGTQmT&ref=wtd&t_s=referral&t_cid=route_share&t_ref_username=1484664526803"
     },
     {
       "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
