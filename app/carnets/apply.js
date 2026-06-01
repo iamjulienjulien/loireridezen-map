@@ -102,7 +102,14 @@ function _applyColorToTraces(color, velodysseeColor) {
 
 // ─── POI filter ─────────────────────────────────────────────────────────────
 
-const ALL_POI_TYPES = ["chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "vigneron", "nature", "photo"];
+const ALL_POI_TYPES = [
+  "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "vigneron", "nature",
+  "abbaye", "site_historique", "vestige_archeo",
+  "restaurant", "bar_cafe", "cave_troglodyte", "marche_producteur", "producteur_fermier",
+  "sandbank", "point_vue", "spot_faune", "depart_sentier", "bivouac",
+  "point_eau", "service_velo", "gare_velo",
+  "photo",
+];
 
 export function applyPoiFilter(enabledTypes) {
   ALL_POI_TYPES.forEach((type) => {

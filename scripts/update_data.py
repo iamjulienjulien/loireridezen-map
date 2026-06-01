@@ -119,19 +119,45 @@ console = Console()
 # POI — constantes visuelles (indépendant de supabase-py)
 # ---------------------------------------------------------------------------
 
+# Doit rester synchronisé avec POI_TYPES dans app/types.js
 _POI_TYPE_EMOJIS: dict[str, str] = {
-    "chateau": "👑",
-    "coupdecoeur": "💖",
-    "patrimoine": "🏰",
-    "guinguette": "🍻",
-    "hébergement": "🏕️",
-    "vigneron": "🍷",
-    "nature": "🌿",
-    "photo": "📸",
+    # 7 existants
+    "chateau":            "👑",
+    "coupdecoeur":        "💖",
+    "patrimoine":         "🏰",
+    "guinguette":         "🍻",
+    "hébergement":        "🏕️",
+    "vigneron":           "🍷",
+    "nature":             "🌿",
+    "photo":              "📸",
+    # 16 nouveaux (LRZ-EVO-73)
+    "abbaye":             "🎯",
+    "site_historique":    "🗝️",
+    "vestige_archeo":     "🏺",
+    "restaurant":         "🍴",
+    "bar_cafe":           "☕",
+    "cave_troglodyte":    "🍇",
+    "marche_producteur":  "🥖",
+    "producteur_fermier": "🧀",
+    "sandbank":           "🏝",
+    "point_vue":          "👁",
+    "spot_faune":         "🦅",
+    "depart_sentier":     "🥾",
+    "bivouac":            "🔥",
+    "point_eau":          "💧",
+    "service_velo":       "🔧",
+    "gare_velo":          "🚉",
 }
 _POI_VALID_TYPES: tuple[str, ...] = (
-    "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement",
-    "vigneron", "nature", "lapin",
+    # 7 existants
+    "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "vigneron", "nature",
+    # 16 nouveaux (LRZ-EVO-73)
+    "abbaye", "site_historique", "vestige_archeo",
+    "restaurant", "bar_cafe", "cave_troglodyte", "marche_producteur", "producteur_fermier",
+    "sandbank", "point_vue", "spot_faune", "depart_sentier", "bivouac",
+    "point_eau", "service_velo", "gare_velo",
+    # spéciaux
+    "lapin",
 )
 _INSTA_RE = re.compile(r"^https?://(www\.)?instagram\.com/.+")
 _KOMOOT_RE = re.compile(r"^https?://(www\.)?komoot\.(com|de)/tour/\d+")
@@ -1054,6 +1080,45 @@ def _prompt_coords_with_method(
         return (coords, None, None) if coords else None
 
 
+def _build_poi_type_choices() -> list:
+    """Construit la liste questionary pour le sélecteur de type POI, groupée par famille."""
+    E = _POI_TYPE_EMOJIS
+    return [
+        questionary.Separator("  Patrimoine et architecture"),
+        questionary.Choice(f"{E['chateau']}  Châteaux",                  value="chateau"),
+        questionary.Choice(f"{E['abbaye']}  Abbayes",                    value="abbaye"),
+        questionary.Choice(f"{E['patrimoine']}  Patrimoine",             value="patrimoine"),
+        questionary.Choice(f"{E['site_historique']}  Sites historiques", value="site_historique"),
+        questionary.Choice(f"{E['vestige_archeo']}  Vestiges archéo.",   value="vestige_archeo"),
+
+        questionary.Separator("  Tables et terroir"),
+        questionary.Choice(f"{E['vigneron']}  Vignerons",                      value="vigneron"),
+        questionary.Choice(f"{E['cave_troglodyte']}  Caves troglodytes",       value="cave_troglodyte"),
+        questionary.Choice(f"{E['guinguette']}  Guinguettes",                  value="guinguette"),
+        questionary.Choice(f"{E['restaurant']}  Restaurants",                  value="restaurant"),
+        questionary.Choice(f"{E['bar_cafe']}  Bars et cafés",                  value="bar_cafe"),
+        questionary.Choice(f"{E['marche_producteur']}  Marchés producteurs",   value="marche_producteur"),
+        questionary.Choice(f"{E['producteur_fermier']}  Producteurs fermiers", value="producteur_fermier"),
+
+        questionary.Separator("  Nature et paysages"),
+        questionary.Choice(f"{E['nature']}  Coins nature",              value="nature"),
+        questionary.Choice(f"{E['sandbank']}  Sandbanks et îles",       value="sandbank"),
+        questionary.Choice(f"{E['point_vue']}  Points de vue",          value="point_vue"),
+        questionary.Choice(f"{E['spot_faune']}  Spots faune",           value="spot_faune"),
+        questionary.Choice(f"{E['depart_sentier']}  Départs sentiers",  value="depart_sentier"),
+
+        questionary.Separator("  Vélo et services"),
+        questionary.Choice(f"{E['hébergement']}  Hébergements",  value="hébergement"),
+        questionary.Choice(f"{E['bivouac']}  Bivouacs",          value="bivouac"),
+        questionary.Choice(f"{E['point_eau']}  Points d'eau",    value="point_eau"),
+        questionary.Choice(f"{E['service_velo']}  Services vélo",value="service_velo"),
+        questionary.Choice(f"{E['gare_velo']}  Gares vélo",      value="gare_velo"),
+
+        questionary.Separator("  Personnel"),
+        questionary.Choice(f"{E['coupdecoeur']}  Coups de cœur", value="coupdecoeur"),
+    ]
+
+
 def prompt_new_poi() -> None:
     if not _SUPABASE_AVAILABLE:
         console.print("[red]Module supabase non disponible. Installer avec : pip install supabase>=2.5.0[/]")
@@ -1061,11 +1126,7 @@ def prompt_new_poi() -> None:
     if not _check_supa_env():
         return
 
-    type_choices = [
-        questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
-        for t in _POI_VALID_TYPES
-    ]
-    poi_type = questionary.select("Type de POI :", choices=type_choices).ask()
+    poi_type = questionary.select("Type de POI :", choices=_build_poi_type_choices()).ask()
     if poi_type is None:
         return
 
@@ -1224,11 +1285,7 @@ def prompt_poi_from_photo(photo_path: "Path | None" = None) -> None:
             console.print(f"[dim]Géocodage inverse échoué : {err}[/]")
 
     # 4. Type de POI
-    type_choices = [
-        questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
-        for t in _POI_VALID_TYPES
-    ]
-    poi_type = questionary.select("Type de POI :", choices=type_choices).ask()
+    poi_type = questionary.select("Type de POI :", choices=_build_poi_type_choices()).ask()
     if poi_type is None:
         return
 
@@ -1439,11 +1496,7 @@ def prompt_edit_poi() -> None:
 
         elif action == "type":
             old_type = local.get("type", "")
-            type_choices = [
-                questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
-                for t in _POI_VALID_TYPES
-            ]
-            new_type = questionary.select("Nouveau type :", choices=type_choices).ask()
+            new_type = questionary.select("Nouveau type :", choices=_build_poi_type_choices()).ask()
             if new_type and new_type != old_type:
                 if old_type == "chateau" and new_type != "chateau":
                     console.print(
@@ -1601,11 +1654,7 @@ def poi_crud_menu() -> None:
         elif choice == "filter":
             if not _check_supa_env():
                 continue
-            type_choices = [
-                questionary.Choice(f"{_POI_TYPE_EMOJIS.get(t, '📍')} {t}", value=t)
-                for t in _POI_VALID_TYPES
-            ] + [questionary.Choice("📸 photo", value="photo")]
-            poi_type = questionary.select("Type à afficher :", choices=type_choices).ask()
+            poi_type = questionary.select("Type à afficher :", choices=_build_poi_type_choices()).ask()
             if poi_type:
                 try:
                     pois = _list_pois(type_filter=poi_type)

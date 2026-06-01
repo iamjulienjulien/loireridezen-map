@@ -30,8 +30,7 @@ export const CARNETS_REGISTRY = [
     },
 
     pois: {
-      defaultEnabled: ["hébergement", "guinguette"],
-      futureTypes: ["point-eau", "service-velo", "gare-velo"],
+      defaultEnabled: ["hébergement", "guinguette", "point_eau", "service_velo", "gare_velo", "point_vue"],
     },
 
     photoCategories: {
@@ -63,8 +62,7 @@ export const CARNETS_REGISTRY = [
     },
 
     pois: {
-      defaultEnabled: ["nature", "coupdecoeur"],
-      futureTypes: ["sandbank", "viewpoint", "faune", "sentier"],
+      defaultEnabled: ["nature", "coupdecoeur", "sandbank", "point_vue", "spot_faune", "depart_sentier", "point_eau", "bivouac"],
     },
 
     photoCategories: {
@@ -96,8 +94,7 @@ export const CARNETS_REGISTRY = [
     },
 
     pois: {
-      defaultEnabled: ["chateau", "patrimoine"],
-      futureTypes: ["abbaye", "viewpoint-chateau", "spot-golden-hour"],
+      defaultEnabled: ["chateau", "patrimoine", "abbaye", "point_vue", "cave_troglodyte"],
     },
 
     photoCategories: {
@@ -129,8 +126,7 @@ export const CARNETS_REGISTRY = [
     },
 
     pois: {
-      defaultEnabled: ["patrimoine", "chateau"],
-      futureTypes: ["site-historique", "lieu-memoire", "vestige"],
+      defaultEnabled: ["patrimoine", "chateau", "abbaye", "site_historique", "vestige_archeo"],
     },
 
     photoCategories: {
@@ -162,8 +158,7 @@ export const CARNETS_REGISTRY = [
     },
 
     pois: {
-      defaultEnabled: ["vigneron", "guinguette"],
-      futureTypes: ["cave-troglodyte", "restaurant", "marche", "affineur"],
+      defaultEnabled: ["vigneron", "guinguette", "cave_troglodyte", "restaurant", "marche_producteur", "producteur_fermier"],
     },
 
     photoCategories: {
@@ -195,8 +190,7 @@ export const CARNETS_REGISTRY = [
     },
 
     pois: {
-      defaultEnabled: ["guinguette"],
-      futureTypes: ["restaurant", "bar", "bivouac", "spot-nuit"],
+      defaultEnabled: ["guinguette", "restaurant", "bar_cafe", "bivouac"],
     },
 
     photoCategories: {
@@ -229,7 +223,6 @@ export const CARNETS_REGISTRY = [
 
     pois: {
       defaultEnabled: ["coupdecoeur", "photo"],
-      futureTypes: [],
     },
 
     photoCategories: {

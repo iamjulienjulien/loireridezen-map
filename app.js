@@ -157,7 +157,14 @@ async function init() {
   (() => {
     const btn = document.getElementById("lrz-tout-voir");
     if (!btn) return;
-    const ALL_POI = ["chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "vigneron", "nature", "photo"];
+    const ALL_POI = [
+      "chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "vigneron", "nature",
+      "abbaye", "site_historique", "vestige_archeo",
+      "restaurant", "bar_cafe", "cave_troglodyte", "marche_producteur", "producteur_fermier",
+      "sandbank", "point_vue", "spot_faune", "depart_sentier", "bivouac",
+      "point_eau", "service_velo", "gare_velo",
+      "photo",
+    ];
     let _expanded = false;
     btn.addEventListener("click", () => {
       _expanded = !_expanded;

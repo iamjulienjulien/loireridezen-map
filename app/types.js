@@ -21,14 +21,33 @@ const {
 } = leafletExtraMarkers;
 
 export const POI_TYPES = {
-  chateau:     { label: "Château",      emoji: "👑",  color: "#b8860b", shape: "star",   defaultChecked: true },
-  coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",   defaultChecked: true },
-  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",   defaultChecked: false },
-  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square", defaultChecked: false },
-  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square", defaultChecked: false },
+  // ── 7 types éditoriaux existants ──────────────────────────────────────────
+  chateau:     { label: "Château",      emoji: "👑",  color: "#b8860b", shape: "star",    defaultChecked: true },
+  coupdecoeur: { label: "Coup de cœur", emoji: "💖",  color: "#d94e6a", shape: "star",    defaultChecked: true },
+  patrimoine:  { label: "Patrimoine",   emoji: "🏰",  color: "#c69247", shape: "star",    defaultChecked: false },
+  guinguette:  { label: "Guinguette",   emoji: "🍻",  color: "#e07b3a", shape: "square",  defaultChecked: false },
+  hébergement: { label: "Hébergement",  emoji: "🏕️", color: "#7a6a4f", shape: "square",  defaultChecked: false },
   vigneron:    { label: "Vignerons",    emoji: "🍷",  color: "#722f37", shape: "diamond", defaultChecked: true },
-  nature:      { label: "Coins nature", emoji: "🌿",  color: "#6b8e4e", shape: "circle", defaultChecked: true },
-  photo:       { label: "Photo",        emoji: "📸",  color: "#3a8aa1", shape: "circle", defaultChecked: true },
+  nature:      { label: "Coins nature", emoji: "🌿",  color: "#6b8e4e", shape: "circle",  defaultChecked: true },
+  // ── 16 nouveaux types (LRZ-EVO-73) ────────────────────────────────────────
+  abbaye:             { label: "Abbayes",                emoji: "🎯", color: "#8b6f47", shape: "star",    defaultChecked: false },
+  site_historique:    { label: "Sites historiques",      emoji: "🗝️", color: "#7a5c3e", shape: "star",    defaultChecked: false },
+  vestige_archeo:     { label: "Vestiges archéologiques",emoji: "🏺", color: "#a89968", shape: "star",    defaultChecked: false },
+  restaurant:         { label: "Restaurants",            emoji: "🍴", color: "#c84a3a", shape: "square",  defaultChecked: false },
+  bar_cafe:           { label: "Bars et cafés",          emoji: "☕", color: "#6f4e37", shape: "square",  defaultChecked: false },
+  cave_troglodyte:    { label: "Caves troglodytes",      emoji: "🍇", color: "#5b3a4f", shape: "diamond", defaultChecked: false },
+  marche_producteur:  { label: "Marchés et producteurs", emoji: "🥖", color: "#b8a050", shape: "diamond", defaultChecked: false },
+  producteur_fermier: { label: "Producteurs fermiers",   emoji: "🧀", color: "#d4c590", shape: "diamond", defaultChecked: false },
+  sandbank:           { label: "Sandbanks et îles",      emoji: "🏝", color: "#d4b88a", shape: "circle",  defaultChecked: false },
+  point_vue:          { label: "Points de vue",          emoji: "👁", color: "#5a8c7c", shape: "circle",  defaultChecked: false },
+  spot_faune:         { label: "Spots faune",            emoji: "🦅", color: "#6b7a3a", shape: "circle",  defaultChecked: false },
+  depart_sentier:     { label: "Départs de sentiers",    emoji: "🥾", color: "#7a6b3a", shape: "circle",  defaultChecked: false },
+  bivouac:            { label: "Bivouacs autorisés",     emoji: "🔥", color: "#e07b3a", shape: "circle",  defaultChecked: false },
+  point_eau:          { label: "Points d'eau",           emoji: "💧", color: "#4a90b8", shape: "circle",  defaultChecked: false },
+  service_velo:       { label: "Services vélo",          emoji: "🔧", color: "#5a6f7c", shape: "square",  defaultChecked: false },
+  gare_velo:          { label: "Gares vélo-friendly",    emoji: "🚉", color: "#3a5f8f", shape: "square",  defaultChecked: false },
+  // ── Types spéciaux ────────────────────────────────────────────────────────
+  photo:       { label: "Photo",           emoji: "📸", color: "#3a8aa1", shape: "circle", defaultChecked: true },
   lapin:       { label: "Lapin en voyage", emoji: "🐰", color: "#ff9b3d", shape: "square", defaultChecked: false, hidden: true },
 };
 
