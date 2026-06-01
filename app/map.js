@@ -79,7 +79,7 @@ export const baseOSMDark = new TileLayer(
   },
 );
 
-// CartoDB Positron (anglais) — gardé en réserve
+// CartoDB Positron raster (anglais) — gardé en réserve
 export const basePositron = new TileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
   {
@@ -89,7 +89,7 @@ export const basePositron = new TileLayer(
   },
 );
 
-// OSM France — fond clair, labels 100 % en français, utilisé par 📷 Souvenirs
+// OSM France — fond clair, labels 100 % en français
 export const baseOSMFr = new TileLayer(
   "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
   {
@@ -98,6 +98,19 @@ export const baseOSMFr = new TileLayer(
     attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors · rendu <a href='https://tile.openstreetmap.fr'>OSM-FR</a>",
   },
 );
+
+// Positron GL (MapLibre) — style vectoriel openmaptiles.data.gouv.fr, labels français
+// Créé lazily via getPositronGL() pour ne pas instancier avant que maplibregl soit chargé
+let _positronGL = null;
+export function getPositronGL() {
+  if (!_positronGL && window.L?.maplibreGL) {
+    _positronGL = window.L.maplibreGL({
+      style: "https://openmaptiles.data.gouv.fr/styles/positron/style.json",
+      attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors · <a href='https://openmaptiles.data.gouv.fr'>openmaptiles.data.gouv.fr</a>",
+    });
+  }
+  return _positronGL;
+}
 
 // Restaurer le fond depuis le carnet persisté
 const _carnetKey = localStorage.getItem("lrz_carnet") ?? DEFAULT_CARNET_KEY;
@@ -110,6 +123,9 @@ if (_initialBasemap === "satellite-esri") {
   baseOSMDark.addTo(map);
 } else if (_initialBasemap === "positron") {
   basePositron.addTo(map);
+} else if (_initialBasemap === "positron-gl") {
+  // GL layer initialisé après chargement de maplibre-gl-leaflet
+  window.addEventListener("load", () => { try { getPositronGL()?.addTo(map); } catch {} });
 } else if (_initialBasemap === "osm-fr") {
   baseOSMFr.addTo(map);
 } else if (_initialBasemap === "ign-plan") {

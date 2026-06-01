@@ -4,7 +4,7 @@
 
 import {
   map,
-  baseOSM, baseOSMDark, basePositron, baseOSMFr,
+  baseOSM, baseOSMDark, basePositron, baseOSMFr, getPositronGL,
   baseEsriSat, esriLabels,
   baseCyclOSM, baseIgnPlan, baseOpenTopo,
 } from "../map.js";
@@ -16,7 +16,9 @@ const PHOTO_CATEGORIES_ENABLED_IN_DB = false;
 // ─── Basemap ────────────────────────────────────────────────────────────────
 
 function _switchBasemap(basemap) {
+  const glLayer = getPositronGL();
   const all = [baseOSM, baseOSMDark, basePositron, baseOSMFr, baseEsriSat, esriLabels, baseCyclOSM, baseIgnPlan, baseOpenTopo];
+  if (glLayer) all.push(glLayer);
   all.forEach((l) => { try { map.removeLayer(l); } catch {} });
 
   switch (basemap) {
@@ -26,6 +28,10 @@ function _switchBasemap(basemap) {
       break;
     case "osm-dark":
       baseOSMDark.addTo(map);
+      break;
+    case "positron-gl":
+      if (glLayer) glLayer.addTo(map);
+      else baseOSMFr.addTo(map); // fallback si GL pas dispo
       break;
     case "positron":
       basePositron.addTo(map);
