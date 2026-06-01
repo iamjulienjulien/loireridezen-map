@@ -1,13 +1,1 @@
--- Migration LRZ-EVO-72 — Catégories photos
---
--- Architecture : les photos géolocalisées sont stockées localement dans
--- data/catalog/photos.json (catalog) et data/pois/pois_photos.geojson (markers).
--- Le champ `categories text[]` vit dans ces fichiers locaux, pas en BDD.
---
--- La colonne categories a été ajoutée sur la table `pois` (pour les POI
--- éditoriaux de type "photo") lors du commit 53d9f42 :
---
---   ALTER TABLE pois ADD COLUMN IF NOT EXISTS categories text[] NOT NULL DEFAULT '{}';
---   CREATE INDEX IF NOT EXISTS idx_pois_categories ON pois USING GIN (categories);
---
--- Cette migration a déjà été appliquée — fichier conservé pour référence.
+-- LRZ-EVO-72 — Voir sql/migrations/20260602_create_photos_table.sql

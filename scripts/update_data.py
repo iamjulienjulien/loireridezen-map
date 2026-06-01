@@ -433,6 +433,7 @@ except ImportError:
 
 _SUPABASE_AVAILABLE = False
 try:
+    from lib.supabase_client import get_client as _get_supabase_client  # type: ignore[import]
     from lib.poi import (  # type: ignore[import]
         list_pois as _list_pois,
         get_poi as _get_poi,
@@ -801,32 +802,38 @@ def prompt_photo_categories(current: list[str] | None = None) -> list[str]:
 
 
 def _categorize_uncategorized_photos() -> None:
-    """Menu de rattrapage : catégoriser les photos sans catégorie (catalog local)."""
-    photos, _ = load_catalog(CATALOG_PHOTOS)
-    uncategorized = [p for p in photos if not p.get("categories")]
+    """Menu de rattrapage : catégoriser les photos sans catégorie (table Supabase photos)."""
+    if not _SUPABASE_AVAILABLE:
+        console.print("[red]Supabase non disponible.[/]")
+        return
+    if not _check_supa_env():
+        return
+
+    supa = _get_supabase_client()
+    resp = supa.table("photos").select("id,label,categories").eq("categories", "{}").execute()
+    uncategorized = resp.data or []
 
     if not uncategorized:
         console.print("[green]✓ Toutes les photos ont au moins une catégorie.[/]")
         return
 
     console.print(f"[yellow]{len(uncategorized)} photo(s) sans catégorie.[/]")
-    changed = False
     for photo in uncategorized:
         console.print(f"\n  [bold]{photo.get('label', photo['id'])}[/]")
         cats = prompt_photo_categories(current=[])
         if cats is None:
             console.print("[dim]Stop — reprise possible plus tard.[/]")
             break
-        photo["categories"] = cats
-        changed = True
-        console.print(f"  [green]✓ {len(cats)} catégorie(s) sélectionnée(s)[/]")
-
-    if changed:
-        save_catalog(CATALOG_PHOTOS, photos)
-        console.print(
-            "[green]✓ Catalog mis à jour.[/]\n"
-            "[dim]  Relancer photos_to_poi.py pour régénérer pois_photos.geojson.[/]"
-        )
+        try:
+            validate_photo_categories(cats)
+        except ValueError as e:
+            console.print(f"[red]{e}[/]")
+            continue
+        up = supa.table("photos").update({"categories": cats}).eq("id", photo["id"]).execute()
+        if up.data:
+            console.print(f"  [green]✓ {len(cats)} catégorie(s) enregistrée(s)[/]")
+        else:
+            console.print("  [red]Erreur lors de la mise à jour.[/]")
 
 
 def prompt_photo_meta(photo_path: Path, non_interactive: bool) -> dict:
