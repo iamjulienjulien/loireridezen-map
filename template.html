@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LRZ — Exploration toggles</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=Oswald:wght@400;700&family=Spectral:wght@400;700&display=swap" />
+  <link rel="stylesheet" href="template.css" />
+</head>
+<body>
+
+<header class="t-header">
+  <div>
+    <h1 class="t-header__title">Loire Ride Zen — Exploration de toggles</h1>
+    <p class="t-header__sub">Choisir une variation pour remplacer les checkboxes natives du panneau.</p>
+  </div>
+  <div class="theme-selector">
+    <button data-theme="tuffeau" class="is-active">🛰️ Or et tuffeau</button>
+    <button data-theme="ardoise">🗺️ Ardoise</button>
+    <button data-theme="etat-major">IGN État-major</button>
+    <button data-theme="loire-velo">🚲 Loire à vélo</button>
+    <button data-theme="grand-air">⛰️ Grand air</button>
+  </div>
+</header>
+
+<main class="t-main">
+
+  <!-- ── V1 : Switch iOS-like ─────────────────────────────── -->
+  <section class="variation v1" id="v1">
+    <div class="variation__head">
+      <h2 class="variation__title">V1 — Switch iOS-like</h2>
+      <p class="variation__desc">Pill arrondie, cercle qui glisse. Familier, frictionless.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V2 : Switch compact ──────────────────────────────── -->
+  <section class="variation v2" id="v2">
+    <div class="variation__head">
+      <h2 class="variation__title">V2 — Switch compact</h2>
+      <p class="variation__desc">Même logique que V1, 30 % plus petit. Gain de place dans le panneau.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="switch-track switch-track--sm"><span class="switch-thumb switch-thumb--sm"></span></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="switch-track switch-track--sm"><span class="switch-thumb switch-thumb--sm"></span></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="switch-track switch-track--sm"><span class="switch-thumb switch-thumb--sm"></span></span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="switch-track switch-track--sm"><span class="switch-thumb switch-thumb--sm"></span></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="switch-track switch-track--sm"><span class="switch-thumb switch-thumb--sm"></span></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V3 : Switch carré / brutaliste ───────────────────── -->
+  <section class="variation v3" id="v3">
+    <div class="variation__head">
+      <h2 class="variation__title">V3 — Switch carré / signalétique</h2>
+      <p class="variation__desc">Angles droits, bordure franche. Esprit tampon, ancienne signalétique.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="switch-track switch-track--sq"><span class="switch-thumb switch-thumb--sq"></span></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="switch-track switch-track--sq"><span class="switch-thumb switch-thumb--sq"></span></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="switch-track switch-track--sq"><span class="switch-thumb switch-thumb--sq"></span></span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="switch-track switch-track--sq"><span class="switch-thumb switch-thumb--sq"></span></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="switch-track switch-track--sq"><span class="switch-thumb switch-thumb--sq"></span></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V4 : Checkbox carrée coche SVG animée ────────────── -->
+  <section class="variation v4" id="v4">
+    <div class="variation__head">
+      <h2 class="variation__title">V4 — Checkbox carrée, coche animée</h2>
+      <p class="variation__desc">La coche se dessine au clic. Couleur du thème, fond semi-opaque.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="check-box">
+          <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8.5 10.5,1.5"/></svg>
+        </span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="check-box">
+          <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8.5 10.5,1.5"/></svg>
+        </span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="check-box">
+          <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8.5 10.5,1.5"/></svg>
+        </span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="check-box">
+          <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8.5 10.5,1.5"/></svg>
+        </span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="check-box">
+          <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8.5 10.5,1.5"/></svg>
+        </span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V5 : Checkbox ronde ──────────────────────────────── -->
+  <section class="variation v5" id="v5">
+    <div class="variation__head">
+      <h2 class="variation__title">V5 — Checkbox ronde</h2>
+      <p class="variation__desc">Point intérieur qui apparaît. Plus doux, moins technique.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="check-circle"></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="check-circle"></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="check-circle"></span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="check-circle"></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="check-circle"></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V6 : Toggle œil ──────────────────────────────────── -->
+  <section class="variation v6" id="v6">
+    <div class="variation__head">
+      <h2 class="variation__title">V6 — Toggle œil</h2>
+      <p class="variation__desc">Visible / caché, sans ambiguïté. Parle même sans lire le label.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="eye-toggle">
+          <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="eye-toggle">
+          <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="eye-toggle">
+          <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="eye-toggle">
+          <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="eye-toggle">
+          <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V7 : Chip / tag toggle ────────────────────────────── -->
+  <section class="variation v7" id="v7">
+    <div class="variation__head">
+      <h2 class="variation__title">V7 — Chip / tag toggle</h2>
+      <p class="variation__desc">Le label entier devient l'interrupteur. Compact, moderne, zéro décoration parasite.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked"><span class="sample-label">Acte 1 — Paris → Blois</span></li>
+      <li class="sample-list__item is-checked"><span class="sample-label">Acte 2 — Blois → Angers</span></li>
+      <li class="sample-list__item is-checked"><span class="sample-label">Acte 3 → L'Océan</span></li>
+      <li class="sample-list__item"><span class="sample-label">Micro-aventures</span></li>
+      <li class="sample-list__item sample-list__item--disabled"><span class="sample-label">Vélodyssée <em>(à venir)</em></span></li>
+    </ul>
+  </section>
+
+  <!-- ── V8 : Chip + point indicateur ─────────────────────── -->
+  <section class="variation v8" id="v8">
+    <div class="variation__head">
+      <h2 class="variation__title">V8 — Chip + indicateur</h2>
+      <p class="variation__desc">Point coloré qui confirme l'état actif. Chip plus lisible que V7 seul.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="chip-dot"></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="chip-dot"></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="chip-dot"></span>
+        <span class="sample-label">Acte 3 → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="chip-dot"></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="chip-dot"></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V9 : Opacité ligne entière ───────────────────────── -->
+  <section class="variation v9" id="v9">
+    <div class="variation__head">
+      <h2 class="variation__title">V9 — Ligne entière, opacité</h2>
+      <p class="variation__desc">Off = effacé. Pas de widget visible — l'état parle par l'absence.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="v9-bar"></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="v9-bar"></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="v9-bar"></span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="v9-bar"></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="v9-bar"></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V10 : Barre colorée à gauche ─────────────────────── -->
+  <section class="variation v10" id="v10">
+    <div class="variation__head">
+      <h2 class="variation__title">V10 — Barre colorée à gauche</h2>
+      <p class="variation__desc">Esprit onglet de classeur. Sobre, directement lisible, ne prend pas de place.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V11 : Texte barré quand off ──────────────────────── -->
+  <section class="variation v11" id="v11">
+    <div class="variation__head">
+      <h2 class="variation__title">V11 — Texte barré quand off</h2>
+      <p class="variation__desc">Zéro widget. Le texte barré dit tout. Ultra-minimaliste.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── V12 : Mini-prévisualisation trace ─────────────────── -->
+  <section class="variation v12" id="v12">
+    <div class="variation__head">
+      <h2 class="variation__title">V12 — Trait de trace</h2>
+      <p class="variation__desc">Actif = trait plein coloré. Inactif = pointillé gris. Cohérent avec la carte.</p>
+    </div>
+    <ul class="sample-list">
+      <li class="sample-list__item is-checked">
+        <span class="trace-preview"></span>
+        <span class="sample-label">Acte 1 — Paris → Blois</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="trace-preview"></span>
+        <span class="sample-label">Acte 2 — Blois → Angers</span>
+      </li>
+      <li class="sample-list__item is-checked">
+        <span class="trace-preview"></span>
+        <span class="sample-label">Acte 3 — Angers → L'Océan</span>
+      </li>
+      <li class="sample-list__item">
+        <span class="trace-preview"></span>
+        <span class="sample-label">Micro-aventures</span>
+      </li>
+      <li class="sample-list__item sample-list__item--disabled">
+        <span class="trace-preview"></span>
+        <span class="sample-label">Vélodyssée <em>(à venir)</em></span>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<script>
+  const THEMES = {
+    'tuffeau':    { color: '#c8893a', font: '"Fraunces", serif' },
+    'ardoise':    { color: '#3f4a54', font: '"Geist", sans-serif' },
+    'etat-major': { color: '#722f37', font: '"Spectral", serif' },
+    'loire-velo': { color: '#3a6f8f', font: '"Oswald", sans-serif' },
+    'grand-air':  { color: '#b5562f', font: '"Cabin", sans-serif' },
+  };
+
+  // Sélecteur de thème
+  document.querySelectorAll('.theme-selector button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = THEMES[btn.dataset.theme];
+      if (!t) return;
+      document.documentElement.style.setProperty('--lrz-color-primary', t.color);
+      document.documentElement.style.setProperty('--lrz-font-theme', t.font);
+      document.querySelectorAll('.theme-selector button').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+
+  // Toggle des items (tous sauf disabled)
+  document.querySelectorAll('.sample-list__item:not(.sample-list__item--disabled)').forEach(li => {
+    li.addEventListener('click', () => li.classList.toggle('is-checked'));
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+/* template.css — Exploration de toggles pour Loire Ride Zen (LRZ-EVO-66) */
+/* Fichier autonome : n'importe pas style.css et n'est pas importé par lui. */
+
+/* ─────────────────────────────────────── Variables & reset */
+
+:root {
+  --lrz-color-primary: #c8893a;
+  --lrz-color-text: #2b2620;
+  --lrz-color-muted: #6b7280;
+  --lrz-color-bg: #fdfbf7;
+  --lrz-color-surface: #fff;
+  --lrz-color-border: #e2ddd8;
+  --lrz-font-theme: 'Fraunces', serif;
+  --lrz-font-body: -apple-system, BlinkMacSystemFont, 'Geist', sans-serif;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--lrz-font-body);
+  font-size: 0.9375rem;
+  color: var(--lrz-color-text);
+  background: var(--lrz-color-bg);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────── Header */
+
+.t-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--lrz-color-surface);
+  border-bottom: 1px solid var(--lrz-color-border);
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.t-header__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.t-header__sub {
+  font-size: 0.8rem;
+  color: var(--lrz-color-muted);
+}
+
+/* ─────────────────────────────────────── Theme selector */
+
+.theme-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.theme-selector button {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--lrz-color-muted);
+  font-size: 0.78rem;
+  font-family: var(--lrz-font-body);
+  cursor: pointer;
+  transition: all 150ms var(--ease);
+}
+
+.theme-selector button:hover,
+.theme-selector button.is-active {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+  color: #fff;
+}
+
+/* ─────────────────────────────────────── Main layout */
+
+.t-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ─────────────────────────────────────── Variation card */
+
+.variation {
+  background: var(--lrz-color-surface);
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.variation__head {
+  margin-bottom: 1rem;
+}
+
+.variation__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.variation__desc {
+  font-size: 0.8rem;
+  color: var(--lrz-color-muted);
+  margin-top: 0.15rem;
+}
+
+/* ─────────────────────────────────────── Sample list (base) */
+
+.sample-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sample-list__item {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sample-list__item--disabled {
+  cursor: default;
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.sample-label {
+  font-size: 0.875rem;
+  color: var(--lrz-color-text);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V1 — Switch iOS-like (taille standard)
+══════════════════════════════════════════════════════════ */
+
+.v1 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.switch-track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--lrz-color-border);
+  flex-shrink: 0;
+  transition: background 200ms var(--ease);
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .switch-track {
+  background: var(--lrz-color-primary);
+}
+
+.sample-list__item.is-checked .switch-thumb {
+  transform: translateX(18px);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V2 — Switch compact
+══════════════════════════════════════════════════════════ */
+
+.v2 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+
+.switch-track--sm {
+  width: 30px;
+  height: 16px;
+}
+
+.switch-thumb--sm {
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+}
+
+.sample-list__item.is-checked .switch-thumb--sm {
+  transform: translateX(14px);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V3 — Switch carré / brutaliste
+══════════════════════════════════════════════════════════ */
+
+.v3 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.switch-track--sq {
+  border-radius: 3px;
+  border: 1.5px solid var(--lrz-color-border);
+  background: transparent;
+  transition: background 200ms var(--ease), border-color 200ms var(--ease);
+}
+
+.switch-thumb--sq {
+  border-radius: 2px;
+  box-shadow: none;
+  background: var(--lrz-color-muted);
+  transition: transform 200ms var(--ease), background 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .switch-track--sq {
+  background: color-mix(in srgb, var(--lrz-color-primary) 12%, transparent);
+  border-color: var(--lrz-color-primary);
+}
+
+.sample-list__item.is-checked .switch-thumb--sq {
+  background: var(--lrz-color-primary);
+  transform: translateX(14px);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V4 — Checkbox carrée, coche SVG animée
+══════════════════════════════════════════════════════════ */
+
+.v4 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.check-box {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--lrz-color-border);
+  border-radius: 4px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 200ms var(--ease), background 200ms var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.check-box svg {
+  width: 12px;
+  height: 12px;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.check-box svg polyline {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .check-box {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+}
+
+.sample-list__item.is-checked .check-box svg polyline {
+  stroke-dashoffset: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V5 — Checkbox ronde
+══════════════════════════════════════════════════════════ */
+
+.v5 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.check-circle {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--lrz-color-border);
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 200ms var(--ease), background 200ms var(--ease);
+}
+
+.check-circle::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  transform: scale(0);
+  transition: transform 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .check-circle {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+}
+
+.sample-list__item.is-checked .check-circle::after {
+  transform: scale(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V6 — Toggle œil (visible / caché)
+══════════════════════════════════════════════════════════ */
+
+.v6 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+
+.eye-toggle {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 200ms var(--ease);
+  color: var(--lrz-color-muted);
+}
+
+.eye-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.eye-open { display: none; }
+.eye-closed { display: block; }
+
+.sample-list__item.is-checked .eye-toggle {
+  color: var(--lrz-color-primary);
+}
+
+.sample-list__item.is-checked .eye-open { display: block; }
+.sample-list__item.is-checked .eye-closed { display: none; }
+
+/* ══════════════════════════════════════════════════════════
+   V7 — Chip / tag toggle
+══════════════════════════════════════════════════════════ */
+
+.v7 .sample-list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.v7 .sample-list__item {
+  min-height: auto;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--lrz-color-border);
+  background: transparent;
+  color: var(--lrz-color-muted);
+  font-size: 0.825rem;
+  transition: background 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease);
+}
+
+.v7 .sample-label { color: inherit; font-size: inherit; }
+
+.v7 .sample-list__item.is-checked {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+  color: #fff;
+}
+
+.v7 .sample-list__item--disabled {
+  opacity: 0.38;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V8 — Chip + point indicateur
+══════════════════════════════════════════════════════════ */
+
+.v8 .sample-list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.v8 .sample-list__item {
+  min-height: auto;
+  padding: 0.35rem 0.85rem 0.35rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid var(--lrz-color-border);
+  background: transparent;
+  color: var(--lrz-color-muted);
+  font-size: 0.825rem;
+  gap: 0.45rem;
+  transition: all 200ms var(--ease);
+}
+
+.v8 .sample-label { color: inherit; font-size: inherit; }
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lrz-color-border);
+  flex-shrink: 0;
+  transition: background 200ms var(--ease);
+}
+
+.v8 .sample-list__item.is-checked {
+  background: color-mix(in srgb, var(--lrz-color-primary) 12%, transparent);
+  border-color: var(--lrz-color-primary);
+  color: var(--lrz-color-primary);
+}
+
+.v8 .sample-list__item.is-checked .chip-dot {
+  background: var(--lrz-color-primary);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V9 — Ligne entière, opacité réduite quand off
+══════════════════════════════════════════════════════════ */
+
+.v9 .sample-list__item {
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  gap: 0.75rem;
+  opacity: 0.35;
+  transition: opacity 200ms var(--ease), background 150ms var(--ease);
+}
+
+.v9 .sample-list__item.is-checked {
+  opacity: 1;
+}
+
+.v9 .sample-list__item:hover:not(.sample-list__item--disabled) {
+  background: color-mix(in srgb, var(--lrz-color-primary) 5%, transparent);
+}
+
+.v9-bar {
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+  background: transparent;
+  flex-shrink: 0;
+  transition: background 200ms var(--ease);
+}
+
+.v9 .sample-list__item.is-checked .v9-bar {
+  background: var(--lrz-color-primary);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V10 — Barre colorée à gauche
+══════════════════════════════════════════════════════════ */
+
+.v10 .sample-list__item {
+  padding: 0.4rem 0.75rem 0.4rem 0.875rem;
+  border-radius: 6px;
+  gap: 0;
+  border-left: 3px solid transparent;
+  transition: border-color 200ms var(--ease), background 150ms var(--ease);
+}
+
+.v10 .sample-label {
+  transition: color 200ms var(--ease);
+  color: var(--lrz-color-muted);
+}
+
+.v10 .sample-list__item.is-checked {
+  border-left-color: var(--lrz-color-primary);
+  background: color-mix(in srgb, var(--lrz-color-primary) 5%, transparent);
+}
+
+.v10 .sample-list__item.is-checked .sample-label {
+  color: var(--lrz-color-text);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V11 — Texte barré quand off
+══════════════════════════════════════════════════════════ */
+
+.v11 .sample-list__item {
+  padding: 0.4rem 0;
+  transition: opacity 200ms var(--ease);
+}
+
+.v11 .sample-label {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--lrz-color-muted) 60%, transparent);
+  color: var(--lrz-color-muted);
+  transition: color 200ms var(--ease), text-decoration-color 200ms var(--ease);
+}
+
+.v11 .sample-list__item.is-checked .sample-label {
+  text-decoration: none;
+  color: var(--lrz-color-text);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V12 — Mini-prévisualisation de trace
+══════════════════════════════════════════════════════════ */
+
+.v12 .sample-list__item {
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+}
+
+.trace-preview {
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background: repeating-linear-gradient(
+    to right,
+    var(--lrz-color-border) 0 5px,
+    transparent 5px 9px
+  );
+  transition: background 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .trace-preview {
+  background: var(--lrz-color-primary);
+}
+
+.v12 .sample-label {
+  color: var(--lrz-color-muted);
+  transition: color 200ms var(--ease);
+}
+
+.v12 .sample-list__item.is-checked .sample-label {
+  color: var(--lrz-color-text);
+}
+
+/* ─────────────────────────────────────── Responsive */
+
+@media (max-width: 600px) {
+  .t-header { padding: 0.875rem 1rem; }
+  .t-main { padding: 1.5rem 1rem 3rem; }
+  .variation { padding: 1rem; }
+}
