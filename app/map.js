@@ -17,7 +17,7 @@
 
 import { Map, TileLayer } from "leaflet";
 import { DEFAULT_VIEW } from "./config.js";
-import { THEME_MAP, DEFAULT_THEME } from "./themes.js";
+import { DEFAULT_CARNET_KEY, CARNET_MAP } from "./carnets/registry.js";
 
 export const map = new Map("map", {
   zoomControl: false,
@@ -69,25 +69,29 @@ export const baseOpenTopo = new TileLayer(
   },
 );
 
-// Restaurer le fond persisté (lrz-preferences, sinon basemap du thème par défaut)
-let _savedBase;
-try {
-  const raw = localStorage.getItem("lrz-preferences");
-  if (raw) _savedBase = JSON.parse(raw)?.baseLayer;
-} catch {}
-if (!_savedBase) {
-  const themeKey = localStorage.getItem("lrz_theme") || DEFAULT_THEME;
-  _savedBase = THEME_MAP.get(themeKey)?.basemap || "sat";
-}
+export const baseOSMDark = new TileLayer(
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  {
+    subdomains: "abcd",
+    maxZoom: 19,
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+  },
+);
 
-if (_savedBase === "sat") {
+// Restaurer le fond depuis le carnet persisté
+const _carnetKey = localStorage.getItem("lrz_carnet") ?? DEFAULT_CARNET_KEY;
+const _initialBasemap = CARNET_MAP.get(_carnetKey)?.visual.basemap ?? "cyclosm";
+
+if (_initialBasemap === "satellite-esri") {
   baseEsriSat.addTo(map);
   esriLabels.addTo(map);
-} else if (_savedBase === "cyclosm") {
-  baseCyclOSM.addTo(map);
-} else if (_savedBase === "ign") {
+} else if (_initialBasemap === "osm-dark") {
+  baseOSMDark.addTo(map);
+} else if (_initialBasemap === "ign-plan") {
   baseIgnPlan.addTo(map);
-} else if (_savedBase === "topo") {
+} else if (_initialBasemap === "cyclosm") {
+  baseCyclOSM.addTo(map);
+} else if (_initialBasemap === "opentopomap") {
   baseOpenTopo.addTo(map);
 } else {
   baseOSM.addTo(map);

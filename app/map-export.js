@@ -15,7 +15,26 @@
 
 import { TRACE_MARKER_TYPES } from "./types.js";
 import { farthestPointFromStart } from "./geo-utils.js";
-import { THEMES, DEFAULT_THEME } from "./themes.js";
+import { CARNETS_REGISTRY, DEFAULT_CARNET_KEY } from "./carnets/registry.js";
+
+// Adaptateur CARNETS → format attendu par les boutons de thème de la modale
+const _BASEMAP_KEY_MAP = {
+  "satellite-esri": "sat",
+  "osm-dark":       "osm",
+  "ign-plan":       "ign",
+  "cyclosm":        "cyclosm",
+  "opentopomap":    "topo",
+  "osm-plan":       "osm",
+};
+
+const THEMES = CARNETS_REGISTRY.map((c) => ({
+  key:     c.key,
+  label:   c.label,
+  basemap: _BASEMAP_KEY_MAP[c.visual.basemap] ?? "osm",
+  color:   c.visual.primaryColor,
+  font:    c.visual.fontFamily,
+}));
+const DEFAULT_THEME = DEFAULT_CARNET_KEY;
 
 // ─── Fonds de carte ───────────────────────────────────────────────────────────
 
@@ -1716,8 +1735,8 @@ export async function openExportModal() {
 
   document.getElementById("exp-generate").addEventListener("click", _generate);
 
-  // Pré-sélectionner le thème actif de la carte dans la modale
-  const currentTheme = localStorage.getItem("lrz_theme") || DEFAULT_THEME;
+  // Pré-sélectionner le carnet actif de la carte dans la modale
+  const currentTheme = localStorage.getItem("lrz_carnet") || DEFAULT_THEME;
   _overlay
     .querySelector(`.lrz-export-theme[data-theme="${currentTheme}"]`)
     ?.click();
