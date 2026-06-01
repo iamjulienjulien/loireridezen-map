@@ -69,8 +69,19 @@ export const baseOpenTopo = new TileLayer(
   },
 );
 
+// CartoDB Dark Matter — utilisé par 🏮 Veillée (même design que OpenMapTiles Dark Matter)
 export const baseOSMDark = new TileLayer(
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  {
+    subdomains: "abcd",
+    maxZoom: 19,
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+  },
+);
+
+// CartoDB Positron — utilisé par 📷 Souvenirs (même design que OpenMapTiles Positron)
+export const basePositron = new TileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
   {
     subdomains: "abcd",
     maxZoom: 19,
@@ -87,6 +98,8 @@ if (_initialBasemap === "satellite-esri") {
   esriLabels.addTo(map);
 } else if (_initialBasemap === "osm-dark") {
   baseOSMDark.addTo(map);
+} else if (_initialBasemap === "positron") {
+  basePositron.addTo(map);
 } else if (_initialBasemap === "ign-plan") {
   baseIgnPlan.addTo(map);
 } else if (_initialBasemap === "cyclosm") {

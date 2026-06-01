@@ -4,7 +4,7 @@
 
 import {
   map,
-  baseOSM, baseOSMDark,
+  baseOSM, baseOSMDark, basePositron,
   baseEsriSat, esriLabels,
   baseCyclOSM, baseIgnPlan, baseOpenTopo,
 } from "../map.js";
@@ -16,7 +16,7 @@ const PHOTO_CATEGORIES_ENABLED_IN_DB = false;
 // ─── Basemap ────────────────────────────────────────────────────────────────
 
 function _switchBasemap(basemap) {
-  const all = [baseOSM, baseOSMDark, baseEsriSat, esriLabels, baseCyclOSM, baseIgnPlan, baseOpenTopo];
+  const all = [baseOSM, baseOSMDark, basePositron, baseEsriSat, esriLabels, baseCyclOSM, baseIgnPlan, baseOpenTopo];
   all.forEach((l) => { try { map.removeLayer(l); } catch {} });
 
   switch (basemap) {
@@ -26,6 +26,9 @@ function _switchBasemap(basemap) {
       break;
     case "osm-dark":
       baseOSMDark.addTo(map);
+      break;
+    case "positron":
+      basePositron.addTo(map);
       break;
     case "ign-plan":
       baseIgnPlan.addTo(map);

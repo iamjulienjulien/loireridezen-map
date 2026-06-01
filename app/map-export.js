@@ -21,6 +21,7 @@ import { CARNETS_REGISTRY, DEFAULT_CARNET_KEY } from "./carnets/registry.js";
 const _BASEMAP_KEY_MAP = {
   "satellite-esri": "sat",
   "osm-dark":       "osm",
+  "positron":       "osm",
   "ign-plan":       "ign",
   "cyclosm":        "cyclosm",
   "opentopomap":    "topo",
