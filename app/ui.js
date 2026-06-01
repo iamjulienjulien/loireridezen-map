@@ -7,6 +7,9 @@
 
 import { FeatureGroup } from "leaflet";
 import * as leafletExtraMarkers from "leaflet-extra-markers";
+import { PHOTO_CATEGORY_GROUPS } from "./carnets/registry.js";
+import { getCurrentEnabledCategories } from "./carnets/state.js";
+import { setEnabledPhotoCategories } from "./poi.js";
 
 import { map } from "./map.js";
 import { traceGroups, loadAllRoutes } from "./routes.js";
@@ -205,21 +208,121 @@ export function renderPoiSection(prefs) {
 
 // ─────────────────────────────────────── Section 4 : Photos
 
+const _CAT_EXPANDED_KEY = "lrz_photo_categories_expanded";
+
 export function renderPhotosSection(prefs) {
   const list = document.getElementById("photos-list");
   if (!list) return;
 
   const isChecked = prefs.poi?.photo ?? true;
+  const enabled = getCurrentEnabledCategories();
+  const isExpanded = (() => {
+    try { return localStorage.getItem(_CAT_EXPANDED_KEY) === "true"; } catch { return false; }
+  })();
+
+  const groupsHTML = PHOTO_CATEGORY_GROUPS.map((group) => {
+    const subHTML = group.subcategories.map((sub) => {
+      const checked = enabled.has(sub.key);
+      return `
+        <div class="lrz-photo-subcat" data-cat="${escapeHtml(sub.key)}">
+          <span class="lrz-photo-subcat__label">${escapeHtml(sub.label)}</span>
+          <label class="lrz-eye-toggle lrz-eye-toggle--sm">
+            <input type="checkbox" class="lrz-photo-cat-cb" data-cat="${escapeHtml(sub.key)}" ${checked ? "checked" : ""} />
+            <span class="lrz-eye-toggle__icon">${_EYE_SVG}</span>
+          </label>
+        </div>`;
+    }).join("");
+
+    const allChecked = group.subcategories.every((s) => enabled.has(s.key));
+    const noneChecked = group.subcategories.every((s) => !enabled.has(s.key));
+    const indeterminate = !allChecked && !noneChecked;
+
+    return `
+      <div class="lrz-photo-group" data-group="${escapeHtml(group.key)}">
+        <div class="lrz-photo-group__header">
+          <span class="lrz-photo-group__icon">${group.icon}</span>
+          <span class="lrz-photo-group__label">${escapeHtml(group.label)}</span>
+          <label class="lrz-eye-toggle lrz-eye-toggle--sm">
+            <input type="checkbox" class="lrz-photo-group-cb" data-group="${escapeHtml(group.key)}"
+              ${allChecked ? "checked" : ""} ${indeterminate ? "data-indeterminate" : ""} />
+            <span class="lrz-eye-toggle__icon">${_EYE_SVG}</span>
+          </label>
+        </div>
+        <div class="lrz-photo-group__subcats">${subHTML}</div>
+      </div>`;
+  }).join("");
 
   list.innerHTML = `
-    <div class="lrz-row">
+    <div class="lrz-row lrz-photo-master-row">
       <div class="lrz-row__marker">${renderMiniMarker("photo")}</div>
       <span class="lrz-row__label">Photos géolocalisées</span>
-      <label class="lrz-eye-toggle" title="Afficher / masquer">
+      <label class="lrz-eye-toggle" title="Afficher / masquer la couche photos">
         <input type="checkbox" class="lrz-checkbox type-filter" value="photo" ${isChecked ? "checked" : ""} />
         <span class="lrz-eye-toggle__icon">${_EYE_SVG}</span>
       </label>
+      <button class="lrz-photo-expand-btn" aria-expanded="${isExpanded}" title="Filtres par catégorie">▾</button>
+    </div>
+    <div class="lrz-photo-categories${isExpanded ? " is-expanded" : ""}">
+      ${groupsHTML}
     </div>`;
+
+  // Appliquer indeterminate en JS (pas en HTML attr)
+  list.querySelectorAll("[data-indeterminate]").forEach((cb) => {
+    cb.indeterminate = true;
+    cb.removeAttribute("data-indeterminate");
+  });
+
+  // Toggle expand
+  list.querySelector(".lrz-photo-expand-btn")?.addEventListener("click", () => {
+    const catSection = list.querySelector(".lrz-photo-categories");
+    const btn = list.querySelector(".lrz-photo-expand-btn");
+    const expanded = catSection.classList.toggle("is-expanded");
+    btn.setAttribute("aria-expanded", String(expanded));
+    try { localStorage.setItem(_CAT_EXPANDED_KEY, String(expanded)); } catch {}
+  });
+
+  // Toggle master → griser les sous-cases (l'état réel est géré par .type-filter)
+  list.querySelector(".type-filter")?.addEventListener("change", (e) => {
+    list.querySelector(".lrz-photo-categories").classList.toggle("is-disabled", !e.target.checked);
+  });
+
+  // Toggle sous-catégorie
+  list.querySelectorAll(".lrz-photo-cat-cb").forEach((cb) => {
+    cb.addEventListener("change", () => _updatePhotoCategoryFilter(list));
+  });
+
+  // Toggle groupe
+  list.querySelectorAll(".lrz-photo-group-cb").forEach((gcb) => {
+    gcb.addEventListener("change", () => {
+      const groupKey = gcb.dataset.group;
+      const group = PHOTO_CATEGORY_GROUPS.find((g) => g.key === groupKey);
+      if (!group) return;
+      group.subcategories.forEach((sub) => {
+        const cb = list.querySelector(`.lrz-photo-cat-cb[data-cat="${sub.key}"]`);
+        if (cb) cb.checked = gcb.checked;
+      });
+      _updatePhotoCategoryFilter(list);
+    });
+  });
+
+  // Reset sur changement de carnet
+  document.addEventListener("lrz:carnet-changed", () => renderPhotosSection(prefs), { once: true });
+}
+
+function _updatePhotoCategoryFilter(list) {
+  const checked = new Set(
+    [...list.querySelectorAll(".lrz-photo-cat-cb:checked")].map((cb) => cb.dataset.cat)
+  );
+  // Mettre à jour les toggles de groupe
+  PHOTO_CATEGORY_GROUPS.forEach((group) => {
+    const gcb = list.querySelector(`.lrz-photo-group-cb[data-group="${group.key}"]`);
+    if (!gcb) return;
+    const all = group.subcategories.every((s) => checked.has(s.key));
+    const none = group.subcategories.every((s) => !checked.has(s.key));
+    gcb.checked = all;
+    gcb.indeterminate = !all && !none;
+  });
+  setEnabledPhotoCategories(checked);
 }
 
 // ─────────────────────────────────────── Drawer mobile (legacy guard)

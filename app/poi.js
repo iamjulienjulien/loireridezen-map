@@ -39,6 +39,31 @@ export const cluster = new LayerGroup().addTo(map);
 // Index des photos rattachées à des POI — Map<poi_id, photo_props[]>
 const photosByPoi = new Map();
 
+// Set des catégories photos actuellement activées (null = toutes visibles)
+let _enabledPhotoCategories = null;
+
+/** Détermine si une photo doit être affichée selon les catégories actives. */
+export function shouldShowPhoto(photo) {
+  // Pas de filtre actif → toutes visibles
+  if (!_enabledPhotoCategories) return true;
+  // Photo sans catégorie → toujours visible (rétrocompat)
+  const cats = photo.categories;
+  if (!cats || cats.length === 0) return true;
+  // Visible si au moins une catégorie est dans le set actif
+  return cats.some((c) => _enabledPhotoCategories.has(c));
+}
+
+/** Met à jour les catégories actives et recharge les markers. */
+export function setEnabledPhotoCategories(enabledSet) {
+  _enabledPhotoCategories = enabledSet ?? null;
+  loadPoisForViewport();
+}
+
+// Écoute les changements de carnet pour refiltrer
+document.addEventListener("lrz:photo-categories-changed", ({ detail }) => {
+  setEnabledPhotoCategories(detail.enabled ? new Set(detail.enabled) : null);
+});
+
 // Types autorisés côté serveur : les types hidden ne sont demandés que si le
 // mode correspondant est actif (sinon ils ne sont pas chargés du tout).
 const _allowedTypes = Object.entries(POI_TYPES)
@@ -291,12 +316,20 @@ export async function loadPoisForViewport() {
     const localFeatures = fcLocal.features || [];
     buildPhotosByPoi(localFeatures);
     // Photos rattachées à un POI n'ont pas de marker séparé
-    const photosForMarkers = localFeatures.filter((f) => !(f.properties || {}).poi_id);
+    const photosForMarkers = localFeatures.filter((f) => {
+      const p = f.properties || {};
+      if (p.poi_id) return false; // rattachée à un POI → pas de marker séparé
+      if (p.type === "photo") return shouldShowPhoto(p);
+      return true;
+    });
     const all = (fcDB.features || []).concat(photosForMarkers);
     const activeSet = new Set(activeTypes);
-    const filtered = all.filter((f) =>
-      activeSet.has((f.properties || {}).type),
-    );
+    const filtered = all.filter((f) => {
+      const p = f.properties || {};
+      if (!activeSet.has(p.type)) return false;
+      if (p.type === "photo") return shouldShowPhoto(p);
+      return true;
+    });
 
     // clearLayers seulement APRÈS succès du fetch (préserve les markers
     // précédents si une erreur survient ensuite)
