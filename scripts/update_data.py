@@ -303,6 +303,43 @@ def _migrate_weather_data(items: list[dict]) -> tuple[int, int]:
     return migrated, skipped
 
 
+def _migrate_labels_extract_step(items: list[dict]) -> tuple[int, int]:
+    """Extrait le numéro d'étape du label vers le champ `step`. Idempotent.
+
+    Avant : {"label": "Étape 4 Ancenis ➡️ Nantes"}
+    Après : {"label": "Ancenis ➡️ Nantes", "step": 4}
+
+    Retourne (n_migrated, n_already).
+    """
+    pattern = re.compile(r'^Étape\s+(\d+)\s*[—–-]?\s*', re.IGNORECASE)
+    migrated = 0
+    already = 0
+    steps_by_group: dict[str, list[int]] = {}
+
+    for trace in items:
+        label = trace.get('label', '')
+        m = pattern.match(label)
+        if not m:
+            continue
+        step = int(m.group(1))
+        new_label = pattern.sub('', label).strip()
+        if trace.get('step') == step and trace.get('label') == new_label:
+            already += 1
+            continue
+        trace['step'] = step
+        trace['label'] = new_label
+        migrated += 1
+        group = trace.get('group', '?')
+        steps_by_group.setdefault(group, []).append(step)
+
+    for group, steps in steps_by_group.items():
+        dups = {s for s in steps if steps.count(s) > 1}
+        if dups:
+            console.print(f"[yellow]⚠ Doublons Étape dans {group}: {sorted(dups)}[/]")
+
+    return migrated, already
+
+
 # Lib Supabase — import optionnel (dispo si supabase>=2.5.0 installé)
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -775,6 +812,7 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
 
     # --- Groupe 4 : Maintenance ---
     choices.append(questionary.Choice("🔧 Migrer structure météo / astres", value="migrate_weather"))
+    choices.append(questionary.Choice("🏷️  Migrer labels → step (extraction numéro d'étape)", value="migrate_step"))
     choices.append(questionary.Separator())
 
     # --- Groupe 4 : Sortie ---
@@ -801,6 +839,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "list_edit", "both"
     if choice == "migrate_weather":
         return "migrate_weather", "both"
+    if choice == "migrate_step":
+        return "migrate_step", "both"
     if choice == "pull_photos":
         return "pull_photos", "both"
     if choice == "delete_all":
@@ -3007,6 +3047,17 @@ def main() -> None:
                 )
                 log_event("INFO", "traces", "weather_migrated", migrated=n_mig, skipped=n_skip)
             console.print(f"[green]✓ Migration météo : {n_mig} trace(s) migrée(s), {n_skip} déjà à jour.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "migrate_step":
+            items, _ = load_catalog(CATALOG_TRACES)
+            n_mig, n_already = _migrate_labels_extract_step(items)
+            if n_mig:
+                save_catalog(CATALOG_TRACES, items)
+                log_event("INFO", "traces", "step_migrated", migrated=n_mig, already=n_already)
+            console.print(f"[green]✓ Migration step : {n_mig} trace(s) migrée(s), {n_already} déjà à jour.[/]")
+            console.print("[dim]Vérifier le diff : git diff data/catalog/traces.json[/]")
             log_event("INFO", "system", "done", exit_code=0,
                       duration_s=round(time.monotonic() - t_start, 2), totals={})
             sys.exit(0)

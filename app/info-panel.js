@@ -55,6 +55,7 @@ function renderPositionBlock(detail) {
 function renderStepBlock(info) {
   if (!info) return "";
   const { trace, status } = info;
+  if (status === "prochaine" && !trace.date) return "";
   const isActive = status === "en-cours";
   const badge = isActive ? "En cours" : "Prochaine étape";
   const badgeClass = isActive

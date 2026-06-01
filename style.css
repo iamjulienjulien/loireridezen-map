@@ -857,9 +857,9 @@ body {
 }
 
 .lrz-legend-row--inline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem 0.5rem;
   padding: 0.3rem 0.875rem;
   font-size: 0.8rem;
   color: var(--lrz-ink-soft);
@@ -869,11 +869,31 @@ body {
 .lrz-legend-row--inline .lrz-legend-row__item {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.25rem;
+  min-width: 0;
 }
 
 .lrz-legend-row--inline .lrz-legend-row__emoji {
   width: auto;
+  flex-shrink: 0;
+}
+
+.lrz-legend__eurovelos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 0.5rem;
+  padding: 0.3rem 0.875rem;
+  font-size: 0.85rem;
+  color: var(--lrz-ink-soft);
+  cursor: default;
+}
+
+.lrz-legend__eurovelo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 /* ─────────────────────────────────────── Checkbox unifiée */
@@ -1446,7 +1466,13 @@ body {
   gap: 0.2rem;
   min-width: 0;
 }
-.lrz-step-popup__group-badge {
+.lrz-step-popup__badges {
+  display: flex;
+  gap: 0.4em;
+  margin-bottom: 0.2rem;
+  flex-wrap: wrap;
+}
+.lrz-step-popup__badge {
   display: inline-flex;
   align-items: center;
   padding: 0.1em 0.5em;
@@ -1458,7 +1484,12 @@ body {
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  align-self: flex-start;
+}
+.lrz-step-popup__badge--step {
+  border-color: var(--lrz-tuffeau-line, #ccc);
+  background: transparent;
+  color: var(--lrz-ink-soft);
+  font-weight: 500;
 }
 .lrz-step-popup__label {
   font-size: 0.9375rem;
@@ -2191,36 +2222,23 @@ body {
 
 .lrz-step-popup__actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.625rem;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
 }
 
-.lrz-step-popup__btn {
-  display: inline-flex;
+.lrz-step-popup__link {
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-family: var(--lrz-font-sans);
+  gap: 0.4em;
+  color: var(--step-group-color, currentColor);
   text-decoration: none;
-  white-space: nowrap;
-  transition: opacity 0.15s;
+  padding: 0.15rem 0;
+  font-size: 0.875rem;
 }
 
-.lrz-step-popup__btn:hover {
-  opacity: 0.85;
-}
-
-.lrz-step-popup__btn--insta {
-  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
-  color: #fff;
-}
-
-.lrz-step-popup__btn--komoot {
-  background: #5090b5;
-  color: #fff;
+.lrz-step-popup__link:hover {
+  text-decoration: underline;
 }
 
 .lrz-step-popup__btn--center {

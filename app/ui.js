@@ -101,26 +101,28 @@ export function addEuroVeloToggle(eurovelo, prefs) {
   const strokeStyle =
     "display:inline-block;width:1.5rem;height:3px;background:#6b7280;opacity:0.6;border-radius:2px;flex-shrink:0";
 
-  const ev6Row = document.createElement("div");
+  const ev6Row = document.createElement("span");
   ev6Row.id = "eurovelo-row";
-  ev6Row.className = "lrz-legend-row";
+  ev6Row.className = "lrz-legend__eurovelo";
   ev6Row.innerHTML =
     `<span class="lrz-legend-row__visual" style="${strokeStyle}"></span>` +
     `<span>EuroVelo 6</span>`;
 
-  const ev1Row = document.createElement("div");
+  const ev1Row = document.createElement("span");
   ev1Row.id = "eurovelo-1-row";
-  ev1Row.className = "lrz-legend-row";
+  ev1Row.className = "lrz-legend__eurovelo";
   ev1Row.innerHTML =
     `<span class="lrz-legend-row__visual" style="${strokeStyle}"></span>` +
     `<span>EuroVelo 1</span>`;
 
+  const evWrapper = document.createElement("div");
+  evWrapper.className = "lrz-legend__eurovelos";
+  evWrapper.append(ev6Row, ev1Row);
+
   if (legend) {
-    legend.after(ev1Row);
-    legend.after(ev6Row);
+    legend.after(evWrapper);
   } else {
-    list.appendChild(ev6Row);
-    list.appendChild(ev1Row);
+    list.appendChild(evWrapper);
   }
 }
 

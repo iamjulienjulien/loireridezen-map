@@ -1139,7 +1139,7 @@ function _buildHTML(groups, tracesData) {
         .filter((it) => it.group === g.id)
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
       if (!its.length) return "";
-      return `<optgroup label="${g.label}">${its.map((it) => `<option value="${it.id}">${it.label}</option>`).join("")}</optgroup>`;
+      return `<optgroup label="${g.label}">${its.map((it) => `<option value="${it.id}">${it.step != null ? `Étape ${it.step} — ` : ""}${it.label}</option>`).join("")}</optgroup>`;
     })
     .join("");
 

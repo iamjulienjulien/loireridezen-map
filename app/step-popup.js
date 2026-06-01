@@ -25,15 +25,16 @@ function formatDateFr(iso) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function renderExternalBtn(url, label, cls, stepId) {
+function renderLink(url, icon, label) {
   const safe = safeHttpUrl(url);
   if (!safe) return "";
-  return `<a href="${escapeHtml(safe)}" target="_blank" rel="noopener noreferrer" class="lrz-step-popup__btn ${cls}" data-step-id="${escapeHtml(stepId || '')}">${label}</a>`;
+  return `<a href="${escapeHtml(safe)}" target="_blank" rel="noopener noreferrer" class="lrz-step-popup__link"><span>${icon}</span> ${escapeHtml(label)}</a>`;
 }
 
 export function renderStepPopup(item, group) {
   const groupColor = group?.color || "#6b7280";
   const groupShort = (group?.label || "").split(" — ")[0].trim() || (group?.id || "");
+  const step = item.step != null ? item.step : null;
 
   const date = item.date ? formatDateFr(item.date) : null;
   const distance = formatDistance(item.distance_km);
@@ -46,19 +47,22 @@ export function renderStepPopup(item, group) {
 
   const hasContext = date || day || moon || weather;
 
-  const instaHTML = renderExternalBtn(item.instagram_url, "📷 Instagram", "lrz-step-popup__btn--insta", item.id);
-  const komootHTML = renderExternalBtn(item.komoot_url, "🗺️ Komoot", "lrz-step-popup__btn--komoot", item.id);
-  const hasActions = instaHTML || komootHTML;
+  const komootHTML = renderLink(item.komoot_url, "🔗", "Trace GPX sur Komoot");
+  const instaHTML = renderLink(item.instagram_url, "📸", "Post sur Instagram");
+  const hasActions = komootHTML || instaHTML;
 
   const weatherLine = weather
-    ? `${escapeHtml(weather.icon || "")} ${escapeHtml(weather.description || "")}${weather.temp != null ? ` · 🌡️${Math.round(weather.temp)}°C` : ""}`.trim()
+    ? `${escapeHtml(weather.icon || "")} ${escapeHtml(weather.description || "")}${weather.temp != null ? ` · 🌡️ ${Math.round(weather.temp)}°C` : ""}`.trim()
     : null;
 
   return `
     <div class="lrz-step-popup" style="--step-group-color:${escapeHtml(groupColor)}">
       <header class="lrz-step-popup__header">
         <div class="lrz-step-popup__header-left">
-          <span class="lrz-step-popup__group-badge">${escapeHtml(groupShort)}</span>
+          <div class="lrz-step-popup__badges">
+            <span class="lrz-step-popup__badge">${escapeHtml(groupShort)}</span>
+            ${step != null ? `<span class="lrz-step-popup__badge lrz-step-popup__badge--step">Étape ${step}</span>` : ""}
+          </div>
           <strong class="lrz-step-popup__label">${escapeHtml(item.label)}</strong>
         </div>
         <button class="lrz-step-popup__close" aria-label="Fermer">✕</button>
@@ -75,7 +79,7 @@ export function renderStepPopup(item, group) {
         ${duration ? `<li>⌚️ <strong>${escapeHtml(duration)} de vélo</strong></li>` : ""}
         ${elev ? `<li>⛰️ <strong>${escapeHtml(elev)}</strong></li>` : ""}
       </ul>
-      ${hasActions ? `<div class="lrz-step-popup__actions">${instaHTML}${komootHTML}</div>` : ""}
+      ${hasActions ? `<div class="lrz-step-popup__actions">${komootHTML}${instaHTML}</div>` : ""}
     </div>
   `;
 }

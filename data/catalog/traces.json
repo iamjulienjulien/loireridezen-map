@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-06-01T00:14:18.501017+00:00",
+  "updated_at": "2026-06-01T04:40:54.794289+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
-      "label": "Étape 1 Paris ➡️ Boissy-Le-Cutté",
+      "label": "Paris ➡️ Boissy-Le-Cutté",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte.geojson",
@@ -29,11 +29,12 @@
         "phase": 0.865,
         "icon": "🌘",
         "description": "Dernier croissant"
-      }
+      },
+      "step": 1
     },
     {
       "id": "acte-1_etape-2_boissy-le-culle_etampes",
-      "label": "Étape 2 Boissy-Le-Cutté ➡️ Étampes",
+      "label": "Boissy-Le-Cutté ➡️ Étampes",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-2_boissy-le-culle_etampes.geojson",
@@ -59,11 +60,12 @@
         "phase": 0.899,
         "icon": "🌘",
         "description": "Dernier croissant"
-      }
+      },
+      "step": 2
     },
     {
       "id": "acte-1_etape-3_etampes_artenay",
-      "label": "Étape 3 Étampes ➡️ Artenay",
+      "label": "Étampes ➡️ Artenay",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-3_etampes_artenay.geojson",
@@ -89,11 +91,12 @@
         "phase": 0.933,
         "icon": "🌘",
         "description": "Dernier croissant"
-      }
+      },
+      "step": 3
     },
     {
       "id": "acte-1_etape-4_artenay_orleans",
-      "label": "Étape 4 Artenay ➡️ Orléans",
+      "label": "Artenay ➡️ Orléans",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-4_artenay_orleans.geojson",
@@ -119,11 +122,12 @@
         "phase": 0.967,
         "icon": "🌑",
         "description": "Nouvelle lune"
-      }
+      },
+      "step": 4
     },
     {
       "id": "acte-1_etape-5_orleans_beaugency",
-      "label": "Étape 5 Orléans ➡️ Beaugency",
+      "label": "Orléans ➡️ Beaugency",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-5_orleans_beaugency.geojson",
@@ -149,11 +153,12 @@
         "phase": 0.069,
         "icon": "🌒",
         "description": "Premier croissant"
-      }
+      },
+      "step": 5
     },
     {
       "id": "acte-1_etape-6_beaugency_blois",
-      "label": "Étape 6 Beaugency ➡️ Blois",
+      "label": "Beaugency ➡️ Blois",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-6_beaugency_blois.geojson",
@@ -179,11 +184,12 @@
         "phase": 0.136,
         "icon": "🌒",
         "description": "Premier croissant"
-      }
+      },
+      "step": 6
     },
     {
       "id": "acte-2_etape-0_blois_chambord",
-      "label": "Étape 0 Blois ↔️ Chambord",
+      "label": "Blois ↔️ Chambord",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-0_blois_chambord.geojson",
@@ -211,11 +217,12 @@
         "phase": 0.352,
         "icon": "🌔",
         "description": "Gibbeuse croissante"
-      }
+      },
+      "step": 0
     },
     {
       "id": "acte-2_etape-1_blois_amboise",
-      "label": "Étape 1 Blois ➡️ Amboise",
+      "label": "Blois ➡️ Amboise",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-1_blois_amboise.geojson",
@@ -241,11 +248,12 @@
         "phase": 0.386,
         "icon": "🌔",
         "description": "Gibbeuse croissante"
-      }
+      },
+      "step": 1
     },
     {
       "id": "acte-2_etape-2_amboise_chenonceaux",
-      "label": "Étape 2 Amboise ➡️ Chenonceaux",
+      "label": "Amboise ➡️ Chenonceaux",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-2_amboise_chenonceaux.geojson",
@@ -271,11 +279,12 @@
         "phase": 0.454,
         "icon": "🌕",
         "description": "Pleine lune"
-      }
+      },
+      "step": 2
     },
     {
       "id": "acte-2_etape-3_chenonceaux_tours",
-      "label": "Étape 3 Chenonceaux ➡️ Tours",
+      "label": "Chenonceaux ➡️ Tours",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-3_chenonceaux_tours.geojson",
@@ -301,11 +310,12 @@
         "phase": 0.487,
         "icon": "🌕",
         "description": "Pleine lune"
-      }
+      },
+      "step": 3
     },
     {
       "id": "acte-2_etape-4_tours_villandry",
-      "label": "Étape 4 Tours ➡️ Villandry",
+      "label": "Tours ➡️ Villandry",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-4_tours_villandry.geojson",
@@ -331,11 +341,12 @@
         "phase": 0.555,
         "icon": "🌕",
         "description": "Pleine lune"
-      }
+      },
+      "step": 4
     },
     {
       "id": "acte-2_etape-5_villandry_chinon",
-      "label": "Étape 5 Villandry ➡️ Chinon",
+      "label": "Villandry ➡️ Chinon",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-5_villandry_chinon.geojson",
@@ -361,11 +372,12 @@
         "phase": 0.589,
         "icon": "🌖",
         "description": "Gibbeuse décroissante"
-      }
+      },
+      "step": 5
     },
     {
       "id": "acte-2_etape-6_chinon_montsoreaux",
-      "label": "Étape 6 Chinon ➡️ Montsoreau",
+      "label": "Chinon ➡️ Montsoreau",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-6_chinon_montsoreaux.geojson",
@@ -391,11 +403,12 @@
         "phase": 0.691,
         "icon": "🌗",
         "description": "Dernier quartier"
-      }
+      },
+      "step": 6
     },
     {
       "id": "acte-2_etape-7_montsoreau_saumur",
-      "label": "Étape 7 Montsoreau ➡️ Saumur",
+      "label": "Montsoreau ➡️ Saumur",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-7_montsoreau_saumur.geojson",
@@ -421,11 +434,12 @@
         "phase": 0.725,
         "icon": "🌗",
         "description": "Dernier quartier"
-      }
+      },
+      "step": 7
     },
     {
       "id": "acte-2_etape-8_saumur_angers",
-      "label": "Étape 8 Saumur ➡️ Angers",
+      "label": "Saumur ➡️ Angers",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-8_saumur_angers.geojson",
@@ -453,11 +467,12 @@
         "phase": 0.758,
         "icon": "🌗",
         "description": "Dernier quartier"
-      }
+      },
+      "step": 8
     },
     {
       "id": "acte-3_etape-1_angers_behuard",
-      "label": "Étape 1 Angers ➡️ Béhuard",
+      "label": "Angers ➡️ Béhuard",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-1_angers_behuard.geojson",
@@ -485,11 +500,12 @@
         "description": "Premier quartier"
       },
       "instagram_url": "https://www.instagram.com/p/DY-iRkaDlpw/",
-      "komoot_url": "https://www.komoot.com/tour/2973444055?share_token=am2Kx556ONSYJE8pKJRnzzcfyNXvXP7IrRJnSudXOxJNPGTQmT&ref=wtd&t_s=referral&t_cid=route_share&t_ref_username=1484664526803"
+      "komoot_url": "https://www.komoot.com/tour/2973444055?share_token=am2Kx556ONSYJE8pKJRnzzcfyNXvXP7IrRJnSudXOxJNPGTQmT&ref=wtd&t_s=referral&t_cid=route_share&t_ref_username=1484664526803",
+      "step": 1
     },
     {
       "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
-      "label": "Étape 2 Béhuard ➡️ St-Florent-Le-Vieil",
+      "label": "Béhuard ➡️ St-Florent-Le-Vieil",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil.geojson",
@@ -515,11 +531,12 @@
         "phase": 0.238,
         "icon": "🌓",
         "description": "Premier quartier"
-      }
+      },
+      "step": 2
     },
     {
       "id": "acte-3_etape-3_st-florent-le-vieil_ancenis",
-      "label": "Étape 3 St-Florent-Le-Vieil ➡️ Ancenis",
+      "label": "St-Florent-Le-Vieil ➡️ Ancenis",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-3_st-florent-le-vieil_ancenis.geojson",
@@ -545,11 +562,12 @@
         "phase": 0.272,
         "icon": "🌓",
         "description": "Premier quartier"
-      }
+      },
+      "step": 3
     },
     {
       "id": "acte-3_etape-4_ancenis_nantes",
-      "label": "Étape 4 Ancenis ➡️ Nantes",
+      "label": "Ancenis ➡️ Nantes",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-4_ancenis_nantes.geojson",
@@ -575,11 +593,12 @@
         "phase": 0.34,
         "icon": "🌔",
         "description": "Gibbeuse croissante"
-      }
+      },
+      "step": 4
     },
     {
       "id": "acte-3_etape-5_nantes_paimboeuf",
-      "label": "Étape 5 Nantes ➡️ Paimboeuf",
+      "label": "Nantes ➡️ Paimboeuf",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-5_nantes_paimboeuf.geojson",
@@ -605,11 +624,12 @@
         "phase": 0.373,
         "icon": "🌔",
         "description": "Gibbeuse croissante"
-      }
+      },
+      "step": 5
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
-      "label": "Étape 6 Paimboeuf ➡️ L'océan",
+      "label": "Paimboeuf ➡️ L'océan",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.geojson",
@@ -635,7 +655,8 @@
         "phase": 0.407,
         "icon": "🌔",
         "description": "Gibbeuse croissante"
-      }
+      },
+      "step": 6
     },
     {
       "id": "micro-aventure_boucle-angevine",
@@ -762,8 +783,22 @@
       },
       "source": "sources/gpx/velodyssee_etape-3_pornic_noirmoutier.gpx",
       "order": 26,
-      "distance_km": 53.78,
-      "elevation_gain_m": 76.1,
+      "distance_km": 53.29,
+      "elevation_gain_m": 82.1,
+      "date_status": "planned"
+    },
+    {
+      "id": "velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie",
+      "label": "Velodyssee -  Noirmoutier ➡️ St-Gilles-Croix-de-Vie",
+      "group": "velodyssee",
+      "paths": {
+        "full": "data/traces/velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie.geojson",
+        "simplified": "data/traces/velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie_simplified.geojson"
+      },
+      "source": "sources/gpx/velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie.gpx",
+      "order": 27,
+      "distance_km": 57.51,
+      "elevation_gain_m": 77.7,
       "date_status": "planned"
     }
   ]
