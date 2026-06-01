@@ -263,7 +263,7 @@ export function renderPhotosSection(prefs) {
       <button class="lrz-photo-expand-btn" aria-expanded="${isExpanded}" title="Filtres par catégorie">▾</button>
     </div>
     <div class="lrz-photo-categories${isExpanded ? " is-expanded" : ""}">
-      ${groupsHTML}
+      <div class="lrz-photo-categories__inner">${groupsHTML}</div>
     </div>`;
 
   // Appliquer indeterminate en JS (pas en HTML attr)
