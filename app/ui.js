@@ -306,7 +306,7 @@ export function renderPhotosSection(prefs) {
   });
 
   // Reset sur changement de carnet
-  document.addEventListener("lrz:carnet-changed", () => renderPhotosSection(prefs), { once: true });
+  document.addEventListener("lrz:carnet-changed", () => renderPhotosSection(prefs));
 }
 
 function _updatePhotoCategoryFilter(list) {

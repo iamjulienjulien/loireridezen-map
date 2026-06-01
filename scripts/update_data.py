@@ -801,31 +801,32 @@ def prompt_photo_categories(current: list[str] | None = None) -> list[str]:
 
 
 def _categorize_uncategorized_photos() -> None:
-    """Menu de rattrapage : catégoriser les photos sans catégorie."""
-    if not _SUPABASE_AVAILABLE:
-        console.print("[red]Supabase non disponible.[/]")
-        return
-
-    supa = _get_supabase_client()
-    resp = supa.table("photos").select("id,label,categories").eq("categories", "{}").execute()
-    uncategorized = resp.data or []
+    """Menu de rattrapage : catégoriser les photos sans catégorie (catalog local)."""
+    photos, _ = load_catalog(CATALOG_PHOTOS)
+    uncategorized = [p for p in photos if not p.get("categories")]
 
     if not uncategorized:
         console.print("[green]✓ Toutes les photos ont au moins une catégorie.[/]")
         return
 
     console.print(f"[yellow]{len(uncategorized)} photo(s) sans catégorie.[/]")
+    changed = False
     for photo in uncategorized:
         console.print(f"\n  [bold]{photo.get('label', photo['id'])}[/]")
         cats = prompt_photo_categories(current=[])
         if cats is None:
             console.print("[dim]Stop — reprise possible plus tard.[/]")
             break
-        resp = supa.table("photos").update({"categories": cats}).eq("id", photo["id"]).execute()
-        if resp.data:
-            console.print(f"  [green]✓ {len(cats)} catégorie(s) enregistrée(s)[/]")
-        else:
-            console.print(f"  [red]Erreur lors de la mise à jour.[/]")
+        photo["categories"] = cats
+        changed = True
+        console.print(f"  [green]✓ {len(cats)} catégorie(s) sélectionnée(s)[/]")
+
+    if changed:
+        save_catalog(CATALOG_PHOTOS, photos)
+        console.print(
+            "[green]✓ Catalog mis à jour.[/]\n"
+            "[dim]  Relancer photos_to_poi.py pour régénérer pois_photos.geojson.[/]"
+        )
 
 
 def prompt_photo_meta(photo_path: Path, non_interactive: bool) -> dict:
@@ -1834,6 +1835,8 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
         if kind == "photos":
             poi_id = item.get("poi_id")
             poi_label = _resolve_poi_name(poi_id) if poi_id else "—"
+            cats = item.get("categories") or []
+            cats_str = ", ".join(cats) if cats else "—"
             lines = [
                 f"  [dim]id:[/]           {item.get('id', '')}",
                 f"  [dim]label:[/]        {item.get('label', '')}",
@@ -1843,6 +1846,7 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 f"  [dim]poi_id:[/]       {poi_label or '—'}",
                 f"  [dim]time:[/]         {item.get('time', '')}",
                 f"  [dim]coords:[/]       {item.get('lat', '')}, {item.get('lon', '')}",
+                f"  [dim]catégories:[/]   {cats_str}",
             ]
             fields = "\n".join(lines)
         else:
@@ -1857,6 +1861,7 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
         if kind == "traces":
             action_choices.append(questionary.Choice("🔢 Modifier l'ordre", value="order"))
         if kind == "photos":
+            action_choices.append(questionary.Choice("🏷️  Modifier les catégories", value="categories"))
             action_choices.append(questionary.Separator())
             if item.get("poi_id"):
                 action_choices.append(questionary.Choice("🔗 Détacher du POI", value="detach_poi"))
@@ -1899,6 +1904,16 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 item["description"] = new_val
                 save_catalog(catalog_path, items)
                 console.print("[green]✓ Item mis à jour[/]")
+
+        elif action == "categories":
+            new_cats = prompt_photo_categories(current=item.get("categories") or [])
+            try:
+                validate_photo_categories(new_cats)
+                item["categories"] = new_cats
+                save_catalog(catalog_path, items)
+                console.print(f"[green]✓ {len(new_cats)} catégorie(s) enregistrée(s)[/]")
+            except ValueError as e:
+                console.print(f"[red]{e}[/]")
 
         elif action == "order":
             new_val = questionary.text(
