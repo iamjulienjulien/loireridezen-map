@@ -928,7 +928,7 @@ async function loadSelectionData(mode, selectedId, groups, tracesData) {
   const traces = loaded.map(({ item, gj }) => ({
     geojson: gj,
     color,
-    dashed: group?.dashed === true && item.date_status !== "effective",
+    dashed: item.date_status === 'planned',
   }));
 
   const markers = [];
@@ -1226,7 +1226,7 @@ function _buildHTML(groups, tracesData) {
         <div class="lrz-export-options">
           <label class="lrz-export-opt" id="exp-opt-upcoming-wrap">
             <input type="checkbox" id="exp-opt-upcoming" checked>
-            <span class="lrz-export-opt__label">Montrer les étapes à venir</span>
+            <span class="lrz-export-opt__label">Inclure les étapes à venir</span>
           </label>
           <label class="lrz-export-opt">
             <input type="checkbox" id="exp-opt-cities">
@@ -1449,7 +1449,7 @@ async function _renderPreview() {
 
     const previewTraces =
       options.showDashed === false
-        ? data.traces.map((t) => ({ ...t, dashed: false }))
+        ? data.traces.filter((t) => !t.dashed)
         : data.traces;
     drawTraces(ctx, previewTraces, zFloat, originWX, originWY, 2);
     drawMarkers(ctx, data.markers, zFloat, originWX, originWY, 20);

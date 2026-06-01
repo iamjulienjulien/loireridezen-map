@@ -36,7 +36,7 @@ async function _fetchGeoJson(primaryUrl, fallbackUrl = null) {
 }
 
 function _layerStyle(group, item, featureIndex) {
-  const isDashed = group.dashed && item?.date_status !== "effective";
+  const isDashed = item?.date_status === 'planned';
   const base = {
     weight: 4,
     opacity: 0.9,
