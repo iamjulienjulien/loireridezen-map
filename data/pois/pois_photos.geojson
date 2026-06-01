@@ -325,7 +325,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/30-guinguette-saumur.jpeg",
         "thumb": "data/thumbs/30-guinguette-saumur.webp",
         "time": "2025:06:17 22:04:04",
-        "id": "30-guinguette-saumur"
+        "id": "30-guinguette-saumur",
+        "poi_id": "68866aa8-adda-4848-975e-885c65d00881"
       },
       "geometry": {
         "type": "Point",
