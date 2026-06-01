@@ -48,7 +48,10 @@ function renderPositionBlock(detail) {
         ${detail.description ? `<span class="lrz-info-block__sub">${escapeHtml(detail.description)}</span>` : ""}
         ${time ? `<span class="lrz-info-block__meta">${time}</span>` : ""}
       </div>
-      <input type="checkbox" class="lrz-checkbox" id="position-toggle" title="Afficher le marqueur sur la carte" checked />
+      <label class="lrz-switch" title="Afficher le marqueur sur la carte">
+        <input type="checkbox" class="lrz-checkbox" id="position-toggle" />
+        <span class="lrz-switch__track"><span class="lrz-switch__thumb"></span></span>
+      </label>
     </div>`;
 }
 
@@ -96,7 +99,7 @@ function _render() {
     };
     const posBlock = container.querySelector("#lrz-position-block");
     posBlock?.addEventListener("click", (e) => {
-      if (e.target.id === "position-toggle") return;
+      if (e.target.closest(".lrz-switch")) return;
       flyTo();
     });
     posBlock?.addEventListener("keydown", (e) => {

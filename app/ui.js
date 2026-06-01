@@ -41,6 +41,12 @@ function colorPreviewStyle(preview) {
   return `background:linear-gradient(to right,${preview.colors.join(",")})`;
 }
 
+const _EYE_SVG = `<svg viewBox="0 0 24 24" class="lrz-eye-toggle__svg" aria-hidden="true">
+  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+  <circle cx="12" cy="12" r="3"/>
+  <line class="lrz-eye-toggle__strike" x1="3" y1="3" x2="21" y2="21"/>
+</svg>`;
+
 function buildTraceRow(group, prefs, isEmpty) {
   const preview = getGroupColorPreview(group);
   const displayPreview = preview.type === 'dashed' ? { ...preview, type: 'solid' } : preview;
@@ -50,11 +56,15 @@ function buildTraceRow(group, prefs, isEmpty) {
   const suffix = isEmpty
     ? ` <span class="lrz-trace-row__suffix">(à venir)</span>`
     : '';
+  const disabledClass = isEmpty ? ' lrz-stamp-toggle--disabled' : '';
   return `
     <div class="lrz-row${emptyClass}">
       <div class="lrz-row__visual" style="${style}"></div>
-      <label class="lrz-row__label">${escapeHtml(group.label)}${suffix}</label>
-      <input type="checkbox" class="lrz-checkbox" data-group-id="${escapeHtml(group.id)}" ${isChecked ? "checked" : ""} />
+      <span class="lrz-row__label">${escapeHtml(group.label)}${suffix}</span>
+      <label class="lrz-stamp-toggle${disabledClass}">
+        <input type="checkbox" class="lrz-checkbox" data-group-id="${escapeHtml(group.id)}" ${isChecked ? "checked" : ""} ${isEmpty ? "disabled" : ""} />
+        <span class="lrz-stamp-toggle__slot" aria-hidden="true"><span class="lrz-stamp-toggle__mark">✓</span></span>
+      </label>
     </div>`;
 }
 
@@ -183,8 +193,11 @@ export function renderPoiSection(prefs) {
       return `
         <div class="lrz-row">
           <div class="lrz-row__marker">${renderMiniMarker(key)}</div>
-          <label class="lrz-row__label">${escapeHtml(cfg.label)}</label>
-          <input type="checkbox" class="lrz-checkbox type-filter" value="${escapeHtml(key)}" ${isChecked ? "checked" : ""} />
+          <span class="lrz-row__label">${escapeHtml(cfg.label)}</span>
+          <label class="lrz-eye-toggle" title="Afficher / masquer">
+            <input type="checkbox" class="lrz-checkbox type-filter" value="${escapeHtml(key)}" ${isChecked ? "checked" : ""} />
+            <span class="lrz-eye-toggle__icon">${_EYE_SVG}</span>
+          </label>
         </div>`;
     })
     .join("");
@@ -201,8 +214,11 @@ export function renderPhotosSection(prefs) {
   list.innerHTML = `
     <div class="lrz-row">
       <div class="lrz-row__marker">${renderMiniMarker("photo")}</div>
-      <label class="lrz-row__label">Photos géolocalisées</label>
-      <input type="checkbox" class="lrz-checkbox type-filter" value="photo" ${isChecked ? "checked" : ""} />
+      <span class="lrz-row__label">Photos géolocalisées</span>
+      <label class="lrz-eye-toggle" title="Afficher / masquer">
+        <input type="checkbox" class="lrz-checkbox type-filter" value="photo" ${isChecked ? "checked" : ""} />
+        <span class="lrz-eye-toggle__icon">${_EYE_SVG}</span>
+      </label>
     </div>`;
 }
 

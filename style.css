@@ -938,6 +938,167 @@ body {
   outline-offset: 2px;
 }
 
+/* ─── Inputs cachés à l'intérieur des toggles custom ── */
+.lrz-switch input,
+.lrz-stamp-toggle input,
+.lrz-eye-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* ─── V1 : Switch iOS-like (position) ── */
+
+.lrz-switch {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.lrz-switch__track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--lrz-tuffeau-line, #ccc);
+  transition: background 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.lrz-switch input:checked ~ .lrz-switch__track {
+  background: var(--lrz-or);
+}
+
+.lrz-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lrz-switch input:checked ~ .lrz-switch__track .lrz-switch__thumb {
+  transform: translateX(16px);
+}
+
+.lrz-switch:focus-within .lrz-switch__track {
+  outline: 2px solid var(--lrz-or);
+  outline-offset: 2px;
+}
+
+/* ─── V21 : Tampon encreur (traces) ── */
+
+.lrz-stamp-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.lrz-stamp-toggle__slot {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: #f5ecd9;
+  border: 1.5px dashed var(--lrz-tuffeau-line, #ccc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color 200ms, border-style 200ms;
+}
+
+.lrz-stamp-toggle__mark {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+  color: var(--lrz-or);
+  opacity: 0;
+  transform: scale(0.5) rotate(-15deg);
+  transition:
+    opacity 220ms cubic-bezier(0.2, 0, 0.2, 1),
+    transform 220ms cubic-bezier(0.2, 0, 0.2, 1.6);
+}
+
+.lrz-stamp-toggle input:checked ~ .lrz-stamp-toggle__slot {
+  border-style: solid;
+  border-color: var(--lrz-or);
+}
+
+.lrz-stamp-toggle input:checked ~ .lrz-stamp-toggle__slot .lrz-stamp-toggle__mark {
+  opacity: 0.9;
+  transform: scale(1) rotate(-3deg);
+}
+
+.lrz-stamp-toggle--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.lrz-stamp-toggle:focus-within .lrz-stamp-toggle__slot {
+  outline: 2px solid var(--lrz-or);
+  outline-offset: 2px;
+}
+
+/* ─── V6 : Toggle œil ouvert/fermé (POI + Photos) ── */
+
+.lrz-eye-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px;
+  margin: -4px;
+}
+
+.lrz-eye-toggle__icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lrz-eye-toggle__svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--lrz-or);
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 200ms;
+}
+
+.lrz-eye-toggle input:not(:checked) ~ .lrz-eye-toggle__icon .lrz-eye-toggle__svg {
+  stroke: var(--lrz-ink-soft);
+}
+
+.lrz-eye-toggle__strike {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  transition: stroke-dashoffset 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lrz-eye-toggle input:not(:checked) ~ .lrz-eye-toggle__icon .lrz-eye-toggle__strike {
+  stroke-dashoffset: 0;
+}
+
+.lrz-eye-toggle:focus-within .lrz-eye-toggle__icon {
+  outline: 2px solid var(--lrz-or);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* ─────────────────────────────────────── Controls section */
 
 .lrz-controls {
