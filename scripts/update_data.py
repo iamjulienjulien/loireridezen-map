@@ -817,14 +817,20 @@ def _categorize_uncategorized_photos() -> None:
         return
 
     supa = _get_supabase_client()
-    resp = supa.table("photos").select("id,label,categories").eq("categories", "{}").execute()
+    resp = (
+        supa.table("photos")
+        .select("id,label,categories")
+        .eq("categories", "{}")
+        .is_("poi_id", "null")
+        .execute()
+    )
     uncategorized = resp.data or []
 
     if not uncategorized:
-        console.print("[green]✓ Toutes les photos ont au moins une catégorie.[/]")
+        console.print("[green]✓ Toutes les photos sans POI ont au moins une catégorie.[/]")
         return
 
-    console.print(f"[yellow]{len(uncategorized)} photo(s) sans catégorie.[/]")
+    console.print(f"[yellow]{len(uncategorized)} photo(s) sans catégorie (hors photos liées à un POI).[/]")
     for photo in uncategorized:
         console.print(f"\n  [bold]{photo.get('label', photo['id'])}[/]")
         cats = prompt_photo_categories(current=[])
