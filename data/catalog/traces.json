@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-31T22:12:13.082431+00:00",
+  "updated_at": "2026-06-01T00:14:18.501017+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -696,6 +696,75 @@
         "description": "Plutôt ensoleillé",
         "temp": 14
       }
+    },
+    {
+      "id": "velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef",
+      "label": "Vélodyssée -  Saint-Brévin-les-Pins ➡️  Saint-Michel-Chef-Chef",
+      "group": "velodyssee",
+      "paths": {
+        "full": "data/traces/velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef.geojson",
+        "simplified": "data/traces/velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef_simplified.geojson"
+      },
+      "source": "sources/gpx/velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef.gpx",
+      "order": 24,
+      "distance_km": 12.88,
+      "elevation_gain_m": 42.1,
+      "date": "2026-05-28",
+      "day": {
+        "sunrise": "06:19",
+        "sunset": "21:52"
+      },
+      "moon": {
+        "phase": 0.407,
+        "icon": "🌔",
+        "description": "Gibbeuse croissante"
+      },
+      "duration_h": 3.0,
+      "date_status": "effective"
+    },
+    {
+      "id": "velodyssee_etape-2_saint-michel-chef-chef_pornic",
+      "label": "Velodyssee - Saint-Michel-Chef-Chef ➡️  Pornic",
+      "group": "velodyssee",
+      "paths": {
+        "full": "data/traces/velodyssee_etape-2_saint-michel-chef-chef_pornic.geojson",
+        "simplified": "data/traces/velodyssee_etape-2_saint-michel-chef-chef_pornic_simplified.geojson"
+      },
+      "source": "sources/gpx/velodyssee_etape-2_saint-michel-chef-chef_pornic.gpx",
+      "order": 25,
+      "distance_km": 25.29,
+      "elevation_gain_m": 152.8,
+      "date": "2026-05-29",
+      "day": {
+        "sunrise": "06:18",
+        "sunset": "21:52"
+      },
+      "moon": {
+        "phase": 0.441,
+        "icon": "🌕",
+        "description": "Pleine lune"
+      },
+      "date_status": "effective",
+      "duration_h": 1.5,
+      "weather": {
+        "icon": "☀️",
+        "description": "Ensoleillé",
+        "temp": 29
+      }
+    },
+    {
+      "id": "velodyssee_etape-3_pornic_noirmoutier",
+      "label": "Velodyssee -  Pornic ➡️  Noirmoutier",
+      "group": "velodyssee",
+      "paths": {
+        "full": "data/traces/velodyssee_etape-3_pornic_noirmoutier.geojson",
+        "simplified": "data/traces/velodyssee_etape-3_pornic_noirmoutier_simplified.geojson"
+      },
+      "source": "sources/gpx/velodyssee_etape-3_pornic_noirmoutier.gpx",
+      "order": 26,
+      "distance_km": 53.78,
+      "elevation_gain_m": 76.1,
+      "date_status": "planned"
     }
   ]
 }
