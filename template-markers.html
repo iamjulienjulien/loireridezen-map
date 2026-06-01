@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="tuffeau">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LRZ — Exploration markers POI</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=Oswald:wght@400;700&family=Spectral:wght@400;700&display=swap" />
+  <link rel="stylesheet" href="template-markers.css" />
+</head>
+<body data-bg="osm">
+
+<header class="t-header">
+  <div>
+    <h1 class="t-header__title">Loire Ride Zen — Exploration de markers POI</h1>
+    <p class="t-header__sub">12 variations • 7 types POI • 4 approches thème×type — choisir puis ticket d'intégration.</p>
+  </div>
+
+  <div class="t-header__selectors">
+    <div class="selector-group">
+      <span class="selector-group__label">Thème</span>
+      <button class="selector-btn is-active" data-theme="tuffeau">🛰️ Or et tuffeau</button>
+      <button class="selector-btn" data-theme="ardoise">🗺️ Ardoise</button>
+      <button class="selector-btn" data-theme="etat-major">IGN État-major</button>
+      <button class="selector-btn" data-theme="loire-velo">🚲 Loire à vélo</button>
+      <button class="selector-btn" data-theme="grand-air">⛰️ Grand air</button>
+    </div>
+
+    <div class="selector-group">
+      <span class="selector-group__label">Fond</span>
+      <button class="selector-btn" data-bg="satellite">🛰 Satellite</button>
+      <button class="selector-btn is-active" data-bg="osm">🗺 Plan OSM</button>
+      <button class="selector-btn" data-bg="ign">📐 IGN Plan</button>
+      <button class="selector-btn" data-bg="cyclosm">🚲 CyclOSM</button>
+      <button class="selector-btn" data-bg="topo">⛰ TopoMap</button>
+      <span class="fallback-notice">⚠ Fonds en couleurs représentatives (pas d'images)</span>
+    </div>
+  </div>
+</header>
+
+<main class="t-main">
+
+  <!-- ── V1 : Référence actuelle ───────────────────────────── -->
+  <section class="variation" id="v1">
+    <div class="variation__head">
+      <h2 class="variation__title">V1 — Goutte classique (référence)</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Leaflet ExtraMarkers actuel. Couleur du type, emoji blanc, pointe vers le bas.</span>
+      </div>
+      <p class="variation__note">Base de comparaison. Fonctionne bien, mais la pointe augmente la hauteur visuelle. Aucune réaction au thème.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v1-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v1-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v1-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v1-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v1-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v1-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v1-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V2 : Goutte + halo thème ──────────────────────────── -->
+  <section class="variation" id="v2">
+    <div class="variation__head">
+      <h2 class="variation__title">V2 — Goutte + halo thème</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Même goutte, halo flou dans la couleur du thème actif.</span>
+      </div>
+      <p class="variation__note">Le thème se sent sans dominer. Subtil. Changer de thème et observer si le halo reste lisible sur satellite.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v2-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v2-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v2-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v2-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v2-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v2-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v2-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V3 : Goutte + bordure thème ───────────────────────── -->
+  <section class="variation" id="v3">
+    <div class="variation__head">
+      <h2 class="variation__title">V3 — Goutte + bordure thème</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Goutte type + contour net dans la couleur du thème.</span>
+      </div>
+      <p class="variation__note">Plus lisible que V2 sur satellite (le contour est net). Peut sembler chargé si le thème est proche de la couleur du type.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v3-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v3-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v3-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v3-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v3-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v3-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v3-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V4 : Cercle plein ─────────────────────────────────── -->
+  <section class="variation" id="v4">
+    <div class="variation__head">
+      <h2 class="variation__title">V4 — Cercle plein, couleur du type</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Disque 32px. Plus calme visuellement que la goutte — pas d'épingle.</span>
+      </div>
+      <p class="variation__note">Propre et lisible. Occupe moins de hauteur que la goutte. Pas de réaction au thème, mais sobre. Tester sur satellite pour vérifier l'ombre.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v4-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v4-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v4-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v4-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v4-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v4-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v4-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V5 : Cercle + anneau thème ────────────────────────── -->
+  <section class="variation" id="v5">
+    <div class="variation__head">
+      <h2 class="variation__title">V5 — Cercle + anneau thème</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Disque type + anneau blanc + anneau couleur thème. Duo concentriques.</span>
+      </div>
+      <p class="variation__note">Très lisible sur tous les fonds grâce au halo blanc intercalé. L'anneau coloré signe le thème sans l'imposer. Changer de thème pour voir l'effet.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v5-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v5-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v5-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v5-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v5-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v5-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v5-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V6 : color-mix type × thème ──────────────────────── -->
+  <section class="variation" id="v6">
+    <div class="variation__head">
+      <h2 class="variation__title">V6 — Mélange type × thème (color-mix)</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche C</span>
+        <span class="variation__desc">color-mix(type 70%, thème 30%). Chaque combo thème×type produit une teinte unique.</span>
+      </div>
+      <p class="variation__note">Subtile alchimie — tester tous les thèmes pour voir les glissements de teinte. Risque : couleurs moins prévisibles, château+ardoise peut devenir gris-vert inattendu.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v6-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v6-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v6-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v6-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v6-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v6-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v6-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V7 : Tampon carnet ────────────────────────────────── -->
+  <section class="variation" id="v7">
+    <div class="variation__head">
+      <h2 class="variation__title">V7 — Tampon carnet de voyage</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Fond crème, encre couleur du type, cercle tireté. Esprit carnet de route.</span>
+      </div>
+      <p class="variation__note">Très « Or et tuffeau » dans l'esprit. À tester sur satellite (le fond crème peut disparaître sur fond foncé). Le tireté discret ajoute du charme sans alourdissement.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v7-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v7-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v7-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v7-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v7-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v7-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v7-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V8 : Plaque carrée administrative ─────────────────── -->
+  <section class="variation" id="v8">
+    <div class="variation__head">
+      <h2 class="variation__title">V8 — Plaque carrée administrative</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche D</span>
+        <span class="variation__desc">Carré couleur thème dominant, emoji type blanc. Esprit IGN / cachet officiel.</span>
+      </div>
+      <p class="variation__note">Très cohérent visuellement (tous les markers dans la couleur du thème). Perd la distinction par type à distance — teste si l'emoji seul suffit. Changer de thème : l'effet est immédiat et saisissant.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v8-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v8-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v8-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v8-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v8-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v8-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v8-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V9 : Plaque émaillée ──────────────────────────────── -->
+  <section class="variation" id="v9">
+    <div class="variation__head">
+      <h2 class="variation__title">V9 — Plaque émaillée</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A</span>
+        <span class="variation__desc">Rectangle avec emoji + label abrégé. Esprit signalisation routière ancienne.</span>
+      </div>
+      <p class="variation__note">Très lisible (le nom du type est écrit). Plus large qu'un cercle — peut saturer la carte si beaucoup de POI. Idéal pour un usage sélectif sur peu de points clés.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap">
+        <div class="marker marker--chateau v9-marker"><span class="marker-emoji">👑</span><span class="v9-label">Château</span></div>
+      </div>
+      <div class="marker-wrap">
+        <div class="marker marker--vigneron v9-marker"><span class="marker-emoji">🍷</span><span class="v9-label">Vigneron</span></div>
+      </div>
+      <div class="marker-wrap">
+        <div class="marker marker--nature v9-marker"><span class="marker-emoji">🌿</span><span class="v9-label">Nature</span></div>
+      </div>
+      <div class="marker-wrap">
+        <div class="marker marker--coupdecoeur v9-marker"><span class="marker-emoji">⭐</span><span class="v9-label">Coup de cœur</span></div>
+      </div>
+      <div class="marker-wrap">
+        <div class="marker marker--patrimoine v9-marker"><span class="marker-emoji">🏛️</span><span class="v9-label">Patrimoine</span></div>
+      </div>
+      <div class="marker-wrap">
+        <div class="marker marker--guinguette v9-marker"><span class="marker-emoji">🍻</span><span class="v9-label">Guinguette</span></div>
+      </div>
+      <div class="marker-wrap">
+        <div class="marker marker--hebergement v9-marker"><span class="marker-emoji">🏕️</span><span class="v9-label">Hébergement</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── V10 : Thème dominant ──────────────────────────────── -->
+  <section class="variation" id="v10">
+    <div class="variation__head">
+      <h2 class="variation__title">V10 — Disque couleur thème dominant</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche B</span>
+        <span class="variation__desc">Tous les markers dans la couleur du thème. Seul l'emoji distingue le type.</span>
+      </div>
+      <p class="variation__note">Carte très cohérente visuellement — changez de thème pour sentir l'unité. Risque : tous les markers se ressemblent de loin. À tester à petite taille (zoom faible).</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v10-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v10-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v10-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v10-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v10-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v10-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v10-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V11 : Glyph sans fond ─────────────────────────────── -->
+  <section class="variation" id="v11">
+    <div class="variation__head">
+      <h2 class="variation__title">V11 — Glyph sans fond</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche A minimale</span>
+        <span class="variation__desc">Emoji seul, halo blanc pour la lisibilité. Zéro marker geometrique.</span>
+      </div>
+      <p class="variation__note">Ultra-léger. Tester impérativement sur satellite — le halo blanc est la seule séparation. Sur des fonds chargés, peut disparaître. Idéal si le fond est toujours clair (OSM/IGN).</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v11-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v11-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v11-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v11-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v11-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v11-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v11-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+  <!-- ── V12 : Forme adaptée au thème ──────────────────────── -->
+  <section class="variation" id="v12">
+    <div class="variation__head">
+      <h2 class="variation__title">V12 — Forme adaptée au thème</h2>
+      <div class="variation__meta">
+        <span class="variation__tag">Approche D</span>
+        <span class="variation__desc">Goutte / Carré / Rond / Pentagone / Triangle selon le thème. Couleur = type.</span>
+      </div>
+      <p class="variation__note">🛰 tuffeau → goutte · 🗺 ardoise → carré · IGN → rond · 🚲 loire-velo → pentagone · ⛰ grand-air → triangle. Changer de thème pour voir la forme changer.</p>
+    </div>
+    <div class="map-preview">
+      <div class="marker-wrap"><div class="marker marker--chateau v12-marker"><span class="marker-emoji">👑</span></div><span class="marker-name">Château</span></div>
+      <div class="marker-wrap"><div class="marker marker--vigneron v12-marker"><span class="marker-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+      <div class="marker-wrap"><div class="marker marker--nature v12-marker"><span class="marker-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+      <div class="marker-wrap"><div class="marker marker--coupdecoeur v12-marker"><span class="marker-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+      <div class="marker-wrap"><div class="marker marker--patrimoine v12-marker"><span class="marker-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+      <div class="marker-wrap"><div class="marker marker--guinguette v12-marker"><span class="marker-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+      <div class="marker-wrap"><div class="marker marker--hebergement v12-marker"><span class="marker-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const THEMES = {
+    'tuffeau':    { color: '#c8893a', font: '"Fraunces", serif' },
+    'ardoise':    { color: '#3f4a54', font: '"Geist", sans-serif' },
+    'etat-major': { color: '#722f37', font: '"Spectral", serif' },
+    'loire-velo': { color: '#3a6f8f', font: '"Oswald", sans-serif' },
+    'grand-air':  { color: '#b5562f', font: '"Cabin", sans-serif' },
+  };
+
+  // Sélecteur de thème
+  document.querySelectorAll('[data-theme]').forEach(btn => {
+    if (!btn.matches('.selector-btn')) return;
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.theme;
+      const t = THEMES[key];
+      if (!t) return;
+      document.documentElement.style.setProperty('--lrz-color-primary', t.color);
+      document.documentElement.style.setProperty('--lrz-font-theme', t.font);
+      document.documentElement.dataset.theme = key;
+      document.querySelectorAll('.selector-group:first-child .selector-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+
+  // Sélecteur de fond
+  document.querySelectorAll('[data-bg]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.body.dataset.bg = btn.dataset.bg;
+      document.querySelectorAll('[data-bg]').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+</script>
+
+</body>
+</html>

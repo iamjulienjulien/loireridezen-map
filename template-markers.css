@@ -1,0 +1,563 @@
+/* template-markers.css — Exploration de markers POI (LRZ-EVO-67) */
+/* Fichier autonome : n'importe pas style.css, n'est pas importé par lui. */
+
+/* ─────────────────────────────────────── Variables */
+
+:root {
+  --lrz-color-primary: #c8893a;
+  --lrz-font-theme: 'Fraunces', serif;
+  --lrz-font-body: -apple-system, BlinkMacSystemFont, 'Geist', sans-serif;
+  --lrz-color-text: #2b2620;
+  --lrz-color-muted: #6b7280;
+  --lrz-color-bg: #fdfbf7;
+  --lrz-color-surface: #fff;
+  --lrz-color-border: #e2ddd8;
+
+  /* 7 types POI */
+  --poi-chateau:     #b8860b;
+  --poi-vigneron:    #722f37;
+  --poi-nature:      #6b8e4e;
+  --poi-coupdecoeur: #c8893a;
+  --poi-patrimoine:  #7a6e8c;
+  --poi-guinguette:  #d97757;
+  --poi-hebergement: #3a6f8f;
+
+  /* Fond de carte courant (modifié par le sélecteur de fond) */
+  --map-bg:    #f5f2e8;
+  --map-color: #f5f2e8;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--lrz-font-body);
+  font-size: 0.9375rem;
+  color: var(--lrz-color-text);
+  background: var(--lrz-color-bg);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────── Header */
+
+.t-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--lrz-color-surface);
+  border-bottom: 1px solid var(--lrz-color-border);
+  padding: 0.875rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.t-header__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.t-header__sub { font-size: 0.78rem; color: var(--lrz-color-muted); }
+
+.t-header__selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.selector-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.selector-group__label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lrz-color-muted);
+  min-width: 48px;
+}
+
+.selector-btn {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--lrz-color-muted);
+  font-size: 0.72rem;
+  font-family: var(--lrz-font-body);
+  cursor: pointer;
+  transition: all 150ms var(--ease);
+}
+
+.selector-btn:hover,
+.selector-btn.is-active {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+  color: #fff;
+}
+
+/* ─────────────────────────────────────── Fallback mode notice */
+
+.fallback-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: var(--lrz-color-muted);
+  background: color-mix(in srgb, var(--lrz-color-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--lrz-color-primary) 20%, transparent);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+}
+
+/* ─────────────────────────────────────── Main layout */
+
+.t-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ─────────────────────────────────────── Variation card */
+
+.variation {
+  background: var(--lrz-color-surface);
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.variation__head {
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--lrz-color-border);
+}
+
+.variation__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.variation__meta {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.variation__desc {
+  font-size: 0.8rem;
+  color: var(--lrz-color-muted);
+}
+
+.variation__tag {
+  font-size: 0.68rem;
+  padding: 0.1em 0.5em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--lrz-color-primary) 12%, transparent);
+  color: var(--lrz-color-primary);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.variation__note {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--lrz-color-muted);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────── Map preview */
+
+.map-preview {
+  padding: 1.5rem 1.25rem;
+  background: var(--map-color, #f5f2e8);
+  transition: background 250ms var(--ease);
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  min-height: 110px;
+}
+
+/* ─────────────────────────────────────── Per-type color binding */
+
+.marker--chateau     { --type-color: var(--poi-chateau);     }
+.marker--vigneron    { --type-color: var(--poi-vigneron);    }
+.marker--nature      { --type-color: var(--poi-nature);      }
+.marker--coupdecoeur { --type-color: var(--poi-coupdecoeur); }
+.marker--patrimoine  { --type-color: var(--poi-patrimoine);  }
+.marker--guinguette  { --type-color: var(--poi-guinguette);  }
+.marker--hebergement { --type-color: var(--poi-hebergement); }
+
+/* ─────────────────────────────────────── Marker wrappers */
+
+.marker-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: default;
+}
+
+.marker-name {
+  font-size: 0.62rem;
+  color: var(--lrz-color-text);
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(255,255,255,0.9);
+}
+
+/* ─────────────────────────────────────── Marker emoji (base) */
+
+.marker-emoji {
+  font-size: 14px;
+  line-height: 1;
+  display: block;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V1 — Goutte classique (référence actuelle)
+   Approche A — couleur du type, pas de thème
+══════════════════════════════════════════════════════════ */
+
+.v1-marker {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.28);
+}
+
+.v1-marker .marker-emoji {
+  transform: rotate(45deg);
+  filter: brightness(0) invert(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V2 — Goutte + halo thème
+   Approche A — type + accent thème en ombre
+══════════════════════════════════════════════════════════ */
+
+.v2-marker {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.22),
+    0 0 0 4px color-mix(in srgb, var(--lrz-color-primary) 30%, transparent);
+  transition: box-shadow 200ms var(--ease);
+}
+
+.v2-marker .marker-emoji {
+  transform: rotate(45deg);
+  filter: brightness(0) invert(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V3 — Goutte + bordure thème
+   Approche A — type + bordure thème
+══════════════════════════════════════════════════════════ */
+
+.v3-marker {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+  outline: 2.5px solid var(--lrz-color-primary);
+  outline-offset: 1px;
+  transition: outline-color 200ms var(--ease);
+}
+
+.v3-marker .marker-emoji {
+  transform: rotate(45deg);
+  filter: brightness(0) invert(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V4 — Cercle plein, couleur du type
+   Approche A — disque pur, pas de thème
+══════════════════════════════════════════════════════════ */
+
+.v4-marker {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+}
+
+.v4-marker .marker-emoji {
+  filter: brightness(0) invert(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V5 — Cercle + anneau thème
+   Approche A — type dominant, thème en anneau
+══════════════════════════════════════════════════════════ */
+
+.v5-marker {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.22),
+    0 0 0 3px #fff,
+    0 0 0 5px var(--lrz-color-primary);
+  transition: box-shadow 200ms var(--ease);
+}
+
+.v5-marker .marker-emoji {
+  filter: brightness(0) invert(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V6 — Cercle color-mix type × thème
+   Approche C — mélange 70/30
+══════════════════════════════════════════════════════════ */
+
+.v6-marker {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--type-color) 70%, var(--lrz-color-primary) 30%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.24);
+  transition: background 200ms var(--ease);
+}
+
+.v6-marker .marker-emoji {
+  filter: brightness(0) invert(1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V7 — Tampon carnet de voyage
+   Approche A — fond crème, encre couleur type
+══════════════════════════════════════════════════════════ */
+
+.v7-marker {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f5ecd9;
+  border: 2px solid var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.v7-marker::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--type-color) 40%, transparent);
+}
+
+.v7-marker .marker-emoji {
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V8 — Plaque carrée administrative
+   Approche D — forme carrée selon l'esprit IGN/État-major
+══════════════════════════════════════════════════════════ */
+
+.v8-marker {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: var(--lrz-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  border-bottom: 2px solid color-mix(in srgb, var(--lrz-color-primary) 60%, #000);
+  transition: background 200ms var(--ease), border-color 200ms var(--ease);
+}
+
+.v8-marker .marker-emoji { font-size: 13px; }
+
+/* ══════════════════════════════════════════════════════════
+   V9 — Plaque émaillée rectangulaire
+   Approche A — signalisation routière ancienne
+══════════════════════════════════════════════════════════ */
+
+.v9-marker {
+  height: 32px;
+  padding: 0 0.55rem;
+  border-radius: 4px;
+  background: var(--type-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow:
+    0 2px 5px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
+  white-space: nowrap;
+}
+
+.v9-marker .marker-emoji { filter: brightness(0) invert(1); font-size: 12px; }
+.v9-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V10 — Disque couleur thème dominant
+   Approche B — thème impose la couleur, type via emoji
+══════════════════════════════════════════════════════════ */
+
+.v10-marker {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--lrz-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--lrz-color-primary) 40%, rgba(0,0,0,0.2));
+  transition: background 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.v10-marker .marker-emoji { filter: brightness(0) invert(1); }
+
+/* ══════════════════════════════════════════════════════════
+   V11 — Glyph sans fond (emoji + halo)
+   Approche A minimale — l'emoji est tout
+══════════════════════════════════════════════════════════ */
+
+.v11-marker {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v11-marker .marker-emoji {
+  font-size: 20px;
+  filter:
+    drop-shadow(0 0 3px rgba(255,255,255,0.95))
+    drop-shadow(0 0 6px rgba(255,255,255,0.7))
+    drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+}
+
+/* ══════════════════════════════════════════════════════════
+   V12 — Forme adaptée au thème
+   Approche D — forme change selon le thème, couleur = type
+══════════════════════════════════════════════════════════ */
+
+/* Défaut (tuffeau) : goutte */
+.v12-marker {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--type-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transition: border-radius 200ms var(--ease), clip-path 200ms var(--ease), transform 200ms var(--ease), background 200ms var(--ease);
+}
+
+.v12-marker .marker-emoji {
+  transform: rotate(45deg);
+  filter: brightness(0) invert(1);
+  transition: transform 200ms var(--ease);
+}
+
+/* Ardoise → carré */
+[data-theme="ardoise"] .v12-marker {
+  border-radius: 4px;
+  transform: none;
+}
+[data-theme="ardoise"] .v12-marker .marker-emoji { transform: none; }
+
+/* État-major → rond sobre */
+[data-theme="etat-major"] .v12-marker {
+  border-radius: 50%;
+  transform: none;
+  outline: 2px solid var(--lrz-color-primary);
+  outline-offset: 2px;
+}
+[data-theme="etat-major"] .v12-marker .marker-emoji { transform: none; }
+
+/* Loire à vélo → pentagone (panneau cycliste) */
+[data-theme="loire-velo"] .v12-marker {
+  border-radius: 0;
+  transform: none;
+  clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+}
+[data-theme="loire-velo"] .v12-marker .marker-emoji { transform: none; }
+
+/* Grand air → triangle */
+[data-theme="grand-air"] .v12-marker {
+  border-radius: 0;
+  transform: none;
+  clip-path: polygon(50% 4%, 96% 96%, 4% 96%);
+}
+[data-theme="grand-air"] .v12-marker .marker-emoji { transform: none; }
+
+/* ─────────────────────────────────────── Fonds de carte (fallback couleurs) */
+
+body { --map-color: #f5f2e8; } /* défaut osm */
+
+body[data-bg="satellite"] { --map-color: #3a4a2e; }
+body[data-bg="osm"]       { --map-color: #f5f2e8; }
+body[data-bg="ign"]       { --map-color: #e8e5d8; }
+body[data-bg="cyclosm"]   { --map-color: #edf4e6; }
+body[data-bg="topo"]      { --map-color: #d8c89a; }
+
+/* Noms de markers : couleur contrastée selon le fond */
+body[data-bg="satellite"] .marker-name { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+/* ─────────────────────────────────────── Responsive */
+
+@media (max-width: 640px) {
+  .t-header { padding: 0.75rem 1rem; }
+  .t-main { padding: 1.25rem 0.875rem 3rem; }
+  .map-preview { gap: 0.875rem; padding: 1.25rem 1rem; }
+}
