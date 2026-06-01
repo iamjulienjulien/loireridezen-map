@@ -474,7 +474,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/34-la-guinchette.jpeg",
         "thumb": "data/thumbs/34-la-guinchette.webp",
         "time": "2026:05:23 17:01:34",
-        "id": "34-la-guinchette"
+        "id": "34-la-guinchette",
+        "poi_id": "14396a7d-6c84-44fd-b54c-0fd8e9d9f9e5"
       },
       "geometry": {
         "type": "Point",
@@ -549,7 +550,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/28-voyage-a-ballon.jpeg",
         "thumb": "data/thumbs/28-voyage-a-ballon.webp",
         "time": "2026:05:27 12:38:16",
-        "id": "28-voyage-a-ballon"
+        "id": "28-voyage-a-ballon",
+        "poi_id": "bef134fb-75c0-4f64-962d-3f0d33653cfa"
       },
       "geometry": {
         "type": "Point",
@@ -622,7 +624,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/33-caballon.jpeg",
         "thumb": "data/thumbs/33-caballon.webp",
         "time": "2026:05:27 20:22:56",
-        "id": "33-caballon"
+        "id": "33-caballon",
+        "poi_id": "d8d20b88-059d-452c-ae5c-fa0068f879d7"
       },
       "geometry": {
         "type": "Point",
