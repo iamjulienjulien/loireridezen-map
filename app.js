@@ -21,8 +21,9 @@ import {
   loadCurrentPosition,
   currentPositionLayer,
 } from "./app/current-position.js";
-import { initActionsPanel, applyTheme, applyThemeColors } from "./app/actions-panel.js";
-import { THEME_MAP } from "./app/themes.js";
+import { initActionsPanel, applyThemeColors } from "./app/actions-panel.js";
+import { getCurrentCarnet } from "./app/carnets/state.js";
+import { applyPoiFilter } from "./app/carnets/apply.js";
 import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
 import { initEuroVelos } from "./app/eurovelo.js";
@@ -117,10 +118,10 @@ async function init() {
 
   initActionsPanel();
 
-  // Param URL ?theme= : override session (sans écriture dans localStorage)
+  // Appliquer le filtre POI du carnet actif au démarrage
   if (!hiddenModes.rabbit) {
-    const urlTheme = new URL(location.href).searchParams.get('theme');
-    if (urlTheme && THEME_MAP.has(urlTheme)) applyTheme(urlTheme, { persist: false });
+    const carnet = getCurrentCarnet();
+    if (carnet) applyPoiFilter(carnet.pois.defaultEnabled);
   }
 
   initExportButton();
@@ -151,6 +152,31 @@ async function init() {
     const cb = document.getElementById("position-toggle");
     if (cb && !cb.checked) map.removeLayer(currentPositionLayer);
   }, 5 * 60 * 1000);
+
+  // Bouton Tout voir
+  (() => {
+    const btn = document.getElementById("lrz-tout-voir");
+    if (!btn) return;
+    const ALL_POI = ["chateau", "coupdecoeur", "patrimoine", "guinguette", "hébergement", "vigneron", "nature", "photo"];
+    let _expanded = false;
+    btn.addEventListener("click", () => {
+      _expanded = !_expanded;
+      btn.classList.toggle("is-active", _expanded);
+      if (_expanded) {
+        applyPoiFilter(ALL_POI);
+      } else {
+        const carnet = getCurrentCarnet();
+        if (carnet) applyPoiFilter(carnet.pois.defaultEnabled);
+      }
+      track("Tout Voir Toggled", { state: _expanded ? "expanded" : "carnet" });
+    });
+    // Resync sur bascule de carnet
+    document.addEventListener("lrz:carnet-changed", () => {
+      if (_expanded) return;
+      const carnet = getCurrentCarnet();
+      if (carnet) applyPoiFilter(carnet.pois.defaultEnabled);
+    });
+  })();
 
   // Sauvegarder la préférence POI à chaque changement de type-filter
   document.querySelectorAll(".type-filter").forEach((cb) => {

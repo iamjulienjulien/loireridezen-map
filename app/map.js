@@ -17,7 +17,7 @@
 
 import { Map, TileLayer } from "leaflet";
 import { DEFAULT_VIEW } from "./config.js";
-import { THEME_MAP, DEFAULT_THEME } from "./themes.js";
+import { DEFAULT_CARNET_KEY, CARNET_MAP } from "./carnets/registry.js";
 
 export const map = new Map("map", {
   zoomControl: false,
@@ -69,25 +69,70 @@ export const baseOpenTopo = new TileLayer(
   },
 );
 
-// Restaurer le fond persisté (lrz-preferences, sinon basemap du thème par défaut)
-let _savedBase;
-try {
-  const raw = localStorage.getItem("lrz-preferences");
-  if (raw) _savedBase = JSON.parse(raw)?.baseLayer;
-} catch {}
-if (!_savedBase) {
-  const themeKey = localStorage.getItem("lrz_theme") || DEFAULT_THEME;
-  _savedBase = THEME_MAP.get(themeKey)?.basemap || "sat";
+// CartoDB Dark Matter — utilisé par 🏮 Veillée (même design que OpenMapTiles Dark Matter)
+export const baseOSMDark = new TileLayer(
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  {
+    subdomains: "abcd",
+    maxZoom: 19,
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+  },
+);
+
+// CartoDB Positron raster (anglais) — gardé en réserve
+export const basePositron = new TileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+  {
+    subdomains: "abcd",
+    maxZoom: 19,
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+  },
+);
+
+// OSM France — fond clair, labels 100 % en français
+export const baseOSMFr = new TileLayer(
+  "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+  {
+    subdomains: "abc",
+    maxZoom: 20,
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors · rendu <a href='https://tile.openstreetmap.fr'>OSM-FR</a>",
+  },
+);
+
+// Positron GL (MapLibre) — style vectoriel openmaptiles.data.gouv.fr, labels français
+// Créé lazily via getPositronGL() pour ne pas instancier avant que maplibregl soit chargé
+let _positronGL = null;
+export function getPositronGL() {
+  if (!_positronGL && window.L?.maplibreGL) {
+    _positronGL = window.L.maplibreGL({
+      style: "https://openmaptiles.data.gouv.fr/styles/positron/style.json",
+      attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors · <a href='https://openmaptiles.data.gouv.fr'>openmaptiles.data.gouv.fr</a>",
+    });
+  }
+  return _positronGL;
 }
 
-if (_savedBase === "sat") {
+// Restaurer le fond depuis le carnet persisté
+const _carnetKey = localStorage.getItem("lrz_carnet") ?? DEFAULT_CARNET_KEY;
+const _initialBasemap = CARNET_MAP.get(_carnetKey)?.visual.basemap ?? "cyclosm";
+
+if (_initialBasemap === "satellite-esri") {
   baseEsriSat.addTo(map);
   esriLabels.addTo(map);
-} else if (_savedBase === "cyclosm") {
-  baseCyclOSM.addTo(map);
-} else if (_savedBase === "ign") {
+} else if (_initialBasemap === "osm-dark") {
+  baseOSMDark.addTo(map);
+} else if (_initialBasemap === "positron") {
+  basePositron.addTo(map);
+} else if (_initialBasemap === "positron-gl") {
+  // GL layer initialisé après chargement de maplibre-gl-leaflet
+  window.addEventListener("load", () => { try { getPositronGL()?.addTo(map); } catch {} });
+} else if (_initialBasemap === "osm-fr") {
+  baseOSMFr.addTo(map);
+} else if (_initialBasemap === "ign-plan") {
   baseIgnPlan.addTo(map);
-} else if (_savedBase === "topo") {
+} else if (_initialBasemap === "cyclosm") {
+  baseCyclOSM.addTo(map);
+} else if (_initialBasemap === "opentopomap") {
   baseOpenTopo.addTo(map);
 } else {
   baseOSM.addTo(map);

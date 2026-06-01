@@ -99,6 +99,14 @@
           <!-- Bandeau focus URL (rempli par url-filter.js si ?acte= ou ?etape=) -->
           <div id="lrz-focus-banner" class="lrz-focus-banner"></div>
 
+          <!-- Bouton Tout voir -->
+          <div class="lrz-tout-voir-wrap">
+            <button id="lrz-tout-voir" class="lrz-tout-voir-btn" title="Activer / désactiver tous les POI et photos">
+              <span class="lrz-tout-voir-btn__icon">👁</span>
+              <span class="lrz-tout-voir-btn__label">Tout voir</span>
+            </button>
+          </div>
+
           <!-- Section Traces -->
           <section
             class="lrz-section lrz-panel-section--actes"
@@ -254,52 +262,14 @@
           −
         </button>
       </div>
-      <div class="lrz-actions-panel__group lrz-actions-panel__group--themes">
-        <button
-          class="lrz-apanel-btn"
-          data-action="theme"
-          data-theme="tuffeau"
-          title="Thème Or et tuffeau"
-          aria-label="Or et tuffeau"
-        >
-          🛰️
-        </button>
-        <button
-          class="lrz-apanel-btn"
-          data-action="theme"
-          data-theme="ardoise"
-          title="Thème Ardoise"
-          aria-label="Ardoise"
-        >
-          🗺️
-        </button>
-        <button
-          class="lrz-apanel-btn"
-          data-action="theme"
-          data-theme="loire-velo"
-          title="Thème Loire à vélo"
-          aria-label="Loire à vélo"
-        >
-          🚲
-        </button>
-        <button
-          class="lrz-apanel-btn"
-          data-action="theme"
-          data-theme="grand-air"
-          title="Thème Grand air"
-          aria-label="Grand air"
-        >
-          ⛰️
-        </button>
-        <button
-          class="lrz-apanel-btn lrz-apanel-btn--text"
-          data-action="theme"
-          data-theme="etat-major"
-          title="Thème État-major"
-          aria-label="État-major"
-        >
-          IGN
-        </button>
+      <div class="lrz-actions-panel__group lrz-carnets-selector" role="group" aria-label="Sélecteur de carnets">
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="loire-velo" title="Loire à vélo"  aria-label="Loire à vélo"  aria-pressed="false">🚲</button>
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="grand-air"  title="Grand air"     aria-label="Grand air"     aria-pressed="false">🌿</button>
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="or-tuffeau" title="Or et tuffeau" aria-label="Or et tuffeau" aria-pressed="false">🏰</button>
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="patrimoine" title="Patrimoine"    aria-label="Patrimoine"    aria-pressed="false">🏛</button>
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="tablee"     title="Tablée"        aria-label="Tablée"        aria-pressed="false">🍷</button>
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="veillee"    title="Veillée"       aria-label="Veillée"       aria-pressed="false">🏮</button>
+        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="souvenirs"  title="Souvenirs"     aria-label="Souvenirs"     aria-pressed="false">📷</button>
       </div>
       <div class="lrz-actions-panel__group">
         <button
