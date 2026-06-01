@@ -10,9 +10,9 @@
 
 import { DivIcon, Marker } from "leaflet";
 import { TRACE_MARKER_TYPES } from "./types.js";
-import { escapeHtml } from "./helpers.js";
 import { hiddenModes } from "./url-mode.js";
 import { farthestPointFromStart } from "./geo-utils.js";
+import { openStepPopup } from "./routes.js";
 
 function emojiIcon(type) {
   const cfg = TRACE_MARKER_TYPES[type];
@@ -83,17 +83,13 @@ export async function buildTraceMarkersFromCatalog(
       const start = firstCoord(data);
       const end = lastCoord(data);
       if (start) {
-        const m = new Marker([start[1], start[0]], {
-          icon: emojiIcon("départ"),
-        });
-        m.bindPopup(`<strong>Départ</strong><br/>${escapeHtml(group.label)}`);
+        const m = new Marker([start[1], start[0]], { icon: emojiIcon("départ") });
+        m.on("click", () => openStepPopup(items[0].id));
         fg.addLayer(m);
       }
       if (end) {
-        const m = new Marker([end[1], end[0]], {
-          icon: emojiIcon("arrivée"),
-        });
-        m.bindPopup(`<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`);
+        const m = new Marker([end[1], end[0]], { icon: emojiIcon("arrivée") });
+        m.on("click", () => openStepPopup(items[items.length - 1].id));
         fg.addLayer(m);
       }
     } else {
@@ -107,23 +103,15 @@ export async function buildTraceMarkersFromCatalog(
           if (i === 0) {
             const start = firstCoord(data);
             if (start) {
-              const m = new Marker([start[1], start[0]], {
-                icon: emojiIcon("départ"),
-              });
-              m.bindPopup(
-                `<strong>${TRACE_MARKER_TYPES["départ"].label}</strong><br/>${escapeHtml(item.label)}`,
-              );
+              const m = new Marker([start[1], start[0]], { icon: emojiIcon("départ") });
+              m.on("click", () => openStepPopup(item.id));
               fg.addLayer(m);
             }
           }
           const far = farthestPointFromStart(_flatCoords(data));
           if (far) {
-            const m = new Marker([far.lat, far.lng], {
-              icon: emojiIcon("étape"),
-            });
-            m.bindPopup(
-              `<strong>${TRACE_MARKER_TYPES["étape"].label}</strong><br/>${escapeHtml(item.label)}`,
-            );
+            const m = new Marker([far.lat, far.lng], { icon: emojiIcon("étape") });
+            m.on("click", () => openStepPopup(item.id));
             fg.addLayer(m);
           }
         } else {
@@ -132,12 +120,8 @@ export async function buildTraceMarkersFromCatalog(
           const start = firstCoord(data);
           if (!start) continue;
           const type = i === 0 ? "départ" : "étape";
-          const m = new Marker([start[1], start[0]], {
-            icon: emojiIcon(type),
-          });
-          m.bindPopup(
-            `<strong>${TRACE_MARKER_TYPES[type].label}</strong><br/>${escapeHtml(item.label)}`,
-          );
+          const m = new Marker([start[1], start[0]], { icon: emojiIcon(type) });
+          m.on("click", () => openStepPopup(item.id));
           fg.addLayer(m);
         }
       }
@@ -148,12 +132,8 @@ export async function buildTraceMarkersFromCatalog(
         if (data) {
           const end = lastCoord(data);
           if (end) {
-            const m = new Marker([end[1], end[0]], {
-              icon: emojiIcon("arrivée"),
-            });
-            m.bindPopup(
-              `<strong>Arrivée</strong><br/>${escapeHtml(group.label)}`,
-            );
+            const m = new Marker([end[1], end[0]], { icon: emojiIcon("arrivée") });
+            m.on("click", () => openStepPopup(lastItem.id));
             fg.addLayer(m);
           }
         }

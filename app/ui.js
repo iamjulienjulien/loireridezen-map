@@ -201,17 +201,9 @@ export function renderPhotosSection(prefs) {
   list.innerHTML = `
     <div class="lrz-row">
       <div class="lrz-row__marker">${renderMiniMarker("photo")}</div>
-      <label class="lrz-row__label" id="photos-count-label">Photos géolocalisées</label>
+      <label class="lrz-row__label">Photos géolocalisées</label>
       <input type="checkbox" class="lrz-checkbox type-filter" value="photo" ${isChecked ? "checked" : ""} />
     </div>`;
-
-  fetch("data/pois/pois_photos.geojson")
-    .then((r) => (r.ok ? r.json() : { features: [] }))
-    .catch(() => ({ features: [] }))
-    .then((fc) => {
-      const label = document.getElementById("photos-count-label");
-      if (label) label.innerHTML = `Photos géolocalisées <span style="color:var(--lrz-or)">(${(fc.features ?? []).length})</span>`;
-    });
 }
 
 // ─────────────────────────────────────── Drawer mobile (legacy guard)
@@ -284,23 +276,25 @@ export function initAccordion(prefs) {
 // ─────────────────────────────────────── Toggle "Où je suis"
 
 export function initCurrentPositionToggle(layer, loadFn, prefs) {
-  const showMarker = prefs.currentPosition ?? true;
-  // Always load position so the info block can populate, regardless of toggle state
-  loadFn();
-  // Checkbox is rendered lazily inside the position block after lrz:position-loaded
+  // Délégation sur document : survit aux re-renders de info-panel._render()
+  document.addEventListener("change", (e) => {
+    if (e.target.id !== "position-toggle") return;
+    if (e.target.checked) layer.addTo(map);
+    else map.removeLayer(layer);
+    updatePreference("currentPosition", e.target.checked);
+  });
+
+  // À chaque re-render du bloc position, restaurer l'état visuel de la checkbox
   document.addEventListener("lrz:position-loaded", ({ detail }) => {
     if (!detail?.active) return;
     const cb = document.getElementById("position-toggle");
     if (!cb) return;
-    cb.checked = showMarker;
-    if (!showMarker) map.removeLayer(layer);
-    cb.addEventListener("click", (e) => e.stopPropagation());
-    cb.addEventListener("change", () => {
-      if (cb.checked) layer.addTo(map);
-      else map.removeLayer(layer);
-      updatePreference("currentPosition", cb.checked);
-    });
-  }, { once: true });
+    const visible = loadPreferences().currentPosition ?? true;
+    cb.checked = visible;
+    if (!visible) map.removeLayer(layer);
+  });
+
+  loadFn();
 }
 
 // ─────────────────────────────────────── Reset preferences

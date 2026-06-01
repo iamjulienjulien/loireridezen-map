@@ -18,8 +18,12 @@ export function formatElevation(m) {
 }
 
 export function formatDurationFr(h) {
-  if (!h) return null;
-  const hours = Math.floor(h);
-  const mins = Math.round((h - hours) * 60);
-  return mins ? `${hours} h ${mins.toString().padStart(2, "0")}` : `${hours} h`;
+  if (!h || h <= 0) return null;
+  const totalMin = Math.round(h * 60);
+  if (totalMin < 60) return `${totalMin} min`;
+  const hours = Math.floor(totalMin / 60);
+  const mins = totalMin % 60;
+  return mins
+    ? `${hours} h ${String(mins).padStart(2, "0")} de vélo`
+    : `${hours} h de vélo`;
 }

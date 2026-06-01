@@ -60,7 +60,7 @@ export function renderStepPopup(item, group) {
       <header class="lrz-step-popup__header">
         <div class="lrz-step-popup__header-left">
           <div class="lrz-step-popup__badges">
-            <span class="lrz-step-popup__badge">${escapeHtml(groupShort)}</span>
+            <span class="lrz-step-popup__badge lrz-step-popup__badge--group">${escapeHtml(groupShort)}</span>
             ${step != null ? `<span class="lrz-step-popup__badge lrz-step-popup__badge--step">Étape ${step}</span>` : ""}
           </div>
           <strong class="lrz-step-popup__label">${escapeHtml(item.label)}</strong>

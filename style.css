@@ -769,6 +769,7 @@ body {
   overflow: hidden;
   transition: max-height 0.25s ease-out;
   max-height: 1000px;
+  padding-bottom: 0.75rem;
 }
 
 .lrz-section[data-collapsed="true"] .lrz-section__body {
@@ -1428,7 +1429,6 @@ body {
   cursor: pointer;
   transition: transform 0.15s ease;
   user-select: none;
-  filter: sepia(1) saturate(2) hue-rotate(var(--lrz-trace-hue));
 }
 .lrz-trace-emoji--départ,
 .lrz-trace-emoji--arrivée {
@@ -1436,6 +1436,7 @@ body {
 }
 .lrz-trace-emoji--étape {
   font-size: 1rem;
+  filter: brightness(0) saturate(100%);
 }
 .lrz-trace-emoji:hover {
   transform: scale(1.2);
@@ -1478,18 +1479,17 @@ body {
   padding: 0.1em 0.5em;
   border: 1px solid var(--step-group-color, #888);
   background: color-mix(in srgb, var(--step-group-color, #888) 15%, transparent);
-  color: var(--lrz-foreground);
+  color: var(--step-group-color, #888);
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
-.lrz-step-popup__badge--step {
-  border-color: var(--lrz-tuffeau-line, #ccc);
-  background: transparent;
-  color: var(--lrz-ink-soft);
-  font-weight: 500;
+.lrz-step-popup__badge--group {
+  background: var(--step-group-color, #888);
+  color: #fff;
+  border-color: var(--step-group-color, #888);
 }
 .lrz-step-popup__label {
   font-size: 0.9375rem;
@@ -1525,24 +1525,16 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-}
-.lrz-step-popup__date {
-  color: var(--lrz-foreground);
+  color: var(--lrz-ink-soft);
 }
 .lrz-step-popup__astro {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--lrz-ink-soft);
   font-size: 0.8rem;
 }
 .lrz-step-popup__moon {
   font-size: 0.8rem;
-  color: var(--lrz-ink-soft);
-}
-.lrz-step-popup__weather {
-  font-size: 0.8125rem;
-  color: var(--lrz-foreground);
 }
 .lrz-step-popup__stats {
   list-style: none;
