@@ -1,0 +1,952 @@
+/* template-2.css — Toggles expressifs : mécanique, vintage, esprit projet (LRZ-EVO-68) */
+/* Fichier autonome. Réutilise les mêmes variables root que template.css. */
+
+:root {
+  --lrz-color-primary: #c8893a;
+  --lrz-color-text: #2b2620;
+  --lrz-color-muted: #6b7280;
+  --lrz-color-bg: #fdfbf7;
+  --lrz-color-surface: #fff;
+  --lrz-color-border: #e2ddd8;
+  --lrz-font-theme: 'Fraunces', serif;
+  --lrz-font-body: -apple-system, BlinkMacSystemFont, 'Geist', sans-serif;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--lrz-font-body);
+  font-size: 0.9375rem;
+  color: var(--lrz-color-text);
+  background: var(--lrz-color-bg);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────── Header */
+
+.t-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--lrz-color-surface);
+  border-bottom: 1px solid var(--lrz-color-border);
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.t-header__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.t-header__sub { font-size: 0.8rem; color: var(--lrz-color-muted); }
+
+.t-header__link {
+  font-size: 0.75rem;
+  color: var(--lrz-color-primary);
+  text-decoration: none;
+  opacity: 0.75;
+}
+.t-header__link:hover { opacity: 1; text-decoration: underline; }
+
+.theme-selector { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.theme-selector button {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--lrz-color-muted);
+  font-size: 0.78rem;
+  font-family: var(--lrz-font-body);
+  cursor: pointer;
+  transition: all 150ms var(--ease);
+}
+
+.theme-selector button:hover,
+.theme-selector button.is-active {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+  color: #fff;
+}
+
+/* ─────────────────────────────────────── Family divider */
+
+.family-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+
+.family-divider__label {
+  font-family: var(--lrz-font-theme);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lrz-color-primary);
+  white-space: nowrap;
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.family-divider::before,
+.family-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--lrz-color-border);
+}
+
+/* ─────────────────────────────────────── Main layout */
+
+.t-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ─────────────────────────────────────── Variation card */
+
+.variation {
+  background: var(--lrz-color-surface);
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.variation__head { margin-bottom: 1rem; }
+
+.variation__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.variation__desc { font-size: 0.8rem; color: var(--lrz-color-muted); margin-top: 0.15rem; }
+.variation__note { font-size: 0.75rem; color: var(--lrz-color-muted); font-style: italic; margin-top: 0.3rem; }
+
+/* ─────────────────────────────────────── Sample list base */
+
+.sample-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sample-list__item {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sample-list__item--disabled {
+  cursor: default;
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.sample-label {
+  font-size: 0.875rem;
+  color: var(--lrz-color-text);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V15 — Rocker switch industriel
+   Famille : Mécanique 3D
+══════════════════════════════════════════════════════════ */
+
+.v15 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; }
+
+.rocker {
+  display: flex;
+  width: 52px;
+  height: 24px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1.5px solid rgba(0,0,0,0.18);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  flex-shrink: 0;
+  background: #ccc;
+}
+
+.rocker__on, .rocker__off {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  transition: all 120ms var(--ease);
+}
+
+/* Default (off): ON side raised, OFF side pressed */
+.rocker__on {
+  background: linear-gradient(to bottom, #ddd 0%, #c8c0b8 100%);
+  color: var(--lrz-color-muted);
+  transform: translateY(-1.5px);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.12);
+}
+.rocker__off {
+  background: linear-gradient(to bottom, #b8b0a8 0%, #c0bab4 100%);
+  color: rgba(0,0,0,0.5);
+  transform: translateY(1.5px);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+}
+
+/* Checked: ON side pressed, OFF raised */
+.sample-list__item.is-checked .rocker__on {
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--lrz-color-primary) 80%, #000) 0%, var(--lrz-color-primary) 100%);
+  color: #fff;
+  transform: translateY(1.5px);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+.sample-list__item.is-checked .rocker__off {
+  background: linear-gradient(to bottom, #d8d2cc 0%, #e4ddd8 100%);
+  color: var(--lrz-color-muted);
+  transform: translateY(-1.5px);
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V16 — Levier vintage
+   Famille : Mécanique 3D
+══════════════════════════════════════════════════════════ */
+
+.v16 .sample-list__item { gap: 1rem; padding: 0.4rem 0; }
+
+.lever-wrap { position: relative; width: 28px; height: 44px; flex-shrink: 0; }
+
+.lever-plate {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 30px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #c8c0b8, #a8a098);
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.lever {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) rotate(25deg);
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.lever-rod {
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(to right, #9a9490, #d8d0c8, #9a9490);
+  border-radius: 2px;
+}
+
+.lever-knob {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #e8e0d8, #a8a098);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+  border: 1px solid rgba(0,0,0,0.15);
+}
+
+.sample-list__item.is-checked .lever {
+  transform: translateX(-50%) rotate(-25deg);
+}
+
+.lever-label {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.42rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: rgba(0,0,0,0.5);
+  text-transform: uppercase;
+  width: 18px;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V17 — Bouton poussoir avec profondeur
+   Famille : Mécanique 3D
+══════════════════════════════════════════════════════════ */
+
+.v17 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; }
+
+.pushbtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #eee8e0, #c0b8b0);
+  box-shadow: 3px 3px 7px rgba(0,0,0,0.2), -2px -2px 5px rgba(255,255,255,0.6), inset 0 1px 0 rgba(255,255,255,0.3);
+  border: 1px solid rgba(0,0,0,0.12);
+  flex-shrink: 0;
+  transition: all 120ms var(--ease);
+  position: relative;
+}
+
+.pushbtn::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.6), transparent);
+  pointer-events: none;
+}
+
+.sample-list__item.is-checked .pushbtn {
+  background: radial-gradient(circle at 62% 65%, color-mix(in srgb, var(--lrz-color-primary) 70%, #000), var(--lrz-color-primary));
+  box-shadow:
+    inset 2px 2px 6px rgba(0,0,0,0.35),
+    inset -1px -1px 3px rgba(255,255,255,0.1),
+    0 0 0 3px rgba(255,255,255,0.5),
+    0 0 0 5px color-mix(in srgb, var(--lrz-color-primary) 35%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V18 — Switch glissière avec encoches
+   Famille : Mécanique 3D
+══════════════════════════════════════════════════════════ */
+
+.v18 .sample-list__item { gap: 0.875rem; padding: 0.3rem 0; }
+
+.slider-track {
+  position: relative;
+  width: 44px;
+  height: 20px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #b8b0a8, #d0c8c0);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.25), inset 0 -1px 2px rgba(255,255,255,0.3);
+  border: 1px solid rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+/* Encoches */
+.slider-track::before, .slider-track::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 1px;
+}
+.slider-track::before { left: 8px; }
+.slider-track::after  { right: 8px; }
+
+.slider-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #e8e0d8, #c0b8b0);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+  border: 1px solid rgba(0,0,0,0.15);
+  transition: transform 200ms cubic-bezier(0.5, 0, 0.5, 1.45);
+}
+
+.sample-list__item.is-checked .slider-thumb {
+  transform: translateX(24px);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--lrz-color-primary) 80%, #fff), var(--lrz-color-primary));
+}
+
+/* ══════════════════════════════════════════════════════════
+   V19 — Interrupteur bois patiné
+   Famille : Vintage / matière
+══════════════════════════════════════════════════════════ */
+
+.v19 .sample-list__item { gap: 0.875rem; padding: 0.3rem 0; }
+
+.wood-track {
+  position: relative;
+  width: 44px;
+  height: 22px;
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px,
+      transparent 1px, transparent 5px
+    ),
+    linear-gradient(165deg, #7c5a28, #5a3e14, #7c5a28, #6b4b1e);
+  border: 1.5px solid #3d2808;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+
+.wood-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 1px,
+      transparent 1px, transparent 4px
+    ),
+    linear-gradient(170deg, #a8722e, #8b5720);
+  border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sample-list__item.is-checked .wood-thumb {
+  transform: translateX(22px);
+}
+
+.wood-dot {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  transition: background 200ms;
+}
+
+.sample-list__item.is-checked .wood-dot {
+  background: color-mix(in srgb, var(--lrz-color-primary) 80%, rgba(255,255,255,0.5));
+  box-shadow: 0 0 4px var(--lrz-color-primary);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V20 — Plaque émaillée ovale ancienne
+   Famille : Vintage / matière
+══════════════════════════════════════════════════════════ */
+
+.v20 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; }
+
+.enamel-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #e8e0d4;
+  border: 2.5px solid #b8a898;
+  box-shadow:
+    0 1px 4px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1);
+  font-size: 12px;
+  transition: all 200ms var(--ease);
+  opacity: 0.45;
+  filter: saturate(0.3);
+}
+
+.sample-list__item.is-checked .enamel-badge {
+  background: var(--lrz-color-primary);
+  border-color: color-mix(in srgb, var(--lrz-color-primary) 60%, #000);
+  box-shadow:
+    0 2px 6px color-mix(in srgb, var(--lrz-color-primary) 35%, rgba(0,0,0,0.2)),
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
+  opacity: 1;
+  filter: none;
+}
+
+.sample-list__item .sample-label {
+  transition: color 200ms var(--ease), opacity 200ms var(--ease);
+}
+.v20 .sample-list__item:not(.is-checked) .sample-label { opacity: 0.5; }
+
+/* ══════════════════════════════════════════════════════════
+   V21 — Tampon encreur
+   Famille : Vintage / matière
+══════════════════════════════════════════════════════════ */
+
+.v21 .sample-list__item {
+  gap: 0.875rem;
+  padding: 0.35rem 0;
+  position: relative;
+}
+
+.stamp-zone {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1.5px dashed var(--lrz-color-border);
+  border-radius: 4px;
+  background: rgba(0,0,0,0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 200ms;
+}
+
+.stamp-mark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  opacity: 0;
+  transform: scale(0.5) rotate(-15deg);
+  transition:
+    opacity 200ms var(--ease),
+    transform 200ms cubic-bezier(0.2, 0, 0.2, 1.6);
+  filter: sepia(1) saturate(2);
+}
+
+.stamp-mark::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1.5px solid var(--lrz-color-primary);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+.stamp-mark-emoji {
+  position: relative;
+  z-index: 1;
+  font-size: 16px;
+}
+
+.sample-list__item.is-checked .stamp-zone {
+  border-color: var(--lrz-color-primary);
+  border-style: solid;
+}
+
+.sample-list__item.is-checked .stamp-mark {
+  opacity: 0.88;
+  transform: scale(1) rotate(-3deg);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V22 — Plume / soulignement qui se dessine
+   Famille : Vintage / matière
+══════════════════════════════════════════════════════════ */
+
+.v22 .sample-list__item {
+  gap: 0;
+  padding: 0.4rem 0;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: auto;
+}
+
+.v22-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.plume-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  opacity: 0.35;
+  transition: opacity 200ms;
+}
+
+.sample-list__item.is-checked .plume-icon { opacity: 1; }
+
+.plume-line {
+  width: 100%;
+  height: 6px;
+  overflow: visible;
+  display: block;
+}
+
+.plume-line path {
+  fill: none;
+  stroke: var(--lrz-color-primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  transition: stroke-dashoffset 320ms var(--ease), stroke 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .plume-line path {
+  stroke-dashoffset: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V23 — Drapeau qu'on plante / qu'on baisse
+   Famille : Esprit projet
+══════════════════════════════════════════════════════════ */
+
+.v23 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; align-items: center; }
+
+.flag-wrap {
+  position: relative;
+  width: 22px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flag-mast {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(to bottom, #aaa, #666);
+  border-radius: 1px;
+}
+
+.flag-banner {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform-origin: left top;
+  transform: rotate(-70deg) scaleX(0.3);
+  opacity: 0;
+  transition:
+    transform 280ms cubic-bezier(0.2, 0, 0.2, 1.3),
+    opacity 200ms var(--ease);
+}
+
+.flag-banner-inner {
+  width: 0;
+  height: 0;
+  border-top: 8px solid var(--lrz-color-primary);
+  border-right: 0;
+  border-bottom: 8px solid transparent;
+  border-left: 14px solid var(--lrz-color-primary);
+  clip-path: polygon(0 0, 100% 40%, 0 100%);
+  width: 14px;
+  height: 16px;
+  background: var(--lrz-color-primary);
+  clip-path: polygon(0 0, 100% 40%, 0 100%);
+  transition: background 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .flag-banner {
+  transform: rotate(0deg) scaleX(1);
+  opacity: 1;
+}
+
+.flag-base {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V24 — Marque-page
+   Famille : Esprit projet
+══════════════════════════════════════════════════════════ */
+
+.v24 .sample-list__item { gap: 0.75rem; padding: 0.3rem 0; overflow: visible; }
+
+.bookmark {
+  position: relative;
+  width: 18px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.bookmark-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--lrz-color-primary);
+  border-radius: 2px 2px 0 0;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+  transform: translateY(-32px);
+  transition: transform 280ms cubic-bezier(0.2, 0, 0.2, 1.3);
+  opacity: 0.85;
+}
+
+.sample-list__item.is-checked .bookmark-body {
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V25 — Étiquette de bagage
+   Famille : Esprit projet
+══════════════════════════════════════════════════════════ */
+
+.v25 .sample-list__item { gap: 0; padding: 0.35rem 0; align-items: stretch; }
+
+.luggage-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  padding: 0.4rem 0.75rem 0.4rem 0.6rem;
+  border: 1.5px solid var(--lrz-color-border);
+  border-radius: 4px 6px 6px 4px;
+  background: #fdf8f2;
+  transform: rotate(-2deg);
+  opacity: 0.5;
+  transition: all 250ms var(--ease);
+  position: relative;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.08);
+}
+
+.luggage-tag::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 1.5px;
+  background: var(--lrz-color-border);
+}
+
+.luggage-hole {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--lrz-color-border);
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+  transition: border-color 200ms;
+}
+
+.luggage-tag .sample-label { font-size: 0.82rem; }
+
+.sample-list__item.is-checked .luggage-tag {
+  transform: rotate(0deg);
+  opacity: 1;
+  border-color: var(--lrz-color-primary);
+  background: color-mix(in srgb, var(--lrz-color-primary) 5%, #fff);
+}
+
+.sample-list__item.is-checked .luggage-hole {
+  border-color: var(--lrz-color-primary);
+  background: color-mix(in srgb, var(--lrz-color-primary) 15%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V26 — Cadenas voyageur
+   Famille : Esprit projet
+══════════════════════════════════════════════════════════ */
+
+.v26 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; }
+
+.padlock {
+  width: 22px;
+  height: 26px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.padlock-body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: linear-gradient(135deg, #ccc 0%, #a8a098 100%);
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  border: 1px solid rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.padlock-keyhole {
+  width: 4px;
+  height: 6px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 50% 50% 1px 1px;
+  position: relative;
+  top: 1px;
+  transition: background 200ms;
+}
+
+.sample-list__item.is-checked .padlock-keyhole {
+  background: color-mix(in srgb, var(--lrz-color-primary) 60%, rgba(0,0,0,0.3));
+}
+
+.padlock-shackle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border: 2.5px solid #a8a098;
+  border-bottom: none;
+  border-radius: 7px 7px 0 0;
+  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1), border-color 200ms;
+}
+
+.sample-list__item.is-checked .padlock-shackle {
+  transform: translateX(-50%) translateY(-6px);
+  border-color: var(--lrz-color-primary);
+}
+
+.sample-list__item.is-checked .padlock-body {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--lrz-color-primary) 30%, #ccc), color-mix(in srgb, var(--lrz-color-primary) 20%, #a8a098));
+}
+
+/* ══════════════════════════════════════════════════════════
+   V27 — Clé dans une serrure
+   Famille : Skeumorphisme contemporain
+══════════════════════════════════════════════════════════ */
+
+.v27 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; }
+
+.keyhole-wrap {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.keyhole-plate {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d8d0c8, #b8b0a8);
+  border: 1.5px solid rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms var(--ease);
+}
+
+.sample-list__item.is-checked .keyhole-plate {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--lrz-color-primary) 30%, #d8d0c8), color-mix(in srgb, var(--lrz-color-primary) 20%, #b8b0a8));
+}
+
+.key-svg {
+  width: 18px;
+  height: 18px;
+  transform-origin: 9px 13px;
+  transform: rotate(-45deg);
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1.3);
+}
+
+.sample-list__item.is-checked .key-svg {
+  transform: rotate(45deg);
+}
+
+/* ══════════════════════════════════════════════════════════
+   V28 — Compteur mécanique à rouleau
+   Famille : Skeumorphisme contemporain
+══════════════════════════════════════════════════════════ */
+
+.v28 .sample-list__item { gap: 0.875rem; padding: 0.4rem 0; }
+
+.roller {
+  width: 44px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #1a1a18, #2e2c28);
+  border: 1.5px solid rgba(0,0,0,0.4);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Top & bottom shadow slits — give the illusion of depth */
+.roller::before, .roller::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  z-index: 2;
+  pointer-events: none;
+}
+.roller::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+}
+.roller::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+}
+
+.roller__strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.roller__cell {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+.roller__cell--off {
+  color: rgba(255,255,255,0.35);
+}
+
+.roller__cell--on {
+  color: var(--lrz-color-primary);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--lrz-color-primary) 60%, transparent);
+}
+
+/* Default: shows OFF */
+.roller__strip { transform: translateY(0); }
+
+/* Checked: shows ON */
+.sample-list__item.is-checked .roller__strip {
+  transform: translateY(-24px);
+}
+
+/* ─────────────────────────────────────── Responsive */
+
+@media (max-width: 600px) {
+  .t-header { padding: 0.875rem 1rem; }
+  .t-main { padding: 1.5rem 1rem 3rem; }
+}
