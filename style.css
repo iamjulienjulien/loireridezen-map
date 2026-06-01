@@ -2243,12 +2243,19 @@ body {
   flex-shrink: 0;
 }
 
+/* Séparateurs entre boutons des groupes verticaux */
 .lrz-apanel-btn + .lrz-apanel-btn {
   border-top: 1px solid var(--lrz-tuffeau-line);
 }
 
+/* Masquer le séparateur quand il touche un bouton actif */
+.lrz-apanel-btn--active + .lrz-apanel-btn,
+.lrz-apanel-btn + .lrz-apanel-btn.lrz-apanel-btn--active {
+  border-top-color: transparent;
+}
+
 .lrz-apanel-btn:hover {
-  background: color-mix(in srgb, var(--lrz-or) 20%, white);
+  background: color-mix(in srgb, var(--lrz-or) 14%, var(--lrz-card));
 }
 
 .lrz-apanel-btn--active {
@@ -2257,7 +2264,7 @@ body {
 }
 
 .lrz-apanel-btn--active:hover {
-  background: color-mix(in srgb, var(--lrz-or) 85%, black);
+  background: color-mix(in srgb, var(--lrz-or) 85%, #000);
   color: #fff;
 }
 
@@ -2271,24 +2278,38 @@ body {
 /* ─── Sélecteur de carnets ── */
 
 .lrz-carnets-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem;
-  padding: 0.2rem !important;
+  flex-direction: row; /* override la direction colonne héritée */
+  padding: 3px;
+  gap: 2px;
+}
+
+/* Pas de séparateur horizontal dans un groupe de boutons en ligne */
+.lrz-carnets-selector .lrz-apanel-btn + .lrz-apanel-btn {
+  border-top: none;
 }
 
 .lrz-carnet-btn {
-  font-size: 1.05rem !important;
-  transition: transform 150ms ease, box-shadow 150ms ease !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  transition: transform 150ms ease, background 0.12s;
 }
 
 .lrz-carnet-btn:hover {
-  transform: scale(1.12);
+  transform: scale(1.1);
+  background: color-mix(in srgb, var(--lrz-or) 14%, var(--lrz-card));
 }
 
 .lrz-carnet-btn--active {
-  background: var(--lrz-or) !important;
-  box-shadow: 0 0 0 2px var(--lrz-or), 0 0 0 4px rgba(255,255,255,0.4);
+  background: var(--lrz-or);
+  color: #fff;
+}
+
+.lrz-carnet-btn--active:hover {
+  background: color-mix(in srgb, var(--lrz-or) 85%, #000);
+  color: #fff;
+  transform: none;
 }
 
 /* ─── Bouton Tout voir ── */
