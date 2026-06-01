@@ -222,7 +222,7 @@ export const CARNETS_REGISTRY = [
       primaryColor: "#a8825a",
       backgroundColor: "#fdf9f4",
       accentColor: null,
-      basemap: "positron-gl",
+      basemap: "positron",
       fontTheme: '"Cormorant Garamond", "Didot", Georgia, serif',
       fontFamily: "Cormorant Garamond",
     },
