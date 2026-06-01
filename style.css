@@ -2260,6 +2260,18 @@ body {
 
 .lrz-info-block--position {
   cursor: pointer;
+  align-items: center;
+}
+
+.lrz-info-block--position .lrz-info-block__icon {
+  padding-top: 0;
+}
+
+.lrz-info-block__title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
 .lrz-info-block--position:hover,

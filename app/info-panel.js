@@ -44,9 +44,11 @@ function renderPositionBlock(detail) {
     <div class="lrz-info-block lrz-info-block--position" id="lrz-position-block" role="button" tabindex="0" title="Centrer sur la position de Julien">
       <div class="lrz-info-block__icon">🚲</div>
       <div class="lrz-info-block__body">
-        <strong class="lrz-info-block__title">${escapeHtml(detail.label || "Ma position")}</strong>
+        <span class="lrz-info-block__title-line">
+          <strong class="lrz-info-block__title">${escapeHtml(detail.label || "Ma position")}</strong>
+          ${time ? `<span class="lrz-info-block__meta">${escapeHtml(time)}</span>` : ""}
+        </span>
         ${detail.description ? `<span class="lrz-info-block__sub">${escapeHtml(detail.description)}</span>` : ""}
-        ${time ? `<span class="lrz-info-block__meta">${time}</span>` : ""}
       </div>
       <label class="lrz-switch" title="Afficher le marqueur sur la carte">
         <input type="checkbox" class="lrz-checkbox" id="position-toggle" />
@@ -100,6 +102,11 @@ function _render() {
     const posBlock = container.querySelector("#lrz-position-block");
     posBlock?.addEventListener("click", (e) => {
       if (e.target.closest(".lrz-switch")) return;
+      const cb = posBlock.querySelector("#position-toggle");
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        cb.dispatchEvent(new Event("change", { bubbles: true }));
+      }
       flyTo();
     });
     posBlock?.addEventListener("keydown", (e) => {
