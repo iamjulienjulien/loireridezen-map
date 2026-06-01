@@ -79,13 +79,23 @@ export const baseOSMDark = new TileLayer(
   },
 );
 
-// CartoDB Positron — utilisé par 📷 Souvenirs (même design que OpenMapTiles Positron)
+// CartoDB Positron (anglais) — gardé en réserve
 export const basePositron = new TileLayer(
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
   {
     subdomains: "abcd",
     maxZoom: 19,
     attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+  },
+);
+
+// OSM France — fond clair, labels 100 % en français, utilisé par 📷 Souvenirs
+export const baseOSMFr = new TileLayer(
+  "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+  {
+    subdomains: "abc",
+    maxZoom: 20,
+    attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors · rendu <a href='https://tile.openstreetmap.fr'>OSM-FR</a>",
   },
 );
 
@@ -100,6 +110,8 @@ if (_initialBasemap === "satellite-esri") {
   baseOSMDark.addTo(map);
 } else if (_initialBasemap === "positron") {
   basePositron.addTo(map);
+} else if (_initialBasemap === "osm-fr") {
+  baseOSMFr.addTo(map);
 } else if (_initialBasemap === "ign-plan") {
   baseIgnPlan.addTo(map);
 } else if (_initialBasemap === "cyclosm") {
