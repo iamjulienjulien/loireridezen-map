@@ -1,0 +1,599 @@
+/* template-markers-2.css — Markers par thème, signature visuelle (LRZ-EVO-69) */
+/* Fichier autonome. */
+
+:root {
+  --lrz-color-primary: #c8893a;
+  --lrz-font-theme: 'Fraunces', serif;
+  --lrz-font-body: -apple-system, BlinkMacSystemFont, 'Geist', sans-serif;
+  --lrz-color-text: #2b2620;
+  --lrz-color-muted: #6b7280;
+  --lrz-color-bg: #fdfbf7;
+  --lrz-color-surface: #fff;
+  --lrz-color-border: #e2ddd8;
+
+  --poi-chateau:     #b8860b;
+  --poi-vigneron:    #722f37;
+  --poi-nature:      #6b8e4e;
+  --poi-coupdecoeur: #c8893a;
+  --poi-patrimoine:  #7a6e8c;
+  --poi-guinguette:  #d97757;
+  --poi-hebergement: #3a6f8f;
+
+  --map-color: #f5f2e8;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Couleur de thème courante pour les markers */
+  --tc: var(--lrz-color-primary);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--lrz-font-body);
+  font-size: 0.9375rem;
+  color: var(--lrz-color-text);
+  background: var(--lrz-color-bg);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────── Header */
+
+.t-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--lrz-color-surface);
+  border-bottom: 1px solid var(--lrz-color-border);
+  padding: 0.875rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.t-header__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.t-header__sub { font-size: 0.78rem; color: var(--lrz-color-muted); }
+.t-header__link { font-size: 0.75rem; color: var(--lrz-color-primary); text-decoration: none; opacity: 0.75; }
+.t-header__link:hover { opacity: 1; text-decoration: underline; }
+
+.t-header__selectors { display: flex; flex-direction: column; gap: 0.45rem; }
+
+.selector-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+
+.selector-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--lrz-color-muted);
+  min-width: 42px;
+}
+
+.selector-btn {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--lrz-color-muted);
+  font-size: 0.72rem;
+  font-family: var(--lrz-font-body);
+  cursor: pointer;
+  transition: all 150ms var(--ease);
+}
+
+.selector-btn:hover,
+.selector-btn.is-active {
+  background: var(--lrz-color-primary);
+  border-color: var(--lrz-color-primary);
+  color: #fff;
+}
+
+.selector-btn--all {
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────── Main layout */
+
+.t-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─────────────────────────────────────── Intro */
+
+.t-intro {
+  background: color-mix(in srgb, var(--lrz-color-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--lrz-color-primary) 20%, transparent);
+  border-radius: 10px;
+  padding: 0.875rem 1.125rem;
+  font-size: 0.82rem;
+  color: var(--lrz-color-text);
+  line-height: 1.6;
+  transition: background 200ms, border-color 200ms;
+}
+
+/* ─────────────────────────────────────── Theme section divider */
+
+.theme-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.theme-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-section__title {
+  font-family: var(--lrz-font-theme);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  white-space: nowrap;
+  transition: color 200ms var(--ease), font-family 200ms;
+}
+
+.theme-section__line { flex: 1; height: 1px; background: var(--lrz-color-border); }
+
+/* ─────────────────────────────────────── Proposal card */
+
+.proposal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.proposal {
+  background: var(--lrz-color-surface);
+  border: 1px solid var(--lrz-color-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.proposal__head {
+  padding: 0.7rem 0.875rem 0.5rem;
+  border-bottom: 1px solid var(--lrz-color-border);
+}
+
+.proposal__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--lrz-color-primary);
+  transition: color 200ms var(--ease);
+}
+
+.proposal__desc {
+  font-size: 0.72rem;
+  color: var(--lrz-color-muted);
+  margin-top: 0.1rem;
+}
+
+.proposal__note {
+  font-size: 0.68rem;
+  color: var(--lrz-color-muted);
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+/* ─────────────────────────────────────── Map preview */
+
+.map-preview {
+  padding: 1.25rem 0.875rem;
+  background: var(--map-color, #f5f2e8);
+  transition: background 250ms var(--ease);
+  display: flex;
+  align-items: flex-end;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+  min-height: 90px;
+}
+
+.marker-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.marker-name {
+  font-size: 0.55rem;
+  color: var(--lrz-color-text);
+  text-shadow: 0 0 4px rgba(255,255,255,0.9);
+  white-space: nowrap;
+}
+
+body[data-bg="satellite"] .marker-name {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.mk-emoji { font-size: 13px; line-height: 1; }
+
+/* ─────────────────────────────────────── Type colors */
+
+.mk--chateau     { --tc: var(--poi-chateau);     }
+.mk--vigneron    { --tc: var(--poi-vigneron);     }
+.mk--nature      { --tc: var(--poi-nature);       }
+.mk--coupdecoeur { --tc: var(--poi-coupdecoeur);  }
+.mk--patrimoine  { --tc: var(--poi-patrimoine);   }
+.mk--guinguette  { --tc: var(--poi-guinguette);   }
+.mk--hebergement { --tc: var(--poi-hebergement);  }
+
+/* For theme-color markers (M1-M5), override with --lrz-color-primary */
+.use-theme-color { --tc: var(--lrz-color-primary); }
+
+/* ══════════════════════════════════════════════════════════
+   OR ET TUFFEAU
+══════════════════════════════════════════════════════════ */
+
+/* M1.A — Goutte chaude */
+.m1a {
+  width: 32px;
+  height: 32px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--tc);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m1a .mk-emoji { transform: rotate(45deg); filter: brightness(0) invert(1); }
+
+/* M1.B — Tampon carnet */
+.m1b {
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 47% 53% 49% / 49% 51% 50% 50%;
+  background: #f5ecd9;
+  border: 2.5px solid var(--tc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.12);
+  position: relative;
+}
+.m1b::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--tc) 45%, transparent);
+  pointer-events: none;
+}
+.m1b .mk-emoji { position: relative; z-index: 1; }
+
+/* M1.C — Médaillon */
+.m1c {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--tc);
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--tc), 0 3px 8px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m1c .mk-emoji { filter: brightness(0) invert(1); }
+
+/* ══════════════════════════════════════════════════════════
+   ARDOISE
+══════════════════════════════════════════════════════════ */
+
+/* M2.A — Pin Material Design */
+.m2a {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--tc);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m2a .mk-emoji { transform: rotate(45deg); filter: brightness(0) invert(1); font-size: 12px; }
+
+/* M2.B — Cercle simple */
+.m2b {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--tc);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m2b .mk-emoji { filter: brightness(0) invert(1); }
+
+/* M2.C — Losange minimaliste */
+.m2c-wrap {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m2c {
+  width: 22px;
+  height: 22px;
+  transform: rotate(45deg);
+  background: var(--tc);
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m2c .mk-emoji { transform: rotate(-45deg); filter: brightness(0) invert(1); font-size: 10px; }
+
+/* ══════════════════════════════════════════════════════════
+   ÉTAT-MAJOR
+══════════════════════════════════════════════════════════ */
+
+/* M3.A — Cartouche IGN (coins biais) */
+.m3a {
+  height: 28px;
+  padding: 0 0.75rem;
+  background: var(--tc);
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  min-width: 36px;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.m3a .mk-emoji { filter: brightness(0) invert(1); }
+
+/* M3.B — Écusson */
+.m3b {
+  width: 30px;
+  height: 36px;
+  background: var(--tc);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 62%, 50% 100%, 0% 62%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 4px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.m3b .mk-emoji { filter: brightness(0) invert(1); }
+
+/* M3.C — Médaille tampon admin */
+.m3c {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--tc);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tc) 40%, #fff), 0 0 0 4px var(--tc), 0 3px 6px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.m3c .mk-emoji { filter: brightness(0) invert(1); }
+
+/* ══════════════════════════════════════════════════════════
+   LOIRE À VÉLO
+══════════════════════════════════════════════════════════ */
+
+/* M4.A — Panneau rond obligation */
+.m4a {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--tc);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m4a .mk-emoji { filter: brightness(0) invert(1); }
+
+/* M4.B — Losange direction */
+.m4b-wrap {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m4b {
+  width: 24px;
+  height: 24px;
+  transform: rotate(45deg);
+  background: var(--tc);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.m4b .mk-emoji { transform: rotate(-45deg); filter: brightness(0) invert(1); font-size: 10px; }
+
+/* M4.C — Pancarte avec flèche */
+.m4c {
+  height: 30px;
+  padding: 0 0.5rem 0 0.6rem;
+  background: var(--tc);
+  clip-path: polygon(0% 0%, 82% 0%, 100% 50%, 82% 100%, 0% 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 40px;
+  padding-right: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+}
+.m4c .mk-emoji { filter: brightness(0) invert(1); }
+
+/* ══════════════════════════════════════════════════════════
+   GRAND AIR
+══════════════════════════════════════════════════════════ */
+
+/* M5.A — Triangle montagne */
+.m5a-wrap {
+  width: 36px;
+  height: 38px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.m5a {
+  width: 36px;
+  height: 32px;
+  background: var(--tc);
+  clip-path: polygon(50% 0%, 2% 100%, 98% 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+  position: relative;
+}
+.m5a .mk-emoji { position: absolute; bottom: 4px; font-size: 11px; filter: brightness(0) invert(1); }
+
+/* M5.B — Marqueur GR (rectangle rayé blanc) */
+.m5b {
+  width: 38px;
+  height: 22px;
+  background: var(--tc);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+  position: relative;
+  overflow: hidden;
+}
+.m5b::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 3px;
+  background: rgba(255,255,255,0.6);
+  transform: translateY(-50%);
+}
+.m5b .mk-emoji { position: relative; z-index: 1; filter: brightness(0) invert(1); font-size: 11px; }
+
+/* M5.C — Hexagone */
+.m5c {
+  width: 34px;
+  height: 30px;
+  background: var(--tc);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+}
+.m5c .mk-emoji { filter: brightness(0) invert(1); }
+
+/* ══════════════════════════════════════════════════════════
+   MX.A — Goutte déclinée en 7 couleurs de types POI
+══════════════════════════════════════════════════════════ */
+
+.mxa {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--tc); /* couleur du TYPE POI */
+  box-shadow: 0 3px 8px rgba(0,0,0,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mxa .mk-emoji { transform: rotate(45deg); filter: brightness(0) invert(1); }
+
+/* ══════════════════════════════════════════════════════════
+   MX.B — Tag numéroté
+══════════════════════════════════════════════════════════ */
+
+.mxb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 26px;
+  padding: 0 0.5rem;
+  background: var(--tc);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.22);
+  position: relative;
+  min-width: 36px;
+}
+.mxb::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--tc);
+}
+.mxb .mk-emoji { filter: brightness(0) invert(1); font-size: 11px; }
+.mxb-num {
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.85);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+}
+
+/* ─────────────────────────────────────── Hover effect (all markers) */
+
+.marker-wrap { cursor: default; }
+.marker-wrap > div,
+.marker-wrap > span {
+  transition: transform 150ms var(--ease), box-shadow 150ms var(--ease);
+}
+.marker-wrap:hover > div,
+.marker-wrap:hover > span { transform: translateY(-2px) scale(1.06); }
+/* Override for rotated shapes */
+.marker-wrap:hover .m1a,
+.marker-wrap:hover .m2a { transform: rotate(-45deg) translateY(-2px) scale(1.06); }
+.marker-wrap:hover .m2c,
+.marker-wrap:hover .m4b { transform: rotate(45deg) scale(1.06); }
+
+/* ─────────────────────────────────────── Fonds */
+
+body { --map-color: #f5f2e8; }
+body[data-bg="satellite"] { --map-color: #3a4a2e; }
+body[data-bg="osm"]       { --map-color: #f5f2e8; }
+body[data-bg="ign"]       { --map-color: #e8e5d8; }
+body[data-bg="cyclosm"]   { --map-color: #edf4e6; }
+body[data-bg="topo"]      { --map-color: #d8c89a; }
+
+/* ─────────────────────────────────────── Grille "Tous" */
+
+.all-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.875rem;
+}
+
+/* ─────────────────────────────────────── Responsive */
+
+@media (max-width: 640px) {
+  .t-header { padding: 0.75rem 1rem; }
+  .t-main { padding: 1.25rem 0.875rem 3rem; }
+  .proposal-grid { grid-template-columns: 1fr; }
+  .map-preview { gap: 0.6rem; }
+}

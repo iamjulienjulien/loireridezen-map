@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LRZ — Markers par thème (EVO-69)</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;700&family=Spectral:wght@400;700&display=swap" />
+  <link rel="stylesheet" href="template-markers-2.css" />
+</head>
+<body data-bg="osm">
+
+<header class="t-header">
+  <div>
+    <h1 class="t-header__title">Loire Ride Zen — Markers par thème</h1>
+    <p class="t-header__sub">15 propositions · une forme signature par thème · 7 types POI chacune —
+      <a class="t-header__link" href="template-markers.html">← variations universelles (EV-67)</a>
+    </p>
+  </div>
+
+  <div class="t-header__selectors">
+    <div class="selector-group">
+      <span class="selector-label">Thème</span>
+      <button class="selector-btn is-active" data-theme="tuffeau">🛰️ Or et tuffeau</button>
+      <button class="selector-btn" data-theme="ardoise">🗺️ Ardoise</button>
+      <button class="selector-btn" data-theme="etat-major">IGN État-major</button>
+      <button class="selector-btn" data-theme="loire-velo">🚲 Loire à vélo</button>
+      <button class="selector-btn" data-theme="grand-air">⛰️ Grand air</button>
+      <button class="selector-btn selector-btn--all" data-theme="tous">Tous ▦</button>
+    </div>
+
+    <div class="selector-group">
+      <span class="selector-label">Fond</span>
+      <button class="selector-btn" data-bg="satellite">🛰 Satellite</button>
+      <button class="selector-btn is-active" data-bg="osm">🗺 Plan OSM</button>
+      <button class="selector-btn" data-bg="ign">📐 IGN Plan</button>
+      <button class="selector-btn" data-bg="cyclosm">🚲 CyclOSM</button>
+      <button class="selector-btn" data-bg="topo">⛰ TopoMap</button>
+    </div>
+  </div>
+</header>
+
+<main class="t-main">
+
+  <div class="t-intro">
+    <strong>Principe :</strong> chaque thème a une forme de marker qui lui appartient. Changer de thème change la forme
+    <em>et</em> la couleur — pas juste la teinte. Le sélecteur de thème filtre les propositions du thème actif.
+    Cliquer <strong>Tous ▦</strong> pour voir les 15 côte à côte.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       OR ET TUFFEAU — M1.A / M1.B / M1.C
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="theme-section" data-theme-section="tuffeau">
+    <div class="theme-section__header">
+      <span class="theme-section__title">🛰️ Or et tuffeau — Ambré · Fraunces · Satellite</span>
+      <div class="theme-section__line"></div>
+    </div>
+
+    <div class="proposal-grid">
+
+      <!-- M1.A -->
+      <div class="proposal" data-proposal="tuffeau">
+        <div class="proposal__head">
+          <div class="proposal__title">M1.A — Goutte chaude</div>
+          <div class="proposal__desc">Leaflet-like ambré, bordure discrète.</div>
+          <div class="proposal__note">Référence chaude. Pointe vers le bas, ombre douce. Lisible partout.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1a"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M1.B -->
+      <div class="proposal" data-proposal="tuffeau">
+        <div class="proposal__head">
+          <div class="proposal__title">M1.B — Tampon de carnet</div>
+          <div class="proposal__desc">Cercle irrégulier, fond crème, encre ambrée.</div>
+          <div class="proposal__note">Favorite. Esprit passeport Loire à Vélo. À tester sur fond satellite.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1b"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M1.C -->
+      <div class="proposal" data-proposal="tuffeau">
+        <div class="proposal__head">
+          <div class="proposal__title">M1.C — Médaillon</div>
+          <div class="proposal__desc">Cercle ambré, double anneau. Esprit médaille.</div>
+          <div class="proposal__note">Plus solennel que M1.A. Le double anneau prend de l'espace — vérifier à 24px.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m1c"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ARDOISE — M2.A / M2.B / M2.C
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="theme-section" data-theme-section="ardoise">
+    <div class="theme-section__header">
+      <span class="theme-section__title">🗺️ Ardoise — Gris ardoise · Geist · Plan OSM</span>
+      <div class="theme-section__line"></div>
+    </div>
+
+    <div class="proposal-grid">
+
+      <!-- M2.A -->
+      <div class="proposal" data-proposal="ardoise">
+        <div class="proposal__head">
+          <div class="proposal__title">M2.A — Pin Material Design</div>
+          <div class="proposal__desc">Goutte géométrique pure, gris ardoise profond.</div>
+          <div class="proposal__note">Propre, sans ornement. Esprit Google Maps modernisé sobre. Ombre très douce.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2a"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M2.B -->
+      <div class="proposal" data-proposal="ardoise">
+        <div class="proposal__head">
+          <div class="proposal__title">M2.B — Cercle simple</div>
+          <div class="proposal__desc">Disque parfait, ombre multicouche. Esprit Apple Plans.</div>
+          <div class="proposal__note">Maximalisme du minimalisme. Très lisible à toute taille.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m2b"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M2.C -->
+      <div class="proposal" data-proposal="ardoise">
+        <div class="proposal__head">
+          <div class="proposal__title">M2.C — Losange minimaliste</div>
+          <div class="proposal__desc">Carré incliné 45°, bords arrondis. Plus signant que le cercle.</div>
+          <div class="proposal__note">Emoji légèrement réduit pour passer dans le losange. À vérifier sur emoji complexes.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">👑</span></div></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">🍷</span></div></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">🌿</span></div></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">⭐</span></div></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">🏛️</span></div></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">🍻</span></div></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="m2c-wrap"><div class="use-theme-color m2c"><span class="mk-emoji">🏕️</span></div></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ÉTAT-MAJOR — M3.A / M3.B / M3.C
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="theme-section" data-theme-section="etat-major">
+    <div class="theme-section__header">
+      <span class="theme-section__title">IGN État-major — Bordeaux · Spectral · IGN Plan</span>
+      <div class="theme-section__line"></div>
+    </div>
+
+    <div class="proposal-grid">
+
+      <!-- M3.A -->
+      <div class="proposal" data-proposal="etat-major">
+        <div class="proposal__head">
+          <div class="proposal__title">M3.A — Cartouche IGN</div>
+          <div class="proposal__desc">Rectangle coins biais, fond bordeaux. Esprit cartouche d'état-major.</div>
+          <div class="proposal__note">Très cohérent avec l'esprit carte officielle. Plus large que les autres — à évaluer en densité.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3a"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M3.B -->
+      <div class="proposal" data-proposal="etat-major">
+        <div class="proposal__head">
+          <div class="proposal__title">M3.B — Écusson</div>
+          <div class="proposal__desc">Bouclier médiéval, sommet plat, pointe en bas. Esprit blason régional.</div>
+          <div class="proposal__note">Élégant et lisible. La pointe donne un ancrage géographique clair, comme la goutte.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3b"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M3.C -->
+      <div class="proposal" data-proposal="etat-major">
+        <div class="proposal__head">
+          <div class="proposal__title">M3.C — Médaille tampon admin</div>
+          <div class="proposal__desc">Cercle double anneau, esprit cachet d'archives préfecture.</div>
+          <div class="proposal__note">Pompeux juste ce qu'il faut. Le double halo bordeaux/blanc est distinctif à grande distance.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m3c"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LOIRE À VÉLO — M4.A / M4.B / M4.C
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="theme-section" data-theme-section="loire-velo">
+    <div class="theme-section__header">
+      <span class="theme-section__title">🚲 Loire à vélo — Bleu Loire · Oswald · CyclOSM</span>
+      <div class="theme-section__line"></div>
+    </div>
+
+    <div class="proposal-grid">
+
+      <!-- M4.A -->
+      <div class="proposal" data-proposal="loire-velo">
+        <div class="proposal__head">
+          <div class="proposal__title">M4.A — Panneau rond obligation</div>
+          <div class="proposal__desc">Cercle bleu, bordure blanche 3px. Esprit balisage EuroVelo.</div>
+          <div class="proposal__note">Favorite. Cohérence avec les vrais panneaux Loire à Vélo. Directement lisible sur tous les fonds grâce à la bordure blanche.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4a"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M4.B -->
+      <div class="proposal" data-proposal="loire-velo">
+        <div class="proposal__head">
+          <div class="proposal__title">M4.B — Losange direction</div>
+          <div class="proposal__desc">Losange bleu, bordure blanche. Esprit balise directionnelle véloroute.</div>
+          <div class="proposal__note">Rappelle les balises Loire à Vélo terrain. Distinctif et compact. Emoji réduit pour passer dans le losange.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">👑</span></div></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">🍷</span></div></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">🌿</span></div></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">⭐</span></div></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">🏛️</span></div></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">🍻</span></div></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="m4b-wrap"><div class="use-theme-color m4b"><span class="mk-emoji">🏕️</span></div></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M4.C -->
+      <div class="proposal" data-proposal="loire-velo">
+        <div class="proposal__head">
+          <div class="proposal__title">M4.C — Pancarte flèche</div>
+          <div class="proposal__desc">Rectangle avec pointe directionnelle à droite. Esprit panneau de direction.</div>
+          <div class="proposal__note">Original et narratif. Plus large que les autres — à évaluer en densité sur la carte. La flèche évoque le voyage, la direction.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m4c"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GRAND AIR — M5.A / M5.B / M5.C
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="theme-section" data-theme-section="grand-air">
+    <div class="theme-section__header">
+      <span class="theme-section__title">⛰️ Grand air — Terracotta · Cabin · OpenTopoMap</span>
+      <div class="theme-section__line"></div>
+    </div>
+
+    <div class="proposal-grid">
+
+      <!-- M5.A -->
+      <div class="proposal" data-proposal="grand-air">
+        <div class="proposal__head">
+          <div class="proposal__title">M5.A — Triangle montagne</div>
+          <div class="proposal__desc">Triangle terracotta, esprit pictogramme topo / GR. Emoji en bas.</div>
+          <div class="proposal__note">Immédiatement évocateur du relief. La pointe haute donne un sentiment d'altitude. Emoji légèrement décalé vers le bas.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">👑</span></div></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">🍷</span></div></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">🌿</span></div></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">⭐</span></div></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">🏛️</span></div></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">🍻</span></div></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="m5a-wrap"><div class="use-theme-color m5a"><span class="mk-emoji">🏕️</span></div></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M5.B -->
+      <div class="proposal" data-proposal="grand-air">
+        <div class="proposal__head">
+          <div class="proposal__title">M5.B — Marqueur GR</div>
+          <div class="proposal__desc">Rectangle terracotta rayé blanc à mi-hauteur. Esprit balisage GR terrain.</div>
+          <div class="proposal__note">Très projet. Rappelle les marques bois/peinture des sentiers de randonnée. Emoji centré sur la bande.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5b"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- M5.C -->
+      <div class="proposal" data-proposal="grand-air">
+        <div class="proposal__head">
+          <div class="proposal__title">M5.C — Hexagone</div>
+          <div class="proposal__desc">Hexagone terracotta. Esprit balise CAF / IGN alpine.</div>
+          <div class="proposal__note">Forme géométrique forte, bon compromis espace/surface. Emoji bien centré, lire avec care les emojis complexes.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color m5c"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TRANSVERSES BONUS — MX.A / MX.B
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="theme-section" data-theme-section="tous-bonus">
+    <div class="theme-section__header">
+      <span class="theme-section__title">✦ Transverses bonus</span>
+      <div class="theme-section__line"></div>
+    </div>
+
+    <div class="proposal-grid">
+
+      <!-- MX.A -->
+      <div class="proposal" data-proposal="tous">
+        <div class="proposal__head">
+          <div class="proposal__title">MX.A — Goutte déclinée en 7 types POI</div>
+          <div class="proposal__desc">Même forme (M1.A), 7 couleurs de types. Comparaison directe avec thème dominant.</div>
+          <div class="proposal__note">Permet de voir les deux approches côte à côte. Ici la couleur parle du type, pas du thème — repères sémantiques plus forts, cohérence visuelle moins forte.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="mk--chateau mxa"><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="mk--vigneron mxa"><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="mk--nature mxa"><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="mk--coupdecoeur mxa"><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="mk--patrimoine mxa"><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="mk--guinguette mxa"><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="mk--hebergement mxa"><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+      <!-- MX.B -->
+      <div class="proposal" data-proposal="tous">
+        <div class="proposal__head">
+          <div class="proposal__title">MX.B — Tag numéroté</div>
+          <div class="proposal__desc">Badge avec numéro d'étape en exposant. Esprit panneau topo numéroté.</div>
+          <div class="proposal__note">Utile pour les POI clés de l'arc narratif (château n°3, vigneron n°7…). Couleur du thème, pointe vers le bas. Numéro adaptatif.</div>
+        </div>
+        <div class="map-preview">
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">1</span><span class="mk-emoji">👑</span></div><span class="marker-name">Château</span></div>
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">2</span><span class="mk-emoji">🍷</span></div><span class="marker-name">Vigneron</span></div>
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">3</span><span class="mk-emoji">🌿</span></div><span class="marker-name">Nature</span></div>
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">4</span><span class="mk-emoji">⭐</span></div><span class="marker-name">Coup de cœur</span></div>
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">5</span><span class="mk-emoji">🏛️</span></div><span class="marker-name">Patrimoine</span></div>
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">6</span><span class="mk-emoji">🍻</span></div><span class="marker-name">Guinguette</span></div>
+          <div class="marker-wrap"><div class="use-theme-color mxb"><span class="mxb-num">7</span><span class="mk-emoji">🏕️</span></div><span class="marker-name">Hébergement</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const THEMES = {
+    'tuffeau':    { color: '#c8893a', font: '"Fraunces", serif' },
+    'ardoise':    { color: '#3f4a54', font: '"Geist", sans-serif' },
+    'etat-major': { color: '#722f37', font: '"Spectral", serif' },
+    'loire-velo': { color: '#3a6f8f', font: '"Oswald", sans-serif' },
+    'grand-air':  { color: '#b5562f', font: '"Cabin", sans-serif' },
+  };
+
+  const allSections  = document.querySelectorAll('[data-theme-section]');
+  const allProposals = document.querySelectorAll('[data-proposal]');
+
+  function applyTheme(key) {
+    const t = THEMES[key];
+    if (!t) return;
+    document.documentElement.style.setProperty('--lrz-color-primary', t.color);
+    document.documentElement.style.setProperty('--lrz-font-theme', t.font);
+  }
+
+  function filterByTheme(key) {
+    const showAll = (key === 'tous');
+
+    allSections.forEach(sec => {
+      const sKey = sec.dataset.themeSection;
+      // Always show bonus section; for others, match theme or show all
+      if (showAll || sKey === 'tous-bonus') {
+        sec.style.display = '';
+      } else {
+        sec.style.display = (sKey === key) ? '' : 'none';
+      }
+    });
+  }
+
+  document.querySelectorAll('.selector-btn[data-theme]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.theme;
+      if (key !== 'tous') applyTheme(key);
+      filterByTheme(key);
+      document.querySelectorAll('.selector-btn[data-theme]').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+
+  document.querySelectorAll('.selector-btn[data-bg]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.body.dataset.bg = btn.dataset.bg;
+      document.querySelectorAll('.selector-btn[data-bg]').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+    });
+  });
+
+  // Init : show tuffeau theme only
+  filterByTheme('tuffeau');
+</script>
+
+</body>
+</html>
