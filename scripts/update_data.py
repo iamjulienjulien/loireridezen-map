@@ -454,6 +454,13 @@ try:
 except ImportError:
     pass
 
+_CATALOG_PHOTOS_MIGRATE_AVAILABLE = False
+try:
+    from migrate_catalog_to_photos_table import migrate as _migrate_catalog_to_photos  # type: ignore[import]
+    _CATALOG_PHOTOS_MIGRATE_AVAILABLE = True
+except ImportError:
+    pass
+
 # ---------------------------------------------------------------------------
 # Logging JSONL
 # ---------------------------------------------------------------------------
@@ -951,6 +958,7 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
     choices.append(questionary.Choice("🔧 Migrer structure météo / astres", value="migrate_weather"))
     choices.append(questionary.Choice("🏷️  Migrer labels → step (extraction numéro d'étape)", value="migrate_step"))
     choices.append(questionary.Choice("📷 Catégoriser les photos sans catégorie", value="categorize_photos"))
+    choices.append(questionary.Choice("📤 Sync catalog photos → Supabase (table photos)", value="migrate_catalog_photos"))
     choices.append(questionary.Separator())
 
     # --- Groupe 4 : Sortie ---
@@ -981,6 +989,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "migrate_step", "both"
     if choice == "categorize_photos":
         return "categorize_photos", "both"
+    if choice == "migrate_catalog_photos":
+        return "migrate_catalog_photos", "both"
     if choice == "pull_photos":
         return "pull_photos", "both"
     if choice == "delete_all":
@@ -3220,6 +3230,20 @@ def main() -> None:
                 _categorize_uncategorized_photos()
             except KeyboardInterrupt:
                 console.print("\n[dim]Interrompu.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "migrate_catalog_photos":
+            if not _CATALOG_PHOTOS_MIGRATE_AVAILABLE:
+                console.print("[red]migrate_catalog_to_photos_table.py introuvable.[/]")
+            else:
+                dry = questionary.confirm("Dry-run (aperçu sans envoi) ?", default=False).ask()
+                try:
+                    _migrate_catalog_to_photos(dry_run=bool(dry), verbose=True)
+                except KeyboardInterrupt:
+                    console.print("\n[dim]Interrompu.[/]")
+                except Exception as e:
+                    console.print(f"[red]Erreur : {e}[/]")
             log_event("INFO", "system", "done", exit_code=0,
                       duration_s=round(time.monotonic() - t_start, 2), totals={})
             sys.exit(0)
