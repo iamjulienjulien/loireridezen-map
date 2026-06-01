@@ -1,0 +1,1 @@
+-- LRZ-EVO-72 — Voir sql/migrations/20260602_create_photos_table.sql

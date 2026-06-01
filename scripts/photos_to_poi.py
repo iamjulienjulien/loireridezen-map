@@ -342,6 +342,7 @@ def build_feature(
     *,
     stem: str | None = None,
     poi_id: str | None = None,
+    categories: list | None = None,
 ) -> dict:
     """Construit un Feature GeoJSON RFC 7946 (Point WGS84)."""
     props: dict = {
@@ -350,6 +351,7 @@ def build_feature(
         "image": image_url,
         "thumb": thumb_url,
         "time": when,
+        "categories": categories or [],
     }
     if stem:
         props["id"] = stem
@@ -412,10 +414,11 @@ def photos_from_supabase(
         cat_entry = (catalog_data or {}).get(stem) or {}
         label = cat_entry.get("label") or (catalog_labels or {}).get(stem) or pretty_name(stem)
         poi_id = cat_entry.get("poi_id")
+        categories = cat_entry.get("categories") or []
 
         features.append(build_feature(
             label, image_url, thumb_url, lat, lon, info.get("time"),
-            stem=stem, poi_id=poi_id,
+            stem=stem, poi_id=poi_id, categories=categories,
         ))
 
     if skipped_no_gps:
@@ -465,10 +468,11 @@ def photos_from_local(
         cat_entry = (catalog_data or {}).get(stem) or {}
         label = cat_entry.get("label") or (catalog_labels or {}).get(stem) or pretty_name(stem)
         poi_id = cat_entry.get("poi_id")
+        categories = cat_entry.get("categories") or []
 
         features.append(build_feature(
             label, image_url, thumb_url, lat, lon, info.get("time"),
-            stem=stem, poi_id=poi_id,
+            stem=stem, poi_id=poi_id, categories=categories,
         ))
 
     if skipped_no_gps:

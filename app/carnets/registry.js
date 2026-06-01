@@ -35,7 +35,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["routes-chemins", "velo-mouvement", "etapes-pratiques", "balises-loire-velo"],
+      enabled: ["routes_chemins", "velo_mouvement", "etapes_pratiques", "balises_loire_velo"],
     },
   },
 
@@ -68,7 +68,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["paysages", "faune-flore", "sentiers-reliefs", "skylines-naturelles"],
+      enabled: ["paysages", "faune_flore", "sentiers_reliefs", "skylines_naturelles"],
     },
   },
 
@@ -101,7 +101,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["architecture", "pierres-dorees", "tuffeau-ardoise", "lumieres-soir"],
+      enabled: ["architecture", "pierres_dorees", "pierres_clochers", "details_sculptes"],
     },
   },
 
@@ -134,7 +134,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["architecture", "pierres-clochers", "ruines-vestiges", "details-sculptes"],
+      enabled: ["architecture", "pierres_clochers", "ruines_vestiges", "details_sculptes"],
     },
   },
 
@@ -167,7 +167,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["vignes-terroirs", "tables-bouteilles", "produits-locaux", "mains-vignerons"],
+      enabled: ["vignes_terroirs", "tables_bouteilles", "produits_locaux", "mains_vignerons"],
     },
   },
 
@@ -200,7 +200,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["vie-nocturne", "lampions-tonnelles", "crepuscules", "lumieres-chaudes"],
+      enabled: ["vie_nocturne", "lampions_tonnelles", "crepuscules", "lumieres_chaudes"],
     },
   },
 
@@ -233,7 +233,7 @@ export const CARNETS_REGISTRY = [
     },
 
     photoCategories: {
-      enabled: ["portraits-rencontres", "moments-suspendus", "details-matieres", "atmospheres", "inattendus"],
+      enabled: ["portraits_rencontres", "moments_suspendus", "details_matieres", "atmospheres", "inattendus"],
     },
   },
 ];
@@ -242,41 +242,82 @@ export const DEFAULT_CARNET_KEY = "loire-velo";
 
 export const CARNET_MAP = new Map(CARNETS_REGISTRY.map((c) => [c.key, c]));
 
+/**
+ * 6 groupes × 26 sous-catégories — source de vérité frontend.
+ * Clés en snake_case — doit rester synchronisé avec KNOWN_PHOTO_CATEGORIES
+ * dans scripts/update_data.py ET avec la colonne categories text[] en BDD.
+ */
 export const PHOTO_CATEGORY_GROUPS = [
+  {
+    key: "architecture-pierres",
+    icon: "🏛",
+    label: "Architecture et pierres",
+    subcategories: [
+      { key: "architecture",      label: "Architecture" },
+      { key: "pierres_dorees",    label: "Pierres dorées" },
+      { key: "pierres_clochers",  label: "Pierres et clochers" },
+      { key: "ruines_vestiges",   label: "Ruines et vestiges" },
+      { key: "details_sculptes",  label: "Détails sculptés" },
+    ],
+  },
   {
     key: "voyage-cyclisme",
     icon: "🚲",
     label: "Voyage et cyclisme",
-    subcategories: ["routes-chemins", "velo-mouvement", "etapes-pratiques", "balises-loire-velo"],
+    subcategories: [
+      { key: "routes_chemins",      label: "Routes et chemins" },
+      { key: "velo_mouvement",      label: "Vélo en mouvement" },
+      { key: "etapes_pratiques",    label: "Étapes pratiques" },
+      { key: "balises_loire_velo",  label: "Balises Loire à Vélo" },
+    ],
   },
   {
     key: "nature-paysages",
     icon: "🌿",
     label: "Nature et paysages",
-    subcategories: ["paysages", "faune-flore", "sentiers-reliefs", "skylines-naturelles"],
-  },
-  {
-    key: "architecture-pierres",
-    icon: "🏛",
-    label: "Architecture et pierres",
-    subcategories: ["architecture", "pierres-dorees", "pierres-clochers", "ruines-vestiges", "details-sculptes"],
+    subcategories: [
+      { key: "paysages",           label: "Paysages" },
+      { key: "faune_flore",        label: "Faune et flore" },
+      { key: "sentiers_reliefs",   label: "Sentiers et reliefs" },
+      { key: "skylines_naturelles", label: "Skylines naturelles" },
+    ],
   },
   {
     key: "terroir-tables",
     icon: "🍷",
     label: "Terroir et tables",
-    subcategories: ["vignes-terroirs", "tables-bouteilles", "produits-locaux", "mains-vignerons"],
+    subcategories: [
+      { key: "vignes_terroirs",   label: "Vignes et terroirs" },
+      { key: "tables_bouteilles", label: "Tables et bouteilles" },
+      { key: "produits_locaux",   label: "Produits locaux" },
+      { key: "mains_vignerons",   label: "Mains de vignerons" },
+    ],
   },
   {
     key: "vie-nocturne",
     icon: "🏮",
     label: "Vie nocturne",
-    subcategories: ["vie-nocturne", "lampions-tonnelles", "crepuscules", "lumieres-chaudes"],
+    subcategories: [
+      { key: "vie_nocturne",       label: "Vie nocturne" },
+      { key: "lampions_tonnelles", label: "Lampions et tonnelles" },
+      { key: "crepuscules",        label: "Crépuscules" },
+      { key: "lumieres_chaudes",   label: "Lumières chaudes" },
+    ],
   },
   {
     key: "intime-memoire",
     icon: "📷",
     label: "Intime et mémoire",
-    subcategories: ["portraits-rencontres", "moments-suspendus", "details-matieres", "atmospheres", "inattendus"],
+    subcategories: [
+      { key: "portraits_rencontres", label: "Portraits et rencontres" },
+      { key: "moments_suspendus",    label: "Moments suspendus" },
+      { key: "details_matieres",     label: "Détails et matières" },
+      { key: "atmospheres",          label: "Atmosphères" },
+      { key: "inattendus",           label: "Inattendus" },
+    ],
   },
 ];
+
+/** Toutes les clés à plat — utile pour la validation et le "Tout voir". */
+export const ALL_PHOTO_CATEGORIES = PHOTO_CATEGORY_GROUPS
+  .flatMap((g) => g.subcategories.map((s) => s.key));

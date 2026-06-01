@@ -106,6 +106,76 @@ LOG_DIR_DEFAULT = REPO_ROOT / "logs" / "update_data"
 PHOTO_EXTS = {".jpg", ".jpeg", ".heic", ".heif", ".png"}
 PHOTO_FILENAME_RE = re.compile(r"^(\d+)-(.+)$")
 KNOWN_GROUPS = ["acte-1", "acte-2", "acte-3", "micro-aventure", "velodyssee"]
+
+# ---------------------------------------------------------------------------
+# Catégories photos — DOIT rester synchronisé avec PHOTO_CATEGORY_GROUPS
+# dans app/carnets/registry.js ET avec la colonne categories text[] en BDD.
+# ---------------------------------------------------------------------------
+
+KNOWN_PHOTO_CATEGORIES = {
+    "architecture-pierres": {
+        "label": "Architecture et pierres",
+        "subcategories": {
+            "architecture":     "Architecture",
+            "pierres_dorees":   "Pierres dorées",
+            "pierres_clochers": "Pierres et clochers",
+            "ruines_vestiges":  "Ruines et vestiges",
+            "details_sculptes": "Détails sculptés",
+        },
+    },
+    "voyage-cyclisme": {
+        "label": "Voyage et cyclisme",
+        "subcategories": {
+            "routes_chemins":    "Routes et chemins",
+            "velo_mouvement":    "Vélo en mouvement",
+            "etapes_pratiques":  "Étapes pratiques",
+            "balises_loire_velo": "Balises Loire à Vélo",
+        },
+    },
+    "nature-paysages": {
+        "label": "Nature et paysages",
+        "subcategories": {
+            "paysages":            "Paysages",
+            "faune_flore":         "Faune et flore",
+            "sentiers_reliefs":    "Sentiers et reliefs",
+            "skylines_naturelles": "Skylines naturelles",
+        },
+    },
+    "terroir-tables": {
+        "label": "Terroir et tables",
+        "subcategories": {
+            "vignes_terroirs":  "Vignes et terroirs",
+            "tables_bouteilles": "Tables et bouteilles",
+            "produits_locaux":  "Produits locaux",
+            "mains_vignerons":  "Mains de vignerons",
+        },
+    },
+    "vie-nocturne": {
+        "label": "Vie nocturne",
+        "subcategories": {
+            "vie_nocturne":       "Vie nocturne",
+            "lampions_tonnelles": "Lampions et tonnelles",
+            "crepuscules":        "Crépuscules",
+            "lumieres_chaudes":   "Lumières chaudes",
+        },
+    },
+    "intime-memoire": {
+        "label": "Intime et mémoire",
+        "subcategories": {
+            "portraits_rencontres": "Portraits et rencontres",
+            "moments_suspendus":    "Moments suspendus",
+            "details_matieres":     "Détails et matières",
+            "atmospheres":          "Atmosphères",
+            "inattendus":           "Inattendus",
+        },
+    },
+}
+
+ALL_PHOTO_CATEGORY_KEYS: set[str] = {
+    key
+    for group in KNOWN_PHOTO_CATEGORIES.values()
+    for key in group["subcategories"].keys()
+}
 DEFAULT_GROUP_ID = "acte-3"
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -363,6 +433,7 @@ except ImportError:
 
 _SUPABASE_AVAILABLE = False
 try:
+    from lib.supabase_client import get_client as _get_supabase_client  # type: ignore[import]
     from lib.poi import (  # type: ignore[import]
         list_pois as _list_pois,
         get_poi as _get_poi,
@@ -380,6 +451,13 @@ _PHOTOS_PULL_AVAILABLE = False
 try:
     from sync_photos_from_supabase import pull_photos_from_storage as _pull_photos_from_storage  # type: ignore[import]
     _PHOTOS_PULL_AVAILABLE = True
+except ImportError:
+    pass
+
+_CATALOG_PHOTOS_MIGRATE_AVAILABLE = False
+try:
+    from migrate_catalog_to_photos_table import migrate as _migrate_catalog_to_photos  # type: ignore[import]
+    _CATALOG_PHOTOS_MIGRATE_AVAILABLE = True
 except ImportError:
     pass
 
@@ -701,10 +779,80 @@ def prompt_trace_meta(gpx_path: Path, non_interactive: bool) -> dict:
     return {"label": label or defaults["label"], "group": group, "description": description or ""}
 
 
+def validate_photo_categories(keys: list[str]) -> None:
+    """Lève ValueError si une clé n'est pas dans ALL_PHOTO_CATEGORY_KEYS."""
+    for k in keys:
+        if k not in ALL_PHOTO_CATEGORY_KEYS:
+            raise ValueError(
+                f"Catégorie inconnue : '{k}' — voir KNOWN_PHOTO_CATEGORIES dans update_data.py "
+                f"et PHOTO_CATEGORY_GROUPS dans app/carnets/registry.js"
+            )
+
+
+def prompt_photo_categories(current: list[str] | None = None) -> list[str]:
+    """Multi-select des catégories pour une photo. Retourne List[str]."""
+    current = current or []
+    choices: list = []
+    for group in KNOWN_PHOTO_CATEGORIES.values():
+        choices.append(questionary.Separator(f"  ── {group['label']}"))
+        for cat_key, cat_label in group["subcategories"].items():
+            choices.append(questionary.Choice(
+                title=cat_label,
+                value=cat_key,
+                checked=(cat_key in current),
+            ))
+    selected = questionary.checkbox(
+        "Catégories (Espace pour cocher/décocher, Entrée pour valider) :",
+        choices=choices,
+    ).ask()
+    return selected or []
+
+
+def _categorize_uncategorized_photos() -> None:
+    """Menu de rattrapage : catégoriser les photos sans catégorie (table Supabase photos)."""
+    if not _SUPABASE_AVAILABLE:
+        console.print("[red]Supabase non disponible.[/]")
+        return
+    if not _check_supa_env():
+        return
+
+    supa = _get_supabase_client()
+    resp = (
+        supa.table("photos")
+        .select("id,label,categories")
+        .eq("categories", "{}")
+        .is_("poi_id", "null")
+        .execute()
+    )
+    uncategorized = resp.data or []
+
+    if not uncategorized:
+        console.print("[green]✓ Toutes les photos sans POI ont au moins une catégorie.[/]")
+        return
+
+    console.print(f"[yellow]{len(uncategorized)} photo(s) sans catégorie (hors photos liées à un POI).[/]")
+    for photo in uncategorized:
+        console.print(f"\n  [bold]{photo.get('label', photo['id'])}[/]")
+        cats = prompt_photo_categories(current=[])
+        if cats is None:
+            console.print("[dim]Stop — reprise possible plus tard.[/]")
+            break
+        try:
+            validate_photo_categories(cats)
+        except ValueError as e:
+            console.print(f"[red]{e}[/]")
+            continue
+        up = supa.table("photos").update({"categories": cats}).eq("id", photo["id"]).execute()
+        if up.data:
+            console.print(f"  [green]✓ {len(cats)} catégorie(s) enregistrée(s)[/]")
+        else:
+            console.print("  [red]Erreur lors de la mise à jour.[/]")
+
+
 def prompt_photo_meta(photo_path: Path, non_interactive: bool) -> dict:
     defaults = build_photo_defaults(photo_path.stem)
     if non_interactive:
-        return {"label": defaults["label"], "description": "", "order": defaults["order"]}
+        return {"label": defaults["label"], "description": "", "order": defaults["order"], "categories": []}
 
     label = questionary.text(
         f"Label pour '{photo_path.name}' :", default=defaults["label"]
@@ -714,10 +862,12 @@ def prompt_photo_meta(photo_path: Path, non_interactive: bool) -> dict:
     if label is None:
         console.print("[red]Annulé.[/]")
         sys.exit(0)
+    categories = prompt_photo_categories(current=[])
     return {
         "label": label or defaults["label"],
         "description": description or "",
         "order": defaults["order"],
+        "categories": categories,
     }
 
 
@@ -813,6 +963,8 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
     # --- Groupe 4 : Maintenance ---
     choices.append(questionary.Choice("🔧 Migrer structure météo / astres", value="migrate_weather"))
     choices.append(questionary.Choice("🏷️  Migrer labels → step (extraction numéro d'étape)", value="migrate_step"))
+    choices.append(questionary.Choice("📷 Catégoriser les photos sans catégorie", value="categorize_photos"))
+    choices.append(questionary.Choice("📤 Sync catalog photos → Supabase (table photos)", value="migrate_catalog_photos"))
     choices.append(questionary.Separator())
 
     # --- Groupe 4 : Sortie ---
@@ -841,6 +993,10 @@ def interactive_menu(scan: dict) -> tuple[str, str]:
         return "migrate_weather", "both"
     if choice == "migrate_step":
         return "migrate_step", "both"
+    if choice == "categorize_photos":
+        return "categorize_photos", "both"
+    if choice == "migrate_catalog_photos":
+        return "migrate_catalog_photos", "both"
     if choice == "pull_photos":
         return "pull_photos", "both"
     if choice == "delete_all":
@@ -1702,6 +1858,8 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
         if kind == "photos":
             poi_id = item.get("poi_id")
             poi_label = _resolve_poi_name(poi_id) if poi_id else "—"
+            cats = item.get("categories") or []
+            cats_str = ", ".join(cats) if cats else "—"
             lines = [
                 f"  [dim]id:[/]           {item.get('id', '')}",
                 f"  [dim]label:[/]        {item.get('label', '')}",
@@ -1711,6 +1869,7 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 f"  [dim]poi_id:[/]       {poi_label or '—'}",
                 f"  [dim]time:[/]         {item.get('time', '')}",
                 f"  [dim]coords:[/]       {item.get('lat', '')}, {item.get('lon', '')}",
+                f"  [dim]catégories:[/]   {cats_str}",
             ]
             fields = "\n".join(lines)
         else:
@@ -1725,6 +1884,7 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
         if kind == "traces":
             action_choices.append(questionary.Choice("🔢 Modifier l'ordre", value="order"))
         if kind == "photos":
+            action_choices.append(questionary.Choice("🏷️  Modifier les catégories", value="categories"))
             action_choices.append(questionary.Separator())
             if item.get("poi_id"):
                 action_choices.append(questionary.Choice("🔗 Détacher du POI", value="detach_poi"))
@@ -1767,6 +1927,16 @@ def _edit_item(item: dict, items: list[dict], catalog_path: Path, kind: str) -> 
                 item["description"] = new_val
                 save_catalog(catalog_path, items)
                 console.print("[green]✓ Item mis à jour[/]")
+
+        elif action == "categories":
+            new_cats = prompt_photo_categories(current=item.get("categories") or [])
+            try:
+                validate_photo_categories(new_cats)
+                item["categories"] = new_cats
+                save_catalog(catalog_path, items)
+                console.print(f"[green]✓ {len(new_cats)} catégorie(s) enregistrée(s)[/]")
+            except ValueError as e:
+                console.print(f"[red]{e}[/]")
 
         elif action == "order":
             new_val = questionary.text(
@@ -3058,6 +3228,28 @@ def main() -> None:
                 log_event("INFO", "traces", "step_migrated", migrated=n_mig, already=n_already)
             console.print(f"[green]✓ Migration step : {n_mig} trace(s) migrée(s), {n_already} déjà à jour.[/]")
             console.print("[dim]Vérifier le diff : git diff data/catalog/traces.json[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "categorize_photos":
+            try:
+                _categorize_uncategorized_photos()
+            except KeyboardInterrupt:
+                console.print("\n[dim]Interrompu.[/]")
+            log_event("INFO", "system", "done", exit_code=0,
+                      duration_s=round(time.monotonic() - t_start, 2), totals={})
+            sys.exit(0)
+        if action == "migrate_catalog_photos":
+            if not _CATALOG_PHOTOS_MIGRATE_AVAILABLE:
+                console.print("[red]migrate_catalog_to_photos_table.py introuvable.[/]")
+            else:
+                dry = questionary.confirm("Dry-run (aperçu sans envoi) ?", default=False).ask()
+                try:
+                    _migrate_catalog_to_photos(dry_run=bool(dry), verbose=True)
+                except KeyboardInterrupt:
+                    console.print("\n[dim]Interrompu.[/]")
+                except Exception as e:
+                    console.print(f"[red]Erreur : {e}[/]")
             log_event("INFO", "system", "done", exit_code=0,
                       duration_s=round(time.monotonic() - t_start, 2), totals={})
             sys.exit(0)

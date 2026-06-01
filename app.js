@@ -22,8 +22,10 @@ import {
   currentPositionLayer,
 } from "./app/current-position.js";
 import { initActionsPanel, applyThemeColors } from "./app/actions-panel.js";
-import { getCurrentCarnet } from "./app/carnets/state.js";
+import { getCurrentCarnet, getCurrentEnabledCategories, setAllPhotoCategoriesEnabled, resetPhotoCategoriesToCarnet } from "./app/carnets/state.js";
 import { applyPoiFilter } from "./app/carnets/apply.js";
+import { setEnabledPhotoCategories } from "./app/poi.js";
+import { ALL_PHOTO_CATEGORIES } from "./app/carnets/registry.js";
 import { initExportButton } from "./app/map-export.js";
 import { initInfoPanel } from "./app/info-panel.js";
 import { initEuroVelos } from "./app/eurovelo.js";
@@ -164,17 +166,25 @@ async function init() {
       btn.classList.toggle("is-active", _expanded);
       if (_expanded) {
         applyPoiFilter(ALL_POI);
+        setEnabledPhotoCategories(new Set(ALL_PHOTO_CATEGORIES));
       } else {
         const carnet = getCurrentCarnet();
-        if (carnet) applyPoiFilter(carnet.pois.defaultEnabled);
+        if (carnet) {
+          applyPoiFilter(carnet.pois.defaultEnabled);
+          setEnabledPhotoCategories(getCurrentEnabledCategories());
+        }
       }
       track("Tout Voir Toggled", { state: _expanded ? "expanded" : "carnet" });
     });
     // Resync sur bascule de carnet
     document.addEventListener("lrz:carnet-changed", () => {
-      if (_expanded) return;
+      _expanded = false;
+      btn.classList.remove("is-active");
       const carnet = getCurrentCarnet();
-      if (carnet) applyPoiFilter(carnet.pois.defaultEnabled);
+      if (carnet) {
+        applyPoiFilter(carnet.pois.defaultEnabled);
+        setEnabledPhotoCategories(getCurrentEnabledCategories());
+      }
     });
   })();
 

@@ -11,8 +11,6 @@ import {
 import { traceGroups } from "../routes.js";
 import { lightenHex } from "../helpers.js";
 
-const PHOTO_CATEGORIES_ENABLED_IN_DB = false;
-
 // ─── Basemap ────────────────────────────────────────────────────────────────
 
 function _switchBasemap(basemap) {
@@ -118,8 +116,11 @@ export function applyPoiFilter(enabledTypes) {
 
 // ─── Photo filter ────────────────────────────────────────────────────────────
 
-function _applyPhotoFilter(_enabledCategories) {
-  if (!PHOTO_CATEGORIES_ENABLED_IN_DB) return; // no-op
+function _applyPhotoFilter(enabledCategories) {
+  // Dispatche un event — poi.js écoute et refiltres les markers
+  document.dispatchEvent(new CustomEvent("lrz:photo-categories-changed", {
+    detail: { enabled: enabledCategories },
+  }));
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
