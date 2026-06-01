@@ -2277,27 +2277,12 @@ body {
 
 /* ─── Sélecteur de carnets ── */
 
-.lrz-carnets-selector {
-  flex-direction: row; /* override la direction colonne héritée */
-  padding: 3px;
-  gap: 2px;
-}
-
-/* Pas de séparateur horizontal dans un groupe de boutons en ligne */
-.lrz-carnets-selector .lrz-apanel-btn + .lrz-apanel-btn {
-  border-top: none;
-}
-
 .lrz-carnet-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 5px;
   font-size: 1.1rem;
-  transition: transform 150ms ease, background 0.12s;
+  transition: background 0.12s;
 }
 
 .lrz-carnet-btn:hover {
-  transform: scale(1.1);
   background: color-mix(in srgb, var(--lrz-or) 14%, var(--lrz-card));
 }
 
@@ -2309,7 +2294,6 @@ body {
 .lrz-carnet-btn--active:hover {
   background: color-mix(in srgb, var(--lrz-or) 85%, #000);
   color: #fff;
-  transform: none;
 }
 
 /* ─── Bouton Tout voir ── */
