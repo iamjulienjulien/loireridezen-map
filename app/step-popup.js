@@ -76,7 +76,7 @@ export function renderStepPopup(item, group) {
         </div>` : ""}
       <ul class="lrz-step-popup__stats">
         ${distance ? `<li>📊 <strong>${escapeHtml(distance)}</strong></li>` : ""}
-        ${duration ? `<li>⌚️ <strong>${escapeHtml(duration)} de vélo</strong></li>` : ""}
+        ${duration ? `<li>⌚️ <strong>${escapeHtml(duration)}</strong></li>` : ""}
         ${elev ? `<li>⛰️ <strong>${escapeHtml(elev)}</strong></li>` : ""}
       </ul>
       ${hasActions ? `<div class="lrz-step-popup__actions">${komootHTML}${instaHTML}</div>` : ""}

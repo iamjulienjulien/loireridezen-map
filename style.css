@@ -854,7 +854,6 @@ body {
   width: 1.5rem;
   text-align: center;
   flex-shrink: 0;
-  filter: sepia(1) saturate(2) hue-rotate(var(--lrz-trace-hue));
 }
 
 .lrz-legend-row--inline {
