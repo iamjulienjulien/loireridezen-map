@@ -855,6 +855,9 @@ body {
   text-align: center;
   flex-shrink: 0;
 }
+.lrz-legend-row__emoji--étape {
+  filter: brightness(0) saturate(100%);
+}
 
 .lrz-legend-row--inline {
   display: grid;

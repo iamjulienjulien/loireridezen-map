@@ -82,8 +82,8 @@ export function renderTracesSection(groups, prefs, traces) {
   const otherGroups = items.filter((g) => groupSubsection(g.id) === 'other');
 
   const legendItems = Object.entries(TRACE_MARKER_TYPES)
-    .map(([, cfg]) =>
-      `<span class="lrz-legend-row__item"><span class="lrz-legend-row__emoji">${cfg.emoji}</span><span>${escapeHtml(cfg.label)}</span></span>`)
+    .map(([key, cfg]) =>
+      `<span class="lrz-legend-row__item"><span class="lrz-legend-row__emoji lrz-legend-row__emoji--${key}">${cfg.emoji}</span><span>${escapeHtml(cfg.label)}</span></span>`)
     .join("");
 
   list.innerHTML =
