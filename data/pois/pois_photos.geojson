@@ -252,7 +252,8 @@
         "image": "https://covxsekavbmeqysdqnjh.supabase.co/storage/v1/object/public/photos/12-fontevraud.jpeg",
         "thumb": "data/thumbs/12-fontevraud.webp",
         "time": "2025:06:17 11:49:26",
-        "id": "12-fontevraud"
+        "id": "12-fontevraud",
+        "poi_id": "1caef394-5438-4fdd-8a9f-b21fa5d4c716"
       },
       "geometry": {
         "type": "Point",
