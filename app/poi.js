@@ -25,12 +25,20 @@ import * as leafletExtraMarkers from "leaflet-extra-markers";
 
 import { map } from "./map.js";
 import { POI_TYPES, SHAPES } from "./types.js";
+import { PHOTO_CATEGORY_GROUPS } from "./carnets/registry.js";
 import { escapeHtml, safeHttpUrl, debounce, lightenHex } from "./helpers.js";
 import { SUPA_URL, SUPA_PUBLISHABLE_KEY } from "./config.js";
 import { hiddenModes } from "./url-mode.js";
 import { track, trackAndNavigate } from "./analytics.js";
 
 const { Icon, TackCircleBorder } = leafletExtraMarkers;
+
+// Lookup catégorie → { icon du groupe, label de la sous-catégorie }
+const _CAT_META = new Map(
+  PHOTO_CATEGORY_GROUPS.flatMap((g) =>
+    g.subcategories.map((s) => [s.key, { icon: g.icon, label: s.label }])
+  )
+);
 
 // ──────────────────────────────────────────────── Cluster (LayerGroup)
 
@@ -161,11 +169,19 @@ function renderEditorialPoiPopup(p) {
 function renderPhotoPopup(p) {
   const img = safeHttpUrl(p.thumb) || safeHttpUrl(p.image) || p.thumb || p.image;
   const safeImg = img ? escapeHtml(img) : null;
+  const cats = Array.isArray(p.categories) ? p.categories : [];
+  const badgesHTML = cats.length > 0
+    ? `<div class="lrz-popup-photo-badges">${cats.map((c) => {
+        const m = _CAT_META.get(c);
+        return m ? `<span class="lrz-badge">${m.icon} <span>${escapeHtml(m.label)}</span></span>` : "";
+      }).join("")}</div>`
+    : "";
   return `
     <div class="poi-popup">
       ${safeImg ? `<img src="${safeImg}" alt="${escapeHtml(p.name || "Photo")}"/>` : ""}
       <strong>${escapeHtml(p.name || "Photo")}</strong>
       ${p.description ? `<p>${escapeHtml(p.description)}</p>` : ""}
+      ${badgesHTML}
     </div>
   `;
 }

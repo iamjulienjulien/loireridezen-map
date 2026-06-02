@@ -102,6 +102,43 @@ export function getGroupColorPreview(group) {
   return { type: "solid", colors: [STAGE_COLORS[0]] };
 }
 
+/**
+ * 5 groupes de POI — source de vérité pour le panneau groupé (LRZ-EVO-74).
+ * Les clés correspondent aux vrais noms des types dans POI_TYPES.
+ */
+export const POI_TYPE_GROUPS = [
+  {
+    key: "patrimoine-architecture",
+    icon: "🏛",
+    label: "Patrimoine et architecture",
+    types: ["chateau", "abbaye", "patrimoine", "site_historique", "vestige_archeo"],
+  },
+  {
+    key: "tables-terroir",
+    icon: "🍷",
+    label: "Tables et terroir",
+    types: ["vigneron", "cave_troglodyte", "guinguette", "restaurant", "bar_cafe", "marche_producteur", "producteur_fermier"],
+  },
+  {
+    key: "nature-paysages",
+    icon: "🌿",
+    label: "Nature et paysages",
+    types: ["nature", "sandbank", "point_vue", "spot_faune", "depart_sentier"],
+  },
+  {
+    key: "voyage-services",
+    icon: "🚲",
+    label: "Voyage et services",
+    types: ["hébergement", "bivouac", "point_eau", "service_velo", "gare_velo"],
+  },
+  {
+    key: "personnel",
+    icon: "⭐",
+    label: "Personnel",
+    types: ["coupdecoeur"],
+  },
+];
+
 export function resolveColor(colorSpec, context = {}) {
   if (!colorSpec) return STAGE_COLORS[0];
   if (typeof colorSpec === "string") {
