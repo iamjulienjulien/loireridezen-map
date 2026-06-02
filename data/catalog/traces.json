@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-01T04:40:54.794289+00:00",
+  "updated_at": "2026-06-02T17:03:44.549204+00:00",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
@@ -800,6 +800,19 @@
       "distance_km": 57.51,
       "elevation_gain_m": 77.7,
       "date_status": "planned"
+    },
+    {
+      "id": "velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne",
+      "label": "Vélodyssée - St-Gilles-Croix-de-Vie ➡️ Les Sables-d'Olonne",
+      "group": "velodyssee",
+      "paths": {
+        "full": "data/traces/velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne.geojson",
+        "simplified": "data/traces/velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne_simplified.geojson"
+      },
+      "source": "sources/gpx/velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne.gpx",
+      "order": 28,
+      "distance_km": null,
+      "elevation_gain_m": null
     }
   ]
 }
