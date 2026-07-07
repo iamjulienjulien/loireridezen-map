@@ -17,6 +17,8 @@ import { track } from "./analytics.js";
 export const traceGroupsGL = new Map();
 /** stepId → bbox [minLng, minLat, maxLng, maxLat] — pour centrer sur une étape. */
 export const stepBoundsById = new Map();
+/** stepId → { item, group } — pour ouvrir le popup d'étape (markers d'étape, commit [4]). */
+const _stepInfoById = new Map();
 
 let _promise = null;
 /** Traces chargées (fetch une fois), re-rendues à chaque style. */
@@ -139,6 +141,7 @@ async function _doLoad() {
       layerIds.push(`trace-${item.id}`);
       sourceIds.push(`trace-src-${item.id}`);
 
+      _stepInfoById.set(item.id, { item, group });
       const bbox = _bbox(data);
       if (bbox) {
         stepBoundsById.set(item.id, bbox);
@@ -172,6 +175,22 @@ async function _doLoad() {
 export function loadAllRoutesGL() {
   if (!_promise) _promise = _doLoad();
   return _promise;
+}
+
+/** Ouvre le popup d'étape (au centre de la trace), réutilisé par les markers d'étape (commit [4]). */
+export function openStepPopupGL(stepId) {
+  const info = _stepInfoById.get(stepId);
+  const b = stepBoundsById.get(stepId);
+  if (!info || !b) return;
+  const center = [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
+  const popup = new maplibregl.Popup({ maxWidth: "300px", closeButton: false })
+    .setLngLat(center)
+    .setHTML(renderStepPopup(info.item, info.group))
+    .addTo(map);
+  popup
+    .getElement()
+    ?.querySelector(".lrz-step-popup__close")
+    ?.addEventListener("click", () => popup.remove());
 }
 
 /** Centre la carte sur une étape (bbox mémorisée). */

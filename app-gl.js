@@ -11,16 +11,24 @@
 import { initMapGL } from "./app/map-gl.js";
 import { loadAllRoutesGL } from "./app/routes-gl.js";
 import { loadPoisForViewportGL, bindViewportListenersGL } from "./app/poi-gl.js";
+import { initEuroVelosGL } from "./app/eurovelo-gl.js";
+import { buildTraceMarkersGL } from "./app/trace-markers-gl.js";
 
 const map = initMapGL();
 
-map.on("load", () => {
+map.on("load", async () => {
   // Retirer le skeleton de chargement dès que le fond est prêt (parité avec app.js).
   const skeleton = document.getElementById("lrz-loading");
   if (skeleton) skeleton.style.display = "none";
 
+  // Commit [4] — EuroVelo d'abord (sous les traces, ordre des layers GL).
+  await initEuroVelosGL();
+
   // Commit [2] — traces (lignes colorées + popups + fitBounds).
-  loadAllRoutesGL();
+  await loadAllRoutesGL();
+
+  // Commit [4] — markers Départ/Étape/Arrivée (après les traces : openStepPopupGL prêt).
+  buildTraceMarkersGL();
 
   // Commit [3] — POI + photos (markers + popups + filtres, rechargés au déplacement).
   loadPoisForViewportGL();
