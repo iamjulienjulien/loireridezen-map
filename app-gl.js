@@ -9,11 +9,15 @@
  */
 
 import { initMapGL } from "./app/map-gl.js";
+import { loadAllRoutesGL } from "./app/routes-gl.js";
 
 const map = initMapGL();
 
-// Retirer le skeleton de chargement dès que le fond est prêt (parité avec app.js).
 map.on("load", () => {
+  // Retirer le skeleton de chargement dès que le fond est prêt (parité avec app.js).
   const skeleton = document.getElementById("lrz-loading");
   if (skeleton) skeleton.style.display = "none";
+
+  // Commit [2] — traces (lignes colorées + popups + fitBounds).
+  loadAllRoutesGL();
 });
