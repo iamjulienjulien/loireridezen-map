@@ -20,6 +20,7 @@ import { track, trackAndNavigate } from "./analytics.js";
 // ── État (dupliqué de poi.js) ────────────────────────────────────────────────
 const photosByPoi = new Map();
 let _enabledPhotoCategories = null;
+let _enabledPoiTypes = null; // null = tous les types autorisés (piloté par le carnet, commit [5])
 const _markers = [];
 
 const _allowedTypes = Object.entries(POI_TYPES)
@@ -35,6 +36,12 @@ export function shouldShowPhoto(photo) {
 
 export function setEnabledPhotoCategoriesGL(enabledSet) {
   _enabledPhotoCategories = enabledSet ?? null;
+  loadPoisForViewportGL();
+}
+
+/** Types de POI actifs (pilotés par le carnet). `null`/vide → tous les types autorisés. */
+export function setEnabledPoiTypesGL(types) {
+  _enabledPoiTypes = types && types.length ? types.slice() : null;
   loadPoisForViewportGL();
 }
 
@@ -279,12 +286,8 @@ export async function loadPoisForViewportGL() {
     activeType = "lapin";
     bounds = { getWest: () => -5, getSouth: () => 41, getEast: () => 10, getNorth: () => 51 };
   } else {
-    // Le panneau de filtres (.type-filter) est peuplé par app.js (Leaflet) — absent en mode GL tant
-    // que les panneaux ne sont pas portés (commit ultérieur). Fallback : tous les types autorisés.
-    const hasFilterUI = document.querySelector(".type-filter") != null;
-    activeTypes = hasFilterUI
-      ? Array.from(document.querySelectorAll(".type-filter:checked")).map((i) => i.value)
-      : _allowedTypes.slice();
+    // Types pilotés par le carnet (commit [5]) ; défaut = tous les types autorisés.
+    activeTypes = (_enabledPoiTypes ?? _allowedTypes).filter((t) => _allowedTypes.includes(t));
     activeType = activeTypes.length === 1 ? activeTypes[0] : null;
     bounds = map.getBounds();
   }
@@ -325,9 +328,7 @@ export async function loadPoisForViewportGL() {
   }
 }
 
-/** Recharge les POI sur déplacement de carte + changement de filtres. */
+/** Recharge les POI au déplacement de carte (les filtres passent par setEnabledPoiTypesGL, commit [5]). */
 export function bindViewportListenersGL() {
-  const debounced = debounce(loadPoisForViewportGL, 250);
-  map.on("moveend", debounced);
-  document.querySelectorAll(".type-filter").forEach((cb) => cb.addEventListener("change", debounced));
+  map.on("moveend", debounce(loadPoisForViewportGL, 250));
 }

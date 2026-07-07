@@ -13,6 +13,8 @@ import { loadAllRoutesGL } from "./app/routes-gl.js";
 import { loadPoisForViewportGL, bindViewportListenersGL } from "./app/poi-gl.js";
 import { initEuroVelosGL } from "./app/eurovelo-gl.js";
 import { buildTraceMarkersGL } from "./app/trace-markers-gl.js";
+import { initActionsPanelGL } from "./app/actions-panel-gl.js";
+import { applyCarnetGL, getCurrentCarnetGL } from "./app/carnets/apply-gl.js";
 
 const map = initMapGL();
 
@@ -30,7 +32,13 @@ map.on("load", async () => {
   // Commit [4] — markers Départ/Étape/Arrivée (après les traces : openStepPopupGL prêt).
   buildTraceMarkersGL();
 
-  // Commit [3] — POI + photos (markers + popups + filtres, rechargés au déplacement).
-  loadPoisForViewportGL();
+  // Commit [5] — sélecteur de carnets + zoom/recentrer/localiser.
   bindViewportListenersGL();
+  initActionsPanelGL();
+
+  // Commit [5] — applique le carnet courant (fond + couleurs + filtre POI + catégories).
+  // setEnabledPoiTypesGL (dans applyCarnetGL) déclenche le chargement initial des POI.
+  const carnet = getCurrentCarnetGL();
+  if (carnet) applyCarnetGL(carnet);
+  else loadPoisForViewportGL();
 });

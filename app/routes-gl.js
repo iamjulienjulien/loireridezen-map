@@ -193,6 +193,24 @@ export function openStepPopupGL(stepId) {
     ?.addEventListener("click", () => popup.remove());
 }
 
+/** Recentre la carte sur l'ensemble des traces (bouton « Recentrer »). */
+export function fitAllTracesGL() {
+  let bbox = null;
+  for (const b of stepBoundsById.values()) bbox = _mergeBbox(bbox, b);
+  if (!bbox) return;
+  try {
+    map.fitBounds(
+      [
+        [bbox[0], bbox[1]],
+        [bbox[2], bbox[3]],
+      ],
+      { padding: 30, maxZoom: 13 },
+    );
+  } catch {
+    /* noop */
+  }
+}
+
 /** Centre la carte sur une étape (bbox mémorisée). */
 export function centerOnStepGL(stepId) {
   const b = stepBoundsById.get(stepId);
