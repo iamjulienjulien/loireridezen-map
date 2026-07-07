@@ -294,11 +294,12 @@
       </div>
     </aside>
 
-    <!-- Bascule de moteur (LRZ-BRA-404 P1) : ?engine=gl → MapLibre GL, sinon Leaflet (défaut). -->
+    <!-- Moteur de rendu (LRZ-BRA-404 P1) : MapLibre GL par DÉFAUT ; ?engine=leaflet = échappatoire
+         vers l'ancien moteur Leaflet (revert sans redéploiement le temps de valider en prod). -->
     <script type="module">
       const engine = new URLSearchParams(location.search).get("engine");
-      if (engine === "gl") import("./app-gl.js");
-      else import("./app.js");
+      if (engine === "leaflet") import("./app.js");
+      else import("./app-gl.js");
     </script>
   </body>
 </html>
