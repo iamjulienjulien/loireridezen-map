@@ -272,7 +272,12 @@ export async function loadPoisForViewportGL() {
     activeType = "lapin";
     bounds = { getWest: () => -5, getSouth: () => 41, getEast: () => 10, getNorth: () => 51 };
   } else {
-    activeTypes = Array.from(document.querySelectorAll(".type-filter:checked")).map((i) => i.value);
+    // Le panneau de filtres (.type-filter) est peuplé par app.js (Leaflet) — absent en mode GL tant
+    // que les panneaux ne sont pas portés (commit ultérieur). Fallback : tous les types autorisés.
+    const hasFilterUI = document.querySelector(".type-filter") != null;
+    activeTypes = hasFilterUI
+      ? Array.from(document.querySelectorAll(".type-filter:checked")).map((i) => i.value)
+      : _allowedTypes.slice();
     activeType = activeTypes.length === 1 ? activeTypes[0] : null;
     bounds = map.getBounds();
   }
