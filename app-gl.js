@@ -15,6 +15,7 @@ import { initEuroVelosGL } from "./app/eurovelo-gl.js";
 import { buildTraceMarkersGL } from "./app/trace-markers-gl.js";
 import { initActionsPanelGL } from "./app/actions-panel-gl.js";
 import { applyCarnetGL, getCurrentCarnetGL } from "./app/carnets/apply-gl.js";
+import { initExportButton } from "./app/map-export.js";
 
 const map = initMapGL();
 
@@ -35,6 +36,9 @@ map.on("load", async () => {
   // Commit [5] — sélecteur de carnets + zoom/recentrer/localiser.
   bindViewportListenersGL();
   initActionsPanelGL();
+
+  // Commit [6] — bouton d'export image (?admin) : map-export.js est agnostique du moteur.
+  initExportButton();
 
   // Commit [5] — applique le carnet courant (fond + couleurs + filtre POI + catégories).
   // setEnabledPoiTypesGL (dans applyCarnetGL) déclenche le chargement initial des POI.
