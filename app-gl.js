@@ -10,6 +10,7 @@
 
 import { initMapGL } from "./app/map-gl.js";
 import { loadAllRoutesGL } from "./app/routes-gl.js";
+import { loadPoisForViewportGL, bindViewportListenersGL } from "./app/poi-gl.js";
 
 const map = initMapGL();
 
@@ -20,4 +21,8 @@ map.on("load", () => {
 
   // Commit [2] — traces (lignes colorées + popups + fitBounds).
   loadAllRoutesGL();
+
+  // Commit [3] — POI + photos (markers + popups + filtres, rechargés au déplacement).
+  loadPoisForViewportGL();
+  bindViewportListenersGL();
 });
