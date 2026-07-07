@@ -234,6 +234,13 @@ function addPoiMarker(feature) {
   if (lng == null || lat == null) return;
 
   const el = iconByType(p.type).createIcon(); // élément DOM extra-markers réutilisé
+  // createIcon() applique des styles d'ancrage Leaflet (position absolute + marginLeft/Top =
+  // -iconAnchor) qui se cumulent avec l'ancrage de maplibregl.Marker → double décalage (markers
+  // « trop hauts »). On neutralise ces styles et on laisse MapLibre ancrer par le bas (pointe du pin).
+  el.style.position = "static";
+  el.style.margin = "0";
+  el.style.left = "";
+  el.style.top = "";
   el.style.cursor = "pointer";
   const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
     .setLngLat([lng, lat])
