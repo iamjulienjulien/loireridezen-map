@@ -211,14 +211,85 @@ async function fetchPoisFromSupabase(bounds, _activeType, signal) {
     return fc;
 }
 
-async function fetchLocalPhotos() {
+// LRZ-BRA-405 [5] : photos de la carte depuis les médias tagués « carte » (RPC `lrz_carte_medias_geojson`,
+// M2) en remplacement de `data/pois/pois_photos.geojson`. Le bucket `medias` est privé, mais la RLS
+// `medias_anon_read_public` autorise l'anon à SIGNER les objets publics → URLs signées pour `<img>`.
+// La RPC n'expose ni catégories ni lien POI → markers photo autonomes (pas de « Mes clichés », pas de
+// filtre de catégorie — le contrat carnet reviendra quand `lrz_medias` portera des catégories).
+// Mémoïsé : les photos ne dépendent pas du viewport (contrairement à l'ancien re-fetch par moveend).
+let _photosPromise = null;
+function fetchCartePhotos() {
+    if (!_photosPromise) _photosPromise = _loadCartePhotos();
+    return _photosPromise;
+}
+
+async function _loadCartePhotos() {
     try {
-        const r = await fetch('data/pois/pois_photos.geojson');
-        if (!r.ok) return { type: 'FeatureCollection', features: [] };
-        return r.json();
-    } catch {
+        const res = await fetch(`${SUPA_URL}/rest/v1/rpc/lrz_carte_medias_geojson`, {
+            method: 'POST',
+            headers: {
+                apikey: SUPA_PUBLISHABLE_KEY,
+                Authorization: `Bearer ${SUPA_PUBLISHABLE_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: '{}',
+        });
+        if (!res.ok) throw new Error(`Supabase ${res.status}`);
+        const fc = await res.json();
+        const features = fc.features || [];
+        if (!features.length) return { type: 'FeatureCollection', features: [] };
+
+        const urlByPath = await _signMediaUrls(
+            features.map((f) => f.properties?.storagePath).filter(Boolean)
+        );
+
+        const out = features.map((f) => {
+            const pr = f.properties || {};
+            const url = urlByPath.get(pr.storagePath) || null;
+            return {
+                type: 'Feature',
+                geometry: f.geometry,
+                properties: {
+                    type: 'photo',
+                    id: pr.id,
+                    name: pr.title || pr.alt || '',
+                    description: pr.caption || '',
+                    thumb: url,
+                    image: url,
+                    categories: [],
+                },
+            };
+        });
+        return { type: 'FeatureCollection', features: out };
+    } catch (err) {
+        console.warn('[loireridezen] carte medias load failed', err);
         return { type: 'FeatureCollection', features: [] };
     }
+}
+
+/** URLs signées du bucket privé `medias` (lecture anon via RLS `medias_anon_read_public`) : chemin → URL absolue. */
+async function _signMediaUrls(paths) {
+    const urls = new Map();
+    if (!paths.length) return urls;
+    try {
+        const res = await fetch(`${SUPA_URL}/storage/v1/object/sign/medias`, {
+            method: 'POST',
+            headers: {
+                apikey: SUPA_PUBLISHABLE_KEY,
+                Authorization: `Bearer ${SUPA_PUBLISHABLE_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ expiresIn: 86400, paths }),
+        });
+        if (!res.ok) return urls;
+        const rows = await res.json();
+        for (const row of rows || []) {
+            if (row.signedURL) urls.set(row.path, `${SUPA_URL}/storage/v1${row.signedURL}`);
+        }
+    } catch {
+        /* pas d'URL signée → markers sans vignette, non bloquant */
+    }
+    return urls;
 }
 
 function buildPhotosByPoi(features) {
@@ -330,7 +401,7 @@ export async function loadPoisForViewportGL() {
     try {
         const [fcDB, fcLocal] = await Promise.all([
             fetchPoisFromSupabase(bounds, activeType, controller.signal),
-            fetchLocalPhotos(),
+            fetchCartePhotos(),
         ]);
         const localFeatures = fcLocal.features || [];
         buildPhotosByPoi(localFeatures);
