@@ -10,28 +10,28 @@ Ce projet combine **Leaflet**, **Supabase + PostGIS**, et des **outils Python** 
 ## ✨ Fonctionnalités
 
 - 🚴 **Parcours à vélo**
-  - Traces par acte et par étape
-  - Micro-aventures (boucles locales)
-  - Couleurs par étape, par groupe ou dynamiques
+    - Traces par acte et par étape
+    - Micro-aventures (boucles locales)
+    - Couleurs par étape, par groupe ou dynamiques
 
 - 📍 **Points d'intérêt (POI)**
-  - Patrimoine (châteaux, lieux historiques)
-  - Guinguettes
-  - Hébergements
-  - Départs / Arrivées
-  - ⭐ Coups de cœur personnels
+    - Patrimoine (châteaux, lieux historiques)
+    - Guinguettes
+    - Hébergements
+    - Départs / Arrivées
+    - ⭐ Coups de cœur personnels
 
 - 📷 **Photos géolocalisées**
-  - Générées automatiquement depuis les EXIF
-  - Miniatures optimisées pour les popups
+    - Générées automatiquement depuis les EXIF
+    - Miniatures optimisées pour les popups
 
 - 🗺️ **Carte avancée**
-  - Vue Plan (OpenStreetMap)
-  - Vue Satellite (Esri)
-  - Clustering doux des POI
-  - Filtres par type
-  - Panneau latéral repliable (desktop & mobile)
-  - Plein écran
+    - Vue Plan (OpenStreetMap)
+    - Vue Satellite (Esri)
+    - Clustering doux des POI
+    - Filtres par type
+    - Panneau latéral repliable (desktop & mobile)
+    - Plein écran
 
 ---
 
@@ -301,13 +301,13 @@ git push
 
 Les quatre fichiers `data/catalog/*.json` sont la **source de vérité éditoriale** du projet. La carte les lit directement au chargement (plus de paths hardcodés).
 
-| Fichier | Rôle | Mis à jour par |
-|---|---|---|
-| `groups.json` | Définition des actes et micro-aventures | **Manuellement** (couleurs, labels, ordre) |
-| `traces.json` | Inventaire des traces GPX | `update_data.py` à l'ajout/suppression |
-| `photos.json` | Inventaire des photos géolocalisées | `update_data.py` après sync photos |
-| `pois.json` | Snapshot light des POI Supabase | `update_data.py --pois` (régénéré entier) |
-| `current_position.json` | Position courante du cycliste sur la carte | `update_position.py` (CLI interactif) |
+| Fichier                 | Rôle                                       | Mis à jour par                             |
+| ----------------------- | ------------------------------------------ | ------------------------------------------ |
+| `groups.json`           | Définition des actes et micro-aventures    | **Manuellement** (couleurs, labels, ordre) |
+| `traces.json`           | Inventaire des traces GPX                  | `update_data.py` à l'ajout/suppression     |
+| `photos.json`           | Inventaire des photos géolocalisées        | `update_data.py` après sync photos         |
+| `pois.json`             | Snapshot light des POI Supabase            | `update_data.py --pois` (régénéré entier)  |
+| `current_position.json` | Position courante du cycliste sur la carte | `update_position.py` (CLI interactif)      |
 
 ### Quand éditer à la main
 
@@ -355,8 +355,8 @@ Configuration runtime exposée au client via `window.LRZ_CONFIG` dans `config.js
 
 ```js
 window.LRZ_CONFIG = {
-  SUPA_URL: "https://covxsekavbmeqysdqnjh.supabase.co",
-  SUPA_PUBLISHABLE_KEY: "sb_publishable_xxxxxxxxxxxxxxxxxxxxxx_xxxxxxxx",
+    SUPA_URL: 'https://covxsekavbmeqysdqnjh.supabase.co',
+    SUPA_PUBLISHABLE_KEY: 'sb_publishable_xxxxxxxxxxxxxxxxxxxxxx_xxxxxxxx',
 };
 ```
 
@@ -377,9 +377,9 @@ Le `buildCommand` de `vercel.json` lit ces variables et écrit le `config.js` av
 
 Certaines opérations administratives — uploader des photos sur Supabase Storage, par exemple — nécessitent le rôle `service_role` (bypass RLS). La clé associée est la **`SUPA_SECRET_KEY`** (format `sb_secret_*`).
 
-| Variable          | Utilisée par                          | Source autorisée             |
-| ----------------- | ------------------------------------- | ---------------------------- |
-| `SUPA_SECRET_KEY` | `scripts/sync_photos_to_supabase.py`  | **Variable d'env seulement** |
+| Variable          | Utilisée par                         | Source autorisée             |
+| ----------------- | ------------------------------------ | ---------------------------- |
+| `SUPA_SECRET_KEY` | `scripts/sync_photos_to_supabase.py` | **Variable d'env seulement** |
 
 ```bash
 # Récupérer dans console Supabase → Settings → API Keys → Secret key → Reveal
@@ -399,10 +399,10 @@ Les POI vivent dans la table `public.pois` de Supabase, **pas** dans un fichier 
 1. Console Supabase → Project `covxsekavbmeqysdqnjh` → **Table Editor** → table `pois`
 2. Cliquer **Insert row**
 3. Renseigner au minimum :
-   - `name` — texte
-   - `type` — une des valeurs autorisées (cf. CHECK constraint) : `paysage`, `patrimoine`, `guinguette`, `hébergement`, `départ`, `arrivée`, `photo`, `coupdecoeur`
-   - `stage` — entier (numéro d'étape ou `0` hors-étape)
-   - `geom` — point géographique au format `SRID=4326;POINT(lon lat)`. Exemple : `SRID=4326;POINT(-0.5594 47.4732)` pour Angers
+    - `name` — texte
+    - `type` — une des valeurs autorisées (cf. CHECK constraint) : `paysage`, `patrimoine`, `guinguette`, `hébergement`, `départ`, `arrivée`, `photo`, `coupdecoeur`
+    - `stage` — entier (numéro d'étape ou `0` hors-étape)
+    - `geom` — point géographique au format `SRID=4326;POINT(lon lat)`. Exemple : `SRID=4326;POINT(-0.5594 47.4732)` pour Angers
 4. Champs optionnels : `description`, `url`, `url_insta`, `image`, `thumb`
 5. Cliquer **Save**
 
@@ -445,13 +445,13 @@ pip install -r requirements.txt
 
 ### Opérations disponibles
 
-| Action | Description |
-|---|---|
-| **Lister tous les POI** | Tableau rich : ID, type, nom, coordonnées, statut visité (pagination si > 100) |
-| **Filtrer par type** | Affiche seulement les POI d'un type donné |
-| **Ajouter un POI** | Saisie guidée : type, nom, description, coordonnées, URL Instagram, champs château |
-| **Modifier un POI** | Sélection dans la liste, édition champ par champ, diff calculé avant envoi |
-| **Supprimer un POI** | Sélection + confirmation explicite "SUPPRIMER" (irréversible) |
+| Action                  | Description                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| **Lister tous les POI** | Tableau rich : ID, type, nom, coordonnées, statut visité (pagination si > 100)     |
+| **Filtrer par type**    | Affiche seulement les POI d'un type donné                                          |
+| **Ajouter un POI**      | Saisie guidée : type, nom, description, coordonnées, URL Instagram, champs château |
+| **Modifier un POI**     | Sélection dans la liste, édition champ par champ, diff calculé avant envoi         |
+| **Supprimer un POI**    | Sélection + confirmation explicite "SUPPRIMER" (irréversible)                      |
 
 ### Lancer
 
@@ -770,12 +770,12 @@ Masque le marqueur sur la carte (`active: false`) sans supprimer les coordonnée
 
 ```json
 {
-  "active": true,
-  "label": "Chalonnes-sur-Loire",
-  "description": "Étape 2 — nuit chez l'habitant",
-  "coordinates": [-0.7594, 47.3594],
-  "source": "address",
-  "updated_at": "2026-06-15T18:42:00+00:00"
+    "active": true,
+    "label": "Chalonnes-sur-Loire",
+    "description": "Étape 2 — nuit chez l'habitant",
+    "coordinates": [-0.7594, 47.3594],
+    "source": "address",
+    "updated_at": "2026-06-15T18:42:00+00:00"
 }
 ```
 

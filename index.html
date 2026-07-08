@@ -1,305 +1,337 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>✨ Loire Ride Zen – Carte de voyage à vélo 🚲</title>
-    <meta
-      name="description"
-      content="Découvrez la carte interactive de Loire Ride Zen 🚴‍♂️ : étapes de ma rando à vélo, châteaux de la Loire et coups de cœur en chemin."
-    />
-
-    <!-- Runtime config (généré au build Vercel depuis les env vars, ou config.js local) -->
-    <script src="config.js"></script>
-
-    <!-- Leaflet -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css"
-    />
-    <!-- MapLibre GL (LRZ-BRA-404 P1 — moteur parallèle via ?engine=gl) -->
-    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
-    <script type="importmap">
-      {
-        "imports": {
-          "leaflet": "https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.js",
-          "leaflet-extra-markers": "https://unpkg.com/leaflet-extra-markers@2.0.1/src/index.js",
-          "maplibre-gl": "https://esm.sh/maplibre-gl@4.7.1"
-        }
-      }
-    </script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;700&family=Spectral:wght@400;700&family=ZCOOL+QingKe+HuangYou&display=swap"
-    />
-    <link rel="stylesheet" href="style.css" />
-
-    <!-- Privacy-friendly analytics by Plausible -->
-    <script
-      defer
-      src="https://plausible.io/js/pa-BOQLtEKyALECqC2DirH6B.js"
-    ></script>
-    <script>
-      ((window.plausible =
-        window.plausible ||
-        function () {
-          (plausible.q = plausible.q || []).push(arguments);
-        }),
-        (plausible.init =
-          plausible.init ||
-          function (i) {
-            plausible.o = i || {};
-          }));
-      plausible.init();
-    </script>
-  </head>
-  <body>
-    <!-- Skeleton de chargement plein écran -->
-    <div id="lrz-loading" class="lrz-loading">
-      <div class="lrz-loading__inner">
-        <img src="assets/logo_loire_ride_zen.jpg" alt="Chargement…" />
-        <p>Chargement de la carte…</p>
-      </div>
-    </div>
-
-    <!-- Panel cockpit -->
-    <aside
-      id="filtersPanel"
-      class="lrz-panel"
-      role="region"
-      aria-label="Filtres et légende"
-    >
-      <!-- En-tête avec logo rond -->
-      <header class="lrz-panel__header">
-        <img
-          class="lrz-panel__logo"
-          src="assets/logo_loire_ride_zen.jpg"
-          alt="Loire Ride Zen"
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>✨ Loire Ride Zen – Carte de voyage à vélo 🚲</title>
+        <meta
+            name="description"
+            content="Découvrez la carte interactive de Loire Ride Zen 🚴‍♂️ : étapes de ma rando à vélo, châteaux de la Loire et coups de cœur en chemin."
         />
-        <div class="lrz-panel__heading">
-          <h1>Loire Ride Zen</h1>
-          <p>Carte interactive</p>
+
+        <!-- Runtime config (généré au build Vercel depuis les env vars, ou config.js local) -->
+        <script src="config.js"></script>
+
+        <!-- Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css" />
+        <!-- MapLibre GL (LRZ-BRA-404 P1 — moteur parallèle via ?engine=gl) -->
+        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+        <script type="importmap">
+            {
+                "imports": {
+                    "leaflet": "https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.js",
+                    "leaflet-extra-markers": "https://unpkg.com/leaflet-extra-markers@2.0.1/src/index.js",
+                    "maplibre-gl": "https://esm.sh/maplibre-gl@4.7.1"
+                }
+            }
+        </script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;700&family=Spectral:wght@400;700&family=ZCOOL+QingKe+HuangYou&display=swap"
+        />
+        <link rel="stylesheet" href="style.css" />
+
+        <!-- Privacy-friendly analytics by Plausible -->
+        <script defer src="https://plausible.io/js/pa-BOQLtEKyALECqC2DirH6B.js"></script>
+        <script>
+            ((window.plausible =
+                window.plausible ||
+                function () {
+                    (plausible.q = plausible.q || []).push(arguments);
+                }),
+                (plausible.init =
+                    plausible.init ||
+                    function (i) {
+                        plausible.o = i || {};
+                    }));
+            plausible.init();
+        </script>
+    </head>
+    <body>
+        <!-- Skeleton de chargement plein écran -->
+        <div id="lrz-loading" class="lrz-loading">
+            <div class="lrz-loading__inner">
+                <img src="assets/logo_loire_ride_zen.jpg" alt="Chargement…" />
+                <p>Chargement de la carte…</p>
+            </div>
         </div>
+
+        <!-- Panel cockpit -->
+        <aside id="filtersPanel" class="lrz-panel" role="region" aria-label="Filtres et légende">
+            <!-- En-tête avec logo rond -->
+            <header class="lrz-panel__header">
+                <img
+                    class="lrz-panel__logo"
+                    src="assets/logo_loire_ride_zen.jpg"
+                    alt="Loire Ride Zen"
+                />
+                <div class="lrz-panel__heading">
+                    <h1>Loire Ride Zen</h1>
+                    <p>Carte interactive</p>
+                </div>
+                <button
+                    class="lrz-panel__toggle"
+                    aria-label="Replier le panneau"
+                    aria-expanded="true"
+                    aria-controls="filtersPanelBody"
+                >
+                    ▼
+                </button>
+            </header>
+
+            <!-- Corps du panneau (animé pour le collapse) -->
+            <div class="lrz-panel__body-wrap" id="filtersPanelBody">
+                <div class="lrz-panel__body">
+                    <!-- Blocs éditoriaux : position + étape (rempli par info-panel.js) -->
+                    <div id="lrz-info-panel"></div>
+
+                    <!-- Bandeau focus URL (rempli par url-filter.js si ?acte= ou ?etape=) -->
+                    <div id="lrz-focus-banner" class="lrz-focus-banner"></div>
+
+                    <!-- Bouton Tout voir -->
+                    <div class="lrz-tout-voir-wrap">
+                        <button
+                            id="lrz-tout-voir"
+                            class="lrz-tout-voir-btn"
+                            title="Activer / désactiver tous les POI et photos"
+                        >
+                            <span class="lrz-tout-voir-btn__icon">👁</span>
+                            <span class="lrz-tout-voir-btn__label">Tout voir</span>
+                        </button>
+                    </div>
+
+                    <!-- Section Traces -->
+                    <section class="lrz-section lrz-panel-section--actes" data-section="traces">
+                        <header class="lrz-section__header">
+                            <h3>Traces</h3>
+                            <button class="lrz-section__all" data-target="traces">Tout</button>
+                            <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+                        </header>
+                        <div class="lrz-section__body" id="traces-list">
+                            <!-- rempli par app.js depuis groups.json -->
+                        </div>
+                    </section>
+
+                    <!-- Section Points d'intérêt -->
+                    <section class="lrz-section lrz-panel-section--poi" data-section="poi">
+                        <header class="lrz-section__header">
+                            <h3>Points d'intérêt</h3>
+                            <button class="lrz-section__all" data-target="poi">Tout</button>
+                            <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+                        </header>
+                        <div class="lrz-section__body" id="poi-list">
+                            <!-- rempli par app.js depuis POI_TYPES -->
+                        </div>
+                    </section>
+
+                    <!-- Section Photos -->
+                    <section class="lrz-section lrz-panel-section--photos" data-section="photos">
+                        <header class="lrz-section__header">
+                            <h3>Photos</h3>
+                            <button class="lrz-section__toggle" aria-expanded="true">▾</button>
+                        </header>
+                        <div class="lrz-section__body" id="photos-list">
+                            <!-- rempli par app.js -->
+                        </div>
+                    </section>
+
+                    <!-- Liens externes (bas du panel) -->
+                    <div class="lrz-panel__actions">
+                        <button class="lrz-reset-btn" id="reset-prefs">
+                            Réinitialiser les filtres
+                        </button>
+                    </div>
+                    <footer class="lrz-panel-header">
+                        <a
+                            href="https://loireridezen.link"
+                            target="_blank"
+                            rel="noopener"
+                            class="lrz-panel-header__link"
+                            title="Site Loire Ride Zen"
+                        >
+                            <span class="lrz-panel-header__icon">🌐</span>
+                            <span class="lrz-panel-header__label">Site</span>
+                        </a>
+                        <a
+                            href="https://www.instagram.com/loireridezen/"
+                            target="_blank"
+                            rel="noopener"
+                            class="lrz-panel-header__link"
+                            title="Compte Instagram"
+                        >
+                            <span class="lrz-panel-header__icon">📷</span>
+                            <span class="lrz-panel-header__label">Instagram</span>
+                        </a>
+                        <a
+                            href="https://www.komoot.com/fr-fr/user/1484664526803"
+                            target="_blank"
+                            rel="noopener"
+                            class="lrz-panel-header__link"
+                            title="Profil Komoot"
+                        >
+                            <span class="lrz-panel-header__icon">🗺️</span>
+                            <span class="lrz-panel-header__label">Komoot</span>
+                        </a>
+                    </footer>
+                    <p class="lrz-panel-credit">
+                        Une création de
+                        <a href="https://julienjulien.fr" target="_blank" rel="noopener"
+                            >Julien Julien</a
+                        >
+                    </p>
+                    <p class="lrz-panel-credit lrz-panel-credit--attr">
+                        ©
+                        <a
+                            href="https://www.openstreetmap.org/copyright"
+                            target="_blank"
+                            rel="noopener"
+                            >OpenStreetMap</a
+                        >
+                        · <span>Loire Ride Zen</span>
+                    </p>
+                </div>
+                <!-- /.lrz-panel__body -->
+            </div>
+            <!-- /.lrz-panel__body-wrap -->
+        </aside>
+
+        <!-- Bouton d'ouverture du drawer mobile -->
         <button
-          class="lrz-panel__toggle"
-          aria-label="Replier le panneau"
-          aria-expanded="true"
-          aria-controls="filtersPanelBody"
+            id="toggleFilters"
+            class="filters-toggle"
+            aria-expanded="false"
+            aria-controls="filtersPanel"
         >
-          ▼
+            Filtres
         </button>
-      </header>
 
-      <!-- Corps du panneau (animé pour le collapse) -->
-      <div class="lrz-panel__body-wrap" id="filtersPanelBody">
-        <div class="lrz-panel__body">
-          <!-- Blocs éditoriaux : position + étape (rempli par info-panel.js) -->
-          <div id="lrz-info-panel"></div>
-
-          <!-- Bandeau focus URL (rempli par url-filter.js si ?acte= ou ?etape=) -->
-          <div id="lrz-focus-banner" class="lrz-focus-banner"></div>
-
-          <!-- Bouton Tout voir -->
-          <div class="lrz-tout-voir-wrap">
-            <button id="lrz-tout-voir" class="lrz-tout-voir-btn" title="Activer / désactiver tous les POI et photos">
-              <span class="lrz-tout-voir-btn__icon">👁</span>
-              <span class="lrz-tout-voir-btn__label">Tout voir</span>
-            </button>
-          </div>
-
-          <!-- Section Traces -->
-          <section
-            class="lrz-section lrz-panel-section--actes"
-            data-section="traces"
-          >
-            <header class="lrz-section__header">
-              <h3>Traces</h3>
-              <button class="lrz-section__all" data-target="traces">
-                Tout
-              </button>
-              <button class="lrz-section__toggle" aria-expanded="true">
-                ▾
-              </button>
-            </header>
-            <div class="lrz-section__body" id="traces-list">
-              <!-- rempli par app.js depuis groups.json -->
+        <!-- Bloc bas-droite : signature + bouton bisou (for=elle) -->
+        <div class="lrz-bottom-right">
+            <div class="lrz-signature">
+                <strong>Je pense à toi 💗 – Papa 🚴‍♂️</strong>
             </div>
-          </section>
-
-          <!-- Section Points d'intérêt -->
-          <section
-            class="lrz-section lrz-panel-section--poi"
-            data-section="poi"
-          >
-            <header class="lrz-section__header">
-              <h3>Points d'intérêt</h3>
-              <button class="lrz-section__all" data-target="poi">Tout</button>
-              <button class="lrz-section__toggle" aria-expanded="true">
-                ▾
-              </button>
-            </header>
-            <div class="lrz-section__body" id="poi-list">
-              <!-- rempli par app.js depuis POI_TYPES -->
-            </div>
-          </section>
-
-          <!-- Section Photos -->
-          <section
-            class="lrz-section lrz-panel-section--photos"
-            data-section="photos"
-          >
-            <header class="lrz-section__header">
-              <h3>Photos</h3>
-              <button class="lrz-section__toggle" aria-expanded="true">
-                ▾
-              </button>
-            </header>
-            <div class="lrz-section__body" id="photos-list">
-              <!-- rempli par app.js -->
-            </div>
-          </section>
-
-          <!-- Liens externes (bas du panel) -->
-          <div class="lrz-panel__actions">
-            <button class="lrz-reset-btn" id="reset-prefs">
-              Réinitialiser les filtres
-            </button>
-          </div>
-          <footer class="lrz-panel-header">
-            <a
-              href="https://loireridezen.link"
-              target="_blank"
-              rel="noopener"
-              class="lrz-panel-header__link"
-              title="Site Loire Ride Zen"
-            >
-              <span class="lrz-panel-header__icon">🌐</span>
-              <span class="lrz-panel-header__label">Site</span>
-            </a>
-            <a
-              href="https://www.instagram.com/loireridezen/"
-              target="_blank"
-              rel="noopener"
-              class="lrz-panel-header__link"
-              title="Compte Instagram"
-            >
-              <span class="lrz-panel-header__icon">📷</span>
-              <span class="lrz-panel-header__label">Instagram</span>
-            </a>
-            <a
-              href="https://www.komoot.com/fr-fr/user/1484664526803"
-              target="_blank"
-              rel="noopener"
-              class="lrz-panel-header__link"
-              title="Profil Komoot"
-            >
-              <span class="lrz-panel-header__icon">🗺️</span>
-              <span class="lrz-panel-header__label">Komoot</span>
-            </a>
-          </footer>
-          <p class="lrz-panel-credit">
-            Une création de
-            <a href="https://julienjulien.fr" target="_blank" rel="noopener"
-              >Julien Julien</a
-            >
-          </p>
-          <p class="lrz-panel-credit lrz-panel-credit--attr">
-            ©
-            <a
-              href="https://www.openstreetmap.org/copyright"
-              target="_blank"
-              rel="noopener"
-              >OpenStreetMap</a
-            >
-            · <span>Loire Ride Zen</span>
-          </p>
         </div>
-        <!-- /.lrz-panel__body -->
-      </div>
-      <!-- /.lrz-panel__body-wrap -->
-    </aside>
 
-    <!-- Bouton d'ouverture du drawer mobile -->
-    <button
-      id="toggleFilters"
-      class="filters-toggle"
-      aria-expanded="false"
-      aria-controls="filtersPanel"
-    >
-      Filtres
-    </button>
+        <div id="map"></div>
 
-    <!-- Bloc bas-droite : signature + bouton bisou (for=elle) -->
-    <div class="lrz-bottom-right">
-      <div class="lrz-signature">
-        <strong>Je pense à toi 💗 – Papa 🚴‍♂️</strong>
-      </div>
-    </div>
+        <!-- Panel flottant d'actions (top-right) -->
+        <aside id="lrz-actions-panel" class="lrz-actions-panel" aria-label="Actions carte">
+            <div class="lrz-actions-panel__group">
+                <button
+                    class="lrz-apanel-btn"
+                    data-action="zoom-in"
+                    title="Zoom avant"
+                    aria-label="Zoom avant"
+                >
+                    +
+                </button>
+                <button
+                    class="lrz-apanel-btn"
+                    data-action="zoom-out"
+                    title="Zoom arrière"
+                    aria-label="Zoom arrière"
+                >
+                    −
+                </button>
+            </div>
+            <div
+                class="lrz-actions-panel__group lrz-carnets-selector"
+                role="group"
+                aria-label="Sélecteur de carnets"
+            >
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="loire-velo"
+                    title="Loire à vélo"
+                    aria-label="Loire à vélo"
+                    aria-pressed="false"
+                >
+                    🚲
+                </button>
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="grand-air"
+                    title="Grand air"
+                    aria-label="Grand air"
+                    aria-pressed="false"
+                >
+                    🌿
+                </button>
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="or-tuffeau"
+                    title="Or et tuffeau"
+                    aria-label="Or et tuffeau"
+                    aria-pressed="false"
+                >
+                    🏰
+                </button>
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="patrimoine"
+                    title="Patrimoine"
+                    aria-label="Patrimoine"
+                    aria-pressed="false"
+                >
+                    🏛
+                </button>
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="tablee"
+                    title="Tablée"
+                    aria-label="Tablée"
+                    aria-pressed="false"
+                >
+                    🍷
+                </button>
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="veillee"
+                    title="Veillée"
+                    aria-label="Veillée"
+                    aria-pressed="false"
+                >
+                    🏮
+                </button>
+                <button
+                    class="lrz-apanel-btn lrz-carnet-btn"
+                    data-carnet="souvenirs"
+                    title="Souvenirs"
+                    aria-label="Souvenirs"
+                    aria-pressed="false"
+                >
+                    📷
+                </button>
+            </div>
+            <div class="lrz-actions-panel__group">
+                <button
+                    class="lrz-apanel-btn"
+                    data-action="reset-view"
+                    title="Recentrer sur les traces"
+                    aria-label="Recentrer"
+                >
+                    🧭
+                </button>
+                <button
+                    class="lrz-apanel-btn"
+                    data-action="locate-me"
+                    title="Ma position"
+                    aria-label="Ma position"
+                >
+                    📍
+                </button>
+            </div>
+        </aside>
 
-    <div id="map"></div>
-
-    <!-- Panel flottant d'actions (top-right) -->
-    <aside
-      id="lrz-actions-panel"
-      class="lrz-actions-panel"
-      aria-label="Actions carte"
-    >
-      <div class="lrz-actions-panel__group">
-        <button
-          class="lrz-apanel-btn"
-          data-action="zoom-in"
-          title="Zoom avant"
-          aria-label="Zoom avant"
-        >
-          +
-        </button>
-        <button
-          class="lrz-apanel-btn"
-          data-action="zoom-out"
-          title="Zoom arrière"
-          aria-label="Zoom arrière"
-        >
-          −
-        </button>
-      </div>
-      <div class="lrz-actions-panel__group lrz-carnets-selector" role="group" aria-label="Sélecteur de carnets">
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="loire-velo" title="Loire à vélo"  aria-label="Loire à vélo"  aria-pressed="false">🚲</button>
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="grand-air"  title="Grand air"     aria-label="Grand air"     aria-pressed="false">🌿</button>
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="or-tuffeau" title="Or et tuffeau" aria-label="Or et tuffeau" aria-pressed="false">🏰</button>
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="patrimoine" title="Patrimoine"    aria-label="Patrimoine"    aria-pressed="false">🏛</button>
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="tablee"     title="Tablée"        aria-label="Tablée"        aria-pressed="false">🍷</button>
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="veillee"    title="Veillée"       aria-label="Veillée"       aria-pressed="false">🏮</button>
-        <button class="lrz-apanel-btn lrz-carnet-btn" data-carnet="souvenirs"  title="Souvenirs"     aria-label="Souvenirs"     aria-pressed="false">📷</button>
-      </div>
-      <div class="lrz-actions-panel__group">
-        <button
-          class="lrz-apanel-btn"
-          data-action="reset-view"
-          title="Recentrer sur les traces"
-          aria-label="Recentrer"
-        >
-          🧭
-        </button>
-        <button
-          class="lrz-apanel-btn"
-          data-action="locate-me"
-          title="Ma position"
-          aria-label="Ma position"
-        >
-          📍
-        </button>
-      </div>
-    </aside>
-
-    <!-- Moteur de rendu (LRZ-BRA-404 P1) : MapLibre GL par DÉFAUT ; ?engine=leaflet = échappatoire
+        <!-- Moteur de rendu (LRZ-BRA-404 P1) : MapLibre GL par DÉFAUT ; ?engine=leaflet = échappatoire
          vers l'ancien moteur Leaflet (revert sans redéploiement le temps de valider en prod). -->
-    <script type="module">
-      const engine = new URLSearchParams(location.search).get("engine");
-      if (engine === "leaflet") import("./app.js");
-      else import("./app-gl.js");
-    </script>
-  </body>
+        <script type="module">
+            const engine = new URLSearchParams(location.search).get('engine');
+            if (engine === 'leaflet') import('./app.js');
+            else import('./app-gl.js');
+        </script>
+    </body>
 </html>

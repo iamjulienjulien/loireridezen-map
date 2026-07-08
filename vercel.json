@@ -1,6 +1,6 @@
 {
-  "framework": null,
-  "installCommand": "",
-  "buildCommand": "node generate-config.js",
-  "outputDirectory": "."
+    "framework": null,
+    "installCommand": "",
+    "buildCommand": "node generate-config.js",
+    "outputDirectory": "."
 }

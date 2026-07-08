@@ -1,0 +1,19 @@
+node_modules/
+.venv/
+.git/
+dist/
+build/
+
+# Data & generated files
+data/
+sources/
+logs/
+photos/
+assets/
+*.csv
+*.geojson
+config.js
+generate-config.js
+
+# Python
+requirements.txt

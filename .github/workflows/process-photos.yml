@@ -1,109 +1,109 @@
 name: Process inbox photos
 
 on:
-  push:
-    paths:
-      - "sources/photos/inbox/**"
+    push:
+        paths:
+            - 'sources/photos/inbox/**'
 
 jobs:
-  process:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    process:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+                  cache: 'pip'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+            - name: Install dependencies
+              run: pip install -r requirements.txt
 
-      - name: Move inbox photos → sources/photos/
-        run: python scripts/process_inbox.py
+            - name: Move inbox photos → sources/photos/
+              run: python scripts/process_inbox.py
 
-      - name: Sync photos (thumbs + Supabase Storage + catalog)
-        env:
-          SUPA_URL: ${{ secrets.SUPA_URL }}
-          SUPA_PUBLISHABLE_KEY: ${{ secrets.SUPA_PUBLISHABLE_KEY }}
-          SUPA_SECRET_KEY: ${{ secrets.SUPA_SECRET_KEY }}
-        run: |
-          python scripts/update_data.py \
-            --photos-only \
-            --non-interactive \
-            --yes \
-            -v
+            - name: Sync photos (thumbs + Supabase Storage + catalog)
+              env:
+                  SUPA_URL: ${{ secrets.SUPA_URL }}
+                  SUPA_PUBLISHABLE_KEY: ${{ secrets.SUPA_PUBLISHABLE_KEY }}
+                  SUPA_SECRET_KEY: ${{ secrets.SUPA_SECRET_KEY }}
+              run: |
+                  python scripts/update_data.py \
+                    --photos-only \
+                    --non-interactive \
+                    --yes \
+                    -v
 
-      - name: Debug — état du filesystem après sync
-        run: |
-          echo "════════════════════════════════════════════════════"
-          echo "📂 sources/photos/"
-          echo "════════════════════════════════════════════════════"
-          ls -la sources/photos/ 2>&1 || echo "(vide ou inexistant)"
+            - name: Debug — état du filesystem après sync
+              run: |
+                  echo "════════════════════════════════════════════════════"
+                  echo "📂 sources/photos/"
+                  echo "════════════════════════════════════════════════════"
+                  ls -la sources/photos/ 2>&1 || echo "(vide ou inexistant)"
 
-          echo "════════════════════════════════════════════════════"
-          echo "📂 data/thumbs/ (derniers 5)"
-          echo "════════════════════════════════════════════════════"
-          ls -la data/thumbs/ 2>&1 | tail -7
+                  echo "════════════════════════════════════════════════════"
+                  echo "📂 data/thumbs/ (derniers 5)"
+                  echo "════════════════════════════════════════════════════"
+                  ls -la data/thumbs/ 2>&1 | tail -7
 
-          echo "════════════════════════════════════════════════════"
-          echo "📂 data/pois/"
-          echo "════════════════════════════════════════════════════"
-          ls -la data/pois/ 2>&1
+                  echo "════════════════════════════════════════════════════"
+                  echo "📂 data/pois/"
+                  echo "════════════════════════════════════════════════════"
+                  ls -la data/pois/ 2>&1
 
-          echo "════════════════════════════════════════════════════"
-          echo "🗺️  pois_photos.geojson — count + 3 dernières features"
-          echo "════════════════════════════════════════════════════"
-          python3 -c "
-          import json
-          try:
-              d = json.load(open('data/pois/pois_photos.geojson'))
-              feats = d.get('features', [])
-              print(f'{len(feats)} features')
-              for f in feats[-3:]:
-                  p = f.get('properties', {})
-                  c = f.get('geometry', {}).get('coordinates', [])
-                  print(f'  - thumb={p.get(\"thumb\", \"?\")}  coords={c}')
-          except Exception as e:
-              print(f'ERREUR: {e}')
-          "
+                  echo "════════════════════════════════════════════════════"
+                  echo "🗺️  pois_photos.geojson — count + 3 dernières features"
+                  echo "════════════════════════════════════════════════════"
+                  python3 -c "
+                  import json
+                  try:
+                      d = json.load(open('data/pois/pois_photos.geojson'))
+                      feats = d.get('features', [])
+                      print(f'{len(feats)} features')
+                      for f in feats[-3:]:
+                          p = f.get('properties', {})
+                          c = f.get('geometry', {}).get('coordinates', [])
+                          print(f'  - thumb={p.get(\"thumb\", \"?\")}  coords={c}')
+                  except Exception as e:
+                      print(f'ERREUR: {e}')
+                  "
 
-          echo "════════════════════════════════════════════════════"
-          echo "📒 photos.json — count + 3 dernières entrées"
-          echo "════════════════════════════════════════════════════"
-          python3 -c "
-          import json
-          d = json.load(open('data/catalog/photos.json'))
-          items = d.get('items', [])
-          print(f'{len(items)} entries')
-          for it in items[-3:]:
-              print(f'  - id={it.get(\"id\")}  thumb={it.get(\"paths\", {}).get(\"thumb\")}')
-          "
+                  echo "════════════════════════════════════════════════════"
+                  echo "📒 photos.json — count + 3 dernières entrées"
+                  echo "════════════════════════════════════════════════════"
+                  python3 -c "
+                  import json
+                  d = json.load(open('data/catalog/photos.json'))
+                  items = d.get('items', [])
+                  print(f'{len(items)} entries')
+                  for it in items[-3:]:
+                      print(f'  - id={it.get(\"id\")}  thumb={it.get(\"paths\", {}).get(\"thumb\")}')
+                  "
 
-          echo "════════════════════════════════════════════════════"
-          echo "📋 git status (avec ignored)"
-          echo "════════════════════════════════════════════════════"
-          git status --short --ignored | head -30
+                  echo "════════════════════════════════════════════════════"
+                  echo "📋 git status (avec ignored)"
+                  echo "════════════════════════════════════════════════════"
+                  git status --short --ignored | head -30
 
-          echo "════════════════════════════════════════════════════"
-          echo "🚫 .gitignore (lignes data/ et sources/)"
-          echo "════════════════════════════════════════════════════"
-          grep -E "data/|sources/|thumbs|photos|pois" .gitignore || echo "(aucune ligne)"
+                  echo "════════════════════════════════════════════════════"
+                  echo "🚫 .gitignore (lignes data/ et sources/)"
+                  echo "════════════════════════════════════════════════════"
+                  grep -E "data/|sources/|thumbs|photos|pois" .gitignore || echo "(aucune ligne)"
 
-      - name: Commit results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add \
-            data/thumbs/ \
-            data/catalog/photos.json \
-            data/pois/pois_photos.geojson \
-            sources/photos/inbox/
-          git diff --cached --quiet && echo "Rien à commiter." && exit 0
-          git commit -m "data(photos): pipeline inbox iOS [skip ci]"
-          git push
+            - name: Commit results
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git add \
+                    data/thumbs/ \
+                    data/catalog/photos.json \
+                    data/pois/pois_photos.geojson \
+                    sources/photos/inbox/
+                  git diff --cached --quiet && echo "Rien à commiter." && exit 0
+                  git commit -m "data(photos): pipeline inbox iOS [skip ci]"
+                  git push
