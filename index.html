@@ -17,11 +17,14 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css"
     />
+    <!-- MapLibre GL (LRZ-BRA-404 P1 — moteur parallèle via ?engine=gl) -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
     <script type="importmap">
       {
         "imports": {
           "leaflet": "https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.js",
-          "leaflet-extra-markers": "https://unpkg.com/leaflet-extra-markers@2.0.1/src/index.js"
+          "leaflet-extra-markers": "https://unpkg.com/leaflet-extra-markers@2.0.1/src/index.js",
+          "maplibre-gl": "https://esm.sh/maplibre-gl@4.7.1"
         }
       }
     </script>
@@ -291,6 +294,12 @@
       </div>
     </aside>
 
-    <script type="module" src="app.js"></script>
+    <!-- Moteur de rendu (LRZ-BRA-404 P1) : MapLibre GL par DÉFAUT ; ?engine=leaflet = échappatoire
+         vers l'ancien moteur Leaflet (revert sans redéploiement le temps de valider en prod). -->
+    <script type="module">
+      const engine = new URLSearchParams(location.search).get("engine");
+      if (engine === "leaflet") import("./app.js");
+      else import("./app-gl.js");
+    </script>
   </body>
 </html>
