@@ -12,6 +12,7 @@ import { hiddenModes } from './url-mode.js';
 import { farthestPointFromStart } from './geo-utils.js';
 import { map } from './map-gl.js';
 import { openStepPopupGL } from './routes-gl.js';
+import { loadCarteJourneys } from './carte-journeys.js';
 
 /** groupId → Marker[] — pour masquer/afficher les markers avec leur trace (commit [5]). */
 export const traceMarkersByGroup = new Map();
@@ -46,15 +47,6 @@ function _flatCoords(geojson) {
     return out;
 }
 
-async function safeFetch(url) {
-    try {
-        const r = await fetch(url);
-        return r.ok ? r.json() : null;
-    } catch {
-        return null;
-    }
-}
-
 /** Affiche/masque les markers Départ/Étape/Arrivée d'un groupe (suivent la case de leur trace). */
 export function setGroupMarkersVisibilityGL(groupId, visible) {
     const markers = traceMarkersByGroup.get(groupId);
@@ -79,24 +71,16 @@ function _addMarker(groupId, type, lngLat, stepId) {
 export async function buildTraceMarkersGL() {
     if (hiddenModes.rabbit) return;
 
-    let groupsCatalog, tracesCatalog;
-    try {
-        [groupsCatalog, tracesCatalog] = await Promise.all([
-            fetch('data/catalog/groups.json').then((r) => r.json()),
-            fetch('data/catalog/traces.json').then((r) => r.json()),
-        ]);
-    } catch {
-        return;
-    }
+    const { groups, traces } = await loadCarteJourneys();
 
-    for (const group of groupsCatalog.items ?? []) {
-        const items = (tracesCatalog.items ?? [])
+    for (const group of groups.items ?? []) {
+        const items = (traces.items ?? [])
             .filter((it) => it.group === group.id)
             .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         if (!items.length) continue;
 
         if (group.unified) {
-            const data = await safeFetch(items[0].paths.full);
+            const data = items[0].geojson;
             if (!data) continue;
             const start = firstCoord(data);
             const end = lastCoord(data);
@@ -105,7 +89,7 @@ export async function buildTraceMarkersGL() {
         } else {
             for (let i = 0; i < items.length; i++) {
                 const item = items[i];
-                const data = await safeFetch(item.paths.simplified ?? item.paths.full);
+                const data = item.geojson;
                 if (!data) continue;
 
                 if (item.is_loop) {
@@ -124,7 +108,7 @@ export async function buildTraceMarkersGL() {
             }
             const lastItem = items[items.length - 1];
             if (!lastItem.is_loop) {
-                const data = await safeFetch(lastItem.paths.simplified ?? lastItem.paths.full);
+                const data = lastItem.geojson;
                 const end = data && lastCoord(data);
                 if (end) _addMarker(group.id, 'arrivée', end, lastItem.id);
             }

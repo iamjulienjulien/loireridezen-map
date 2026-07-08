@@ -12,6 +12,7 @@ import { map } from './map-gl.js';
 import { resolveColor } from './types.js';
 import { renderStepPopup } from './step-popup.js';
 import { track } from './analytics.js';
+import { loadCarteJourneys } from './carte-journeys.js';
 
 /** groupId → { group, layerIds, sourceIds } — pour la bascule de visibilité (carnets, commit [5]). */
 export const traceGroupsGL = new Map();
@@ -25,18 +26,6 @@ const _stepInfoById = new Map();
 let _promise = null;
 /** Traces chargées (fetch une fois), re-rendues à chaque style. */
 const _loaded = [];
-
-async function _fetchGeoJson(primaryUrl, fallbackUrl = null) {
-    try {
-        let res = await fetch(primaryUrl);
-        if (!res.ok && fallbackUrl) res = await fetch(fallbackUrl);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-    } catch (err) {
-        console.warn(`[loireridezen] trace load failed: ${primaryUrl}`, err);
-        return null;
-    }
-}
 
 /** bbox [minLng, minLat, maxLng, maxLat] d'un GeoJSON (Feature/FeatureCollection, Line/MultiLine). */
 function _bbox(geojson) {
@@ -109,18 +98,10 @@ function _wireStepPopup(lyrId, item, group) {
 }
 
 async function _doLoad() {
-    let groupsCatalog, tracesCatalog;
-    try {
-        [groupsCatalog, tracesCatalog] = await Promise.all([
-            fetch('data/catalog/groups.json').then((r) => r.json()),
-            fetch('data/catalog/traces.json').then((r) => r.json()),
-        ]);
-    } catch (err) {
-        console.warn('[loireridezen] catalog load failed', err);
-        return;
-    }
-
-    const groups = (groupsCatalog.items ?? []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const { groups: groupsCatalog, traces: tracesCatalog } = await loadCarteJourneys();
+    const groups = (groupsCatalog.items ?? [])
+        .slice()
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     const allItems = tracesCatalog.items ?? [];
     let globalBbox = null;
 
@@ -133,10 +114,7 @@ async function _doLoad() {
         const layerIds = [];
         const sourceIds = [];
         for (const item of items) {
-            const primary = item.paths?.simplified ?? item.paths?.full;
-            const fallback = item.paths?.simplified ? item.paths?.full : null;
-            if (!primary) continue;
-            const data = await _fetchGeoJson(primary, fallback);
+            const data = item.geojson;
             if (!data) continue;
 
             const featureIndex = (item.order ?? 1) - 1;
