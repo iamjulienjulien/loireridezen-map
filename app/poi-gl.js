@@ -27,6 +27,10 @@ const _allowedTypes = Object.entries(POI_TYPES)
     .filter(([k, c]) => !c.hidden || (k === 'lapin' && hiddenModes.rabbit))
     .map(([k]) => k);
 
+// LRZ-BRA-405 : `lrz_pois_geojson` renvoie les slugs canoniques du Camp ; un seul diverge de la
+// nomenclature carte (accentuée, héritée de la table legacy `pois` + carnets). Alias DB → carte.
+const DB_TYPE_ALIAS = { hebergement: 'hébergement' };
+
 export function shouldShowPhoto(photo) {
     if (!_enabledPhotoCategories) return true;
     const cats = photo.categories;
@@ -173,16 +177,17 @@ function popupHtmlFor(p) {
 // ── Fetch (dupliqué de poi.js — bounds.getWest/... : API identique GL) ────────
 let lastAbort = null;
 
-async function fetchPoisFromSupabase(bounds, activeType, signal) {
+async function fetchPoisFromSupabase(bounds, _activeType, signal) {
+    // LRZ-BRA-405 [1] : bascule legacy `pois` → `lrz_pois` via la RPC publique carte
+    // `lrz_pois_geojson` (M1, INVOKER, clé publishable). BBOX seule — le filtrage par type reste
+    // client-side (loadPoisForViewportGL), donc `p_type`/`p_allowed_types` disparaissent.
     const body = {
         minlon: bounds.getWest(),
         minlat: bounds.getSouth(),
         maxlon: bounds.getEast(),
         maxlat: bounds.getNorth(),
-        p_allowed_types: _allowedTypes,
     };
-    if (activeType) body.p_type = activeType;
-    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson`, {
+    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/lrz_pois_geojson`, {
         method: 'POST',
         headers: {
             apikey: SUPA_PUBLISHABLE_KEY,
@@ -193,7 +198,17 @@ async function fetchPoisFromSupabase(bounds, activeType, signal) {
         signal,
     });
     if (!res.ok) throw new Error(`Supabase ${res.status}`);
-    return res.json();
+    const fc = await res.json();
+    // Normalisation vers la forme attendue par le rendu (héritée de la table legacy `pois`) :
+    // `typeSlug` est aligné 1:1 sur les clés de POI_TYPES (types.js) ; `construction_date` vit dans
+    // `meta`. La vignette de couverture et l'Instagram ne sont pas exposés par cette RPC (compteurs
+    // seuls) → ils reviendront avec les photos taguées « carte » (Commit [3], lrz_medias public).
+    for (const f of fc.features || []) {
+        const pr = f.properties || {};
+        pr.type = DB_TYPE_ALIAS[pr.typeSlug] ?? pr.typeSlug;
+        pr.construction_date = pr.meta?.construction_date ?? null;
+    }
+    return fc;
 }
 
 async function fetchLocalPhotos() {
