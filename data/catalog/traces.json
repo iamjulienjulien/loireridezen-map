@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-06-02T17:03:44.549204+00:00",
+  "updated_at": "2026-07-08T06:15:13.035Z",
   "items": [
     {
       "id": "acte-1_etape-1_chatillon_boissy-le-cutte",
-      "label": "Paris ➡️ Boissy-Le-Cutté",
+      "label": "Châtillon ➡️ Boissy-le-Cutté",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-1_chatillon_boissy-le-cutte.geojson",
@@ -13,28 +13,23 @@
       "order": 1,
       "date_status": "effective",
       "date": "2018-06-09",
-      "distance_km": 50.34,
-      "elevation_gain_m": 623.7,
-      "duration_h": 3.25,
-      "weather": {
-        "icon": "🌧",
-        "description": "Pluie modérée",
-        "temp": 20
-      },
+      "distance_km": 50.28,
+      "elevation_gain_m": 670,
+      "duration_h": 3.17,
       "day": {
-        "sunrise": "05:48",
-        "sunset": "21:51"
+        "sunset": "21:52",
+        "sunrise": "05:50"
       },
       "moon": {
-        "phase": 0.865,
         "icon": "🌘",
-        "description": "Dernier croissant"
+        "phase": 0.84,
+        "description": "Croissant décroissant"
       },
       "step": 1
     },
     {
       "id": "acte-1_etape-2_boissy-le-culle_etampes",
-      "label": "Boissy-Le-Cutté ➡️ Étampes",
+      "label": "Boissy-St-Cutté ➡️ Étampes",
       "group": "acte-1",
       "paths": {
         "full": "data/traces/acte-1_etape-2_boissy-le-culle_etampes.geojson",
@@ -44,22 +39,17 @@
       "order": 2,
       "date_status": "effective",
       "date": "2018-06-10",
-      "distance_km": 19.27,
-      "elevation_gain_m": 170.7,
-      "duration_h": 2.0,
-      "weather": {
-        "icon": "🌧",
-        "description": "Pluie légère",
-        "temp": 20
-      },
+      "distance_km": 19.25,
+      "elevation_gain_m": 175,
+      "duration_h": 1.47,
       "day": {
-        "sunrise": "05:49",
-        "sunset": "21:51"
+        "sunset": "21:52",
+        "sunrise": "05:51"
       },
       "moon": {
-        "phase": 0.899,
         "icon": "🌘",
-        "description": "Dernier croissant"
+        "phase": 0.874,
+        "description": "Croissant décroissant"
       },
       "step": 2
     },
@@ -73,24 +63,19 @@
       },
       "source": "sources/gpx/acte-1_etape-3_etampes_artenay.gpx",
       "order": 3,
-      "distance_km": 59.2,
-      "elevation_gain_m": 459.5,
       "date_status": "effective",
       "date": "2018-06-11",
-      "duration_h": 8.0,
-      "weather": {
-        "icon": "🌧",
-        "description": "Pluie modérée",
-        "temp": 19
-      },
+      "distance_km": 59.13,
+      "elevation_gain_m": 465,
+      "duration_h": 5.43,
       "day": {
-        "sunrise": "05:51",
-        "sunset": "21:52"
+        "sunset": "21:53",
+        "sunrise": "05:52"
       },
       "moon": {
-        "phase": 0.933,
         "icon": "🌘",
-        "description": "Dernier croissant"
+        "phase": 0.909,
+        "description": "Croissant décroissant"
       },
       "step": 3
     },
@@ -104,23 +89,18 @@
       },
       "source": "sources/gpx/acte-1_etape-4_artenay_orleans.gpx",
       "order": 4,
-      "distance_km": 39.07,
-      "elevation_gain_m": 174.3,
       "date_status": "effective",
       "date": "2018-06-12",
-      "duration_h": 4.0,
-      "weather": {
-        "icon": "🌦",
-        "description": "Bruine légère",
-        "temp": 17
-      },
+      "distance_km": 39.03,
+      "elevation_gain_m": 186,
+      "duration_h": 3.25,
       "day": {
-        "sunrise": "05:53",
-        "sunset": "21:52"
+        "sunset": "21:53",
+        "sunrise": "05:54"
       },
       "moon": {
-        "phase": 0.967,
         "icon": "🌑",
+        "phase": 0.945,
         "description": "Nouvelle lune"
       },
       "step": 4
@@ -135,24 +115,19 @@
       },
       "source": "sources/gpx/acte-1_etape-5_orleans_beaugency.gpx",
       "order": 5,
-      "distance_km": 27.68,
-      "elevation_gain_m": 128.0,
       "date_status": "effective",
       "date": "2018-06-15",
-      "duration_h": 2.0,
-      "weather": {
-        "icon": "🌦",
-        "description": "Bruine légère",
-        "temp": 18
-      },
+      "distance_km": 27.65,
+      "elevation_gain_m": 131,
+      "duration_h": 2.15,
       "day": {
-        "sunrise": "05:54",
-        "sunset": "21:53"
+        "sunset": "21:54",
+        "sunrise": "05:55"
       },
       "moon": {
-        "phase": 0.069,
-        "icon": "🌒",
-        "description": "Premier croissant"
+        "icon": "🌑",
+        "phase": 0.059,
+        "description": "Nouvelle lune"
       },
       "step": 5
     },
@@ -166,56 +141,44 @@
       },
       "source": "sources/gpx/acte-1_etape-6_beaugency_blois.gpx",
       "order": 6,
-      "distance_km": 34.41,
-      "elevation_gain_m": 128.5,
       "date_status": "effective",
       "date": "2018-06-17",
-      "duration_h": 2.5,
-      "weather": {
-        "icon": "🌦",
-        "description": "Bruine légère",
-        "temp": 17
-      },
+      "distance_km": 34.37,
+      "elevation_gain_m": 131,
+      "duration_h": 2.45,
       "day": {
-        "sunrise": "05:54",
-        "sunset": "21:53"
+        "sunset": "21:55",
+        "sunrise": "05:56"
       },
       "moon": {
-        "phase": 0.136,
         "icon": "🌒",
-        "description": "Premier croissant"
+        "phase": 0.135,
+        "description": "Croissant croissant"
       },
       "step": 6
     },
     {
       "id": "acte-2_etape-0_blois_chambord",
-      "label": "Blois ↔️ Chambord",
+      "label": "Blois ➡️ Chambord",
       "group": "acte-2",
       "paths": {
         "full": "data/traces/acte-2_etape-0_blois_chambord.geojson",
         "simplified": "data/traces/acte-2_etape-0_blois_chambord_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-0_blois_chambord.gpx",
-      "order": 7,
-      "distance_km": 35.08,
-      "elevation_gain_m": 97.1,
+      "order": 0,
       "date_status": "effective",
       "date": "2025-06-06",
-      "duration_h": 2.0,
-      "weather": {
-        "icon": "⛅",
-        "description": "Bruine modérée",
-        "temp": 22
-      },
-      "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy",
-      "is_loop": true,
+      "distance_km": 35.04,
+      "elevation_gain_m": 99,
+      "duration_h": 1.83,
       "day": {
-        "sunrise": "05:57",
-        "sunset": "21:48"
+        "sunset": "21:49",
+        "sunrise": "05:59"
       },
       "moon": {
-        "phase": 0.352,
         "icon": "🌔",
+        "phase": 0.35,
         "description": "Gibbeuse croissante"
       },
       "step": 0
@@ -229,24 +192,19 @@
         "simplified": "data/traces/acte-2_etape-1_blois_amboise_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-1_blois_amboise.gpx",
-      "order": 8,
-      "distance_km": 51.3,
-      "elevation_gain_m": 300.3,
+      "order": 1,
       "date_status": "effective",
       "date": "2025-06-07",
-      "duration_h": 3.0,
-      "weather": {
-        "icon": "🌦️",
-        "description": "Bruine modérée",
-        "temp": 23
-      },
+      "distance_km": 51.24,
+      "elevation_gain_m": 303,
+      "duration_h": 2.78,
       "day": {
-        "sunrise": "05:59",
-        "sunset": "21:49"
+        "sunset": "21:50",
+        "sunrise": "06:00"
       },
       "moon": {
-        "phase": 0.386,
         "icon": "🌔",
+        "phase": 0.38,
         "description": "Gibbeuse croissante"
       },
       "step": 1
@@ -260,24 +218,19 @@
         "simplified": "data/traces/acte-2_etape-2_amboise_chenonceaux_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-2_amboise_chenonceaux.gpx",
-      "order": 9,
-      "distance_km": 16.72,
-      "elevation_gain_m": 152.0,
+      "order": 2,
       "date_status": "effective",
-      "date": "2025-06-09",
-      "duration_h": 1.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Peu nuageux",
-        "temp": 25
-      },
+      "date": "2025-06-10",
+      "distance_km": 16.7,
+      "elevation_gain_m": 154,
+      "duration_h": 0.85,
       "day": {
-        "sunrise": "05:59",
-        "sunset": "21:50"
+        "sunset": "21:52",
+        "sunrise": "06:00"
       },
       "moon": {
-        "phase": 0.454,
         "icon": "🌕",
+        "phase": 0.468,
         "description": "Pleine lune"
       },
       "step": 2
@@ -291,24 +244,19 @@
         "simplified": "data/traces/acte-2_etape-3_chenonceaux_tours_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-3_chenonceaux_tours.gpx",
-      "order": 10,
-      "distance_km": 37.43,
-      "elevation_gain_m": 76.6,
+      "order": 3,
       "date_status": "effective",
-      "date": "2025-06-10",
-      "duration_h": 2.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Couvert",
-        "temp": 27
-      },
+      "date": "2025-06-11",
+      "distance_km": 37.39,
+      "elevation_gain_m": 78,
+      "duration_h": 1.9,
       "day": {
-        "sunrise": "05:59",
-        "sunset": "21:52"
+        "sunset": "21:53",
+        "sunrise": "06:01"
       },
       "moon": {
-        "phase": 0.487,
         "icon": "🌕",
+        "phase": 0.514,
         "description": "Pleine lune"
       },
       "step": 3
@@ -322,24 +270,19 @@
         "simplified": "data/traces/acte-2_etape-4_tours_villandry_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-4_tours_villandry.gpx",
-      "order": 11,
-      "distance_km": 20.97,
-      "elevation_gain_m": 30.4,
+      "order": 4,
       "date_status": "effective",
       "date": "2025-06-12",
-      "duration_h": 1.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Couvert",
-        "temp": 26
-      },
+      "distance_km": 20.94,
+      "elevation_gain_m": 31,
+      "duration_h": 0.97,
       "day": {
-        "sunrise": "06:00",
-        "sunset": "21:54"
+        "sunset": "21:55",
+        "sunrise": "06:01"
       },
       "moon": {
-        "phase": 0.555,
         "icon": "🌕",
+        "phase": 0.536,
         "description": "Pleine lune"
       },
       "step": 4
@@ -353,24 +296,19 @@
         "simplified": "data/traces/acte-2_etape-5_villandry_chinon_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-5_villandry_chinon.gpx",
-      "order": 12,
-      "distance_km": 39.19,
-      "elevation_gain_m": 169.6,
+      "order": 5,
       "date_status": "effective",
       "date": "2025-06-13",
-      "duration_h": 2.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Pluie modérée",
-        "temp": 27
-      },
+      "distance_km": 39.14,
+      "elevation_gain_m": 171,
+      "duration_h": 1.77,
       "day": {
-        "sunrise": "06:02",
-        "sunset": "21:55"
+        "sunset": "21:56",
+        "sunrise": "06:03"
       },
       "moon": {
-        "phase": 0.589,
         "icon": "🌖",
+        "phase": 0.566,
         "description": "Gibbeuse décroissante"
       },
       "step": 5
@@ -384,25 +322,20 @@
         "simplified": "data/traces/acte-2_etape-6_chinon_montsoreaux_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-6_chinon_montsoreaux.gpx",
-      "order": 13,
-      "distance_km": 34.77,
-      "elevation_gain_m": 177.3,
+      "order": 6,
       "date_status": "effective",
       "date": "2025-06-16",
-      "duration_h": 2.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Partiellement nuageux",
-        "temp": 30
-      },
+      "distance_km": 34.73,
+      "elevation_gain_m": 181,
+      "duration_h": 1.73,
       "day": {
-        "sunrise": "06:02",
-        "sunset": "21:57"
+        "sunset": "21:58",
+        "sunrise": "06:04"
       },
       "moon": {
-        "phase": 0.691,
-        "icon": "🌗",
-        "description": "Dernier quartier"
+        "icon": "🌖",
+        "phase": 0.668,
+        "description": "Gibbeuse décroissante"
       },
       "step": 6
     },
@@ -415,24 +348,19 @@
         "simplified": "data/traces/acte-2_etape-7_montsoreau_saumur_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-7_montsoreau_saumur.gpx",
-      "order": 14,
-      "distance_km": 13.46,
-      "elevation_gain_m": 34.9,
+      "order": 7,
       "date_status": "effective",
       "date": "2025-06-17",
-      "duration_h": 1.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Ciel dégagé",
-        "temp": 28
-      },
+      "distance_km": 13.44,
+      "elevation_gain_m": 36,
+      "duration_h": 0.68,
       "day": {
-        "sunrise": "06:03",
-        "sunset": "21:58"
+        "sunset": "21:59",
+        "sunrise": "06:04"
       },
       "moon": {
-        "phase": 0.725,
         "icon": "🌗",
+        "phase": 0.703,
         "description": "Dernier quartier"
       },
       "step": 7
@@ -446,26 +374,19 @@
         "simplified": "data/traces/acte-2_etape-8_saumur_angers_simplified.geojson"
       },
       "source": "sources/gpx/acte-2_etape-8_saumur_angers.gpx",
-      "order": 15,
-      "distance_km": 64.77,
-      "elevation_gain_m": 135.5,
+      "order": 8,
       "date_status": "effective",
       "date": "2025-06-18",
-      "duration_h": 4.0,
-      "weather": {
-        "icon": "☀️",
-        "description": "Ciel dégagé",
-        "temp": 28
-      },
-      "instagram_url": "https://www.instagram.com/p/DKp1roDCcKy/?img_index=1",
-      "komoot_url": "https://www.komoot.com/tour/2336053643",
+      "distance_km": 64.7,
+      "elevation_gain_m": 139,
+      "duration_h": 3.08,
       "day": {
-        "sunrise": "06:03",
-        "sunset": "22:00"
+        "sunset": "22:02",
+        "sunrise": "06:05"
       },
       "moon": {
-        "phase": 0.758,
         "icon": "🌗",
+        "phase": 0.74,
         "description": "Dernier quartier"
       },
       "step": 8
@@ -479,88 +400,86 @@
         "simplified": "data/traces/acte-3_etape-1_angers_behuard_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-1_angers_behuard.gpx",
-      "order": 16,
-      "distance_km": 15.67,
-      "elevation_gain_m": 19.3,
+      "order": 1,
       "date_status": "effective",
       "date": "2026-05-22",
-      "duration_h": 1.0,
+      "distance_km": 15.65,
+      "elevation_gain_m": 20,
+      "duration_h": 1.18,
       "weather": {
-        "icon": "☀️",
-        "description": "Ensoleillé",
-        "temp": 31
+        "icon": "⛅",
+        "temp": 29,
+        "description": "Ensoleillé"
       },
       "day": {
-        "sunrise": "06:17",
-        "sunset": "21:40"
+        "sunset": "21:41",
+        "sunrise": "06:19"
       },
       "moon": {
-        "phase": 0.204,
         "icon": "🌓",
+        "phase": 0.21,
         "description": "Premier quartier"
       },
-      "instagram_url": "https://www.instagram.com/p/DY-iRkaDlpw/",
-      "komoot_url": "https://www.komoot.com/tour/2973444055?share_token=am2Kx556ONSYJE8pKJRnzzcfyNXvXP7IrRJnSudXOxJNPGTQmT&ref=wtd&t_s=referral&t_cid=route_share&t_ref_username=1484664526803",
       "step": 1
     },
     {
       "id": "acte-3_etape-2_behuard_st-florent-le-vieil",
-      "label": "Béhuard ➡️ St-Florent-Le-Vieil",
+      "label": "Béhuard ➡️ Saint-Florent-le-Vieil",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil.geojson",
         "simplified": "data/traces/acte-3_etape-2_behuard_st-florent-le-vieil_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-2_behuard_st-florent-le-vieil.gpx",
-      "order": 17,
-      "distance_km": 37.7,
-      "elevation_gain_m": 97.4,
+      "order": 2,
       "date_status": "effective",
       "date": "2026-05-23",
-      "duration_h": 2.0,
+      "distance_km": 37.66,
+      "elevation_gain_m": 99,
+      "duration_h": 2.23,
       "weather": {
         "icon": "☀️",
-        "description": "Ensoleillé",
-        "temp": 31
+        "temp": 30,
+        "description": "Ensoleillé"
       },
       "day": {
-        "sunrise": "06:17",
-        "sunset": "21:41"
+        "sunset": "21:43",
+        "sunrise": "06:19"
       },
       "moon": {
-        "phase": 0.238,
         "icon": "🌓",
+        "phase": 0.246,
         "description": "Premier quartier"
       },
       "step": 2
     },
     {
       "id": "acte-3_etape-3_st-florent-le-vieil_ancenis",
-      "label": "St-Florent-Le-Vieil ➡️ Ancenis",
+      "label": "St-Florent-le-Vieil ➡️ Ancenis",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-3_st-florent-le-vieil_ancenis.geojson",
         "simplified": "data/traces/acte-3_etape-3_st-florent-le-vieil_ancenis_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-3_st-florent-le-vieil_ancenis.gpx",
-      "order": 18,
-      "distance_km": 13.84,
-      "elevation_gain_m": 26.7,
+      "order": 3,
       "date_status": "effective",
       "date": "2026-05-24",
-      "duration_h": 0.6667,
+      "distance_km": 13.83,
+      "elevation_gain_m": 27,
+      "duration_h": 0.7,
       "weather": {
         "icon": "☀️",
-        "description": "Ensoleillé",
-        "temp": 32
+        "temp": 30,
+        "description": "Ensoleillé"
       },
       "day": {
-        "sunrise": "06:18",
-        "sunset": "21:44"
+        "sunset": "21:45",
+        "sunrise": "06:19"
       },
       "moon": {
-        "phase": 0.272,
         "icon": "🌓",
+        "phase": 0.281,
         "description": "Premier quartier"
       },
       "step": 3
@@ -574,24 +493,24 @@
         "simplified": "data/traces/acte-3_etape-4_ancenis_nantes_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-4_ancenis_nantes.gpx",
-      "order": 19,
-      "distance_km": 36.25,
-      "elevation_gain_m": 93.9,
+      "order": 4,
       "date_status": "effective",
       "date": "2026-05-26",
-      "duration_h": 2.0,
+      "distance_km": 36.21,
+      "elevation_gain_m": 103,
+      "duration_h": 1.9,
       "weather": {
         "icon": "☀️",
-        "description": "Ensoleillé — pic de chaleur",
-        "temp": 34
+        "temp": 32,
+        "description": "Ensoleillé"
       },
       "day": {
-        "sunrise": "06:17",
-        "sunset": "21:47"
+        "sunset": "21:48",
+        "sunrise": "06:19"
       },
       "moon": {
-        "phase": 0.34,
         "icon": "🌔",
+        "phase": 0.348,
         "description": "Gibbeuse croissante"
       },
       "step": 4
@@ -605,214 +524,172 @@
         "simplified": "data/traces/acte-3_etape-5_nantes_paimboeuf_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-5_nantes_paimboeuf.gpx",
-      "order": 20,
-      "distance_km": 44.34,
-      "elevation_gain_m": 121.7,
+      "order": 5,
       "date_status": "effective",
       "date": "2026-05-27",
-      "duration_h": 2.0,
+      "distance_km": 44.29,
+      "elevation_gain_m": 142,
+      "duration_h": 2.73,
       "weather": {
         "icon": "☀️",
-        "description": "Ensoleillé",
-        "temp": 33
+        "temp": 33,
+        "description": "Ensoleillé"
       },
       "day": {
-        "sunrise": "06:18",
-        "sunset": "21:49"
+        "sunset": "21:51",
+        "sunrise": "06:20"
       },
       "moon": {
-        "phase": 0.373,
         "icon": "🌔",
+        "phase": 0.38,
         "description": "Gibbeuse croissante"
       },
       "step": 5
     },
     {
       "id": "acte-3_etape-6_paimboeuf_saint-brevin-les-pins",
-      "label": "Paimboeuf ➡️ L'océan",
+      "label": "Paimboeuf ➡️ Saint-Brévin-les-Pins",
       "group": "acte-3",
       "paths": {
         "full": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.geojson",
         "simplified": "data/traces/acte-3_etape-6_paimboeuf_saint-brevin-les-pins_simplified.geojson"
       },
       "source": "sources/gpx/acte-3_etape-6_paimboeuf_saint-brevin-les-pins.gpx",
-      "order": 21,
-      "distance_km": 12.22,
-      "elevation_gain_m": 25.8,
+      "order": 6,
       "date_status": "effective",
       "date": "2026-05-28",
-      "duration_h": 1.0,
+      "distance_km": 12.21,
+      "elevation_gain_m": 33,
+      "duration_h": 0.7,
       "weather": {
-        "icon": "☀️",
-        "description": "Ensoleillé, brise de mer",
-        "temp": 32
+        "icon": "🌤️",
+        "temp": 27,
+        "description": "Partiellement nuageux"
       },
       "day": {
-        "sunrise": "06:19",
-        "sunset": "21:52"
+        "sunset": "21:53",
+        "sunrise": "06:20"
       },
       "moon": {
-        "phase": 0.407,
         "icon": "🌔",
+        "phase": 0.412,
         "description": "Gibbeuse croissante"
       },
       "step": 6
     },
     {
       "id": "micro-aventure_boucle-angevine",
-      "label": "Boucle Angevine",
+      "label": "Angers ➡️ Angers",
       "group": "micro-aventure",
-      "is_loop": true,
       "paths": {
         "full": "data/traces/micro-aventure_boucle-angevine.geojson",
         "simplified": "data/traces/micro-aventure_boucle-angevine_simplified.geojson"
       },
       "source": "sources/gpx/micro-aventure_boucle-angevine.gpx",
-      "order": 22,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "order": 1,
       "date_status": "effective",
       "date": "2025-09-30",
-      "duration_h": null,
-      "weather": {
-        "icon": "☁️",
-        "description": "Couvert",
-        "temp": 15
-      },
+      "distance_km": 45.29,
+      "elevation_gain_m": 142,
+      "duration_h": 2.68,
       "day": {
-        "sunrise": "07:59",
-        "sunset": "19:43"
+        "sunset": "19:45",
+        "sunrise": "08:00"
       },
       "moon": {
-        "phase": 0.28,
         "icon": "🌓",
+        "phase": 0.266,
         "description": "Premier quartier"
-      }
+      },
+      "step": 1
     },
     {
       "id": "micro-aventure_boucle_mayenne",
-      "label": "Boucle de la Mayenne",
+      "label": "Angers ➡️ Angers",
       "group": "micro-aventure",
       "paths": {
         "full": "data/traces/micro-aventure_boucle_mayenne.geojson",
         "simplified": "data/traces/micro-aventure_boucle_mayenne_simplified.geojson"
       },
       "source": "sources/gpx/micro-aventure_boucle_mayenne.gpx",
-      "order": 23,
-      "distance_km": null,
-      "elevation_gain_m": null,
+      "order": 1,
+      "date_status": "effective",
       "date": "2025-10-16",
+      "distance_km": 29.1,
+      "elevation_gain_m": 133,
+      "duration_h": 1.87,
       "day": {
-        "sunrise": "08:23",
-        "sunset": "19:12"
+        "sunset": "19:14",
+        "sunrise": "08:23"
       },
       "moon": {
-        "phase": 0.822,
         "icon": "🌘",
-        "description": "Dernier croissant"
+        "phase": 0.839,
+        "description": "Croissant décroissant"
       },
-      "date_status": "effective",
-      "weather": {
-        "icon": "🌤️",
-        "description": "Plutôt ensoleillé",
-        "temp": 14
-      }
+      "step": 1
     },
     {
       "id": "velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef",
-      "label": "Vélodyssée -  Saint-Brévin-les-Pins ➡️  Saint-Michel-Chef-Chef",
+      "label": "Saint-Brévin-les-Pins ➡️ Saint-Michel-Chef-Chef",
       "group": "velodyssee",
       "paths": {
         "full": "data/traces/velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef.geojson",
         "simplified": "data/traces/velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef_simplified.geojson"
       },
       "source": "sources/gpx/velodyssee_etape-1_saint-brevin-les-pins_saint-michel-chef-chef.gpx",
-      "order": 24,
-      "distance_km": 12.88,
-      "elevation_gain_m": 42.1,
+      "order": 1,
+      "date_status": "effective",
       "date": "2026-05-28",
+      "distance_km": 12.87,
+      "elevation_gain_m": 43,
+      "duration_h": 0.82,
+      "weather": {
+        "icon": "🌤️",
+        "temp": 27,
+        "description": "Partiellement nuageux"
+      },
       "day": {
-        "sunrise": "06:19",
-        "sunset": "21:52"
+        "sunset": "21:53",
+        "sunrise": "06:21"
       },
       "moon": {
-        "phase": 0.407,
         "icon": "🌔",
+        "phase": 0.412,
         "description": "Gibbeuse croissante"
       },
-      "duration_h": 3.0,
-      "date_status": "effective"
+      "step": 1
     },
     {
       "id": "velodyssee_etape-2_saint-michel-chef-chef_pornic",
-      "label": "Velodyssee - Saint-Michel-Chef-Chef ➡️  Pornic",
+      "label": "Saint-Michel-Chef-Chef ➡️ Pornic",
       "group": "velodyssee",
       "paths": {
         "full": "data/traces/velodyssee_etape-2_saint-michel-chef-chef_pornic.geojson",
         "simplified": "data/traces/velodyssee_etape-2_saint-michel-chef-chef_pornic_simplified.geojson"
       },
       "source": "sources/gpx/velodyssee_etape-2_saint-michel-chef-chef_pornic.gpx",
-      "order": 25,
-      "distance_km": 25.29,
-      "elevation_gain_m": 152.8,
+      "order": 2,
+      "date_status": "effective",
       "date": "2026-05-29",
+      "distance_km": 25.26,
+      "elevation_gain_m": 158,
+      "duration_h": 1.57,
+      "weather": {
+        "icon": "⛅",
+        "temp": 28,
+        "description": "Couvert"
+      },
       "day": {
-        "sunrise": "06:18",
-        "sunset": "21:52"
+        "sunset": "21:54",
+        "sunrise": "06:20"
       },
       "moon": {
-        "phase": 0.441,
         "icon": "🌕",
+        "phase": 0.442,
         "description": "Pleine lune"
       },
-      "date_status": "effective",
-      "duration_h": 1.5,
-      "weather": {
-        "icon": "☀️",
-        "description": "Ensoleillé",
-        "temp": 29
-      }
-    },
-    {
-      "id": "velodyssee_etape-3_pornic_noirmoutier",
-      "label": "Velodyssee -  Pornic ➡️  Noirmoutier",
-      "group": "velodyssee",
-      "paths": {
-        "full": "data/traces/velodyssee_etape-3_pornic_noirmoutier.geojson",
-        "simplified": "data/traces/velodyssee_etape-3_pornic_noirmoutier_simplified.geojson"
-      },
-      "source": "sources/gpx/velodyssee_etape-3_pornic_noirmoutier.gpx",
-      "order": 26,
-      "distance_km": 53.29,
-      "elevation_gain_m": 82.1,
-      "date_status": "planned"
-    },
-    {
-      "id": "velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie",
-      "label": "Velodyssee -  Noirmoutier ➡️ St-Gilles-Croix-de-Vie",
-      "group": "velodyssee",
-      "paths": {
-        "full": "data/traces/velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie.geojson",
-        "simplified": "data/traces/velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie_simplified.geojson"
-      },
-      "source": "sources/gpx/velodyssee_etape-4_noirmoutier_st-gilles-croix-de-vie.gpx",
-      "order": 27,
-      "distance_km": 57.51,
-      "elevation_gain_m": 77.7,
-      "date_status": "planned"
-    },
-    {
-      "id": "velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne",
-      "label": "Vélodyssée - St-Gilles-Croix-de-Vie ➡️ Les Sables-d'Olonne",
-      "group": "velodyssee",
-      "paths": {
-        "full": "data/traces/velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne.geojson",
-        "simplified": "data/traces/velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne_simplified.geojson"
-      },
-      "source": "sources/gpx/velodyssee_etape-5_st-gilles-croix-de-vie_les-sables-d-olonne.gpx",
-      "order": 28,
-      "distance_km": null,
-      "elevation_gain_m": null
+      "step": 2
     }
   ]
 }
