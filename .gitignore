@@ -3,6 +3,7 @@
 .venv/
 __pycache__/
 *.pyc
+node_modules/
 
 # Runtime config — généré au build sur Vercel, créé localement par chaque dev
 .DS_Store
