@@ -15,6 +15,8 @@ import { track } from './analytics.js';
 
 /** groupId → { group, layerIds, sourceIds } — pour la bascule de visibilité (carnets, commit [5]). */
 export const traceGroupsGL = new Map();
+/** Groupes masqués par l'utilisateur (cases du panel). Réappliqué après un re-render de style. */
+const _hiddenGroups = new Set();
 /** stepId → bbox [minLng, minLat, maxLng, maxLat] — pour centrer sur une étape. */
 export const stepBoundsById = new Map();
 /** stepId → { item, group } — pour ouvrir le popup d'étape (markers d'étape, commit [4]). */
@@ -74,7 +76,11 @@ function _renderTraces() {
             id: lyrId,
             type: 'line',
             source: srcId,
-            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            layout: {
+                'line-cap': 'round',
+                'line-join': 'round',
+                visibility: _hiddenGroups.has(t.group.id) ? 'none' : 'visible',
+            },
             paint: {
                 'line-color': t.color,
                 'line-width': 4,
@@ -178,6 +184,19 @@ async function _doLoad() {
 export function loadAllRoutesGL() {
     if (!_promise) _promise = _doLoad();
     return _promise;
+}
+
+/** Affiche/masque les lignes d'un groupe de traces (cases du panel). Idempotent, survit au re-style. */
+export function setTraceGroupVisibilityGL(groupId, visible) {
+    if (visible) _hiddenGroups.delete(groupId);
+    else _hiddenGroups.add(groupId);
+    const entry = traceGroupsGL.get(groupId);
+    if (!entry) return;
+    for (const layerId of entry.layerIds) {
+        if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+        }
+    }
 }
 
 /** Ouvre le popup d'étape (au centre de la trace), réutilisé par les markers d'étape (commit [4]). */

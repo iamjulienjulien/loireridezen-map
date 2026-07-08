@@ -55,6 +55,13 @@ async function safeFetch(url) {
     }
 }
 
+/** Affiche/masque les markers Départ/Étape/Arrivée d'un groupe (suivent la case de leur trace). */
+export function setGroupMarkersVisibilityGL(groupId, visible) {
+    const markers = traceMarkersByGroup.get(groupId);
+    if (!markers) return;
+    for (const m of markers) m.getElement().style.display = visible ? '' : 'none';
+}
+
 /** Crée un marker emoji GL à [lng, lat] et l'enregistre pour son groupe. */
 function _addMarker(groupId, type, lngLat, stepId) {
     const marker = new maplibregl.Marker({ element: emojiEl(type), anchor: 'center' })

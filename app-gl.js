@@ -20,6 +20,17 @@ import { hiddenModes } from './app/url-mode.js';
 import { initVisitCounter } from './app/visit-counter.js';
 import { initVisitCounterForElle } from './app/visit-counter-for-elle.js';
 import { initBisouButton } from './app/bisou-button.js';
+import { loadPreferences } from './app/preferences.js';
+import {
+    renderTracesSectionGL,
+    renderPoiSectionGL,
+    renderPhotosSectionGL,
+    wireTraceCheckboxesGL,
+    wirePoiFiltersGL,
+    addEuroVeloLegendGL,
+    initAccordionGL,
+    initResetButtonGL,
+} from './app/ui-gl.js';
 
 const map = initMapGL();
 
@@ -28,6 +39,33 @@ map.on('load', async () => {
     const skeleton = document.getElementById('lrz-loading');
     if (skeleton) skeleton.style.display = 'none';
 
+    const prefs = loadPreferences();
+
+    // Panel cockpit (Traces · POI · Photos) — parité app.js. Rendu AVANT les données pour que les
+    // cases existent quand on câble la visibilité des couches. Non pertinent en mode ?for=elle
+    // (l'UI y est réduite, comme dans app.js).
+    let panelActive = !hiddenModes.rabbit;
+    if (panelActive) {
+        const [groups, traces] = await Promise.all([
+            fetch('data/catalog/groups.json').then((r) => r.json()),
+            fetch('data/catalog/traces.json').then((r) => r.json()),
+        ]).catch((err) => {
+            console.warn('[loireridezen] panel catalog load failed', err);
+            return [null, null];
+        });
+        if (groups) {
+            renderTracesSectionGL(groups, prefs, traces);
+            renderPoiSectionGL(prefs);
+            renderPhotosSectionGL(prefs);
+            addEuroVeloLegendGL();
+            initAccordionGL(prefs);
+            initResetButtonGL();
+            wirePoiFiltersGL();
+        } else {
+            panelActive = false;
+        }
+    }
+
     // Commit [4] — EuroVelo d'abord (sous les traces, ordre des layers GL).
     await initEuroVelosGL();
 
@@ -35,7 +73,10 @@ map.on('load', async () => {
     await loadAllRoutesGL();
 
     // Commit [4] — markers Départ/Étape/Arrivée (après les traces : openStepPopupGL prêt).
-    buildTraceMarkersGL();
+    await buildTraceMarkersGL();
+
+    // Câble les cases de traces sur la visibilité des couches (après lignes + markers prêts).
+    if (panelActive) wireTraceCheckboxesGL();
 
     // Commit [5] — sélecteur de carnets + zoom/recentrer/localiser.
     bindViewportListenersGL();
