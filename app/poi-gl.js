@@ -27,6 +27,10 @@ const _allowedTypes = Object.entries(POI_TYPES)
     .filter(([k, c]) => !c.hidden || (k === 'lapin' && hiddenModes.rabbit))
     .map(([k]) => k);
 
+// LRZ-BRA-405 : `lrz_pois_geojson` renvoie les slugs canoniques du Camp ; un seul diverge de la
+// nomenclature carte (accentuée, héritée de la table legacy `pois` + carnets). Alias DB → carte.
+const DB_TYPE_ALIAS = { hebergement: 'hébergement' };
+
 export function shouldShowPhoto(photo) {
     if (!_enabledPhotoCategories) return true;
     const cats = photo.categories;
@@ -173,16 +177,17 @@ function popupHtmlFor(p) {
 // ── Fetch (dupliqué de poi.js — bounds.getWest/... : API identique GL) ────────
 let lastAbort = null;
 
-async function fetchPoisFromSupabase(bounds, activeType, signal) {
+async function fetchPoisFromSupabase(bounds, _activeType, signal) {
+    // LRZ-BRA-405 [1] : bascule legacy `pois` → `lrz_pois` via la RPC publique carte
+    // `lrz_pois_geojson` (M1, INVOKER, clé publishable). BBOX seule — le filtrage par type reste
+    // client-side (loadPoisForViewportGL), donc `p_type`/`p_allowed_types` disparaissent.
     const body = {
         minlon: bounds.getWest(),
         minlat: bounds.getSouth(),
         maxlon: bounds.getEast(),
         maxlat: bounds.getNorth(),
-        p_allowed_types: _allowedTypes,
     };
-    if (activeType) body.p_type = activeType;
-    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/pois_bbox_geojson`, {
+    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/lrz_pois_geojson`, {
         method: 'POST',
         headers: {
             apikey: SUPA_PUBLISHABLE_KEY,
@@ -193,17 +198,98 @@ async function fetchPoisFromSupabase(bounds, activeType, signal) {
         signal,
     });
     if (!res.ok) throw new Error(`Supabase ${res.status}`);
-    return res.json();
+    const fc = await res.json();
+    // Normalisation vers la forme attendue par le rendu (héritée de la table legacy `pois`) :
+    // `typeSlug` est aligné 1:1 sur les clés de POI_TYPES (types.js) ; `construction_date` vit dans
+    // `meta`. La vignette de couverture et l'Instagram ne sont pas exposés par cette RPC (compteurs
+    // seuls) → ils reviendront avec les photos taguées « carte » (Commit [3], lrz_medias public).
+    for (const f of fc.features || []) {
+        const pr = f.properties || {};
+        pr.type = DB_TYPE_ALIAS[pr.typeSlug] ?? pr.typeSlug;
+        pr.construction_date = pr.meta?.construction_date ?? null;
+    }
+    return fc;
 }
 
-async function fetchLocalPhotos() {
+// LRZ-BRA-405 [5] : photos de la carte depuis les médias tagués « carte » (RPC `lrz_carte_medias_geojson`,
+// M2) en remplacement de `data/pois/pois_photos.geojson`. Le bucket `medias` est privé, mais la RLS
+// `medias_anon_read_public` autorise l'anon à SIGNER les objets publics → URLs signées pour `<img>`.
+// La RPC n'expose ni catégories ni lien POI → markers photo autonomes (pas de « Mes clichés », pas de
+// filtre de catégorie — le contrat carnet reviendra quand `lrz_medias` portera des catégories).
+// Mémoïsé : les photos ne dépendent pas du viewport (contrairement à l'ancien re-fetch par moveend).
+let _photosPromise = null;
+function fetchCartePhotos() {
+    if (!_photosPromise) _photosPromise = _loadCartePhotos();
+    return _photosPromise;
+}
+
+async function _loadCartePhotos() {
     try {
-        const r = await fetch('data/pois/pois_photos.geojson');
-        if (!r.ok) return { type: 'FeatureCollection', features: [] };
-        return r.json();
-    } catch {
+        const res = await fetch(`${SUPA_URL}/rest/v1/rpc/lrz_carte_medias_geojson`, {
+            method: 'POST',
+            headers: {
+                apikey: SUPA_PUBLISHABLE_KEY,
+                Authorization: `Bearer ${SUPA_PUBLISHABLE_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: '{}',
+        });
+        if (!res.ok) throw new Error(`Supabase ${res.status}`);
+        const fc = await res.json();
+        const features = fc.features || [];
+        if (!features.length) return { type: 'FeatureCollection', features: [] };
+
+        const urlByPath = await _signMediaUrls(
+            features.map((f) => f.properties?.storagePath).filter(Boolean)
+        );
+
+        const out = features.map((f) => {
+            const pr = f.properties || {};
+            const url = urlByPath.get(pr.storagePath) || null;
+            return {
+                type: 'Feature',
+                geometry: f.geometry,
+                properties: {
+                    type: 'photo',
+                    id: pr.id,
+                    name: pr.title || pr.alt || '',
+                    description: pr.caption || '',
+                    thumb: url,
+                    image: url,
+                    categories: [],
+                },
+            };
+        });
+        return { type: 'FeatureCollection', features: out };
+    } catch (err) {
+        console.warn('[loireridezen] carte medias load failed', err);
         return { type: 'FeatureCollection', features: [] };
     }
+}
+
+/** URLs signées du bucket privé `medias` (lecture anon via RLS `medias_anon_read_public`) : chemin → URL absolue. */
+async function _signMediaUrls(paths) {
+    const urls = new Map();
+    if (!paths.length) return urls;
+    try {
+        const res = await fetch(`${SUPA_URL}/storage/v1/object/sign/medias`, {
+            method: 'POST',
+            headers: {
+                apikey: SUPA_PUBLISHABLE_KEY,
+                Authorization: `Bearer ${SUPA_PUBLISHABLE_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ expiresIn: 86400, paths }),
+        });
+        if (!res.ok) return urls;
+        const rows = await res.json();
+        for (const row of rows || []) {
+            if (row.signedURL) urls.set(row.path, `${SUPA_URL}/storage/v1${row.signedURL}`);
+        }
+    } catch {
+        /* pas d'URL signée → markers sans vignette, non bloquant */
+    }
+    return urls;
 }
 
 function buildPhotosByPoi(features) {
@@ -315,7 +401,7 @@ export async function loadPoisForViewportGL() {
     try {
         const [fcDB, fcLocal] = await Promise.all([
             fetchPoisFromSupabase(bounds, activeType, controller.signal),
-            fetchLocalPhotos(),
+            fetchCartePhotos(),
         ]);
         const localFeatures = fcLocal.features || [];
         buildPhotosByPoi(localFeatures);

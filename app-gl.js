@@ -13,6 +13,7 @@ import { loadAllRoutesGL } from './app/routes-gl.js';
 import { loadPoisForViewportGL, bindViewportListenersGL } from './app/poi-gl.js';
 import { initEuroVelosGL } from './app/eurovelo-gl.js';
 import { buildTraceMarkersGL } from './app/trace-markers-gl.js';
+import { loadCarteJourneys } from './app/carte-journeys.js';
 import { initActionsPanelGL } from './app/actions-panel-gl.js';
 import { applyCarnetGL, getCurrentCarnetGL } from './app/carnets/apply-gl.js';
 import { initExportButton } from './app/map-export.js';
@@ -46,13 +47,7 @@ map.on('load', async () => {
     // (l'UI y est réduite, comme dans app.js).
     let panelActive = !hiddenModes.rabbit;
     if (panelActive) {
-        const [groups, traces] = await Promise.all([
-            fetch('data/catalog/groups.json').then((r) => r.json()),
-            fetch('data/catalog/traces.json').then((r) => r.json()),
-        ]).catch((err) => {
-            console.warn('[loireridezen] panel catalog load failed', err);
-            return [null, null];
-        });
+        const { groups, traces } = await loadCarteJourneys();
         if (groups) {
             renderTracesSectionGL(groups, prefs, traces);
             renderPoiSectionGL(prefs);
